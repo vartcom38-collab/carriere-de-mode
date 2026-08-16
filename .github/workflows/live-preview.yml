@@ -20,13 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Rebuild exact atelier preview image
+      - name: Check approved accueil artwork
         run: |
           set -eux
-          cat assets/atelier_live_b64/part_*.txt > /tmp/menu_atelier.b64
-          base64 -d /tmp/menu_atelier.b64 > assets/menu_atelier.webp
-          test "$(wc -c < assets/menu_atelier.webp)" -eq 41530
-          file assets/menu_atelier.webp
+          test -s assets/accueil_haute_couture_master.png
+          file assets/accueil_haute_couture_master.png
 
       - name: Install Godot 4.6.3 and export templates
         run: |
