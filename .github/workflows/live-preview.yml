@@ -42,11 +42,21 @@ jobs:
       - name: Validate and import project
         run: godot --headless --editor --quit-after 12
 
-      - name: Export web preview
+      - name: Export versioned web preview
         run: |
-          mkdir -p build/web
-          godot --headless --export-release Web build/web/index.html
-          touch build/web/.nojekyll
+          set -eux
+          SHORT_SHA="${GITHUB_SHA::8}"
+          VERSION_DIR="build/site/v-${SHORT_SHA}"
+          mkdir -p "$VERSION_DIR"
+          godot --headless --export-release Web "$VERSION_DIR/index.html"
+          touch "$VERSION_DIR/.nojekyll"
+          mkdir -p build/site
+          touch build/site/.nojekyll
+          cat > build/site/index.html <<EOF
+          <!doctype html>
+          <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./v-${SHORT_SHA}/"><title>Haute Couture</title></head>
+          <body><a href="./v-${SHORT_SHA}/">Ouvrir la dernière preview Haute Couture</a></body></html>
+          EOF
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -56,7 +66,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build/web
+          path: build/site
 
   deploy:
     environment:
