@@ -20,24 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install image repair tools
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg
-
-      - name: Rebuild and repair official atelier image
+      - name: Rebuild exact atelier preview image
         run: |
           set -eux
-          if file assets/menu_atelier.webp | grep -qi 'ASCII\|text'; then
-            base64 -d assets/menu_atelier.webp > /tmp/menu_atelier_source.webp
-          else
-            cp assets/menu_atelier.webp /tmp/menu_atelier_source.webp
-          fi
-          file /tmp/menu_atelier_source.webp
-          ffmpeg -v error -y -i /tmp/menu_atelier_source.webp -frames:v 1 -c:v libwebp -q:v 82 /tmp/menu_atelier_fixed.webp
-          mv /tmp/menu_atelier_fixed.webp assets/menu_atelier.webp
+          cat assets/atelier_live_b64/part_*.txt > /tmp/menu_atelier.b64
+          base64 -d /tmp/menu_atelier.b64 > assets/menu_atelier.webp
+          test "$(wc -c < assets/menu_atelier.webp)" -eq 41530
           file assets/menu_atelier.webp
-          ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 assets/menu_atelier.webp
 
       - name: Install Godot 4.6.3 and export templates
         run: |
