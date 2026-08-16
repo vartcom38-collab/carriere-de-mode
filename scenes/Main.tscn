@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Texture2D" path="res://assets/menu_atelier.webp" id="2_atelier"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -18,8 +19,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_atelier")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 mouse_filter = 2
 
 [node name="WarmLight" type="ColorRect" parent="."]
@@ -51,50 +53,50 @@ grow_vertical = 2
 
 [node name="NewGame" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 395.0
-offset_right = 410.0
-offset_bottom = 458.0
+offset_left = 178.0
+offset_top = 338.0
+offset_right = 486.0
+offset_bottom = 409.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Load" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 462.0
-offset_right = 410.0
-offset_bottom = 520.0
+offset_left = 178.0
+offset_top = 410.0
+offset_right = 486.0
+offset_bottom = 470.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Options" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 525.0
-offset_right = 410.0
-offset_bottom = 583.0
+offset_left = 178.0
+offset_top = 471.0
+offset_right = 486.0
+offset_bottom = 529.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Credits" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 588.0
-offset_right = 410.0
-offset_bottom = 646.0
+offset_left = 178.0
+offset_top = 530.0
+offset_right = 486.0
+offset_bottom = 588.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Quit" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 651.0
-offset_right = 410.0
-offset_bottom = 709.0
+offset_left = 178.0
+offset_top = 589.0
+offset_right = 486.0
+offset_bottom = 650.0
 focus_mode = 0
 flat = true
 text = ""
@@ -102,27 +104,27 @@ text = ""
 [node name="HoverGlow" type="ColorRect" parent="MenuHitboxes"]
 visible = false
 layout_mode = 0
-offset_left = 78.0
-offset_top = 395.0
-offset_right = 410.0
-offset_bottom = 458.0
+offset_left = 178.0
+offset_top = 338.0
+offset_right = 486.0
+offset_bottom = 409.0
 mouse_filter = 2
-color = Color(1, 0.93, 0.72, 0.12)
+color = Color(1, 0.93, 0.72, 0.13)
 
 [node name="Cinematic" type="CanvasLayer" parent="."]
 layer = 20
 
 [node name="Black" type="ColorRect" parent="Cinematic"]
-offset_right = 1600.0
-offset_bottom = 900.0
+offset_right = 1280.0
+offset_bottom = 960.0
 color = Color(0.035, 0.028, 0.024, 1)
 mouse_filter = 2
 
 [node name="Title" type="Label" parent="Cinematic"]
-offset_left = 390.0
-offset_top = 354.0
-offset_right = 1210.0
-offset_bottom = 460.0
+offset_left = 235.0
+offset_top = 378.0
+offset_right = 1045.0
+offset_bottom = 485.0
 modulate = Color(1, 1, 1, 0)
 theme_override_colors/font_color = Color(0.96, 0.9, 0.78, 1)
 theme_override_font_sizes/font_size = 58
@@ -131,10 +133,10 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Cinematic"]
-offset_left = 430.0
-offset_top = 450.0
-offset_right = 1170.0
-offset_bottom = 505.0
+offset_left = 330.0
+offset_top = 474.0
+offset_right = 950.0
+offset_bottom = 529.0
 modulate = Color(1, 1, 1, 0)
 theme_override_colors/font_color = Color(0.78, 0.7, 0.59, 1)
 theme_override_font_sizes/font_size = 24
@@ -142,12 +144,12 @@ text = "CRÉEZ VOTRE HISTOIRE"
 horizontal_alignment = 1
 
 [node name="Skip" type="Label" parent="Cinematic"]
-offset_left = 1180.0
-offset_top = 838.0
-offset_right = 1550.0
-offset_bottom = 875.0
+offset_left = 875.0
+offset_top = 904.0
+offset_right = 1240.0
+offset_bottom = 938.0
 modulate = Color(1, 1, 1, 0)
 theme_override_colors/font_color = Color(0.8, 0.76, 0.7, 0.72)
 theme_override_font_sizes/font_size = 16
-text = "clic pour passer"
+text = "touchez pour passer"
 horizontal_alignment = 2
