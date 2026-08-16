@@ -1,0 +1,44 @@
+name: Build cinematic checkpoint
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pin checkpoint scene script
+        run: cp scripts/main_checkpoint.gd scripts/main.gd
+
+      - name: Install Godot 4.6.3 and export templates
+        run: |
+          set -eux
+          wget -q https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -O /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p ~/.local/share/godot/export_templates/4.6.3.stable
+          wget -q https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz -O /tmp/templates.tpz
+          unzip -q /tmp/templates.tpz -d /tmp/templates
+          cp -r /tmp/templates/templates/* ~/.local/share/godot/export_templates/4.6.3.stable/
+
+      - name: Validate Godot project
+        run: godot --headless --editor --quit-after 2
+
+      - name: Export cinematic Web checkpoint
+        run: |
+          mkdir -p build/web
+          godot --headless --export-release Web build/web/index.html
+
+      - name: Upload playable checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: carriere-de-mode-cinematic-checkpoint
+          path: build/web
+          if-no-files-found: error
