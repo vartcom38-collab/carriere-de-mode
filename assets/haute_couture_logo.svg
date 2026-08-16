@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="500" viewBox="0 0 1100 500">
+  <defs>
+    <filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+  <g opacity="0.28" fill="#f4a9b8" filter="url(#soft)">
+    <path d="M290 130 C390 72 520 78 625 132 C560 175 470 205 360 218 C320 202 292 168 290 130Z"/>
+    <path d="M260 210 C375 155 555 160 690 230 C560 275 410 280 285 255 C266 244 254 228 260 210Z"/>
+    <path d="M335 285 C430 235 565 242 650 295 C575 325 455 344 365 326 C340 317 328 301 335 285Z"/>
+  </g>
+  <g fill="none" stroke="#111" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 95 C140 55 187 27 220 58 C250 32 288 63 270 99 C258 122 232 124 211 114"/>
+    <path d="M153 109 C126 132 131 183 158 201 C176 215 190 219 210 215 C229 212 247 200 257 179 C269 153 260 126 240 109"/>
+    <path d="M158 122 C182 91 224 84 250 115"/>
+    <path d="M173 150 C170 179 180 213 207 226 C229 225 247 208 251 179"/>
+    <path d="M168 159 C182 149 204 149 214 159 C207 178 184 181 171 170 Z" fill="#111"/>
+    <path d="M216 158 C231 149 252 151 260 162 C251 178 230 181 218 171 Z" fill="#111"/>
+    <path d="M212 160 L220 160"/>
+    <path d="M213 171 C211 181 209 186 214 189" stroke-width="3"/>
+    <path d="M198 202 C208 194 222 195 230 202 C220 211 207 212 198 202Z" stroke="#e94b70" fill="#e94b70" stroke-width="3"/>
+    <path d="M184 220 L180 255 M236 218 L241 255"/>
+    <path d="M180 250 C145 265 116 300 105 356 L98 460"/>
+    <path d="M242 249 C284 267 315 308 327 365 L338 460"/>
+    <path d="M180 249 L215 285 L242 249"/>
+    <path d="M145 281 L203 344 L165 362 L124 460"/>
+    <path d="M280 281 L225 344 L270 365 L315 460"/>
+    <path d="M175 355 C196 339 225 337 248 354 L248 460 L174 460 Z"/>
+    <path d="M122 458 C143 410 158 391 181 370"/>
+    <path d="M313 458 C295 415 278 390 250 371"/>
+    <path d="M154 131 C132 146 124 173 131 202" stroke-width="3"/>
+    <path d="M252 121 C274 140 278 170 268 201" stroke-width="3"/>
+  </g>
+  <text x="420" y="235" font-family="Georgia, 'Times New Roman', serif" font-size="180" letter-spacing="8" fill="#111111">HAUTE</text>
+  <text x="525" y="390" font-family="Georgia, 'Times New Roman', serif" font-size="118" font-style="italic" fill="#e94b70">Couture</text>
+  <path d="M560 425 C700 462 885 446 1032 405" fill="none" stroke="#e94b70" stroke-width="8" stroke-linecap="round"/>
+</svg>
