@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
-uniform float sway : hint_range(0.0, 0.01, 0.0001) = 0.0032;
-uniform float speed : hint_range(0.0, 2.0, 0.01) = 0.66;
+uniform float sway : hint_range(0.0, 0.01, 0.0001) = 0.0040;
+uniform float speed : hint_range(0.0, 2.0, 0.01) = 0.58;
 
 void fragment() {
     vec2 uv = UV;
