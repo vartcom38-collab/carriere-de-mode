@@ -2,7 +2,7 @@ name: Live accueil preview
 
 on:
   push:
-    branches: [assistant/accueil-v2, main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -20,14 +20,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore atelier image when stored as base64 text
+      - name: Rebuild and repair official atelier image
         run: |
           set -eux
           if file assets/menu_atelier.webp | grep -qi 'ASCII\|text'; then
-            base64 -d assets/menu_atelier.webp > /tmp/menu_atelier.webp
-            mv /tmp/menu_atelier.webp assets/menu_atelier.webp
+            base64 -d assets/menu_atelier.webp > /tmp/menu_atelier_source.webp
+          else
+            cp assets/menu_atelier.webp /tmp/menu_atelier_source.webp
           fi
+          file /tmp/menu_atelier_source.webp
+          ffmpeg -v error -y -i /tmp/menu_atelier_source.webp -frames:v 1 -c:v libwebp -q:v 82 /tmp/menu_atelier_fixed.webp
+          mv /tmp/menu_atelier_fixed.webp assets/menu_atelier.webp
           file assets/menu_atelier.webp
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 assets/menu_atelier.webp
 
       - name: Install Godot 4.6.3 and export templates
         run: |
@@ -40,8 +45,8 @@ jobs:
           unzip -q /tmp/templates.tpz -d /tmp/templates
           cp -r /tmp/templates/templates/* ~/.local/share/godot/export_templates/4.6.3.stable/
 
-      - name: Validate project
-        run: godot --headless --editor --quit-after 2
+      - name: Validate and import project
+        run: godot --headless --editor --quit-after 12
 
       - name: Export web preview
         run: |
