@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
-uniform float flutter : hint_range(0.0, 0.01, 0.0001) = 0.0024;
-uniform float speed : hint_range(0.0, 3.0, 0.01) = 1.05;
+uniform float flutter : hint_range(0.0, 0.01, 0.0001) = 0.0030;
+uniform float speed : hint_range(0.0, 3.0, 0.01) = 0.85;
 
 void fragment() {
     vec2 uv = UV;
