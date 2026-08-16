@@ -20,6 +20,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Rebuild official atelier image
+        run: |
+          set -eux
+          base64 -d assets/menu_atelier.webp > /tmp/menu_atelier.webp
+          mv /tmp/menu_atelier.webp assets/menu_atelier.webp
+          file assets/menu_atelier.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/main_checkpoint.gd')
+          s = p.read_text()
+          s = s.replace('    _load_real_atelier()\n', '    atelier.texture = load("res://assets/menu_atelier.webp") as Texture2D\n', 1)
+          p.write_text(s)
+          PY
+
       - name: Pin checkpoint scene script
         run: cp scripts/main_checkpoint.gd scripts/main.gd
 
