@@ -1,59 +1,7 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Texture2D" path="res://assets/layers/atelier_back.svg" id="2_back"]
-[ext_resource type="Script" path="res://scripts/fx_overlay.gd" id="3_fx"]
-[ext_resource type="Texture2D" path="res://assets/layers/curtains.svg" id="4_curtains"]
-[ext_resource type="Texture2D" path="res://assets/layers/props.svg" id="5_props"]
-[ext_resource type="Texture2D" path="res://assets/layers/foreground.svg" id="6_foreground"]
-[ext_resource type="Texture2D" path="res://assets/haute_couture_logo.svg" id="7_logo"]
-
-[sub_resource type="StyleBoxFlat" id="menu_panel"]
-bg_color = Color(0.98, 0.94, 0.88, 0.94)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.72, 0.50, 0.38, 0.42)
-corner_radius_top_left = 26
-corner_radius_top_right = 26
-corner_radius_bottom_right = 26
-corner_radius_bottom_left = 26
-shadow_color = Color(0.25, 0.10, 0.10, 0.16)
-shadow_size = 14
-
-[sub_resource type="StyleBoxFlat" id="button_normal"]
-bg_color = Color(1, 1, 1, 0)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="button_hover"]
-bg_color = Color(0.95, 0.63, 0.69, 0.38)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="button_pressed"]
-bg_color = Color(0.90, 0.46, 0.58, 0.42)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="icon_button"]
-bg_color = Color(0.98, 0.88, 0.70, 0.50)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.66, 0.44, 0.24, 0.68)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
+[ext_resource type="Texture2D" path="res://assets/accueil_haute_couture_master.png" id="2_art"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -73,105 +21,27 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BackLayer" type="TextureRect" parent="ArtRoot"]
+[node name="Artwork" type="TextureRect" parent="ArtRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_back")
-expand_mode = 1
-stretch_mode = 6
-mouse_filter = 2
-
-[node name="WindowFX" type="Control" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("3_fx")
-
-[node name="CurtainLayer" type="TextureRect" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_curtains")
-expand_mode = 1
-stretch_mode = 6
-mouse_filter = 2
-
-[node name="PropsLayer" type="TextureRect" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("5_props")
-expand_mode = 1
-stretch_mode = 6
-mouse_filter = 2
-
-[node name="ForegroundLayer" type="TextureRect" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("6_foreground")
-expand_mode = 1
-stretch_mode = 6
-mouse_filter = 2
-
-[node name="WarmLight" type="ColorRect" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(1, 0.86, 0.60, 0)
-
-[node name="Dust" type="Control" parent="ArtRoot"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="HomeLogo" type="TextureRect" parent="ArtRoot"]
-layout_mode = 0
-offset_left = 506.0
-offset_top = 76.0
-offset_right = 962.0
-offset_bottom = 292.0
-texture = ExtResource("7_logo")
+texture = ExtResource("2_art")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="Tagline" type="Label" parent="ArtRoot"]
-layout_mode = 0
-offset_left = 590.0
-offset_top = 292.0
-offset_right = 910.0
-offset_bottom = 333.0
-theme_override_colors/font_color = Color(0.49, 0.31, 0.29, 0.86)
-theme_override_font_sizes/font_size = 20
-text = "Rêve.  Crée.  Brille."
-horizontal_alignment = 1
+[node name="WarmVeil" type="ColorRect" parent="ArtRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
+color = Color(1, 0.93, 0.79, 0)
 
 [node name="MenuHitboxes" type="Control" parent="."]
 layout_mode = 1
@@ -181,128 +51,85 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MenuCard" type="Panel" parent="MenuHitboxes"]
-layout_mode = 0
-offset_left = 54.0
-offset_top = 252.0
-offset_right = 355.0
-offset_bottom = 690.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("menu_panel")
-
-[node name="MenuTitle" type="Label" parent="MenuHitboxes"]
-layout_mode = 0
-offset_left = 82.0
-offset_top = 276.0
-offset_right = 326.0
-offset_bottom = 317.0
-theme_override_colors/font_color = Color(0.42, 0.25, 0.24, 0.82)
-theme_override_font_sizes/font_size = 17
-text = "ATELIER PARISIEN"
-horizontal_alignment = 1
-mouse_filter = 2
-
 [node name="NewGame" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 330.0
-offset_right = 330.0
-offset_bottom = 391.0
+offset_left = 190.0
+offset_top = 352.0
+offset_right = 451.0
+offset_bottom = 415.0
 focus_mode = 0
-theme_override_colors/font_color = Color(0.28, 0.17, 0.17, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("button_normal")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_pressed")
-text = "✦  Nouvelle partie"
+flat = true
+text = ""
 
-[node name="Load" type="Button" parent="MenuHitboxes"]
+[node name="Continue" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 399.0
-offset_right = 330.0
-offset_bottom = 460.0
+offset_left = 190.0
+offset_top = 415.0
+offset_right = 451.0
+offset_bottom = 474.0
 focus_mode = 0
-theme_override_colors/font_color = Color(0.28, 0.17, 0.17, 1)
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("button_normal")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_pressed")
-text = "◌  Continuer"
+flat = true
+text = ""
 
 [node name="Options" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 468.0
-offset_right = 330.0
-offset_bottom = 529.0
+offset_left = 190.0
+offset_top = 474.0
+offset_right = 451.0
+offset_bottom = 533.0
 focus_mode = 0
-theme_override_colors/font_color = Color(0.28, 0.17, 0.17, 1)
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("button_normal")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_pressed")
-text = "⚙  Options"
+flat = true
+text = ""
 
 [node name="Credits" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 537.0
-offset_right = 330.0
-offset_bottom = 598.0
+offset_left = 190.0
+offset_top = 533.0
+offset_right = 451.0
+offset_bottom = 592.0
 focus_mode = 0
-theme_override_colors/font_color = Color(0.28, 0.17, 0.17, 1)
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("button_normal")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_pressed")
-text = "◇  Crédits"
+flat = true
+text = ""
 
 [node name="Quit" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 606.0
-offset_right = 330.0
-offset_bottom = 667.0
+offset_left = 190.0
+offset_top = 592.0
+offset_right = 451.0
+offset_bottom = 650.0
 focus_mode = 0
-theme_override_colors/font_color = Color(0.28, 0.17, 0.17, 1)
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("button_normal")
-theme_override_styles/hover = SubResource("button_hover")
-theme_override_styles/pressed = SubResource("button_pressed")
-text = "↙  Quitter"
+flat = true
+text = ""
 
-[node name="HoverGlow" type="ColorRect" parent="MenuHitboxes"]
+[node name="Settings" type="Button" parent="MenuHitboxes"]
+layout_mode = 0
+offset_left = 1088.0
+offset_top = 852.0
+offset_right = 1154.0
+offset_bottom = 926.0
+focus_mode = 0
+flat = true
+text = ""
+
+[node name="Music" type="Button" parent="MenuHitboxes"]
+layout_mode = 0
+offset_left = 1164.0
+offset_top = 852.0
+offset_right = 1234.0
+offset_bottom = 926.0
+focus_mode = 0
+flat = true
+text = ""
+
+[node name="TouchGlow" type="ColorRect" parent="MenuHitboxes"]
 visible = false
 layout_mode = 0
-offset_left = 78.0
-offset_top = 330.0
-offset_right = 330.0
-offset_bottom = 391.0
+offset_left = 190.0
+offset_top = 352.0
+offset_right = 451.0
+offset_bottom = 415.0
 mouse_filter = 2
-color = Color(1, 0.86, 0.72, 0.08)
-
-[node name="MusicButton" type="Button" parent="MenuHitboxes"]
-layout_mode = 0
-offset_left = 1145.0
-offset_top = 875.0
-offset_right = 1195.0
-offset_bottom = 925.0
-focus_mode = 0
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("icon_button")
-text = "♪"
-
-[node name="SettingsButton" type="Button" parent="MenuHitboxes"]
-layout_mode = 0
-offset_left = 1203.0
-offset_top = 875.0
-offset_right = 1253.0
-offset_bottom = 925.0
-focus_mode = 0
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("icon_button")
-text = "⚙"
+color = Color(1, 0.92, 0.70, 0.10)
 
 [node name="Cinematic" type="CanvasLayer" parent="."]
 layer = 20
@@ -310,38 +137,17 @@ layer = 20
 [node name="Black" type="ColorRect" parent="Cinematic"]
 offset_right = 1280.0
 offset_bottom = 960.0
-color = Color(0.035, 0.028, 0.024, 1)
 mouse_filter = 2
-
-[node name="IntroLogo" type="TextureRect" parent="Cinematic"]
-offset_left = 220.0
-offset_top = 248.0
-offset_right = 1060.0
-offset_bottom = 650.0
-modulate = Color(1, 1, 1, 0)
-texture = ExtResource("7_logo")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="Subtitle" type="Label" parent="Cinematic"]
-offset_left = 330.0
-offset_top = 672.0
-offset_right = 950.0
-offset_bottom = 727.0
-modulate = Color(1, 1, 1, 0)
-theme_override_colors/font_color = Color(0.90, 0.72, 0.67, 1)
-theme_override_font_sizes/font_size = 23
-text = "RÊVE.  CRÉE.  BRILLE."
-horizontal_alignment = 1
+color = Color(0.025, 0.019, 0.017, 1)
 
 [node name="Skip" type="Label" parent="Cinematic"]
-offset_left = 875.0
-offset_top = 904.0
+offset_left = 1000.0
+offset_top = 905.0
 offset_right = 1240.0
-offset_bottom = 938.0
+offset_bottom = 940.0
 modulate = Color(1, 1, 1, 0)
-theme_override_colors/font_color = Color(0.8, 0.76, 0.7, 0.72)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.86, 0.80, 0.70, 0.72)
+theme_override_font_sizes/font_size = 15
 text = "touchez pour passer"
 horizontal_alignment = 2
+mouse_filter = 2
