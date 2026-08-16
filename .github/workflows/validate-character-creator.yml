@@ -1,0 +1,27 @@
+name: Validate character creator
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.6.3
+        run: |
+          set -eux
+          wget -q https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -O /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
+      - name: Import and validate project
+        run: godot --headless --editor --quit-after 10
+      - name: Check creator scene
+        run: |
+          test -f scenes/CharacterCreator.tscn
+          test -f scripts/character_creator.gd
+          test -f scripts/game_state.gd
