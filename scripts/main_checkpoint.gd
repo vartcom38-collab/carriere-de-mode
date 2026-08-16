@@ -124,7 +124,6 @@ func _build_living_layers() -> void:
         Vector2(470, 190), Vector2(655, 175), Vector2(1180, 760), Vector2(760, 790)
     ])
     light_beam.color = Color(1.0, 0.88, 0.56, 0.14)
-    light_beam.mouse_filter = Control.MOUSE_FILTER_IGNORE
     add_child(light_beam)
     move_child(light_beam, 2)
 
