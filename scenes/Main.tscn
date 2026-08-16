@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/menu_atelier.webp" id="2_atelier"]
+[ext_resource type="Shader" path="res://shaders/atelier_living.gdshader" id="3_living"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_living"]
+shader = ExtResource("3_living")
+shader_parameter/curtain_strength = 0.0014
+shader_parameter/curtain_speed = 0.34
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -13,6 +19,7 @@ grow_vertical = 2
 script = ExtResource("1_main")
 
 [node name="Atelier" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_living")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
