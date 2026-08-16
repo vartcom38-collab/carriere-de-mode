@@ -14,7 +14,6 @@ func _ready() -> void:
     menu_hitboxes.mouse_filter = Control.MOUSE_FILTER_IGNORE
     touch_glow.visible = false
     skip.modulate.a = 0.0
-
     _connect_menu()
     await get_tree().process_frame
     _play_intro()
@@ -22,7 +21,6 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
     if not cinematic_running:
         return
-
     if event is InputEventMouseButton and event.pressed:
         _skip_intro()
     elif event is InputEventScreenTouch and event.pressed:
@@ -60,14 +58,13 @@ func _connect_menu() -> void:
         $MenuHitboxes/Settings,
         $MenuHitboxes/Music
     ]
-
     for button in buttons:
         button.mouse_entered.connect(func(): _show_glow(button, 0.055))
         button.mouse_exited.connect(_hide_glow)
         button.button_down.connect(func(): _show_glow(button, 0.115))
         button.button_up.connect(_hide_glow)
 
-    $MenuHitboxes/NewGame.pressed.connect(func(): _confirm_touch($MenuHitboxes/NewGame))
+    $MenuHitboxes/NewGame.pressed.connect(_start_new_game)
     $MenuHitboxes/Continue.pressed.connect(func(): _confirm_touch($MenuHitboxes/Continue))
     $MenuHitboxes/Options.pressed.connect(func(): _confirm_touch($MenuHitboxes/Options))
     $MenuHitboxes/Credits.pressed.connect(func(): _confirm_touch($MenuHitboxes/Credits))
@@ -75,8 +72,18 @@ func _connect_menu() -> void:
     $MenuHitboxes/Music.pressed.connect(func(): _confirm_touch($MenuHitboxes/Music))
     $MenuHitboxes/Quit.pressed.connect(_quit_game)
 
-func _show_glow(button: Button, alpha: float) -> void:
+func _start_new_game() -> void:
     if cinematic_running:
+        return
+    cinematic_running = true
+    menu_hitboxes.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _show_glow($MenuHitboxes/NewGame, 0.14)
+    var tween := create_tween()
+    tween.tween_property(black, "color:a", 1.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+    tween.tween_callback(func(): get_tree().change_scene_to_file("res://scenes/CharacterCreator.tscn"))
+
+func _show_glow(button: Button, alpha: float) -> void:
+    if cinematic_running and button != $MenuHitboxes/NewGame:
         return
     touch_glow.position = button.position
     touch_glow.size = button.size
@@ -87,7 +94,6 @@ func _hide_glow() -> void:
     touch_glow.visible = false
 
 func _confirm_touch(button: Button) -> void:
-    # Pour cette passe, l'accueil reste la seule scène : on valide d'abord son rendu.
     touch_glow.position = button.position
     touch_glow.size = button.size
     touch_glow.visible = true
