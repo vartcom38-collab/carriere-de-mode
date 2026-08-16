@@ -20,7 +20,7 @@ var light_beam: Polygon2D
 var page_glint: Polygon2D
 
 func _ready() -> void:
-    atelier.texture = load("res://assets/menu_atelier.webp") as Texture2D
+    _load_real_atelier()
     atelier.modulate.a = 0.0
     atelier.pivot_offset = Vector2(800, 450)
     atelier.scale = Vector2.ONE
@@ -32,6 +32,19 @@ func _ready() -> void:
     _connect_menu()
     await get_tree().process_frame
     _play_intro()
+
+func _load_real_atelier() -> void:
+    # menu_atelier.webp a été enregistré dans GitHub sous forme de texte Base64.
+    # On le reconstruit ici en vraie texture WebP au lancement.
+    var encoded := FileAccess.get_file_as_string("res://assets/menu_atelier.webp")
+    encoded = encoded.replace("\n", "").replace("\r", "").replace(" ", "")
+    var raw := Marshalls.base64_to_raw(encoded)
+    var image := Image.new()
+    var err := image.load_webp_from_buffer(raw)
+    if err != OK:
+        push_error("Impossible de décoder l'atelier officiel. Code: %s" % err)
+        return
+    atelier.texture = ImageTexture.create_from_image(image)
 
 func _process(delta: float) -> void:
     idle_time += delta
@@ -52,18 +65,16 @@ func _input(event: InputEvent) -> void:
 func _play_intro() -> void:
     cinematic_running = true
     intro_tween = create_tween()
-    intro_tween.tween_interval(0.45)
-    intro_tween.tween_property(title, "modulate:a", 0.92, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-    intro_tween.parallel().tween_property(subtitle, "modulate:a", 0.62, 1.35).set_delay(0.25)
-    intro_tween.tween_interval(1.0)
-    intro_tween.tween_property(title, "modulate:a", 0.0, 0.65)
-    intro_tween.parallel().tween_property(subtitle, "modulate:a", 0.0, 0.65)
-    intro_tween.parallel().tween_property(skip, "modulate:a", 0.34, 0.5)
-    intro_tween.tween_interval(0.1)
-    intro_tween.tween_property(atelier, "modulate:a", 1.0, 1.35).set_trans(Tween.TRANS_SINE)
-    intro_tween.parallel().tween_property(black, "color:a", 0.0, 1.55)
-    intro_tween.parallel().tween_property(window_layer, "modulate:a", 1.0, 1.75)
-    intro_tween.tween_interval(0.55)
+    intro_tween.tween_interval(0.35)
+    intro_tween.tween_property(title, "modulate:a", 0.92, 0.85).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+    intro_tween.parallel().tween_property(subtitle, "modulate:a", 0.62, 1.1).set_delay(0.2)
+    intro_tween.tween_interval(0.85)
+    intro_tween.tween_property(title, "modulate:a", 0.0, 0.55)
+    intro_tween.parallel().tween_property(subtitle, "modulate:a", 0.0, 0.55)
+    intro_tween.tween_property(atelier, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE)
+    intro_tween.parallel().tween_property(black, "color:a", 0.0, 1.15)
+    intro_tween.parallel().tween_property(window_layer, "modulate:a", 1.0, 1.25)
+    intro_tween.tween_interval(0.35)
     intro_tween.tween_callback(_finish_intro)
 
 func _skip_intro() -> void:
@@ -74,14 +85,15 @@ func _skip_intro() -> void:
     skip.modulate.a = 0.0
     black.color.a = 0.0
     atelier.modulate.a = 1.0
-    window_layer.modulate.a = 1.0
+    if window_layer:
+        window_layer.modulate.a = 1.0
     _finish_intro()
 
 func _finish_intro() -> void:
     cinematic_running = false
     skip.modulate.a = 0.0
     menu_hitboxes.mouse_filter = Control.MOUSE_FILTER_PASS
-    create_tween().tween_property(menu_hitboxes, "modulate:a", 1.0, 0.55)
+    create_tween().tween_property(menu_hitboxes, "modulate:a", 1.0, 0.45)
 
 func _build_living_layers() -> void:
     window_layer = Control.new()
@@ -101,7 +113,7 @@ func _build_living_layers() -> void:
             Vector2(30, -11), Vector2(58, -5), Vector2(82, 17), Vector2(58, 29),
             Vector2(-45, 30)
         ])
-        cloud.color = Color(1.0, 0.98, 0.91, 0.18 + i * 0.025)
+        cloud.color = Color(1.0, 0.98, 0.91, 0.12 + i * 0.02)
         cloud.position = Vector2(80 + i * 150, 110 + i * 66)
         cloud.scale = Vector2(0.8 + i * 0.12, 0.5 + i * 0.05)
         window_layer.add_child(cloud)
@@ -113,7 +125,7 @@ func _build_living_layers() -> void:
             Vector2(-12, 1), Vector2(-5, -4), Vector2(0, 0), Vector2(6, -5),
             Vector2(13, 0), Vector2(6, -1), Vector2(0, 4), Vector2(-6, -1)
         ])
-        bird.color = Color(0.22, 0.18, 0.14, 0.58)
+        bird.color = Color(0.22, 0.18, 0.14, 0.46)
         bird.position = Vector2(-35 - i * 160, 155 + i * 75)
         bird.scale = Vector2(0.72 - i * 0.12, 0.72 - i * 0.12)
         window_layer.add_child(bird)
@@ -123,7 +135,7 @@ func _build_living_layers() -> void:
     light_beam.polygon = PackedVector2Array([
         Vector2(470, 190), Vector2(655, 175), Vector2(1180, 760), Vector2(760, 790)
     ])
-    light_beam.color = Color(1.0, 0.88, 0.56, 0.14)
+    light_beam.color = Color(1.0, 0.88, 0.56, 0.055)
     add_child(light_beam)
     move_child(light_beam, 2)
 
@@ -131,7 +143,7 @@ func _build_living_layers() -> void:
     page_glint.polygon = PackedVector2Array([
         Vector2(845, 515), Vector2(1222, 544), Vector2(1190, 667), Vector2(878, 622)
     ])
-    page_glint.color = Color(1.0, 0.98, 0.84, 0.025)
+    page_glint.color = Color(1.0, 0.98, 0.84, 0.018)
     add_child(page_glint)
     move_child(page_glint, 3)
 
