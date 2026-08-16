@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<defs>
+ <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4e7cf"/><stop offset="1" stop-color="#d8bea0"/></linearGradient>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c7d8d5"/><stop offset="1" stop-color="#f3dec4"/></linearGradient>
+ <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#76543f"/><stop offset=".5" stop-color="#9b7254"/><stop offset="1" stop-color="#654635"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff6c9" stop-opacity=".85"/><stop offset="1" stop-color="#f4c477" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#wall)"/>
+<circle cx="370" cy="250" r="330" fill="url(#sun)" opacity=".65"/>
+<!-- window -->
+<rect x="52" y="40" width="548" height="430" rx="4" fill="#6a5141" opacity=".9"/>
+<rect x="68" y="56" width="516" height="398" fill="url(#sky)"/>
+<path d="M68 350 L130 314 180 335 244 292 310 326 370 274 425 315 492 286 584 335 584 454 68 454Z" fill="#8c8178" opacity=".63"/>
+<path d="M68 378 L152 346 222 370 308 330 390 361 470 322 584 367 584 454 68 454Z" fill="#695d57" opacity=".45"/>
+<path d="M326 56v398M68 258h516" stroke="#60483a" stroke-width="12"/>
+<!-- curtains -->
+<path d="M0 0 C82 28 100 112 84 225 C70 324 118 394 88 520 L0 560Z" fill="#f7efdf" opacity=".93" stroke="#b9a48b" stroke-width="3"/>
+<path d="M614 0 C566 88 593 192 572 302 C558 375 603 430 585 520 L682 500 674 0Z" fill="#efe3d0" opacity=".82" stroke="#b29b83" stroke-width="3"/>
+<!-- title/menu -->
+<g fill="#4d4036" font-family="Georgia, serif">
+ <text x="92" y="155" font-size="58" letter-spacing="2">CARRIÈRE</text>
+ <text x="92" y="215" font-size="52" letter-spacing="5">DE MODE</text>
+ <text x="96" y="252" font-size="21" font-style="italic" opacity=".72">Créez votre histoire</text>
+</g>
+<g fill="#5a4638" stroke="#c4a887" stroke-width="1" font-family="Georgia, serif" font-size="23">
+ <rect x="76" y="392" width="336" height="58" rx="7" fill="#f1dfc8" opacity=".88"/><text x="110" y="429" stroke="none">NOUVELLE PARTIE</text>
+ <rect x="76" y="458" width="336" height="55" rx="7" fill="#efddc6" opacity=".82"/><text x="110" y="493" stroke="none">CHARGER UNE PARTIE</text>
+ <rect x="76" y="521" width="336" height="55" rx="7" fill="#efddc6" opacity=".82"/><text x="110" y="556" stroke="none">OPTIONS</text>
+ <rect x="76" y="584" width="336" height="55" rx="7" fill="#efddc6" opacity=".82"/><text x="110" y="619" stroke="none">CRÉDITS</text>
+ <rect x="76" y="647" width="336" height="55" rx="7" fill="#efddc6" opacity=".82"/><text x="110" y="682" stroke="none">QUITTER</text>
+</g>
+<!-- mannequin -->
+<g stroke="#51453d" stroke-width="6" fill="#d3b99d">
+ <ellipse cx="720" cy="192" rx="53" ry="66"/>
+ <path d="M665 258 C650 326 640 410 666 496 C690 522 760 522 785 493 C806 410 797 326 775 260 C748 241 696 241 665 258Z"/>
+ <path d="M713 521v189M691 710h47M714 710l-76 80M714 710l79 80" fill="none"/>
+</g>
+<path d="M679 288 C702 274 744 274 766 288 C750 344 749 420 760 480 C729 498 699 496 679 479 C691 415 691 349 679 288Z" fill="#b98e83" opacity=".75"/>
+<!-- desk -->
+<path d="M500 628 Q820 582 1325 618 L1362 795 Q900 826 468 790Z" fill="url(#wood)" stroke="#5c4233" stroke-width="5"/>
+<!-- sketchbook -->
+<path d="M650 618 Q790 578 909 612 L890 757 Q767 735 634 758Z" fill="#f5ead7" stroke="#8c735f" stroke-width="4"/>
+<path d="M909 612 Q1027 595 1132 632 L1099 765 Q991 738 890 757Z" fill="#eee0ca" stroke="#8c735f" stroke-width="4"/>
+<path d="M795 638 q38 -47 83 4 q-17 19 -12 48 q-41 -19 -71 7 q18 -34 0 -59z" fill="none" stroke="#8f7766" stroke-width="3"/>
+<path d="M970 641 q51 -35 83 20 q-38 11 -36 55 q-26 -30 -68 -18 q32 -22 21 -57z" fill="none" stroke="#9a7f69" stroke-width="3"/>
+<!-- sewing machine -->
+<g fill="#3f3b36" stroke="#211f1d" stroke-width="4">
+ <rect x="1122" y="515" width="214" height="113" rx="12"/>
+ <path d="M1150 519 Q1182 451 1287 469 L1305 520Z"/>
+ <circle cx="1300" cy="556" r="38" fill="#24221f"/><circle cx="1300" cy="556" r="17" fill="#b28f6b"/>
+ <rect x="1155" y="603" width="200" height="24" rx="5"/>
+</g>
+<!-- lamp -->
+<path d="M1028 346l-82 176M1006 389l-72-34" stroke="#4c4037" stroke-width="13" stroke-linecap="round"/>
+<path d="M930 329 q68 -25 116 25 l-22 52 q-70 19 -117 -21z" fill="#d2a967" stroke="#59483a" stroke-width="4"/>
+<ellipse cx="942" cy="418" rx="170" ry="120" fill="url(#sun)" opacity=".34"/>
+<!-- fabrics -->
+<path d="M1280 649 q84 -50 198 20 l-25 113 q-91 40 -186 -9z" fill="#8d6f78" opacity=".9"/>
+<path d="M1305 677 q74 -45 150 8 l-8 73 q-80 24 -154 -7z" fill="#6c8075" opacity=".82"/>
+<path d="M1322 701 q62 -32 119 3 l-7 46 q-64 18 -123 -4z" fill="#c09b71" opacity=".9"/>
+<!-- flowers/books -->
+<g transform="translate(1450 390)"><path d="M0 55v166" stroke="#55715b" stroke-width="5"/><circle cx="-24" cy="42" r="23" fill="#b78386"/><circle cx="15" cy="30" r="26" fill="#d7b39b"/><circle cx="38" cy="62" r="22" fill="#a8757b"/><path d="M-42 214h85l-12 65h-62z" fill="#88735c"/></g>
+<g transform="translate(1410 720)"><rect width="145" height="22" rx="3" fill="#5c4a42"/><rect y="25" width="132" height="24" rx="3" fill="#9b735f"/><rect y="52" width="151" height="22" rx="3" fill="#6d7b70"/></g>
+<!-- hand-drawn accent lines -->
+<g fill="none" stroke="#6b584a" stroke-width="2" opacity=".35"><path d="M455 110q62 18 95 -7M847 140q71 -28 145 8M1370 185q85 23 147 -4M520 835q178 -30 340 -4M1030 838q166 -20 326 9"/></g>
+</svg>
