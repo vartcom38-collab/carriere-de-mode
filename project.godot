@@ -10,6 +10,9 @@ window/size/window_height_override=768
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
 
+[input_devices]
+pointing/emulate_mouse_from_touch=true
+
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
