@@ -11,7 +11,7 @@ window/size/viewport_height=960
 window/size/window_width_override=1024
 window/size/window_height_override=768
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
+window/stretch/aspect="expand"
 
 [input_devices]
 pointing/emulate_mouse_from_touch=true
