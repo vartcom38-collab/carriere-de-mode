@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="960" viewBox="0 0 1280 960">
+<defs>
+ <linearGradient id="dress" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7d5d9"/><stop offset="0.55" stop-color="#d9899a"/><stop offset="1" stop-color="#b76276"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d184"/><stop offset="0.4" stop-color="#a86e22"/><stop offset="1" stop-color="#eecf7d"/></linearGradient>
+</defs>
+<!-- vintage sewing machine -->
+<g transform="translate(255 585)">
+ <path d="M0 160 H250 V198 H-8Z" fill="#5b332b"/><rect x="18" y="40" width="175" height="122" rx="15" fill="#1f2022" stroke="#ba8738" stroke-width="4"/>
+ <path d="M55 53 Q118 13 170 58 L166 102 H110 Q94 102 94 118 V156 H55Z" fill="#161719" stroke="#ba8738" stroke-width="4"/>
+ <circle cx="201" cy="87" r="42" fill="none" stroke="#1c1c1e" stroke-width="13"/><circle cx="201" cy="87" r="32" fill="none" stroke="#c49343" stroke-width="3"/><circle cx="201" cy="87" r="8" fill="#c49343"/>
+ <path d="M30 128 H102 M115 140 H162" stroke="#d4a45b" stroke-width="4"/>
+ <path d="M67 67 C87 53 103 54 119 65 M66 80 C89 66 109 67 124 78" stroke="#d6a247" stroke-width="3" fill="none"/>
+</g>
+<!-- mannequin -->
+<g transform="translate(1020 355)">
+ <circle cx="88" cy="24" r="18" fill="#4a3026"/><rect x="82" y="38" width="12" height="25" rx="5" fill="#805a45"/>
+ <path d="M58 62 Q88 47 118 62 Q135 111 125 169 Q114 213 121 284 Q91 306 56 284 Q64 215 52 171 Q42 109 58 62Z" fill="#e9d9c7" stroke="#7b5d4b" stroke-width="4"/>
+ <path d="M58 101 Q88 83 118 101 L127 275 Q89 295 55 275Z" fill="url(#dress)" opacity="0.86"/>
+ <path d="M51 137 Q18 185 26 260 Q37 278 58 263" fill="url(#dress)" opacity="0.9"/>
+ <path d="M124 137 Q157 183 149 260 Q138 278 119 263" fill="url(#dress)" opacity="0.9"/>
+ <path d="M92 89 C111 139 107 199 104 271" stroke="#d5aa55" stroke-width="8" fill="none"/>
+ <path d="M50 310 H130" stroke="#5a3a2b" stroke-width="8"/><path d="M90 291 V386" stroke="#704936" stroke-width="10"/><path d="M45 392 H136" stroke="#704936" stroke-width="10"/>
+</g>
+<!-- left flowers and hanging ribbons -->
+<g transform="translate(35 70)"><path d="M96 198 Q112 114 70 15 M126 195 Q151 110 178 28 M65 195 Q47 124 18 66" stroke="#55734b" stroke-width="7" fill="none"/><g fill="#eaa3b1" stroke="#bd6a80" stroke-width="2"><circle cx="75" cy="25" r="33"/><circle cx="143" cy="46" r="34"/><circle cx="38" cy="80" r="30"/><circle cx="105" cy="100" r="36"/></g><g fill="#f8d0d7"><circle cx="75" cy="25" r="17"/><circle cx="143" cy="46" r="18"/><circle cx="38" cy="80" r="15"/><circle cx="105" cy="100" r="18"/></g></g>
+<path d="M112 248 C96 310 109 365 92 430" stroke="#cf758b" stroke-width="16" fill="none"/><path d="M137 247 C121 314 136 364 124 437" stroke="#efb3c0" stroke-width="12" fill="none"/>
+<!-- plant -->
+<g transform="translate(925 475)" fill="#4f8050"><path d="M60 155 Q25 105 3 65 Q51 76 65 129Z"/><path d="M63 152 Q80 93 119 54 Q119 105 77 148Z"/><path d="M63 148 Q35 75 43 17 Q78 67 72 142Z"/><path d="M70 148 Q92 62 153 34 Q134 94 81 149Z"/><path d="M68 146 Q72 77 105 8 Q112 81 79 147Z"/></g>
+<path d="M971 625 L1058 625 L1043 697 L985 697Z" fill="#c6a78f" stroke="#7b5d4c" stroke-width="3"/>
+<!-- gold accents -->
+<circle cx="1190" cy="115" r="12" fill="url(#gold)"/><path d="M1190 127 V194" stroke="url(#gold)" stroke-width="6"/>
+</svg>
