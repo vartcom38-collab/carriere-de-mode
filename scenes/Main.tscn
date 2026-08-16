@@ -1,13 +1,24 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/menu_atelier.webp" id="2_atelier"]
-[ext_resource type="Shader" path="res://shaders/atelier_living.gdshader" id="3_living"]
+[ext_resource type="Script" path="res://scripts/fx_overlay.gd" id="3_fx"]
+[ext_resource type="Shader" path="res://shaders/curtains.gdshader" id="4_curtains"]
+[ext_resource type="Shader" path="res://shaders/plants.gdshader" id="5_plants"]
+[ext_resource type="Shader" path="res://shaders/page.gdshader" id="6_page"]
+[ext_resource type="Shader" path="res://shaders/card.gdshader" id="7_card"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_living"]
-shader = ExtResource("3_living")
-shader_parameter/curtain_strength = 0.0014
-shader_parameter/curtain_speed = 0.34
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_curtains"]
+shader = ExtResource("4_curtains")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_plants"]
+shader = ExtResource("5_plants")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_page"]
+shader = ExtResource("6_page")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_card"]
+shader = ExtResource("7_card")
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -18,8 +29,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main")
 
-[node name="Atelier" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_living")
+[node name="ArtRoot" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Atelier" type="TextureRect" parent="ArtRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,7 +50,69 @@ expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="WarmLight" type="ColorRect" parent="."]
+[node name="WindowFX" type="Control" parent="ArtRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_fx")
+
+[node name="LivingCurtains" type="TextureRect" parent="ArtRoot"]
+material = SubResource("ShaderMaterial_curtains")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_atelier")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="LivingPlants" type="TextureRect" parent="ArtRoot"]
+material = SubResource("ShaderMaterial_plants")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_atelier")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="LivingPage" type="TextureRect" parent="ArtRoot"]
+material = SubResource("ShaderMaterial_page")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_atelier")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="LivingCard" type="TextureRect" parent="ArtRoot"]
+material = SubResource("ShaderMaterial_card")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_atelier")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="WarmLight" type="ColorRect" parent="ArtRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,7 +122,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 0.88, 0.62, 0)
 
-[node name="Dust" type="Control" parent="."]
+[node name="Dust" type="Control" parent="ArtRoot"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
