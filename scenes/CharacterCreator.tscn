@@ -1,43 +1,48 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/character_creator.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/menu_atelier.webp" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/character_creator/preview_stylist.svg" id="3_character"]
 
 [sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.98, 0.955, 0.91, 0.94)
+bg_color = Color(0.995, 0.975, 0.925, 0.97)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.34, 0.25, 0.23, 0.34)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-
-[sub_resource type="StyleBoxFlat" id="PreviewPanel"]
-bg_color = Color(0.96, 0.93, 0.86, 0.86)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.47, 0.37, 0.31, 0.38)
+border_color = Color(0.45, 0.34, 0.29, 0.28)
 corner_radius_top_left = 22
 corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
+shadow_color = Color(0.22, 0.16, 0.13, 0.12)
+shadow_size = 8
 
-[sub_resource type="StyleBoxFlat" id="RightPanel"]
-bg_color = Color(0.91, 0.88, 0.94, 0.92)
+[sub_resource type="StyleBoxFlat" id="PreviewPanel"]
+bg_color = Color(0.995, 0.98, 0.94, 0.94)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.38, 0.29, 0.49, 0.32)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+border_color = Color(0.50, 0.39, 0.31, 0.30)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+shadow_color = Color(0.22, 0.16, 0.13, 0.14)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="RightPanel"]
+bg_color = Color(0.94, 0.91, 0.96, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.31, 0.52, 0.26)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 
 [node name="CharacterCreator" type="Control"]
 layout_mode = 3
@@ -58,7 +63,7 @@ grow_vertical = 2
 texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(1, 1, 1, 0.32)
+modulate = Color(1, 1, 1, 0.28)
 mouse_filter = 2
 
 [node name="PaperVeil" type="ColorRect" parent="."]
@@ -68,7 +73,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.98, 0.965, 0.925, 0.88)
+color = Color(0.99, 0.975, 0.94, 0.89)
 mouse_filter = 2
 
 [node name="Margin" type="MarginContainer" parent="."]
@@ -78,10 +83,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 38
-theme_override_constants/margin_top = 28
-theme_override_constants/margin_right = 38
-theme_override_constants/margin_bottom = 28
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
 
 [node name="Layout" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
@@ -89,69 +94,77 @@ theme_override_constants/separation = 14
 
 [node name="Header" type="VBoxContainer" parent="Margin/Layout"]
 layout_mode = 2
+theme_override_constants/separation = 2
 
 [node name="Title" type="Label" parent="Margin/Layout/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.12, 0.13, 1)
-theme_override_font_sizes/font_size = 38
+theme_override_font_sizes/font_size = 46
 text = "CRÉATION DE VOTRE PERSONNAGE"
 
 [node name="Subtitle" type="Label" parent="Margin/Layout/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.32, 0.25, 0.24, 0.9)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 21
 text = "Créez la styliste qui écrira sa propre histoire."
 
 [node name="Tabs" type="HBoxContainer" parent="Margin/Layout"]
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="Identity" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "1  Identité"
 
 [node name="Face" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "2  Visage"
 
 [node name="Hair" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "3  Cheveux"
 
 [node name="Body" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "4  Silhouette"
 
 [node name="Outfit" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "5  Tenue"
 
 [node name="Preview" type="Button" parent="Margin/Layout/Tabs"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 17
 text = "6  Aperçu"
 
 [node name="Content" type="HBoxContainer" parent="Margin/Layout"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 18
+theme_override_constants/separation = 16
 
 [node name="LeftPanel" type="PanelContainer" parent="Margin/Layout/Content"]
-custom_minimum_size = Vector2(345, 0)
+custom_minimum_size = Vector2(370, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Panel")
 
 [node name="LeftMargin" type="MarginContainer" parent="Margin/Layout/Content/LeftPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 26
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 26
+theme_override_constants/margin_bottom = 26
 
 [node name="LeftBox" type="VBoxContainer" parent="Margin/Layout/Content/LeftPanel/LeftMargin"]
 layout_mode = 2
@@ -160,22 +173,24 @@ theme_override_constants/separation = 14
 [node name="StageTitle" type="Label" parent="Margin/Layout/Content/LeftPanel/LeftMargin/LeftBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.26, 0.17, 0.18, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 28
 text = "1. Identité"
 
 [node name="NameLabel" type="Label" parent="Margin/Layout/Content/LeftPanel/LeftMargin/LeftBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 18
 text = "Prénom"
 
 [node name="NameEdit" type="LineEdit" parent="Margin/Layout/Content/LeftPanel/LeftMargin/LeftBox"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
 placeholder_text = "Votre prénom"
 
 [node name="OptionsBox" type="VBoxContainer" parent="Margin/Layout/Content/LeftPanel/LeftMargin/LeftBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 13
 
 [node name="PreviewPanel" type="PanelContainer" parent="Margin/Layout/Content"]
 layout_mode = 2
@@ -184,63 +199,85 @@ theme_override_styles/panel = SubResource("PreviewPanel")
 
 [node name="PreviewMargin" type="MarginContainer" parent="Margin/Layout/Content/PreviewPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
 
 [node name="PreviewBox" type="VBoxContainer" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 18
+theme_override_constants/separation = 9
 
 [node name="PreviewTitle" type="Label" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.34, 0.25, 0.25, 0.85)
-theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.34, 0.25, 0.25, 0.86)
+theme_override_font_sizes/font_size = 18
 text = "APERÇU DE VOTRE STYLISTE"
 horizontal_alignment = 1
 
-[node name="PortraitHint" type="Label" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
+[node name="PortraitFrame" type="PanelContainer" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
+custom_minimum_size = Vector2(0, 415)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.45, 0.34, 0.31, 0.34)
-theme_override_font_sizes/font_size = 78
-text = "✦"
-horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="PortraitBackground" type="TextureRect" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox/PortraitFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(1, 1, 1, 0.34)
+mouse_filter = 2
+
+[node name="Portrait" type="TextureRect" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox/PortraitFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_character")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
 
 [node name="PreviewName" type="Label" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25, 0.15, 0.18, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 32
 text = "Camille"
 horizontal_alignment = 1
 
 [node name="PreviewDetails" type="Label" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.33, 0.25, 0.24, 0.92)
-theme_override_font_sizes/font_size = 18
-text = "Elle • Étoile\nVisage : Doux\nCheveux : Chignon flou\nSilhouette : Petite\nTenue : Chemise + jean"
+theme_override_font_sizes/font_size = 17
+text = "Elle • Étoile   ·   Visage doux   ·   Chignon flou   ·   Chemise + jean"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="MotionHint" type="Label" parent="Margin/Layout/Content/PreviewPanel/PreviewMargin/PreviewBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.37, 0.28, 0.48, 0.86)
-theme_override_font_sizes/font_size = 16
-text = "Aperçu animé du personnage : prochaine passe graphique"
+theme_override_font_sizes/font_size = 15
+text = "Le personnage final sera animé dans le jeu et les cinématiques."
 horizontal_alignment = 1
 
 [node name="RightPanel" type="PanelContainer" parent="Margin/Layout/Content"]
-custom_minimum_size = Vector2(270, 0)
+custom_minimum_size = Vector2(235, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RightPanel")
 
 [node name="RightMargin" type="MarginContainer" parent="Margin/Layout/Content/RightPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 22
+theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 22
+theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 24
 
 [node name="RightBox" type="VBoxContainer" parent="Margin/Layout/Content/RightPanel/RightMargin"]
@@ -249,12 +286,14 @@ theme_override_constants/separation = 16
 
 [node name="TipTitle" type="Label" parent="Margin/Layout/Content/RightPanel/RightMargin/RightBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.29, 0.22, 0.34, 1)
+theme_override_font_sizes/font_size = 22
 text = "ASTUCE"
 
 [node name="Summary" type="Label" parent="Margin/Layout/Content/RightPanel/RightMargin/RightBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.28, 0.22, 0.31, 0.9)
 theme_override_font_sizes/font_size = 17
 text = "Votre personnage apparaîtra dans les cinématiques et dans le jeu."
 autowrap_mode = 2
@@ -262,16 +301,19 @@ autowrap_mode = 2
 [node name="Flow" type="Label" parent="Margin/Layout/Content/RightPanel/RightMargin/RightBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.26, 0.33, 0.78)
+theme_override_font_sizes/font_size = 16
 text = "Carnet\n↓\nPersonnage\n↓\nIntroduction\n↓\nVille\n↓\nLogement"
 horizontal_alignment = 1
 
 [node name="Footer" type="HBoxContainer" parent="Margin/Layout"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="Previous" type="Button" parent="Margin/Layout/Footer"]
-custom_minimum_size = Vector2(150, 54)
+custom_minimum_size = Vector2(170, 60)
 layout_mode = 2
+theme_override_font_sizes/font_size = 19
 text = "← Retour"
 
 [node name="Spacer" type="Control" parent="Margin/Layout/Footer"]
@@ -279,12 +321,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Next" type="Button" parent="Margin/Layout/Footer"]
-custom_minimum_size = Vector2(180, 54)
+custom_minimum_size = Vector2(205, 60)
 layout_mode = 2
+theme_override_font_sizes/font_size = 19
 text = "Suivant →"
 
 [node name="Confirm" type="Button" parent="Margin/Layout/Footer"]
 visible = false
-custom_minimum_size = Vector2(280, 54)
+custom_minimum_size = Vector2(310, 60)
 layout_mode = 2
+theme_override_font_sizes/font_size = 19
 text = "Confirmer et commencer →"
