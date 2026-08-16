@@ -1,6 +1,8 @@
 extends Control
 
 @onready var art_root: Control = $ArtRoot
+@onready var curtain_layer: TextureRect = $ArtRoot/CurtainLayer
+@onready var home_logo: TextureRect = $ArtRoot/HomeLogo
 @onready var warm_light: ColorRect = $ArtRoot/WarmLight
 @onready var dust_root: Control = $ArtRoot/Dust
 @onready var menu_hitboxes: Control = $MenuHitboxes
@@ -35,9 +37,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     idle_time += delta
 
-    # Caméra fixe sur l'accueil : uniquement une respiration lumineuse locale.
+    # L'accueil est une vraie scène 2D : pas de caméra qui flotte.
+    # Les mouvements restent limités aux calques qui peuvent vivre naturellement.
     if not cinematic_running:
-        warm_light.color.a = 0.009 + (sin(idle_time * 0.30) + 1.0) * 0.006
+        warm_light.color.a = 0.010 + (sin(idle_time * 0.30) + 1.0) * 0.006
+        curtain_layer.position.x = sin(idle_time * 0.46) * 2.2
+        curtain_layer.position.y = cos(idle_time * 0.31) * 0.6
+        home_logo.position.y = sin(idle_time * 0.22) * 0.45
 
     _animate_dust(delta)
 
@@ -56,7 +62,6 @@ func _play_intro() -> void:
     intro_tween = create_tween()
     intro_tween.set_parallel(false)
 
-    # Le nouveau logo est la signature de l'ouverture.
     intro_tween.tween_interval(0.45)
     intro_tween.tween_property(intro_logo, "modulate:a", 1.0, 1.10).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
     intro_tween.parallel().tween_property(subtitle, "modulate:a", 0.88, 1.25).set_delay(0.40)
@@ -66,7 +71,7 @@ func _play_intro() -> void:
     intro_tween.parallel().tween_property(skip, "modulate:a", 0.42, 0.45)
     intro_tween.tween_interval(0.10)
 
-    # Révélation de l'atelier uniquement par fondu : aucun zoom sur l'accueil.
+    # Révélation uniquement par fondu : aucune caméra/zoom tant qu'on reste à l'accueil.
     intro_tween.tween_property(art_root, "modulate:a", 1.0, 1.45).set_trans(Tween.TRANS_SINE)
     intro_tween.parallel().tween_property(black, "color:a", 0.0, 1.65)
     intro_tween.tween_interval(0.60)
@@ -100,7 +105,7 @@ func _connect_menu() -> void:
         var button := menu_hitboxes.get_node(node_name) as Button
         button.mouse_entered.connect(func(): _show_button_feedback(button))
         button.mouse_exited.connect(_hide_button_feedback)
-        button.button_down.connect(func(): _show_button_feedback(button, 0.20))
+        button.button_down.connect(func(): _show_button_feedback(button, 0.14))
         button.button_up.connect(_hide_button_feedback)
 
     $MenuHitboxes/NewGame.pressed.connect(_new_game)
@@ -108,8 +113,10 @@ func _connect_menu() -> void:
     $MenuHitboxes/Options.pressed.connect(func(): _soft_feedback("Options — bientôt disponibles."))
     $MenuHitboxes/Credits.pressed.connect(func(): _soft_feedback("HAUTE COUTURE"))
     $MenuHitboxes/Quit.pressed.connect(_quit_game)
+    $MenuHitboxes/MusicButton.pressed.connect(func(): _soft_feedback("Musique d'atelier"))
+    $MenuHitboxes/SettingsButton.pressed.connect(func(): _soft_feedback("Réglages"))
 
-func _show_button_feedback(button: Button, alpha := 0.13) -> void:
+func _show_button_feedback(button: Button, alpha := 0.07) -> void:
     hover_glow.position = button.position
     hover_glow.size = button.size
     hover_glow.color.a = alpha
@@ -127,7 +134,7 @@ func _new_game() -> void:
     menu_hitboxes.mouse_filter = Control.MOUSE_FILTER_IGNORE
     hover_glow.visible = false
 
-    # Le seul mouvement de caméra arrive après Nouvelle partie : entrée dans le carnet.
+    # Le seul zoom arrive APRÈS Nouvelle partie : on entre alors dans le carnet.
     art_root.pivot_offset = Vector2(size.x * 0.56, size.y * 0.82)
 
     var tween := create_tween()
@@ -167,8 +174,8 @@ func _make_dust() -> void:
         var particle_size := randf_range(1.0, 2.4)
         particle.size = Vector2(particle_size, particle_size)
         particle.position = Vector2(
-            randf_range(size.x * 0.40, size.x * 0.88),
-            randf_range(size.y * 0.16, size.y * 0.82)
+            randf_range(size.x * 0.36, size.x * 0.86),
+            randf_range(size.y * 0.14, size.y * 0.75)
         )
         particle.color = Color(1.0, 0.94, 0.72, randf_range(0.045, 0.14))
         particle.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -187,6 +194,6 @@ func _animate_dust(delta: float) -> void:
 
         if particle.position.y < size.y * 0.12:
             particle.position = Vector2(
-                randf_range(size.x * 0.42, size.x * 0.88),
-                randf_range(size.y * 0.72, size.y * 0.86)
+                randf_range(size.x * 0.38, size.x * 0.88),
+                randf_range(size.y * 0.70, size.y * 0.84)
             )
