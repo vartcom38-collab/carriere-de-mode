@@ -2,7 +2,7 @@ name: Live accueil preview
 
 on:
   push:
-    branches: [assistant/accueil-v2]
+    branches: [assistant/accueil-v2, main]
   workflow_dispatch:
 
 permissions:
