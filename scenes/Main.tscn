@@ -1,7 +1,7 @@
 [gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Texture2D" path="res://assets/accueil_haute_couture_master.png" id="2_art"]
+[ext_resource type="Texture2D" path="res://assets/accueil_haute_couture_master.webp" id="2_art"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -51,72 +51,75 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="NewGame" type="Button" parent="MenuHitboxes"]
+[node name="Continue" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 190.0
-offset_top = 352.0
-offset_right = 451.0
-offset_bottom = 415.0
+offset_left = 170.0
+offset_top = 715.0
+offset_right = 454.0
+offset_bottom = 875.0
 focus_mode = 0
 flat = true
 text = ""
 
-[node name="Continue" type="Button" parent="MenuHitboxes"]
+[node name="NewGame" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 190.0
-offset_top = 415.0
-offset_right = 451.0
-offset_bottom = 474.0
+offset_left = 475.0
+offset_top = 705.0
+offset_right = 805.0
+offset_bottom = 890.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Options" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 190.0
-offset_top = 474.0
-offset_right = 451.0
-offset_bottom = 533.0
+offset_left = 825.0
+offset_top = 715.0
+offset_right = 1115.0
+offset_bottom = 875.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Credits" type="Button" parent="MenuHitboxes"]
+visible = false
 layout_mode = 0
-offset_left = 190.0
-offset_top = 533.0
-offset_right = 451.0
-offset_bottom = 592.0
+offset_left = -200.0
+offset_top = -200.0
+offset_right = -100.0
+offset_bottom = -100.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Quit" type="Button" parent="MenuHitboxes"]
+visible = false
 layout_mode = 0
-offset_left = 190.0
-offset_top = 592.0
-offset_right = 451.0
-offset_bottom = 650.0
+offset_left = -200.0
+offset_top = -200.0
+offset_right = -100.0
+offset_bottom = -100.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Settings" type="Button" parent="MenuHitboxes"]
 layout_mode = 0
-offset_left = 1088.0
-offset_top = 852.0
-offset_right = 1154.0
-offset_bottom = 926.0
+offset_left = 1190.0
+offset_top = 28.0
+offset_right = 1255.0
+offset_bottom = 90.0
 focus_mode = 0
 flat = true
 text = ""
 
 [node name="Music" type="Button" parent="MenuHitboxes"]
+visible = false
 layout_mode = 0
-offset_left = 1164.0
-offset_top = 852.0
-offset_right = 1234.0
-offset_bottom = 926.0
+offset_left = -200.0
+offset_top = -200.0
+offset_right = -100.0
+offset_bottom = -100.0
 focus_mode = 0
 flat = true
 text = ""
@@ -124,10 +127,10 @@ text = ""
 [node name="TouchGlow" type="ColorRect" parent="MenuHitboxes"]
 visible = false
 layout_mode = 0
-offset_left = 190.0
-offset_top = 352.0
-offset_right = 451.0
-offset_bottom = 415.0
+offset_left = 475.0
+offset_top = 705.0
+offset_right = 805.0
+offset_bottom = 890.0
 mouse_filter = 2
 color = Color(1, 0.92, 0.70, 0.10)
 
