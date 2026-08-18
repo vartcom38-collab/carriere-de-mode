@@ -1,4 +1,4 @@
-name: Haute Couture Play Preview
+name: Haute Couture Live
 
 on:
   push:
@@ -23,16 +23,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify accueil
-        run: |
-          file play/assets/accueil-officiel.jpg
-          test "$(stat -c%s play/assets/accueil-officiel.jpg)" -gt 50000
+      - name: Verify clean accueil
+        run: test -s hc-live/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload game preview
+      - name: Upload clean game preview
         uses: actions/upload-pages-artifact@v3
         with:
-          path: play
+          path: hc-live
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
