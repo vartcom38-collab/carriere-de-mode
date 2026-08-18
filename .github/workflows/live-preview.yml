@@ -1,4 +1,4 @@
-name: Haute Couture Web App
+name: Haute Couture Phaser Preview
 
 on:
   push:
@@ -23,16 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Rebuild approved home artwork
-        run: |
-          base64 -d webapp/assets/home-valid.b64 > webapp/assets/home.jpg
-          file webapp/assets/home.jpg
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload web app
+      - name: Upload Phaser preview
         uses: actions/upload-pages-artifact@v3
         with:
-          path: webapp
+          path: preview
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
