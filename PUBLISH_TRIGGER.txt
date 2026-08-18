@@ -1,1 +1,1 @@
-Accueil officiel mis à jour le 17 août 2026.
+Redéploiement Haute Couture Live déclenché le 18 août 2026 à 16:01 après activation de GitHub Pages via GitHub Actions.
