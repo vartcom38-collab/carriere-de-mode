@@ -1,4 +1,4 @@
-name: Live accueil preview
+name: Haute Couture Web App
 
 on:
   push:
@@ -11,68 +11,24 @@ permissions:
   id-token: write
 
 concurrency:
-  group: carriere-de-mode-live-preview
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Check approved accueil artwork
-        run: |
-          set -eux
-          test -s assets/accueil_haute_couture_master.png
-          file assets/accueil_haute_couture_master.png
-
-      - name: Install Godot 4.6.3 and export templates
-        run: |
-          set -eux
-          wget -q https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip -O /tmp/godot.zip
-          unzip -q /tmp/godot.zip -d /tmp/godot
-          sudo install /tmp/godot/Godot_v4.6.3-stable_linux.x86_64 /usr/local/bin/godot
-          mkdir -p ~/.local/share/godot/export_templates/4.6.3.stable
-          wget -q https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz -O /tmp/templates.tpz
-          unzip -q /tmp/templates.tpz -d /tmp/templates
-          cp -r /tmp/templates/templates/* ~/.local/share/godot/export_templates/4.6.3.stable/
-
-      - name: Validate and import project
-        run: godot --headless --editor --quit-after 12
-
-      - name: Export versioned web preview
-        run: |
-          set -eux
-          SHORT_SHA="${GITHUB_SHA::8}"
-          VERSION_DIR="build/site/v-${SHORT_SHA}"
-          mkdir -p "$VERSION_DIR"
-          godot --headless --export-release Web "$VERSION_DIR/index.html"
-          touch "$VERSION_DIR/.nojekyll"
-          mkdir -p build/site
-          touch build/site/.nojekyll
-          cat > build/site/index.html <<EOF
-          <!doctype html>
-          <html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./v-${SHORT_SHA}/"><title>Haute Couture</title></head>
-          <body><a href="./v-${SHORT_SHA}/">Ouvrir la dernière preview Haute Couture</a></body></html>
-          EOF
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/site
-
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload web app
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: webapp
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
