@@ -1,10 +1,8 @@
-const HOME_URL='https://raw.githubusercontent.com/vartcom38-collab/carriere-de-mode/main/assets/accueil_haute_couture_new.jpg';
+const HOME_URL='./home.jpg';
 
 class HomeScene extends Phaser.Scene{
   constructor(){super('home')}
-  preload(){
-    this.load.image('home',HOME_URL);
-  }
+  preload(){ this.load.image('home',HOME_URL); }
   create(){
     this.bg=this.add.image(0,0,'home').setOrigin(0.5);
     this.hotspots=[];
@@ -24,7 +22,7 @@ class HomeScene extends Phaser.Scene{
   layout(){
     const w=this.scale.width,h=this.scale.height;
     const tex=this.textures.get('home').getSourceImage();
-    const iw=tex.width||1448, ih=tex.height||1086;
+    const iw=tex.width||320, ih=tex.height||240;
     const s=Math.max(w/iw,h/ih);
     this.bg.setPosition(w/2,h/2).setScale(s);
     const dw=iw*s, dh=ih*s, ox=(w-dw)/2, oy=(h-dh)/2;
