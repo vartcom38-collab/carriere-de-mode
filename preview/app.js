@@ -1,4 +1,4 @@
-const HOME_URL='./assets/home.jpg';
+const HOME_URL='./assets/home-v2.jpg';
 
 class HomeScene extends Phaser.Scene{
   constructor(){super('home')}
