@@ -25,9 +25,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Rebuild clean home artwork
         run: |
-          base64 -d preview/assets/home320.b64 > preview/assets/home.jpg
-          file preview/assets/home.jpg
-          test "$(stat -c%s preview/assets/home.jpg)" -gt 10000
+          base64 -d preview/assets/home320.b64 > preview/assets/home-v2.jpg
+          file preview/assets/home-v2.jpg
+          test "$(stat -c%s preview/assets/home-v2.jpg)" -gt 10000
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Phaser preview
