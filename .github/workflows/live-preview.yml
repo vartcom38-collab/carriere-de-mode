@@ -1,4 +1,4 @@
-name: Haute Couture Phaser Preview
+name: Haute Couture Play Preview
 
 on:
   push:
@@ -23,17 +23,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Rebuild clean home artwork
+      - name: Verify accueil
         run: |
-          base64 -d preview/assets/home320.b64 > preview/assets/home-v2.jpg
-          file preview/assets/home-v2.jpg
-          test "$(stat -c%s preview/assets/home-v2.jpg)" -gt 10000
+          file play/assets/accueil-officiel.jpg
+          test "$(stat -c%s play/assets/accueil-officiel.jpg)" -gt 50000
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload Phaser preview
+      - name: Upload game preview
         uses: actions/upload-pages-artifact@v3
         with:
-          path: preview
+          path: play
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
