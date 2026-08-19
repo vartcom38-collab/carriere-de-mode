@@ -20,7 +20,8 @@
     if(!window.__HCProLoading&&!window.__HCProInstalled){window.__HCProLoading=true;const c=document.createElement('script');c.src='./professional-life-engine.js?v=02a5a0a0';c.onload=()=>{window.__HCProLoading=false};document.head.appendChild(c)}
     if(!window.__HCTravelLoading&&!window.__HCTravelInstalled){window.__HCTravelLoading=true;const d=document.createElement('script');d.src='./travel-engine.js?v=e9440310';d.onload=()=>{window.__HCTravelLoading=false;loadAinDeep()};document.head.appendChild(d)}else loadAinDeep();
   }
-  function loadAinMap(){if(!window.__HCAinInteractiveMapLoading&&!window.__HCAinInteractiveMapInstalled){window.__HCAinInteractiveMapLoading=true;const m=document.createElement('script');m.src='./ain-interactive-map.js?v=296d5cf0';m.onload=()=>{window.__HCAinInteractiveMapLoading=false};document.head.appendChild(m)}}
+  function loadAinMap(){if(!window.__HCAinInteractiveMapLoading&&!window.__HCAinInteractiveMapInstalled){window.__HCAinInteractiveMapLoading=true;const m=document.createElement('script');m.src='./ain-interactive-map.js?v=296d5cf0';m.onload=()=>{window.__HCAinInteractiveMapLoading=false;loadBourgMap()};document.head.appendChild(m)}else loadBourgMap()}
+  function loadBourgMap(){if(!window.__HCBourgInteractiveMapLoading&&!window.__HCBourgInteractiveMapInstalled){window.__HCBourgInteractiveMapLoading=true;const bm=document.createElement('script');bm.src='./bourg-interactive-map.js?v=7675e12c';bm.onload=()=>{window.__HCBourgInteractiveMapLoading=false};document.head.appendChild(bm)}}
   function loadAinDeep(){if(!window.__HCAinDeepLoading&&!window.__HCAinDeepInstalled){window.__HCAinDeepLoading=true;const e=document.createElement('script');e.src='./travel-ain-deep-engine.js?v=e333c0db';e.onload=()=>{window.__HCAinDeepLoading=false};document.head.appendChild(e)}}
   function install(){if(!ready()||window.__HCInfiniteInstalled)return;window.__HCInfiniteInstalled=true;
     const core=HauteCoutureCore;
