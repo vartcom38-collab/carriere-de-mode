@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "status": "research-pass-3",
+  "department": {"code":"01","name":"Ain"},
+  "extends":"01-ain.json",
+  "territories":[
+    {"id":"ain-amberieu","name":"Ambérieu-en-Bugey","type":"town","themes":["fortification","frontière","Bugey","pierre","héraldique"]},
+    {"id":"ain-belley","name":"Belley","type":"city","themes":["capitale historique du Bugey","architecture religieuse","portraits","demeures anciennes"]},
+    {"id":"ain-lochieu","name":"Lochieu / Valromey","type":"village","themes":["Renaissance rurale","Bugey","mémoire locale","architecture","montagne"]},
+    {"id":"ain-grand-colombier","name":"Grand Colombier","type":"natural-area","themes":["relief","calcaire","panorama","vent","ligne de crête"]},
+    {"id":"ain-izieu","name":"Izieu","type":"village","themes":["mémoire","histoire","transmission","archives"]},
+    {"id":"ain-fort-ecluse","name":"Léaz / Fort l'Écluse","type":"site","themes":["architecture militaire","roche","escalier","Rhône","frontière"]},
+    {"id":"ain-divonne","name":"Divonne-les-Bains","type":"city","themes":["thermalisme","eau","Belle Époque","villégiature","jardin"]}
+  ],
+  "realPlaces":[
+    {
+      "id":"ain-allymes",
+      "name":"Château des Allymes",
+      "commune":"Ambérieu-en-Bugey",
+      "reality":"real",
+      "kind":"medieval-fortress",
+      "sourceNotes":"Fortification médiévale dominant la plaine de l'Ain, liée aux conflits entre Dauphiné et Savoie. Donjon, tour circulaire, courtines, chemin de ronde, escaliers à vis et vues sur Bresse et Dombes structurent fortement le lieu.",
+      "sources":["https://patrimoines.ain.fr/n/chateau-des-allymes-a-amberieu-en-bugey/n%3A1058","https://patrimoines.ain.fr/n/chateau-des-allymes-a-amberieu-en-bugey/n%3A1203"],
+      "creativeReading":{
+        "forms":["tour carrée","tour ronde","courtine","chemin de ronde","spirale d'escalier"],
+        "materials":["pierre","bois","fer"],
+        "textures":["maçonnerie massive","bois ancien","patine métallique"],
+        "palette":["gris calcaire","brun sombre","vert forêt","bleu brume"],
+        "symbols":["frontière","protection","surveillance","passage"]
+      },
+      "fashionKnowledge":["construction par panneaux","contraste structure rigide / mouvement","héraldique comme système graphique"],
+      "keywords":["Allymes","Ambérieu","forteresse","tour","chemin de ronde","spirale","Savoie","Dauphiné"],
+      "unlocks":["unlock-allymes-panel-coat","unlock-allymes-spiral-skirt","unlock-allymes-guard-collar","unlock-allymes-stone-palette","unlock-allymes-heraldic-pattern"],
+      "drawingLessons":["lesson-allymes-structured-coat","lesson-allymes-spiral-line","lesson-allymes-heraldic-shape"],
+      "encounterHooks":["enc-amberieu-noemie"],
+      "missionHooks":["mission-amberieu-banner"],
+      "shootingPotential":{"enabled":true,"fictionalConditions":["autorisation","équipe légère","météo stable"],"themes":["silhouette sentinelle","pierre et brouillard","ligne de défense"]}
+    },
+    {
+      "id":"ain-belley-center",
+      "name":"Centre historique de Belley et palais épiscopal",
+      "commune":"Belley",
+      "reality":"real",
+      "kind":"historic-city-architecture",
+      "sourceNotes":"Belley, capitale historique du Bugey, conserve un patrimoine religieux et civil important : palais épiscopal, galerie de portraits, maisons anciennes, tours d'escalier, galeries, façades classiques et circuit patrimonial.",
+      "sources":["https://patrimoines.ain.fr/n/belley/n%3A399","https://patrimoines.ain.fr/n/belley-siege-historique-du-diocese/n%3A886"],
+      "creativeReading":{
+        "forms":["fenêtre haute","fronton","tour octogonale","galerie d'arcades","escalier à vis"],
+        "materials":["pierre","bois peint","enduit","métal"],
+        "textures":["façade sobre","trompe-l'œil","bois peint","pierre lisse"],
+        "palette":["crème","gris clair","vert profond","rouge brun","or discret"],
+        "symbols":["rang","portrait","ordre","ville de passage"]
+      },
+      "fashionKnowledge":["portrait comme mise en scène du statut","proportion classique","détail d'insigne et de col"],
+      "keywords":["Belley","Bugey","portrait","palais épiscopal","fronton","galerie","tour octogonale"],
+      "unlocks":["unlock-belley-octagon-collar","unlock-belley-gallery-dress","unlock-belley-portrait-jacket","unlock-belley-classic-palette"],
+      "drawingLessons":["lesson-belley-octagon-collar","lesson-belley-classic-proportion","lesson-belley-portrait-detail"],
+      "encounterHooks":["enc-belley-agathe"],
+      "missionHooks":["mission-belley-portrait-evening"]
+    },
+    {
+      "id":"ain-bugey-valromey",
+      "name":"Musée du Bugey-Valromey",
+      "commune":"Arvière-en-Valromey (Lochieu)",
+      "reality":"real",
+      "kind":"territory-museum-renaissance-house",
+      "sourceNotes":"Le musée occupe une maison Renaissance datée de 1561, avec fenêtres à meneaux, cheminée, escaliers à vis, pierre et éléments d'architecture rurale conservés. Il est ancré dans l'histoire du Bugey-Valromey.",
+      "sources":["https://patrimoines.ain.fr/n/l-histoire-du-site/n%3A1712","https://patrimoines.ain.fr/archives/archives/fonds/PA01_insitu_architecture/view%3Aall"],
+      "creativeReading":{
+        "forms":["meneau","arc en accolade","spirale","grande cheminée","cadre de fenêtre"],
+        "materials":["pierre","bois de sapin","fer"],
+        "textures":["pierre rurale","bois ancien","surface mate"],
+        "palette":["gris minéral","brun sapin","vert mousse","écru"],
+        "symbols":["transmission","ruralité","Renaissance","mémoire du territoire"]
+      },
+      "fashionKnowledge":["architecture rurale comme vocabulaire de coupe","cadre et empiècement","ligne en accolade"],
+      "keywords":["Valromey","Lochieu","Renaissance","meneau","accolade","pierre","bois","Bugey"],
+      "unlocks":["unlock-valromey-accolade-neckline","unlock-valromey-window-panel-skirt","unlock-valromey-rustic-jacket","unlock-valromey-moss-palette"],
+      "drawingLessons":["lesson-valromey-accolade-neckline","lesson-valromey-window-panel","lesson-valromey-stonewood-texture"],
+      "encounterHooks":["enc-valromey-anais"],
+      "missionHooks":["mission-valromey-rural-modern"]
+    },
+    {
+      "id":"ain-grand-colombier-site",
+      "name":"Massif du Grand Colombier",
+      "commune":"Bugey",
+      "reality":"real",
+      "kind":"mountain-landscape",
+      "sourceNotes":"Massif jurassien culminant à 1 534 m, dominant le Rhône et offrant des panoramas sur les Alpes et plusieurs grands lacs. Relief calcaire, plis géologiques, crêtes et vents structurent le paysage.",
+      "sources":["https://www.ain-tourisme.com/decouvrir-richesses-naturelles/au-coeur-de-la-nature/massif-du-grand-colombier/"],
+      "creativeReading":{
+        "forms":["pli géologique","crête","courbe de niveau","ligne ascendante","panorama circulaire"],
+        "materials":["laine","feutre","matière technique","calcaire"],
+        "textures":["roche","herbe rase","brume","surface coupe-vent"],
+        "palette":["gris calcaire","vert altitude","bleu froid","blanc brume"],
+        "movement":["ascension","vent","torsion","déploiement"]
+      },
+      "fashionKnowledge":["vêtement de protection","superposition","lecture d'un relief en volume"],
+      "keywords":["Grand Colombier","Bugey","montagne","calcaire","pli","crête","vent","panorama"],
+      "unlocks":["unlock-colombier-wrap-jacket","unlock-colombier-fold-skirt","unlock-colombier-wind-hood","unlock-colombier-altitude-palette"],
+      "drawingLessons":["lesson-colombier-fold-volume","lesson-colombier-hood","lesson-colombier-landscape-to-silhouette"],
+      "encounterHooks":["enc-colombier-simon"],
+      "missionHooks":["mission-colombier-wind-study"]
+    },
+    {
+      "id":"ain-izieu-memorial",
+      "name":"Maison d'Izieu — mémorial des enfants juifs exterminés",
+      "commune":"Izieu",
+      "reality":"real",
+      "kind":"memorial-history-education",
+      "sourceNotes":"Lieu de mémoire et d'éducation consacré à la colonie d'enfants juifs d'Izieu, à leur arrestation le 6 avril 1944, à la déportation, au crime contre l'humanité, à la justice et à la construction de la mémoire. La maison conserve notamment lettres, dessins et portraits des enfants.",
+      "sources":["https://www.memorializieu.eu/le-musee-memorial/le-musee/","https://www.memorializieu.eu/le-musee-memorial/la-maison/","https://www.memorializieu.eu/le-musee-memorial/missions/"],
+      "ethicalRule":"Aucune récompense vestimentaire, esthétique ou commerciale ne doit être tirée de la Shoah, de la rafle ou des victimes. La visite nourrit uniquement culture historique, mémoire, vigilance, transmission et compréhension documentaire.",
+      "creativeReading":{
+        "forms":["page d'archive","lettre","portrait","table de mémoire"],
+        "materials":["papier","encre","bois"],
+        "textures":["archive","écriture manuscrite","papier conservé"],
+        "palette":["neutres documentaires uniquement"],
+        "symbols":["mémoire","transmission","vigilance","dignité"]
+      },
+      "fashionKnowledge":["aucun déblocage mode direct"],
+      "keywords":["Izieu","mémoire","enfants","Shoah","archives","lettres","justice","transmission"],
+      "unlocks":[],
+      "drawingLessons":["lesson-izieu-document-observation"],
+      "encounterHooks":["enc-izieu-mediator"],
+      "missionHooks":["mission-izieu-memory-page"]
+    },
+    {
+      "id":"ain-fort-ecluse",
+      "name":"Fort l'Écluse",
+      "commune":"Léaz",
+      "reality":"real",
+      "kind":"fortified-site-cultural-venue",
+      "sourceNotes":"Fortification construite à flanc de montagne, composée d'un fort inférieur et d'un fort supérieur reliés par 1 165 marches taillées dans la roche. Casemates, portes, terrasse, tourelles et vues sur le Rhône composent le site, aujourd'hui également lieu culturel et événementiel.",
+      "sources":["https://www.fortlecluse.fr/histoire/","https://www.fortlecluse.fr/"],
+      "creativeReading":{
+        "forms":["escalier vertical","casemate","meurtrière","porte fortifiée","terrasse"],
+        "materials":["pierre","métal","roche"],
+        "textures":["mur épais","roche brute","ombre froide"],
+        "palette":["gris roche","noir","vert Rhône","bleu acier"],
+        "movement":["montée","compression","ouverture vers le panorama"]
+      },
+      "fashionKnowledge":["construction protectrice","volume utilitaire","ouvertures fonctionnelles"],
+      "keywords":["Fort l'Écluse","Léaz","casemate","escalier","roche","Rhône","fortification","frontière"],
+      "unlocks":["unlock-ecluse-utility-coat","unlock-ecluse-slit-pocket","unlock-ecluse-stair-pleat","unlock-ecluse-rhone-palette","unlock-ecluse-structure-backdrop"],
+      "drawingLessons":["lesson-ecluse-utility-coat","lesson-ecluse-pocket-opening","lesson-ecluse-stair-rhythm"],
+      "encounterHooks":["enc-ecluse-yasmine"],
+      "missionHooks":["mission-ecluse-night-shoot"]
+    },
+    {
+      "id":"ain-divonne-heritage",
+      "name":"Parcours patrimonial de Divonne-les-Bains",
+      "commune":"Divonne-les-Bains",
+      "reality":"real",
+      "kind":"spa-town-heritage-route",
+      "sourceNotes":"Le patrimoine de Divonne documente la transformation de la ville par le thermalisme à partir de 1849, la villégiature d'une clientèle bourgeoise et aristocratique européenne, ainsi qu'un patrimoine plus ancien dont un tronçon d'aqueduc gallo-romain.",
+      "sources":["https://www.divonnelesbains.com/15199-patrimoine.htm"],
+      "creativeReading":{
+        "forms":["ligne d'eau","arc d'aqueduc","robe de promenade","silhouette de villégiature","courbe de source"],
+        "materials":["lin","coton léger","verre","pierre claire"],
+        "textures":["eau","linge frais","pierre humide","végétation de parc"],
+        "palette":["blanc","bleu eau","vert pâle","gris perle"],
+        "symbols":["repos","soin","villégiature","eau","élégance discrète"]
+      },
+      "fashionKnowledge":["vêtement de villégiature","élégance de jour","relation entre climat, usage et matière"],
+      "keywords":["Divonne","thermalisme","eau","villégiature","aqueduc","promenade","Belle Époque"],
+      "unlocks":["unlock-divonne-day-dress","unlock-divonne-water-blouse","unlock-divonne-resort-hat","unlock-divonne-spa-palette"],
+      "drawingLessons":["lesson-divonne-day-dress","lesson-divonne-water-folds","lesson-divonne-resort-hat"],
+      "encounterHooks":["enc-divonne-alix"],
+      "missionHooks":["mission-divonne-resort-capsule"]
+    }
+  ],
+  "fictionalPlaces":[
+    {"id":"fp-amberieu-bastion-cafe","name":"Le Bastion Vert","commune":"Ambérieu-en-Bugey","reality":"fictional","kind":"cafe-gallery","purpose":["rencontres","croquis","petites expos"]},
+    {"id":"fp-belley-atelier-arcade","name":"Atelier Arcade","commune":"Belley","reality":"fictional","kind":"shared-creative-workshop","purpose":["cours","essayages","missions culturelles"]},
+    {"id":"fp-valromey-lisiere","name":"La Lisière Textile","commune":"Lochieu","reality":"fictional","kind":"small-textile-studio","purpose":["laine","feutre","cours de matière"]},
+    {"id":"fp-ecluse-studio-rhone","name":"Studio Rhône 1165","commune":"Léaz","reality":"fictional","kind":"photo-production-team","purpose":["shootings","événements","missions nocturnes"]},
+    {"id":"fp-divonne-source-atelier","name":"Atelier des Sources","commune":"Divonne-les-Bains","reality":"fictional","kind":"resort-fashion-studio","purpose":["capsules légères","clientèle de passage","réseau hôtelier"]}
+  ],
+  "npcs":[
+    {"id":"npc-noemie-beraud","name":"Noémie Béraud","reality":"fictional","home":"Ambérieu-en-Bugey","role":"médiatrice patrimoine et illustratrice","traits":["précise","vive","pédagogue"],"longArc":"Peut devenir partenaire pour des carnets illustrés et des projets patrimoine-mode."},
+    {"id":"npc-agathe-lenoir","name":"Agathe Lenoir","reality":"fictional","home":"Belley","role":"costumière pour spectacles et cérémonies","traits":["élégante","exigeante","discrète"],"longArc":"Peut ouvrir une branche costume de scène sobre et commandes culturelles."},
+    {"id":"npc-anais-rochat","name":"Anaïs Rochat","reality":"fictional","home":"Valromey","role":"artisane laine et feutre","traits":["calme","technique","indépendante"],"longArc":"Peut transmettre superposition, feutre et construction pour climat froid."},
+    {"id":"npc-simon-durel","name":"Simon Durel","reality":"fictional","home":"Bugey","role":"photographe paysage et sport","traits":["patient","endurant","peu bavard"],"longArc":"Peut proposer des séries photo de montagne et enseigner la lecture du mouvement naturel."},
+    {"id":"npc-yasmine-keller","name":"Yasmine Keller","reality":"fictional","home":"Pays de Gex","role":"directrice artistique événementielle","traits":["rapide","ambitieuse","très réseau"],"longArc":"Peut ouvrir événements, concerts, shootings nocturnes et collaborations transfrontalières."},
+    {"id":"npc-alix-meyer","name":"Alix Meyer","reality":"fictional","home":"Divonne-les-Bains","role":"styliste indépendante spécialisée villégiature","traits":["polie","très professionnelle","compétitive"],"longArc":"Rivale ou collaboratrice sur les clientes de séjour et capsules estivales."},
+    {"id":"npc-izieu-mediator","name":"Médiatrice du mémorial","reality":"fictional-generic-role","home":"Izieu","role":"médiation historique","traits":["rigoureuse","respectueuse","pédagogue"],"longArc":"Aucun arc commercial ; peut uniquement approfondir mémoire, archives et transmission."}
+  ],
+  "encounters":[
+    {"id":"enc-amberieu-noemie","npc":"npc-noemie-beraud","trigger":"après le chemin de ronde des Allymes","choices":["parler de structure","parler d'héraldique","rester seule à dessiner"],"possibleEffects":["contact","cours","inspiration"]},
+    {"id":"enc-belley-agathe","npc":"npc-agathe-lenoir","trigger":"soirée culturelle ou visite du centre historique","choices":["parler costume","montrer son book","demander un conseil"],"possibleEffects":["mission","réseau","connaissance"]},
+    {"id":"enc-valromey-anais","npc":"npc-anais-rochat","trigger":"après le musée ou lors d'un marché fictif","choices":["demander un cours","acheter une chute","proposer une capsule"],"possibleEffects":["matière","cours","relation"]},
+    {"id":"enc-colombier-simon","npc":"npc-simon-durel","trigger":"belvédère ou sentier","choices":["dessiner avec lui","parler mouvement","proposer un shooting"],"possibleEffects":["photo","mission","inspiration"]},
+    {"id":"enc-ecluse-yasmine","npc":"npc-yasmine-keller","trigger":"concert ou événement fictif au fort","choices":["parler scénographie","proposer une tenue","rester spectatrice"],"possibleEffects":["réseau","mission événementielle","future invitation"]},
+    {"id":"enc-divonne-alix","npc":"npc-alix-meyer","trigger":"événement de villégiature fictif","choices":["collaborer","observer sa clientèle","la challenger"],"possibleEffects":["collaboration","rivalité","réputation"]},
+    {"id":"enc-izieu-mediator","npc":"npc-izieu-mediator","trigger":"visite guidée du mémorial","choices":["poser une question historique","consulter une ressource documentaire","prendre une note silencieuse"],"possibleEffects":["culture","mémoire","carnet"]}
+  ],
+  "missions":[
+    {"id":"mission-amberieu-banner","title":"Une ligne de frontière","reality":"fictional","location":"Ambérieu-en-Bugey","hook":"Créer un motif graphique contemporain à partir des lignes du château et de l'héraldique, sans costume médiéval.","rewards":["motif","portfolio","connaissance"]},
+    {"id":"mission-belley-portrait-evening","title":"Portrait en mouvement","reality":"fictional","location":"Belley","hook":"Créer une tenue contemporaine pour une soirée culturelle inspirée des proportions classiques du centre historique.","rewards":["portfolio","réseau","argent"]},
+    {"id":"mission-valromey-rural-modern","title":"Matière de montagne","reality":"fictional","location":"Valromey","hook":"Réinterpréter laine, feutre et architecture rurale dans une silhouette actuelle.","rewards":["matière","cours","signature créative"]},
+    {"id":"mission-colombier-wind-study","title":"Étudier le vent","reality":"fictional","location":"Grand Colombier","hook":"Produire trois silhouettes rapides à partir du vent, des plis du relief et de la marche.","rewards":["croquis","inspiration","pose"]},
+    {"id":"mission-ecluse-night-shoot","title":"1165 marches après la tombée du jour","reality":"fictional","location":"Fort l'Écluse","hook":"Yasmine propose un shooting nocturne très court avec contraintes de sécurité et lumière dure.","risk":"météo, fatigue, autorisation","rewards":["shooting","portfolio","réseau"]},
+    {"id":"mission-divonne-resort-capsule","title":"Trois jours de villégiature","reality":"fictional","location":"Divonne-les-Bains","hook":"Imaginer trois pièces légères pour une cliente de passage : promenade, déjeuner, soirée.","rewards":["argent","clientèle","spécialisation"]},
+    {"id":"mission-izieu-memory-page","title":"Page de mémoire","reality":"fictional-educational","location":"Izieu","hook":"Créer dans le carnet une page documentaire sobre à partir des faits appris, sans exploitation esthétique ni commerciale.","rewards":["culture","mémoire","connaissance historique"]}
+  ],
+  "assetRules":{"allWearableUnlocks":"line-art-black-neutral","transparentOrWhiteBase":true,"editableZones":["color","pattern","material","detail"],"noBakedColor":true},
+  "visualProduction":[
+    {"territory":"Ambérieu-en-Bugey","needed":["carte","Château des Allymes","chemin de ronde","portrait Noémie","5 line-art unlocks","3 cours"]},
+    {"territory":"Belley","needed":["carte","palais épiscopal","centre historique","portrait Agathe","4 line-art unlocks","3 cours"]},
+    {"territory":"Valromey","needed":["carte","maison Renaissance du musée","portrait Anaïs","4 line-art unlocks","3 cours"]},
+    {"territory":"Grand Colombier","needed":["panorama","ligne de crête","portrait Simon","4 line-art unlocks","3 cours"]},
+    {"territory":"Izieu","needed":["carte sobre","fiche documentaire du mémorial","aucun vêtement débloqué","1 cours d'observation documentaire"]},
+    {"territory":"Fort l'Écluse","needed":["carte","fort inférieur/supérieur","escalier","portrait Yasmine","5 line-art unlocks","3 cours"]},
+    {"territory":"Divonne-les-Bains","needed":["carte","sources/aqueduc","parcours thermal","portrait Alix","4 line-art unlocks","3 cours"]}
+  ]
+}
