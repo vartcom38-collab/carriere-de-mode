@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "status": "research-pass-6",
+  "country": "France",
+  "region": "Auvergne-Rhône-Alpes",
+  "department": {"code": "01", "name": "Ain"},
+  "scope": "Compléments Ain : Mijoux, Valserine/Chézery-Forens, Plagne/Dinoplagne, Neuville-les-Dames, Pont-d'Ain, Château-Gaillard, Vonnas, Ceyzérieu/Lavours, Valromey/Cerveyrieu.",
+  "assetRule": "Tout élément destiné au mannequin doit exister en line art noir neutre, fond blanc ou transparent, avec zones séparées pour couleur, motif, matière et détails.",
+  "realPlaces": [
+    {
+      "id": "ain-mijoux-lapidaire",
+      "name": "Musée des pierres et du lapidaire",
+      "commune": "Mijoux",
+      "reality": "real",
+      "kind": "craft-museum-gem-cutting",
+      "sourceNotes": "Le musée retrace l'histoire du métier de lapidaire et présente des pierres fines et précieuses, minéraux, outils anciens et étapes de taille ; un atelier vitré permet d'observer la fabrication.",
+      "sources": [
+        "https://www.ain-tourisme.com/offres/musee-des-pierres-et-du-lapidaire-mijoux-fr-5390453/",
+        "https://www.paysdegex-montsjura.com/patrimoine-culturel/musee-des-pierres-et-du-lapidaire/",
+        "https://www.mijoux.fr/"
+      ],
+      "creativeReading": {
+        "forms": ["facette", "cabochon", "prisme", "taille ovale", "pointe", "serti"],
+        "materials": ["pierre fine", "cristal", "métal de bijou", "verre comme simulation textile"],
+        "textures": ["brillance polie", "transparence", "surface brute", "facettage"],
+        "palette": ["améthyste", "quartz fumé", "bleu glacier", "vert minéral", "cristal clair"],
+        "movement": ["éclat", "réfraction", "rotation de facette"]
+      },
+      "fashionKnowledge": ["rapport bijou-corps", "mise à l'échelle d'un ornement", "facettage comme principe graphique", "sertissage comme détail de vêtement"],
+      "keywords": ["Mijoux", "lapidaire", "gemme", "pierre fine", "facette", "bijou", "minéral"],
+      "unlocks": ["unlock-mijoux-faceted-collar", "unlock-mijoux-gem-belt", "unlock-mijoux-crystal-earring", "unlock-mijoux-facet-pattern", "unlock-mijoux-mineral-palette"],
+      "drawingLessons": ["lesson-mijoux-facet", "lesson-mijoux-jewel-scale", "lesson-mijoux-crystal-light"],
+      "encounterHooks": ["enc-mijoux-camille-lapidaire"],
+      "missionHooks": ["mission-mijoux-ornement", "mission-mijoux-jewel-capsule"]
+    },
+    {
+      "id": "ain-valserine",
+      "name": "Rivière de la Valserine",
+      "commune": "Mijoux / Lélex / Chézery-Forens / Valserhône",
+      "reality": "real",
+      "kind": "wild-river-natural-site",
+      "sourceNotes": "La Valserine prend sa source dans la combe de Mijoux et rejoint le Rhône à Valserhône. Elle traverse plusieurs communes du Pays de Gex et du Haut-Jura et a été la première rivière française labellisée Rivière sauvage en 2014.",
+      "sources": ["https://patrimoines.ain.fr/n/riviere-de-la-valserine/n%3A1175"],
+      "creativeReading": {
+        "forms": ["méandre", "ligne vive", "strates de rive", "cascade", "fil continu"],
+        "materials": ["eau", "roche", "mousse", "bois humide"],
+        "textures": ["miroir", "écume", "surface plissée", "pierre mouillée"],
+        "palette": ["vert froid", "bleu ardoise", "blanc écume", "gris roche", "mousse sombre"],
+        "movement": ["flux", "chute", "courbe", "accélération"]
+      },
+      "fashionKnowledge": ["traduire un mouvement naturel en ligne de coupe", "superposer des transparences", "travailler les contrastes mat/brillant"],
+      "keywords": ["Valserine", "rivière sauvage", "flux", "eau", "cascade", "mousse", "Jura"],
+      "unlocks": ["unlock-valserine-flow-skirt", "unlock-valserine-stream-sleeve", "unlock-valserine-waterline-pattern", "unlock-valserine-river-palette"],
+      "drawingLessons": ["lesson-valserine-flow-lines", "lesson-valserine-transparent-layers"],
+      "encounterHooks": ["enc-valserine-elias-guide"],
+      "missionHooks": ["mission-valserine-line-study"]
+    },
+    {
+      "id": "ain-dinoplagne",
+      "name": "Dinoplagne",
+      "commune": "Plagne",
+      "reality": "real",
+      "kind": "paleontology-site",
+      "sourceNotes": "Site paléontologique présentant une piste d'empreintes de titanosaure datée d'environ 150 millions d'années, annoncée comme la plus longue piste de titanosaure au monde.",
+      "sources": ["https://www.dinoplagne.fr/"],
+      "creativeReading": {
+        "forms": ["empreinte", "répétition", "échelle géante", "rondeur lourde", "trace séquentielle"],
+        "materials": ["roche", "terre", "argile comme évocation"],
+        "textures": ["empreinte creuse", "surface fossile", "grain minéral"],
+        "palette": ["ocre fossile", "argile", "gris calcaire", "vert végétal"],
+        "movement": ["marche", "poids", "rythme de pas"]
+      },
+      "fashionKnowledge": ["répétition modulaire", "échelle et proportion", "empreinte comme motif abstrait", "volume lourd versus textile léger"],
+      "keywords": ["Dinoplagne", "Plagne", "titanosaure", "empreinte", "fossile", "rythme", "échelle"],
+      "unlocks": ["unlock-dino-footprint-pattern", "unlock-dino-structured-skirt", "unlock-dino-heavy-sole", "unlock-dino-ochre-palette"],
+      "drawingLessons": ["lesson-dino-repeat", "lesson-dino-scale-volume"],
+      "encounterHooks": ["enc-dino-nina-science"],
+      "missionHooks": ["mission-dino-pattern-study"]
+    },
+    {
+      "id": "ain-neuville-chapitre",
+      "name": "Place du Chapitre et maisons canoniales",
+      "commune": "Neuville-les-Dames",
+      "reality": "real",
+      "kind": "historic-village-religious-civil",
+      "sourceNotes": "Le village conserve la place du Chapitre et une vingtaine de maisons canoniales, héritage des bénédictines devenues chanoinesses puis comtesses-chanoinesses au XVIIIe siècle. Certaines maisons présentent façades classiques, œils-de-bœuf, escaliers remarquables, ferronneries et parquets en étoile. Une entreprise de confection de bleus de travail occupa aussi une partie de l'ancien ensemble au XXe siècle.",
+      "sources": [
+        "https://patrimoines.ain.fr/n/neuville-les-dames-histoire-et-patrimoine/n%3A1559",
+        "https://patrimoines.ain.fr/n/neuville-les-dames/n%3A1547"
+      ],
+      "creativeReading": {
+        "forms": ["œil-de-bœuf", "fronton", "double révolution", "étoile de parquet", "grille", "mansarde"],
+        "materials": ["bois", "fer forgé", "pierre", "textile de travail"],
+        "textures": ["parquet", "boiserie", "métal forgé", "toile de travail"],
+        "palette": ["gris façade", "bleu de travail", "bois miel", "rouge tuile", "noir fer"],
+        "symbols": ["éducation", "statut", "vie féminine collective", "travail ouvrier", "transformation sociale"]
+      },
+      "fashionKnowledge": ["vêtement comme marqueur de statut", "habit de chanoinesse comme source historique", "bleu de travail", "uniforme et fonction", "architecture classique vers construction vestimentaire"],
+      "keywords": ["Neuville-les-Dames", "chanoinesses", "maisons canoniales", "bleu de travail", "fer forgé", "parquet étoile"],
+      "unlocks": ["unlock-neuville-blue-work-jacket", "unlock-neuville-star-panel-skirt", "unlock-neuville-oculus-collar", "unlock-neuville-forged-detail", "unlock-neuville-bluegrey-palette"],
+      "drawingLessons": ["lesson-neuville-oculus-collar", "lesson-neuville-star-panel", "lesson-neuville-work-jacket"],
+      "encounterHooks": ["enc-neuville-soline-archive"],
+      "missionHooks": ["mission-neuville-two-histories"]
+    },
+    {
+      "id": "ain-pontdain-river-town",
+      "name": "Pont-d'Ain : vieille ville, rivière, Porte de France et patrimoine savoyard",
+      "commune": "Pont-d'Ain",
+      "reality": "real",
+      "kind": "historic-river-town",
+      "sourceNotes": "Pont-d'Ain conserve des quais, les Moulins Convert, la Porte de France, une vieille ville aux rues étroites, une église à rosace, et le château de Pont-d'Ain lié aux ducs de Savoie, aujourd'hui privé et non visitable.",
+      "sources": ["https://pontdain.fr/tourisme/patrimoine-a-visiter/"],
+      "creativeReading": {
+        "forms": ["pont", "porte", "rosace", "goulet", "tour", "ligne de quai"],
+        "materials": ["pierre", "eau", "bois de moulin", "verre coloré"],
+        "textures": ["eau courante", "mur ancien", "pavé", "vitrail"],
+        "palette": ["bleu rivière", "gris pierre", "vert rive", "rouge vitrail", "bois"],
+        "movement": ["traversée", "passage", "courant"]
+      },
+      "fashionKnowledge": ["construire une silhouette autour du passage", "utiliser une rosace comme motif radial", "lier vêtement urbain et paysage fluvial"],
+      "keywords": ["Pont-d'Ain", "rivière", "Porte de France", "rosace", "Savoie", "quais", "moulin"],
+      "unlocks": ["unlock-pontdain-gateway-coat", "unlock-pontdain-rose-pattern", "unlock-pontdain-river-dress", "unlock-pontdain-bridge-belt"],
+      "drawingLessons": ["lesson-pontdain-radial-rose", "lesson-pontdain-gateway-coat"],
+      "encounterHooks": ["enc-pontdain-rene-photo"],
+      "missionHooks": ["mission-pontdain-river-look"]
+    },
+    {
+      "id": "ain-chateaugaillard-archaeology",
+      "name": "Château-Gaillard : sites archéologiques et habitat ancien",
+      "commune": "Château-Gaillard",
+      "reality": "real",
+      "kind": "archaeology-territory",
+      "sourceNotes": "Le territoire est documenté pour des fouilles de tertres protohistoriques au XIXe siècle et pour des vestiges d'habitat rural du haut Moyen Âge révélés par l'archéologie préventive.",
+      "sources": ["https://patrimoines.ain.fr/n/ans-d-archeologie-dans-l-ain/n%3A1375"],
+      "creativeReading": {
+        "forms": ["strate", "tracé de fouille", "cercle de tertre", "plan fragmentaire"],
+        "materials": ["terre", "céramique", "pierre"],
+        "textures": ["sol stratifié", "fragment", "surface mate"],
+        "palette": ["terre brune", "ocre", "gris cendre", "argile rouge"],
+        "symbols": ["trace", "fragment", "mémoire du sol", "reconstruction"]
+      },
+      "fashionKnowledge": ["travailler à partir d'un fragment", "patronage par morceaux", "motif inspiré de la stratigraphie"],
+      "keywords": ["Château-Gaillard", "archéologie", "strate", "fragment", "habitat", "tertre"],
+      "unlocks": ["unlock-chateaugaillard-fragment-top", "unlock-chateaugaillard-strata-skirt", "unlock-chateaugaillard-strata-pattern", "unlock-chateaugaillard-earth-palette"],
+      "drawingLessons": ["lesson-chateaugaillard-fragment", "lesson-chateaugaillard-strata"],
+      "encounterHooks": ["enc-chateaugaillard-lou-archaeo"],
+      "missionHooks": ["mission-chateaugaillard-fragment-collection"]
+    },
+    {
+      "id": "ain-vonnas-village",
+      "name": "Vonnas, village d'eau, de fleurs et de gastronomie",
+      "commune": "Vonnas",
+      "reality": "real",
+      "kind": "village-gastronomy-landscape",
+      "sourceNotes": "Vonnas est traversée par la Veyle et le Renon et met en avant une identité de village d'eau, de fleurs et de charme. La destination est aussi fortement liée à la famille Blanc et à son histoire gastronomique.",
+      "sources": [
+        "https://www.vonnas.com/",
+        "https://www.ain-tourisme.com/visiter-patrimoine/villes-villages-remarquables/vonnas-village-gourmand-de-georges-blanc/"
+      ],
+      "creativeReading": {
+        "forms": ["pont", "courbe de rivière", "bouquet", "ligne de table", "cadre de vitrine"],
+        "materials": ["eau", "végétal", "lin de table", "verre"],
+        "textures": ["reflet", "pétale", "nappe", "porcelaine comme inspiration"],
+        "palette": ["vert jardin", "blanc crème", "rose fleur", "bleu eau", "rouge profond"],
+        "symbols": ["hospitalité", "mise en scène", "art de recevoir", "saisonnalité"]
+      },
+      "fashionKnowledge": ["tenue de service contemporaine", "silhouette événementielle", "relation entre mode et art de vivre", "palette saisonnière"],
+      "keywords": ["Vonnas", "Veyle", "fleurs", "gastronomie", "hospitalité", "Bresse"],
+      "unlocks": ["unlock-vonnas-service-jacket", "unlock-vonnas-floral-dress", "unlock-vonnas-river-scarf", "unlock-vonnas-garden-palette"],
+      "drawingLessons": ["lesson-vonnas-service-jacket", "lesson-vonnas-floral-border"],
+      "encounterHooks": ["enc-vonnas-lina-event"],
+      "missionHooks": ["mission-vonnas-dinner-look"]
+    },
+    {
+      "id": "ain-lavours-maison",
+      "name": "Maison du Marais de Lavours et sentier sur pilotis",
+      "commune": "Ceyzérieu",
+      "reality": "real",
+      "kind": "nature-interpretation-center",
+      "sourceNotes": "La Maison du Marais est l'espace d'interprétation de la Réserve naturelle nationale du Marais de Lavours. Elle propose plusieurs salles thématiques ; un sentier sur pilotis permet d'observer le marais, ses milieux et ses variations saisonnières.",
+      "sources": [
+        "https://ccbugeysud.com/decouvrir/maison-du-marais-de-lavours/",
+        "https://www.reserve-lavours.com/contact/",
+        "https://patrimoines.ain.fr/n/marais-de-lavours-a-ceyzerieu/n%3A1528"
+      ],
+      "creativeReading": {
+        "forms": ["pilotis", "roseau", "strate humide", "passerelle", "papillon", "jonc"],
+        "materials": ["bois", "eau", "fibre végétale", "tulle comme traduction"],
+        "textures": ["brume", "eau noire", "feuille", "bois mouillé"],
+        "palette": ["vert marais", "tourbe", "bleu gris", "jaune paille", "violet orchidée"],
+        "movement": ["oscillation", "flottement", "traversée"]
+      },
+      "fashionKnowledge": ["superposition transparente", "motif botanique non littéral", "construction légère", "observation du vivant sans prélèvement"],
+      "keywords": ["Lavours", "Ceyzérieu", "marais", "pilotis", "roseau", "papillon", "tourbe"],
+      "unlocks": ["unlock-lavours-pilotis-dress", "unlock-lavours-reed-sleeve", "unlock-lavours-marsh-pattern", "unlock-lavours-orchid-palette"],
+      "drawingLessons": ["lesson-lavours-reed-lines", "lesson-lavours-layered-transparency"],
+      "encounterHooks": ["enc-lavours-marine-naturalist"],
+      "missionHooks": ["mission-lavours-season-study"]
+    },
+    {
+      "id": "ain-cerveyrieu",
+      "name": "Gorges de Thurignin, cascade et canyon de Cerveyrieu",
+      "commune": "Artemare / Valromey-sur-Séran",
+      "reality": "real",
+      "kind": "geological-natural-site",
+      "sourceNotes": "Le site associe gorges, marmites, vasques, canyon et chute d'eau le long du Séran ; il s'inscrit dans un ensemble de curiosités géologiques du Valromey.",
+      "sources": [
+        "https://patrimoines.ain.fr/n/gorges-de-thurignin-cascade-et-canyon-de-cerveyrieu/n%3A1188",
+        "https://patrimoines.ain.fr/n/l-arviere-gorges-de-thurignin-cascade-et-canyon-de-cerveyrieu/n%3A1361"
+      ],
+      "creativeReading": {
+        "forms": ["vasque", "canyon", "fente", "chute verticale", "marmite géologique"],
+        "materials": ["roche", "eau", "mousse"],
+        "textures": ["érosion", "surface lissée", "écume", "paroi humide"],
+        "palette": ["gris pierre", "vert mousse", "blanc chute", "bleu profond", "brun humide"],
+        "movement": ["chute", "tourbillon", "compression", "rupture"]
+      },
+      "fashionKnowledge": ["créer une coupe à rupture", "transformer un canyon en fente", "dessiner un volume creux", "utiliser le mouvement de l'eau pour le drapé"],
+      "keywords": ["Cerveyrieu", "Thurignin", "canyon", "cascade", "vasque", "érosion", "Valromey"],
+      "unlocks": ["unlock-cerveyrieu-canyon-dress", "unlock-cerveyrieu-cut-sleeve", "unlock-cerveyrieu-vortex-skirt", "unlock-cerveyrieu-stonewater-palette"],
+      "drawingLessons": ["lesson-cerveyrieu-cut", "lesson-cerveyrieu-vortex"],
+      "encounterHooks": ["enc-cerveyrieu-yann-sketch"],
+      "missionHooks": ["mission-cerveyrieu-three-movements"]
+    }
+  ],
+  "fictionalPlaces": [
+    {"id":"fp-mijoux-atelier-facette","name":"Atelier Facette Nord","commune":"Mijoux","reality":"fictional","kind":"jewelry-lapidary-studio","purpose":["cours bijou","prototype accessoire","mission sertissage"]},
+    {"id":"fp-neuville-cafe-chapitre","name":"Le Café du Chapitre","commune":"Neuville-les-Dames","reality":"fictional","kind":"cafe-gallery","purpose":["rencontre archives","soirée locale","mission bleu de travail"]},
+    {"id":"fp-vonnas-studio-rivage","name":"Studio Rivage","commune":"Vonnas","reality":"fictional","kind":"event-styling-studio","purpose":["événementiel","shooting","hospitalité"]},
+    {"id":"fp-pontdain-atelier-passage","name":"Atelier Passage","commune":"Pont-d'Ain","reality":"fictional","kind":"small-fashion-workshop","purpose":["prototype manteau","retouches voyage","mission rosace"]}
+  ],
+  "npcs": [
+    {"id":"npc-camille-rey","name":"Camille Rey","reality":"fictional","home":"Mijoux","role":"lapidaire et créatrice de petits bijoux","traits":["méticuleuse","calme","très technique"],"longArc":"Peut apprendre au joueur à transformer une logique de facette en accessoire puis en détail textile."},
+    {"id":"npc-elias-mercier","name":"Élias Mercier","reality":"fictional","home":"Chézery-Forens","role":"guide nature et photographe de rivière","traits":["discret","patient","très observateur"],"longArc":"Peut devenir contact régulier pour repérages nature et shootings très légers."},
+    {"id":"npc-nina-borel","name":"Nina Borel","reality":"fictional","home":"Plagne","role":"médiatrice scientifique","traits":["pédagogue","enthousiaste","terre-à-terre"],"longArc":"Relie sciences, formes naturelles et exercices de répétition graphique."},
+    {"id":"npc-soline-vachet","name":"Soline Vachet","reality":"fictional","home":"Neuville-les-Dames","role":"documentaliste bénévole et passionnée d'histoire locale","traits":["méthodique","bavarde","généreuse"],"longArc":"Peut faire émerger des archives sur les chanoinesses et la confection de bleus de travail."},
+    {"id":"npc-rene-costa","name":"René Costa","reality":"fictional","home":"Pont-d'Ain","role":"photographe amateur des berges et du vieux bourg","traits":["curieux","accessible","nostalgique"],"longArc":"Peut aider à constituer un premier reportage de territoire et repérer des fonds de shooting."},
+    {"id":"npc-lou-marin","name":"Lou Marin","reality":"fictional","home":"Château-Gaillard","role":"archéologue contractuelle","traits":["directe","analytique","inventive"],"longArc":"Peut apprendre au joueur à travailler à partir de fragments plutôt qu'à copier un objet historique."},
+    {"id":"npc-lina-pavel","name":"Lina Pavel","reality":"fictional","home":"Vonnas","role":"coordinatrice événementielle","traits":["vive","élégante","exigeante"],"longArc":"Ouvre des commandes liées à l'hospitalité, aux dîners, aux lancements et à la mise en scène."},
+    {"id":"npc-marine-gallet","name":"Marine Gallet","reality":"fictional","home":"Ceyzérieu","role":"naturaliste et animatrice nature","traits":["douce","rigoureuse","éthique"],"longArc":"Peut débloquer des études de saison, couleurs et mouvements du marais sans collecte."},
+    {"id":"npc-yann-rossi","name":"Yann Rossi","reality":"fictional","home":"Valromey","role":"illustrateur de paysage","traits":["silencieux","expressif","spontané"],"longArc":"Peut devenir compagnon occasionnel de croquis et déclencher des défis de dessin en extérieur."}
+  ],
+  "missions": [
+    {"id":"mission-mijoux-ornement","title":"Un éclat sans couleur","location":"Mijoux","reality":"fictional","hook":"Créer un ornement de vêtement uniquement par la forme et le relief, sans utiliser la couleur.","rewards":["bijou","dessin","signature"]},
+    {"id":"mission-mijoux-jewel-capsule","title":"Pierre sur textile","location":"Mijoux","reality":"fictional","hook":"Camille propose une mini capsule où un même principe de facette existe en bijou, boucle et empiècement textile.","rewards":["collaboration","accessoires","réseau"]},
+    {"id":"mission-valserine-line-study","title":"Suivre le courant","location":"Valserine","reality":"fictional","hook":"Réaliser trois silhouettes à partir de trois vitesses de l'eau : calme, courant, chute.","rewards":["croquis","inspiration","palette"]},
+    {"id":"mission-dino-pattern-study","title":"Une trace, pas un dinosaure","location":"Plagne","reality":"fictional","hook":"Créer un motif contemporain à partir du rythme des empreintes sans dessiner littéralement un dinosaure.","rewards":["motif","créativité"]},
+    {"id":"mission-neuville-two-histories","title":"Deux vies du même bâtiment","location":"Neuville-les-Dames","reality":"fictional","hook":"Construire un look qui associe l'élégance classique des maisons canoniales et la mémoire du bleu de travail du XXe siècle.","rewards":["signature créative","connaissance","portfolio"]},
+    {"id":"mission-pontdain-river-look","title":"Tenue de passage","location":"Pont-d'Ain","reality":"fictional","hook":"Créer une tenue de voyage inspirée de la porte, du pont et du courant de l'Ain.","rewards":["look","portfolio"]},
+    {"id":"mission-chateaugaillard-fragment-collection","title":"Collection fragmentaire","location":"Château-Gaillard","reality":"fictional","hook":"Composer une silhouette avec quatre pièces qui semblent provenir de fragments différents mais forment un ensemble cohérent.","rewards":["patronage","créativité","portfolio"]},
+    {"id":"mission-vonnas-dinner-look","title":"Dîner au bord de l'eau","location":"Vonnas","reality":"fictional","hook":"Lina cherche une silhouette élégante, confortable et photogénique pour un événement gastronomique fictif.","rewards":["argent","réseau événementiel","portfolio"]},
+    {"id":"mission-lavours-season-study","title":"Le même marais, quatre fois","location":"Ceyzérieu","reality":"fictional","hook":"Revenir à différentes saisons pour constituer quatre palettes et quatre études de silhouette à partir du même lieu.","rewards":["carnet","palette","connaissance nature"]},
+    {"id":"mission-cerveyrieu-three-movements","title":"Chute, vasque, canyon","location":"Valromey","reality":"fictional","hook":"Créer trois études : une verticale, une circulaire et une coupée, à partir du site géologique.","rewards":["croquis","formes","inspiration"]}
+  ],
+  "drawingLessons": [
+    {"id":"lesson-mijoux-facet","title":"Dessiner une facette simple puis la transformer en col","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-mijoux-jewel-scale","title":"Dessiner un bijou à l'échelle du corps","levels":["trace","guided","memory"],"skills":["Croquis"]},
+    {"id":"lesson-mijoux-crystal-light","title":"Rendre transparence et éclat en noir, gris puis couleur","levels":["guided","memory","variation"],"skills":["Croquis","Matières"]},
+    {"id":"lesson-valserine-flow-lines","title":"Dessiner le mouvement d'un tissu à partir d'un courant","levels":["trace","guided","memory","creation"],"skills":["Croquis"]},
+    {"id":"lesson-valserine-transparent-layers","title":"Superposer des couches transparentes","levels":["guided","variation","creation"],"skills":["Matières","Créativité"]},
+    {"id":"lesson-dino-repeat","title":"Construire un motif par répétition d'empreintes abstraites","levels":["guided","memory","variation","creation"],"skills":["Créativité"]},
+    {"id":"lesson-dino-scale-volume","title":"Comprendre l'échelle et le volume avec une forme massive","levels":["trace","guided","variation"],"skills":["Croquis"]},
+    {"id":"lesson-neuville-oculus-collar","title":"Transformer un œil-de-bœuf en col","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-neuville-star-panel","title":"Construire un panneau étoile à partir d'un parquet","levels":["guided","memory","variation","creation"],"skills":["Patronage","Créativité"]},
+    {"id":"lesson-neuville-work-jacket","title":"Dessiner une veste de travail et la moderniser","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-pontdain-radial-rose","title":"Créer un motif radial à partir d'une rosace","levels":["guided","memory","variation","creation"],"skills":["Créativité"]},
+    {"id":"lesson-pontdain-gateway-coat","title":"Construire un manteau autour d'une forme de porte","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-chateaugaillard-fragment","title":"Dessiner une silhouette à partir de fragments","levels":["guided","variation","creation"],"skills":["Créativité","Croquis"]},
+    {"id":"lesson-chateaugaillard-strata","title":"Transformer une stratigraphie en découpe de jupe","levels":["guided","memory","variation"],"skills":["Patronage","Croquis"]},
+    {"id":"lesson-vonnas-service-jacket","title":"Dessiner une veste de service contemporaine","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-vonnas-floral-border","title":"Créer une bordure florale non littérale","levels":["guided","variation","creation"],"skills":["Créativité"]},
+    {"id":"lesson-lavours-reed-lines","title":"Transformer des roseaux en lignes de manche","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-lavours-layered-transparency","title":"Dessiner plusieurs transparences sans perdre la silhouette","levels":["guided","memory","variation","creation"],"skills":["Matières","Croquis"]},
+    {"id":"lesson-cerveyrieu-cut","title":"Transformer un canyon en fente ou découpe","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-cerveyrieu-vortex","title":"Construire un volume circulaire à partir d'un tourbillon","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]}
+  ],
+  "visualProduction": [
+    {"territory":"Mijoux","needed":["carte locale","musée lapidaire","atelier vitré","portrait Camille","5 line-art assets","3 planches de cours"]},
+    {"territory":"Valserine / Chézery-Forens","needed":["carte rivière","3 ambiances de courant","portrait Élias","4 line-art assets","2 cours"]},
+    {"territory":"Plagne / Dinoplagne","needed":["carte","site d'empreintes","planche empreintes abstraites","portrait Nina","4 line-art assets","2 cours"]},
+    {"territory":"Neuville-les-Dames","needed":["carte","place du Chapitre","maisons canoniales","détails ferronnerie/parquet","portrait Soline","5 line-art assets","3 cours"]},
+    {"territory":"Pont-d'Ain","needed":["carte","quais","Porte de France","vieille ville","portrait René","4 line-art assets","2 cours"]},
+    {"territory":"Château-Gaillard","needed":["carte","évocation archéologique originale","portrait Lou","4 line-art assets","2 cours"]},
+    {"territory":"Vonnas","needed":["carte","rivières et ponts","ambiance village","portrait Lina","4 line-art assets","2 cours"]},
+    {"territory":"Ceyzérieu / Lavours","needed":["Maison du Marais","sentier sur pilotis","4 saisons","portrait Marine","4 line-art assets","2 cours"]},
+    {"territory":"Cerveyrieu / Valromey","needed":["cascade","canyon","vasques","portrait Yann","4 line-art assets","2 cours"]}
+  ]
+}
