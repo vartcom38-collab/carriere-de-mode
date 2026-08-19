@@ -1,0 +1,41 @@
+name: Hotfix housing UI cache
+
+on:
+  push:
+    paths:
+      - '.github/workflows/hotfix-housing-cache.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Force latest housing UI chain
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          hub = Path('hc-live/main-hub.js')
+          s = hub.read_text()
+          s = s.replace("./infinite-engine.js?v=47382991", "./infinite-engine.js?v=755a6411")
+          hub.write_text(s)
+
+          index = Path('hc-live/index.html')
+          s = index.read_text()
+          s = s.replace('./main-hub.js?v=9be48877', './main-hub.js?v=cachefix-755a6411')
+          index.write_text(s)
+          PY
+      - name: Commit cache hotfix
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "haute-couture-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add hc-live/main-hub.js hc-live/index.html
+          git commit -m "Fix housing UI cache chain"
+          git push
