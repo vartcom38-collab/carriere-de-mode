@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "status": "research-pass-5",
+  "country": "France",
+  "region": "Auvergne-Rhône-Alpes",
+  "department": {"code": "01", "name": "Ain"},
+  "designIntent": "Cinquième lot Ain : Pays de Gex, Monts Jura, formes urbaines singulières, patrimoine peint, châteaux décorés, zone humide et préhistoire. Les lieux culturels sont réels et sourcés ; PNJ, missions et lieux narratifs sont fictifs. Tous les assets de création destinés au mannequin sont prévus en line art noir neutre, recolorable et remplaçable en matière/motif.",
+  "territories": [
+    {"id":"ain-gex","name":"Gex / Pays de Gex","type":"territory","themes":["frontière","Jura","Léman","influences croisées","identité locale"]},
+    {"id":"ain-lelex","name":"Lélex / Monts Jura","type":"mountain-resort","themes":["montagne","mouvement","sport","neige","forêt"]},
+    {"id":"ain-cret-neige","name":"Crêt de la Neige & Haute Chaîne du Jura","type":"natural-area","themes":["crêtes","vent","altitude","panorama","ligne d'horizon"]},
+    {"id":"ain-oncieu","name":"Oncieu","type":"village","themes":["village rond","géométrie","verger","maisons vigneronnes"]},
+    {"id":"ain-saint-sorlin","name":"Saint-Sorlin-en-Bugey","type":"village","themes":["façades peintes","Savoie","eau","lavoir","Renaissance"]},
+    {"id":"ain-fareins","name":"Fareins / Château de Fléchères","type":"village-estate","themes":["XVIIe siècle","fresque","perspective","jardin","parade"]},
+    {"id":"ain-marais-vaux","name":"Marais de Vaux","type":"natural-area","themes":["zone humide","pilotis","orchidées","plantes carnivores","tourbe"]},
+    {"id":"ain-labalme","name":"Labalme / Grottes du Cerdon","type":"cave-site","themes":["grotte","eau","concrétions","préhistoire","parure"]}
+  ],
+  "realPlaces": [
+    {
+      "id":"ain-pays-gex-identity",
+      "name":"Pays de Gex — territoire culturel",
+      "commune":"Gex et communes du Pays de Gex",
+      "reality":"real",
+      "kind":"cultural-landscape",
+      "sourceNotes":"Le Pays de Gex est un territoire singulier entre Jura, Bugey et frontière suisse, marqué historiquement par des influences savoyardes, bernoises, genevoises puis françaises. Son identité est fortement liée à la frontière, aux paysages jurassiens et à la proximité du Léman.",
+      "sources":[
+        "https://patrimoines.ain.fr/n/identite-culturelle-du-pays-de-gex/n%3A126",
+        "https://patrimoines.ain.fr/n/pays-de-gex/n%3A108"
+      ],
+      "creativeReading":{
+        "forms":["ligne-frontière","crête","contre-courbe du lac","strates de territoire","passage"],
+        "materials":["laine","bois","pierre claire","verre","métal fin"],
+        "textures":["brume lémanique","bois brossé","roche jurassienne","surface lisse de l'eau"],
+        "palette":["bleu Léman","gris brume","vert Jura","ivoire","charbon"],
+        "symbols":["frontière","passage","double appartenance","horizon","échange"]
+      },
+      "fashionKnowledge":["territoire-frontière comme mélange d'influences","vêtement de montagne adapté au climat","contraste entre sobriété alpine et codes urbains lémaniques"],
+      "keywords":["Pays de Gex","frontière","Jura","Léman","Savoie","Genève","crêtes","brume"],
+      "unlocks":["unlock-gex-border-coat","unlock-gex-lake-skirt","unlock-gex-fog-palette","unlock-gex-horizon-detail"],
+      "drawingLessons":["lesson-gex-layered-horizon","lesson-gex-border-line"],
+      "encounterHooks":["enc-gex-amelie"],
+      "missionHooks":["mission-gex-crossborder-look"]
+    },
+    {
+      "id":"ain-monts-jura",
+      "name":"Station Monts Jura / Lélex",
+      "commune":"Lélex",
+      "reality":"real",
+      "kind":"mountain-resort-natural-territory",
+      "sourceNotes":"Monts Jura est une station quatre saisons du massif jurassien. Le territoire réunit ski alpin, ski nordique, randonnée, VTT, parapente et autres activités de pleine nature, dans l'environnement de la Haute Chaîne du Jura.",
+      "sources":[
+        "https://www.ain-tourisme.com/decouvrir-richesses-naturelles/au-coeur-de-la-nature/plus-hauts-sommets-du-massif-jurassien/station-monts-jura/",
+        "https://www.ain-tourisme.com/offres/bike-park-des-monts-jura-domaine-de-lelex-lelex-fr-5382381/"
+      ],
+      "creativeReading":{
+        "forms":["pente","zigzag de piste","capuche protectrice","volume matelassé","sangle"],
+        "materials":["laine","maille","matière technique","softshell fictif","sangle"],
+        "textures":["neige","maille côtelée","surface imperméable","écorce"],
+        "palette":["blanc neige","vert sapin","gris roche","bleu froid","rouge balise"],
+        "movement":["descente","virage","suspension","élan"]
+      },
+      "fashionKnowledge":["superposition fonctionnelle","protection au froid","mobilité du vêtement","construction de vêtements de plein air"],
+      "keywords":["Lélex","Monts Jura","ski","randonnée","VTT","montagne","neige","protection"],
+      "unlocks":["unlock-lelex-technical-hood","unlock-lelex-layer-jacket","unlock-lelex-slope-skirt","unlock-lelex-strap-detail","unlock-lelex-winter-palette"],
+      "drawingLessons":["lesson-lelex-hood-construction","lesson-lelex-layered-jacket","lesson-lelex-motion-ski"],
+      "encounterHooks":["enc-lelex-romane"],
+      "missionHooks":["mission-lelex-weather-capsule"]
+    },
+    {
+      "id":"ain-cret-neige",
+      "name":"Crêt de la Neige et hauts sommets du Jura",
+      "commune":"Secteur Lélex / Pays de Gex",
+      "reality":"real",
+      "kind":"mountain-summit-landscape",
+      "sourceNotes":"Le Crêt de la Neige, autour de 1 720 m, est le point culminant du massif du Jura. Il s'inscrit dans un alignement de hauts sommets avec le Reculet, le Grand Crêt et le Colomby de Gex, reliés par une ligne de crêtes caractéristique.",
+      "sources":[
+        "https://www.ain-tourisme.com/decouvrir-richesses-naturelles/au-coeur-de-la-nature/plus-hauts-sommets-du-massif-jurassien/",
+        "https://patrimoines.ain.fr/n/pays-de-gex/n%3A108"
+      ],
+      "creativeReading":{
+        "forms":["crête continue","ligne ascendante","pointe douce","pli de relief","silhouette étirée"],
+        "materials":["laine bouillie","feutre","matière technique mate"],
+        "textures":["roche calcaire","herbe rase","givre","brume"],
+        "palette":["gris calcaire","vert froid","blanc givre","bleu altitude","ombre violette"],
+        "movement":["vent transversal","marche","bascule","ligne d'horizon"]
+      },
+      "fashionKnowledge":["construction d'une silhouette par ligne dominante","vêtement coupe-vent","équilibre entre volume et mobilité"],
+      "keywords":["Crêt de la Neige","Reculet","Grand Crêt","Colomby de Gex","crête","altitude","vent","Jura"],
+      "unlocks":["unlock-cret-ridge-cape","unlock-cret-asym-top","unlock-cret-ridge-seam","unlock-cret-frost-palette"],
+      "drawingLessons":["lesson-cret-ridge-silhouette","lesson-cret-wind-lines"],
+      "encounterHooks":["enc-cret-jules"],
+      "missionHooks":["mission-cret-five-lines"]
+    },
+    {
+      "id":"ain-oncieu-round-village",
+      "name":"Village rond d'Oncieu",
+      "commune":"Oncieu",
+      "reality":"real",
+      "kind":"historic-village-urban-form",
+      "sourceNotes":"Oncieu est célèbre pour sa forme arrondie autour d'un verger central, particularité qui lui vaut un classement de site depuis 1985. Les maisons, souvent vigneronnes, s'organisent autour de cet espace central avec ouvertures tournées vers l'extérieur.",
+      "sources":["https://patrimoines.ain.fr/n/oncieu/n%3A392"],
+      "creativeReading":{
+        "forms":["cercle","anneau","centre vide","répétition radiale","escalier de façade"],
+        "materials":["pierre","bois","tuile","verger"],
+        "textures":["mur ancien","bois patiné","écorce","herbe"],
+        "palette":["gris pierre","vert verger","brun bois","rouge tuile","crème"],
+        "symbols":["centre","communauté","protection","cercle","orientation"]
+      },
+      "fashionKnowledge":["construction circulaire","panneaux radiaux","jupe cercle","répétition autour d'un axe"],
+      "keywords":["Oncieu","village rond","cercle","verger","maison vigneronne","radial"],
+      "unlocks":["unlock-oncieu-circle-skirt","unlock-oncieu-radial-top","unlock-oncieu-ring-collar","unlock-oncieu-orchard-palette"],
+      "drawingLessons":["lesson-oncieu-circle-skirt","lesson-oncieu-radial-construction"],
+      "encounterHooks":["enc-oncieu-lou"],
+      "missionHooks":["mission-oncieu-round-study"]
+    },
+    {
+      "id":"ain-saint-sorlin-painted-house",
+      "name":"Maison Saint-Christophe & patrimoine de Saint-Sorlin-en-Bugey",
+      "commune":"Saint-Sorlin-en-Bugey",
+      "reality":"real",
+      "kind":"painted-house-historic-village",
+      "sourceNotes":"Saint-Sorlin conserve une maison de type savoyard dont la façade porte un remarquable décor peint des XVe-XVIe siècles, avec saint Christophe, la Vierge, des anges, un phylactère et des écus de Savoie. Le village possède aussi un lavoir néoclassique, des châteaux et une église mêlant éléments romans et gothiques.",
+      "sources":["https://patrimoines.ain.fr/n/saint-sorlin-en-bugey/n%3A393"],
+      "creativeReading":{
+        "forms":["phylactère","écu","fenêtre à meneaux","porte en accolade","colonnade"],
+        "materials":["enduit peint","pierre claire","bois","fer forgé"],
+        "textures":["fresque patinée","mur ancien","pierre lisse du lavoir"],
+        "palette":["ocre pâle","rouge Savoie","bleu grisé","vert passé","ivoire"],
+        "symbols":["voyage","protection","passage","eau","mémoire peinte"]
+      },
+      "fashionKnowledge":["héraldique comme vocabulaire graphique","bordure peinte","ruban-phylactère","construction de motif narratif"],
+      "keywords":["Saint-Sorlin","Saint Christophe","Savoie","fresque","phylactère","écu","lavoir","meneaux"],
+      "unlocks":["unlock-sorlin-scroll-collar","unlock-sorlin-heraldic-panel","unlock-sorlin-painted-border","unlock-sorlin-travel-cape","unlock-sorlin-fresco-palette"],
+      "drawingLessons":["lesson-sorlin-scroll-ribbon","lesson-sorlin-heraldic-shape","lesson-sorlin-fresco-border"],
+      "encounterHooks":["enc-sorlin-estelle"],
+      "missionHooks":["mission-sorlin-travel-symbol"]
+    },
+    {
+      "id":"ain-flecheres",
+      "name":"Château de Fléchères",
+      "commune":"Fareins",
+      "reality":"real",
+      "kind":"historic-castle-painted-decor",
+      "sourceNotes":"Le château de Fléchères, édifié au début du XVIIe siècle, conserve un ensemble exceptionnel de fresques de Pietro Ricchi dans plusieurs salles : perspectives, chasses, vertus, Hercule, parade et autres décors. Le site associe architecture monumentale, peinture décorative, jardin à la française et parc à l'anglaise.",
+      "sources":[
+        "https://patrimoines.ain.fr/n/chateau-de-flecheres-a-fareins/n%3A823",
+        "https://patrimoines.ain.fr/n/chateau-de-flecheres-a-fareins/n%3A1204"
+      ],
+      "creativeReading":{
+        "forms":["perspective forcée","colonne torse","cadre peint","défilé","symétrie de façade"],
+        "materials":["peinture murale","boiserie","pierre","soierie fictive de décor"],
+        "textures":["fresque mate","bois ciré","surface sculptée"],
+        "palette":["terre cuite","vert sombre","ivoire","bleu fané","or sourd"],
+        "symbols":["mise en scène","statut","illusion","parade","vertu"]
+      },
+      "fashionKnowledge":["costume et parade au XVIIe comme observation iconographique","perspective appliquée au motif","rapport entre décor mural et construction textile"],
+      "keywords":["Fléchères","Pietro Ricchi","fresque","perspective","parade","XVIIe","Fareins","jardin"],
+      "unlocks":["unlock-flecheres-perspective-dress","unlock-flecheres-twisted-sleeve","unlock-flecheres-parade-jacket","unlock-flecheres-frame-pattern","unlock-flecheres-fresco-palette"],
+      "drawingLessons":["lesson-flecheres-perspective-pattern","lesson-flecheres-twisted-column-sleeve","lesson-flecheres-parade-silhouette"],
+      "shootingPotential":{"enabled":true,"fictionalConditions":["autorisation","équipe réduite","budget patrimoine"],"themes":["illusion et cadre","parade contemporaine","fresque et textile"]},
+      "encounterHooks":["enc-flecheres-iris"],
+      "missionHooks":["mission-flecheres-room-to-look"]
+    },
+    {
+      "id":"ain-marais-vaux",
+      "name":"Marais de Vaux",
+      "commune":"Plateau d'Hauteville / Cormaranche-en-Bugey",
+      "reality":"real",
+      "kind":"wetland-natural-site",
+      "sourceNotes":"Le Marais de Vaux est une vaste zone humide du Bugey, d'environ 132 hectares, avec près de 160 espèces végétales recensées. Un sentier d'interprétation sur pilotis permet d'explorer le site restauré.",
+      "sources":["https://patrimoines.ain.fr/n/marais-de-vaux-a-hauteville-lompnes/n%3A1357"],
+      "creativeReading":{
+        "forms":["ligne de pilotis","tige verticale","goutte","ellipse de feuille","couche flottante"],
+        "materials":["organza","tulle","matière translucide","bois"],
+        "textures":["tourbe","surface humide","feuille cireuse","brume"],
+        "palette":["vert mousse","brun tourbe","rose orchidée","gris eau","jaune acide discret"],
+        "symbols":["fragilité","résilience","couche","humidité","observation"]
+      },
+      "fashionKnowledge":["construction par couches transparentes","motif botanique simplifié","volume léger inspiré des tiges"],
+      "keywords":["Marais de Vaux","pilotis","orchidée","plante carnivore","tourbe","zone humide","Bugey"],
+      "unlocks":["unlock-vaux-stem-sleeve","unlock-vaux-layered-dress","unlock-vaux-bog-texture","unlock-vaux-orchid-palette"],
+      "drawingLessons":["lesson-vaux-transparent-layers","lesson-vaux-botanical-line"],
+      "encounterHooks":["enc-vaux-mila"],
+      "missionHooks":["mission-vaux-no-pick-sketch"]
+    },
+    {
+      "id":"ain-grottes-cerdon",
+      "name":"Grottes du Cerdon — Parc de loisirs préhistoriques",
+      "commune":"Labalme",
+      "reality":"real",
+      "kind":"cave-prehistory-site",
+      "sourceNotes":"Le parcours suit le lit d'une ancienne rivière souterraine et traverse des cavités sculptées par l'eau jusqu'à une grande salle ouverte sur la vallée. Le parc propose aussi des ateliers liés à la préhistoire : parure, poterie, peinture, feu et autres gestes expérimentaux.",
+      "sources":[
+        "https://www.ain-tourisme.com/visiter-patrimoine/parcs-a-theme/grottes-du-cerdon-parc-de-loisirs-prehistoriques/",
+        "https://www.ain-tourisme.com/offres/grottes-du-cerdon-parc-de-loisirs-prehistoriques-labalme-fr-5377932/"
+      ],
+      "creativeReading":{
+        "forms":["stalactite","cavité","arc naturel","goutte","stratification"],
+        "materials":["pierre","argile","cordon","coquillage fictif de référence","fibre brute"],
+        "textures":["roche humide","argile mate","surface minérale","trace peinte"],
+        "palette":["ocre","charbon","gris roche","brun terre","blanc calcaire"],
+        "symbols":["abri","trace","geste","parure","temps long"]
+      },
+      "fashionKnowledge":["parure comme geste humain ancien","assemblage simple","cordons et liens","motif gestuel","surface minérale comme source de texture"],
+      "keywords":["Grottes du Cerdon","Labalme","préhistoire","parure","argile","grotte","rivière souterraine","ocre"],
+      "unlocks":["unlock-cerdon-cord-necklace","unlock-cerdon-wrap-top","unlock-cerdon-stone-texture","unlock-cerdon-ochre-palette","unlock-cerdon-cave-drape"],
+      "drawingLessons":["lesson-cerdon-simple-parure","lesson-cerdon-ochre-mark","lesson-cerdon-cave-drape"],
+      "encounterHooks":["enc-cerdon-nael"],
+      "missionHooks":["mission-cerdon-three-materials"]
+    }
+  ],
+  "fictionalPlaces":[
+    {"id":"fp-gex-lisiere","name":"La Lisière","commune":"Gex","reality":"fictional","kind":"design-bookshop-cafe","purpose":["rencontres transfrontalières","revues mode","soirées créatives"]},
+    {"id":"fp-lelex-altitude-12","name":"Atelier Altitude 12","commune":"Lélex","reality":"fictional","kind":"small-technical-sewing-workshop","purpose":["réparations outdoor","matières techniques","cours capuche"]},
+    {"id":"fp-oncieu-verger","name":"Le Verger Rond","commune":"Oncieu","reality":"fictional","kind":"seasonal-artist-residency","purpose":["croquis","micro-expo","rencontres designers"]},
+    {"id":"fp-fareins-cadre","name":"Le Cadre Bleu","commune":"Fareins","reality":"fictional","kind":"small-gallery","purpose":["vernissage","motifs peints","rencontre curatrice"]},
+    {"id":"fp-sorlin-passage","name":"Le Passage Peint","commune":"Saint-Sorlin-en-Bugey","reality":"fictional","kind":"illustration-workshop","purpose":["pigments","motifs","petites commandes"]}
+  ],
+  "npcs":[
+    {"id":"npc-amelie-rochat","name":"Amélie Rochat","reality":"fictional","home":"Gex","role":"styliste éditoriale franco-suisse","traits":["élégante","rapide","très connectée"],"longArc":"Peut ouvrir des collaborations transfrontalières et confronter le joueur à des réseaux plus exigeants."},
+    {"id":"npc-romane-gillet","name":"Romane Gillet","reality":"fictional","home":"Lélex","role":"couturière-réparatrice outdoor","traits":["pratique","patiente","ingénieuse"],"longArc":"Transmet des logiques de mobilité, renfort et réparation ; fournit de petites séries techniques."},
+    {"id":"npc-jules-perraudin","name":"Jules Perraudin","reality":"fictional","home":"Mijoux","role":"guide et dessinateur de montagne","traits":["silencieux","précis","endurant"],"longArc":"Peut devenir contact pour repérages et projets de collection liés aux crêtes."},
+    {"id":"npc-lou-vachet","name":"Lou Vachet","reality":"fictional","home":"Oncieu","role":"architecte-paysagiste","traits":["douce","méthodique","obsédée par les formes"],"longArc":"Aide le joueur à transformer géométrie et paysage en construction de vêtement."},
+    {"id":"npc-estelle-ray","name":"Estelle Ray","reality":"fictional","home":"Saint-Sorlin-en-Bugey","role":"illustratrice et restauratrice de décors peints","traits":["minutieuse","curieuse","protectrice du patrimoine"],"longArc":"Peut enseigner bordures, motifs narratifs et travail graphique inspiré des fresques."},
+    {"id":"npc-iris-montfort","name":"Iris Montfort","reality":"fictional","home":"Villefranche-sur-Saône","role":"curatrice indépendante","traits":["théâtrale","érudite","sélective"],"longArc":"Introduit le joueur dans des événements privés et des commandes liées à l'art décoratif."},
+    {"id":"npc-mila-caron","name":"Mila Caron","reality":"fictional","home":"Plateau d'Hauteville","role":"botaniste-médiatrice","traits":["calme","rigoureuse","anti-gaspillage"],"longArc":"Apprend à observer sans prélever ; peut inspirer une branche de création végétale responsable."},
+    {"id":"npc-nael-besson","name":"Naël Besson","reality":"fictional","home":"Poncin","role":"médiateur préhistoire et artisan amateur","traits":["pédagogue","enthousiaste","terre-à-terre"],"longArc":"Débloque exercices sur parure, lien, argile et dessin gestuel."}
+  ],
+  "encounters":[
+    {"id":"enc-gex-amelie","npc":"npc-amelie-rochat","trigger":"soirée fictive à La Lisière","choices":["montrer son book","parler influences du territoire","écouter seulement"],"possibleEffects":["réseau","pression","mission transfrontalière"]},
+    {"id":"enc-lelex-romane","npc":"npc-romane-gillet","trigger":"après une journée dehors avec un vêtement abîmé","choices":["payer une réparation","demander comment c'est construit","proposer un échange"],"possibleEffects":["réparation","cours technique","contact"]},
+    {"id":"enc-cret-jules","npc":"npc-jules-perraudin","trigger":"croquis sur une crête","choices":["dessiner en silence","demander un conseil sur le vent","proposer un repérage"],"possibleEffects":["croquis","contact","shooting futur"]},
+    {"id":"enc-oncieu-lou","npc":"npc-lou-vachet","trigger":"observation du verger central","choices":["parler géométrie","parler vêtements","continuer seule"],"possibleEffects":["connaissance","mission","inspiration"]},
+    {"id":"enc-sorlin-estelle","npc":"npc-estelle-ray","trigger":"devant la maison Saint-Christophe","choices":["poser une question sur les pigments","parler motifs","ne pas interrompre"],"possibleEffects":["motif","contact","cours"]},
+    {"id":"enc-flecheres-iris","npc":"npc-iris-montfort","trigger":"visite ou vernissage fictif lié à Fléchères","choices":["parler fresques","parler silhouette","demander son avis sur le book"],"possibleEffects":["réseau art","mission","critique"]},
+    {"id":"enc-vaux-mila","npc":"npc-mila-caron","trigger":"sentier sur pilotis","choices":["demander comment observer sans déranger","dessiner une plante","parler textile"],"possibleEffects":["connaissance","palette","mission"]},
+    {"id":"enc-cerdon-nael","npc":"npc-nael-besson","trigger":"atelier parure ou peinture","choices":["faire l'atelier","poser des questions sur les gestes","partir après la grotte"],"possibleEffects":["cours","parure","inspiration"]}
+  ],
+  "missions":[
+    {"id":"mission-gex-crossborder-look","title":"Deux rives, une silhouette","reality":"fictional","location":"Pays de Gex","hook":"Amélie veut une silhouette mêlant sobriété jurassienne et élégance urbaine lémanique.","choices":["accepter","négocier plus de temps","refuser"],"rewards":["portfolio","réseau","signature"]},
+    {"id":"mission-lelex-weather-capsule","title":"Météo changeante","reality":"fictional","location":"Lélex","hook":"Créer trois pièces combinables pour une journée de montagne qui passe du froid au soleil.","rewards":["technique","portfolio","matériaux"]},
+    {"id":"mission-cret-five-lines","title":"Cinq lignes de crête","reality":"fictional","location":"Crêt de la Neige","hook":"Ramener cinq silhouettes construites uniquement depuis les lignes du paysage.","rewards":["croquis","créativité","carnet"]},
+    {"id":"mission-oncieu-round-study","title":"Autour du centre","reality":"fictional","location":"Oncieu","hook":"Créer une jupe ou cape à construction radiale inspirée du plan du village.","rewards":["patronage","croquis","déblocage"]},
+    {"id":"mission-sorlin-travel-symbol","title":"Signe de voyage","reality":"fictional","location":"Saint-Sorlin-en-Bugey","hook":"Créer un détail protecteur contemporain à partir du vocabulaire graphique de la façade peinte, sans reproduire littéralement l'iconographie religieuse.","rewards":["motif","culture","signature"]},
+    {"id":"mission-flecheres-room-to-look","title":"Une salle, une tenue","reality":"fictional","location":"Fareins","hook":"Choisir une salle peinte et traduire perspective, rythme et cadre en silhouette contemporaine.","rewards":["portfolio","art","réseau"]},
+    {"id":"mission-vaux-no-pick-sketch","title":"Observer sans cueillir","reality":"fictional","location":"Marais de Vaux","hook":"Créer une mini planche botanique uniquement par observation et croquis, sans aucun prélèvement.","rewards":["croquis","connaissance","éthique"]},
+    {"id":"mission-cerdon-three-materials","title":"Trois gestes anciens","reality":"fictional","location":"Grottes du Cerdon","hook":"Créer un accessoire contemporain à partir de trois idées : lien, parure et trace minérale.","rewards":["accessoire","créativité","cours"]}
+  ],
+  "unlockCatalog":[
+    {"id":"unlock-gex-border-coat","type":"coat","name":"Manteau Frontière","source":"ain-pays-gex-identity","assetRule":"neutral-line-art"},
+    {"id":"unlock-gex-lake-skirt","type":"skirt","name":"Jupe Ligne Léman","source":"ain-pays-gex-identity","assetRule":"neutral-line-art"},
+    {"id":"unlock-gex-fog-palette","type":"palette","name":"Brume du Léman","source":"ain-pays-gex-identity"},
+    {"id":"unlock-gex-horizon-detail","type":"component-detail","name":"Empiècement Horizon","source":"ain-pays-gex-identity","assetRule":"neutral-line-art"},
+    {"id":"unlock-lelex-technical-hood","type":"component-hood","name":"Capuche Lélex","source":"ain-monts-jura","assetRule":"neutral-line-art"},
+    {"id":"unlock-lelex-layer-jacket","type":"jacket","name":"Veste Trois Couches","source":"ain-monts-jura","assetRule":"neutral-line-art"},
+    {"id":"unlock-lelex-slope-skirt","type":"skirt","name":"Jupe Pente","source":"ain-monts-jura","assetRule":"neutral-line-art"},
+    {"id":"unlock-lelex-strap-detail","type":"component-detail","name":"Sangle Monts Jura","source":"ain-monts-jura","assetRule":"neutral-line-art"},
+    {"id":"unlock-lelex-winter-palette","type":"palette","name":"Neige & Sapin","source":"ain-monts-jura"},
+    {"id":"unlock-cret-ridge-cape","type":"outerwear","name":"Cape Crête","source":"ain-cret-neige","assetRule":"neutral-line-art"},
+    {"id":"unlock-cret-asym-top","type":"top","name":"Top Ligne de Crête","source":"ain-cret-neige","assetRule":"neutral-line-art"},
+    {"id":"unlock-cret-ridge-seam","type":"component-detail","name":"Découpe Sommitale","source":"ain-cret-neige","assetRule":"neutral-line-art"},
+    {"id":"unlock-cret-frost-palette","type":"palette","name":"Givre du Jura","source":"ain-cret-neige"},
+    {"id":"unlock-oncieu-circle-skirt","type":"skirt","name":"Jupe Oncieu Cercle","source":"ain-oncieu-round-village","assetRule":"neutral-line-art"},
+    {"id":"unlock-oncieu-radial-top","type":"top","name":"Top Radial","source":"ain-oncieu-round-village","assetRule":"neutral-line-art"},
+    {"id":"unlock-oncieu-ring-collar","type":"component-collar","name":"Col Anneau","source":"ain-oncieu-round-village","assetRule":"neutral-line-art"},
+    {"id":"unlock-oncieu-orchard-palette","type":"palette","name":"Verger Rond","source":"ain-oncieu-round-village"},
+    {"id":"unlock-sorlin-scroll-collar","type":"component-collar","name":"Col Phylactère","source":"ain-saint-sorlin-painted-house","assetRule":"neutral-line-art"},
+    {"id":"unlock-sorlin-heraldic-panel","type":"component-panel","name":"Panneau Écu","source":"ain-saint-sorlin-painted-house","assetRule":"neutral-line-art"},
+    {"id":"unlock-sorlin-painted-border","type":"pattern","name":"Bordure Façade Peinte","source":"ain-saint-sorlin-painted-house"},
+    {"id":"unlock-sorlin-travel-cape","type":"outerwear","name":"Cape Passage","source":"ain-saint-sorlin-painted-house","assetRule":"neutral-line-art"},
+    {"id":"unlock-sorlin-fresco-palette","type":"palette","name":"Fresque Patinée","source":"ain-saint-sorlin-painted-house"},
+    {"id":"unlock-flecheres-perspective-dress","type":"dress","name":"Robe Perspective","source":"ain-flecheres","assetRule":"neutral-line-art"},
+    {"id":"unlock-flecheres-twisted-sleeve","type":"component-sleeve","name":"Manche Colonne Torse","source":"ain-flecheres","assetRule":"neutral-line-art"},
+    {"id":"unlock-flecheres-parade-jacket","type":"jacket","name":"Veste Parade","source":"ain-flecheres","assetRule":"neutral-line-art"},
+    {"id":"unlock-flecheres-frame-pattern","type":"pattern","name":"Cadre Ricchi","source":"ain-flecheres"},
+    {"id":"unlock-flecheres-fresco-palette","type":"palette","name":"Fresque XVIIe","source":"ain-flecheres"},
+    {"id":"unlock-vaux-stem-sleeve","type":"component-sleeve","name":"Manche Tige","source":"ain-marais-vaux","assetRule":"neutral-line-art"},
+    {"id":"unlock-vaux-layered-dress","type":"dress","name":"Robe Marais Transparent","source":"ain-marais-vaux","assetRule":"neutral-line-art"},
+    {"id":"unlock-vaux-bog-texture","type":"texture","name":"Tourbe & Eau","source":"ain-marais-vaux"},
+    {"id":"unlock-vaux-orchid-palette","type":"palette","name":"Orchidée des Vaux","source":"ain-marais-vaux"},
+    {"id":"unlock-cerdon-cord-necklace","type":"accessory","name":"Collier Lien","source":"ain-grottes-cerdon","assetRule":"neutral-line-art"},
+    {"id":"unlock-cerdon-wrap-top","type":"top","name":"Top Enroulé","source":"ain-grottes-cerdon","assetRule":"neutral-line-art"},
+    {"id":"unlock-cerdon-stone-texture","type":"texture","name":"Roche Humide","source":"ain-grottes-cerdon"},
+    {"id":"unlock-cerdon-ochre-palette","type":"palette","name":"Ocre & Charbon","source":"ain-grottes-cerdon"},
+    {"id":"unlock-cerdon-cave-drape","type":"component-drape","name":"Drapé Cavité","source":"ain-grottes-cerdon","assetRule":"neutral-line-art"}
+  ],
+  "drawingLessons":[
+    {"id":"lesson-gex-layered-horizon","title":"Construire une silhouette en strates d'horizon","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-gex-border-line","title":"Transformer une ligne-frontière en découpe de vêtement","levels":["guided","memory","variation","creation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-lelex-hood-construction","title":"Dessiner une capuche protectrice","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-lelex-layered-jacket","title":"Construire une veste en plusieurs couches","levels":["guided","memory","variation","creation"],"skills":["Patronage","Croquis"]},
+    {"id":"lesson-lelex-motion-ski","title":"Dessiner une silhouette en mouvement de descente","levels":["trace","guided","memory"],"skills":["Croquis"]},
+    {"id":"lesson-cret-ridge-silhouette","title":"Créer une silhouette depuis une ligne de crête","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-cret-wind-lines","title":"Dessiner le vent avec les lignes du vêtement","levels":["trace","guided","memory","creation"],"skills":["Croquis"]},
+    {"id":"lesson-oncieu-circle-skirt","title":"Dessiner et comprendre une jupe cercle","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-oncieu-radial-construction","title":"Construire un vêtement autour d'un centre","levels":["guided","variation","creation"],"skills":["Patronage","Créativité"]},
+    {"id":"lesson-sorlin-scroll-ribbon","title":"Dessiner un ruban-phylactère en volume","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-sorlin-heraldic-shape","title":"Simplifier un écu en empiècement moderne","levels":["guided","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-sorlin-fresco-border","title":"Créer une bordure textile depuis une façade peinte","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-flecheres-perspective-pattern","title":"Transformer une perspective peinte en motif textile","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-flecheres-twisted-column-sleeve","title":"Dessiner une manche inspirée d'une colonne torse","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-flecheres-parade-silhouette","title":"Construire une silhouette de parade contemporaine","levels":["guided","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-vaux-transparent-layers","title":"Dessiner des couches transparentes sans perdre la forme","levels":["trace","guided","memory","variation"],"skills":["Croquis","Matières"]},
+    {"id":"lesson-vaux-botanical-line","title":"Simplifier une plante en ligne de mode","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-cerdon-simple-parure","title":"Dessiner une parure simple à partir de liens","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-cerdon-ochre-mark","title":"Créer un motif gestuel inspiré de traces minérales","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-cerdon-cave-drape","title":"Transformer une cavité rocheuse en drapé","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Créativité"]}
+  ],
+  "visualProduction":[
+    {"territory":"Gex / Pays de Gex","needed":["carte territoire","brume/Léman au loin","La Lisière","portrait Amélie","4 déblocages","2 cours"]},
+    {"territory":"Lélex / Monts Jura","needed":["carte station","été/hiver","Atelier Altitude 12","portrait Romane","5 déblocages","3 cours"]},
+    {"territory":"Crêt de la Neige","needed":["panorama de crêtes","vent","portrait Jules","4 déblocages","2 cours"]},
+    {"territory":"Oncieu","needed":["vue aérienne illustrée du village rond","verger","portrait Lou","4 déblocages","2 cours"]},
+    {"territory":"Saint-Sorlin-en-Bugey","needed":["carte village","façade Saint-Christophe","lavoir","atelier fictif","portrait Estelle","5 déblocages","3 cours"]},
+    {"territory":"Fareins / Fléchères","needed":["extérieur château","salle des perspectives","fresques","jardin","portrait Iris","5 déblocages","3 cours"]},
+    {"territory":"Marais de Vaux","needed":["sentier sur pilotis","zone humide","planche botanique originale","portrait Mila","4 déblocages","2 cours"]},
+    {"territory":"Grottes du Cerdon","needed":["entrée et cavité","ancienne rivière","atelier parure fictif","portrait Naël","5 déblocages","3 cours"]}
+  ]
+}
