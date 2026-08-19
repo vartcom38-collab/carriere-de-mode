@@ -5,6 +5,7 @@
   function loadExtras(){
     if(!window.__HCCommsLoading&&!window.__HCCommsInstalled){window.__HCCommsLoading=true;const a=document.createElement('script');a.src='./communication-engine.js?v=694e6a66';a.onload=()=>{window.__HCCommsLoading=false};document.head.appendChild(a)}
     if(!window.__HCDepthLoading&&!window.__HCDepthInstalled){window.__HCDepthLoading=true;const b=document.createElement('script');b.src='./career-depth-engine.js?v=9398905c';b.onload=()=>{window.__HCDepthLoading=false};document.head.appendChild(b)}
+    if(!window.__HCProLoading&&!window.__HCProInstalled){window.__HCProLoading=true;const c=document.createElement('script');c.src='./professional-life-engine.js?v=02a5a0a0';c.onload=()=>{window.__HCProLoading=false};document.head.appendChild(c)}
   }
   function install(){if(!ready()||window.__HCInfiniteInstalled)return;window.__HCInfiniteInstalled=true;
     const core=HauteCoutureCore;
