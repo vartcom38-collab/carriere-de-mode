@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "status": "research-pass-1",
+  "country": "France",
+  "region": "Auvergne-Rhône-Alpes",
+  "department": {"code": "01", "name": "Ain"},
+  "designIntent": "Premier lot de la World Bible. Les lieux culturels sont réels et sourcés ; les PNJ, lieux narratifs et missions sont fictifs.",
+  "territories": [
+    {"id":"ain-bourg","name":"Bourg-en-Bresse","type":"city","themes":["gothique flamboyant","art","Bresse","costume","architecture"]},
+    {"id":"ain-jujurieux","name":"Jujurieux","type":"village","themes":["soie","industrie textile","tissage","mémoire ouvrière"]},
+    {"id":"ain-saint-cyr-menthon","name":"Saint-Cyr-sur-Menthon","type":"village","themes":["Bresse","costume régional","émaux","habitat rural"]},
+    {"id":"ain-ferney","name":"Ferney-Voltaire","type":"city","themes":["XVIIIe siècle","Lumières","jardin","portrait","théâtre"]},
+    {"id":"ain-villars-dombes","name":"Villars-les-Dombes","type":"town","themes":["oiseaux","plumes","couleurs","mouvement","nature"]},
+    {"id":"ain-trevoux","name":"Trévoux","type":"town","themes":["artisanat d'art","fil d'or","bijou","Dombes"]},
+    {"id":"ain-perouges","name":"Pérouges","type":"village","themes":["cité médiévale","pierre","bois","ruelles","artisanat"]}
+  ],
+  "realPlaces": [
+    {
+      "id":"ain-soieries-bonnet",
+      "name":"Musée des Soieries Bonnet",
+      "commune":"Jujurieux",
+      "reality":"real",
+      "kind":"textile-museum-industrial-heritage",
+      "sourceNotes":"Ensemble industriel textile préservé, associé à une grande maison de soierie lyonnaise des XIXe et XXe siècles. Les collections et ateliers documentent étoffes, outils, archives, chaîne/trame, dessin textile, Jacquard, velours, taffetas, satin, mousseline, foulards et métiers de la soierie.",
+      "sources":[
+        "https://patrimoines.ain.fr/n/les-soieries-bonnet-a-jujurieux/n%3A453",
+        "https://patrimoines.ain.fr/n/dans-le-secret-des-ateliers-de-tissage/n%3A1010",
+        "https://patrimoines.ain.fr/n/des-collections-exceptionnelles/n%3A1026"
+      ],
+      "creativeReading":{
+        "forms":["répétition modulaire","grille chaîne-trame","foulard carré","motif façonné"],
+        "materials":["soie","mousseline","velours","satin","taffetas"],
+        "textures":["brillance","transparence","poil du velours","surface façonnée"],
+        "palette":["noir soyeux","ivoire","bleu nuit","vert profond","tons de cartes de nuances"],
+        "movement":["fluidité","ondulation","chute légère"]
+      },
+      "fashionKnowledge":["chaîne et trame","armure taffetas","mécanique Jacquard","ourdissage","conception de motif","contrôle qualité textile","métiers de la soierie"],
+      "keywords":["Jujurieux","soie","Jacquard","velours","mousseline","tissage","foulard","industrie textile","ouvrières"],
+      "unlocks":["unlock-juj-foulard-01","unlock-juj-blouse-mousseline","unlock-juj-jacquard-jacket","unlock-juj-velvet-skirt","unlock-juj-pattern-repeat","unlock-juj-palette-silk"],
+      "drawingLessons":["lesson-juj-foulard","lesson-juj-silk-folds","lesson-juj-repeat-pattern","lesson-juj-velvet-render"],
+      "shootingPotential":{"enabled":true,"fictionalConditions":["autorisation","collection adaptée","photographe"],"themes":["mémoire industrielle","métier à tisser","soie et machine"]},
+      "encounterHooks":["enc-juj-eleonore","enc-juj-malo"],
+      "missionHooks":["mission-juj-archive","mission-juj-foulard"]
+    },
+    {
+      "id":"ain-brou",
+      "name":"Monastère royal de Brou & musée des Beaux-Arts",
+      "commune":"Bourg-en-Bresse",
+      "reality":"real",
+      "kind":"monument-art-museum",
+      "sourceNotes":"Monument lié à Marguerite d'Autriche, remarquable pour son architecture entre tradition médiévale et Renaissance, ses tombeaux princiers, vitraux et décors sculptés. Le musée présente des collections du Moyen Âge à l'art contemporain, avec notamment art flamand, art troubadour, Gustave Doré et art contemporain.",
+      "sources":[
+        "https://www.monastere-de-brou.fr/decouvrir/une-architecture-unique",
+        "https://www.monastere-de-brou.fr/decouvrir/somptueux-tombeaux",
+        "https://www.monastere-de-brou.fr/decouvrir/les-collections-permanentes-du-musee"
+      ],
+      "creativeReading":{
+        "forms":["verticalité","arcades","pinacles","dais ajourés","lettres entrelacées"],
+        "materials":["pierre","marbre","albâtre","verre coloré"],
+        "textures":["dentelle de pierre","surface sculptée","vitrail lumineux"],
+        "palette":["ivoire","gris pierre","bleu verrier","rouge profond","or sourd"],
+        "symbols":["amour","pouvoir","mémoire","art","entrelacs"]
+      },
+      "fashionKnowledge":["portrait princier","costume de cour comme source d'observation","ornement Renaissance","rapport entre structure et décor"],
+      "keywords":["Brou","Marguerite d'Autriche","dentelle de pierre","gothique flamboyant","vitrail","tombeau","art flamand","Bourg-en-Bresse"],
+      "unlocks":["unlock-brou-cape","unlock-brou-cutwork-collar","unlock-brou-sculpted-sleeve","unlock-brou-ivory-dress","unlock-brou-stone-lace-pattern","unlock-brou-stainedglass-palette"],
+      "drawingLessons":["lesson-brou-architectural-collar","lesson-brou-sculpted-sleeve","lesson-brou-stainedglass-color"],
+      "shootingPotential":{"enabled":true,"fictionalConditions":["prestige minimum","autorisation","budget"],"themes":["dentelle de pierre","ivoire et vitrail","silhouette monumentale"]},
+      "encounterHooks":["enc-bourg-lison","enc-bourg-adrien"],
+      "missionHooks":["mission-bourg-vernissage","mission-bourg-portrait"]
+    },
+    {
+      "id":"ain-planons",
+      "name":"Domaine des Saveurs – Les Planons",
+      "commune":"Saint-Cyr-sur-Menthon",
+      "reality":"real",
+      "kind":"regional-museum",
+      "sourceNotes":"Les collections départementales documentent l'identité bressane, notamment costumes, coiffes, grand chapeau bressan, sabots, tabliers, châles et émaux bressans. Le musée est engagé dans une transformation dont l'inauguration annoncée est prévue en juin 2027.",
+      "sources":[
+        "https://patrimoines.ain.fr/n/un-musee-des-collections/n%3A1019",
+        "https://patrimoines.ain.fr/chronologie/liste/histoire-du-musee-de-la-bresse-6/n%3A1001"
+      ],
+      "creativeReading":{
+        "forms":["chapeau à cheminée","coiffe","tablier","châle","bijou pendentif"],
+        "materials":["feutre","dentelle noire","émail","or","argent","bois"],
+        "textures":["dentelle","émaillage brillant","tissu de fête","bois ouvragé"],
+        "palette":["noir","blanc","or","rouge émaillé","vert rural"],
+        "symbols":["identité","rite","fête","deuil","appartenance locale"]
+      },
+      "fashionKnowledge":["costume comme code social","coiffes selon les moments de vie","bijou régional","émaux bressans"],
+      "keywords":["Bresse","costume bressan","chapeau bressan","coiffe","dentelle noire","émaux bressans","tablier","châle"],
+      "unlocks":["unlock-bresse-hat-inspired","unlock-bresse-lace-collar","unlock-bresse-apron-skirt","unlock-bresse-enamel-brooch","unlock-bresse-blackwhite-palette"],
+      "drawingLessons":["lesson-bresse-hat-shape","lesson-bresse-lace-detail","lesson-bresse-brooch"],
+      "encounterHooks":["enc-bresse-claire-emaux"],
+      "missionHooks":["mission-bresse-modernise-costume"]
+    },
+    {
+      "id":"ain-voltaire",
+      "name":"Château de Voltaire",
+      "commune":"Ferney-Voltaire",
+      "reality":"real",
+      "kind":"historic-house-garden",
+      "sourceNotes":"Demeure où Voltaire passa les vingt dernières années de sa vie. Le parcours présente château, salons, portraits et jardins ; la charmille et le jardin régulier participent fortement à la mise en scène du domaine et offrent des variations saisonnières.",
+      "sources":[
+        "https://www.chateau-ferney-voltaire.fr/decouvrir/visite-virtuelle-du-chateau-de-voltaire-a-ferney",
+        "https://www.chateau-ferney-voltaire.fr/decouvrir/la-charmille-de-voltaire",
+        "https://www.chateau-ferney-voltaire.fr/decouvrir/les-representations-de-voltaire"
+      ],
+      "creativeReading":{
+        "forms":["silhouette XVIIIe","axe de jardin","tunnel végétal","salon","portrait en buste"],
+        "materials":["bois","papier","marbre","végétal","étoffes d'intérieur"],
+        "textures":["feuillage","parquet","papier imprimé","marbre"],
+        "palette":["vert charme","crème","gris perle","bleu pâle","terre"],
+        "symbols":["Lumières","conversation","écriture","jardin","mise en scène sociale"]
+      },
+      "fashionKnowledge":["portrait et représentation de soi","vêtement du XVIIIe comme observation historique","salon comme espace social"],
+      "keywords":["Ferney","Voltaire","XVIIIe","Lumières","charmille","jardin","portrait","salon"],
+      "unlocks":["unlock-ferney-garden-coat","unlock-ferney-bow-blouse","unlock-ferney-portrait-collar","unlock-ferney-green-palette","unlock-ferney-salon-backdrop"],
+      "drawingLessons":["lesson-ferney-portrait-collar","lesson-ferney-coat-line","lesson-ferney-botanical-border"],
+      "encounterHooks":["enc-ferney-celeste","enc-ferney-theatre"],
+      "missionHooks":["mission-ferney-reading-night","mission-ferney-garden-shoot"]
+    },
+    {
+      "id":"ain-parc-oiseaux",
+      "name":"Parc des Oiseaux",
+      "commune":"Villars-les-Dombes",
+      "reality":"real",
+      "kind":"nature-ornithology-park",
+      "sourceNotes":"Parc consacré aux oiseaux, à leurs milieux et à la sensibilisation à leur préservation. Le site met notamment en avant plumes, couleurs, mouvement en vol et diversité des espèces.",
+      "sources":[
+        "https://www.parcdesoiseaux.com/le-parc/",
+        "https://www.parcdesoiseaux.com/votre-visite/",
+        "https://www.parcdesoiseaux.com/le-parc/un-monde-a-partager/les-roles-et-missions/"
+      ],
+      "creativeReading":{
+        "forms":["aile","plume","bec","queue","envol","courbe"],
+        "materials":["plume comme référence visuelle non prélevée","organza","tulle","matières iridescentes"],
+        "textures":["iridescence","duvet","superposition","frange légère"],
+        "palette":["arc-en-ciel","bleu paon","corail","jaune vif","noir profond"],
+        "movement":["envol","ballet","déploiement","battement"]
+      },
+      "fashionKnowledge":["observation de couleur naturelle","construction par superposition","mouvement comme source de silhouette","création inspirée du vivant sans prélèvement"],
+      "keywords":["Dombes","oiseaux","plumes","couleur","iridescence","envol","mouvement","nature"],
+      "unlocks":["unlock-bird-wing-sleeve","unlock-bird-layered-skirt","unlock-bird-iridescent-palette","unlock-bird-featherlike-motif","unlock-bird-flight-pose"],
+      "drawingLessons":["lesson-bird-wing-sleeve","lesson-bird-iridescence","lesson-bird-motion-lines"],
+      "encounterHooks":["enc-dombes-ines-photo"],
+      "missionHooks":["mission-dombes-motion-study"]
+    },
+    {
+      "id":"ain-trevoux-art",
+      "name":"Trévoux — ville d'art et d'histoire / tradition artisanale",
+      "commune":"Trévoux",
+      "reality":"real",
+      "kind":"historic-town-craft",
+      "sourceNotes":"Ancienne capitale de la Dombes. La présentation touristique départementale souligne sa tradition artisanale, avec peintres, bijoutiers, céramistes et un savoir-faire historiquement associé au fil d'or.",
+      "sources":["https://www.ain-tourisme.com/visiter-patrimoine/villes-villages-remarquables/"],
+      "creativeReading":{
+        "forms":["filigrane","ligne fine","médaillon","courbe de bijou"],
+        "materials":["métal doré","céramique","pierre"],
+        "textures":["fil métallique","surface émaillée","patine"],
+        "palette":["or doux","ivoire","bleu Dombes","terre cuite"],
+        "symbols":["artisanat","précision","ornement","transmission"]
+      },
+      "keywords":["Trévoux","fil d'or","bijou","artisanat d'art","Dombes","céramique"],
+      "unlocks":["unlock-trevoux-gold-thread-belt","unlock-trevoux-filigree-earring","unlock-trevoux-metallic-embroidery","unlock-trevoux-goldblue-palette"],
+      "drawingLessons":["lesson-trevoux-filigree","lesson-trevoux-jewelry-proportion"],
+      "encounterHooks":["enc-trevoux-nora-bijou"],
+      "missionHooks":["mission-trevoux-accessory-collab"]
+    },
+    {
+      "id":"ain-perouges-town",
+      "name":"Pérouges — cité médiévale",
+      "commune":"Pérouges",
+      "reality":"real",
+      "kind":"historic-village",
+      "sourceNotes":"Cité médiévale emblématique de l'Ain, identifiée parmi les villes et villages remarquables du département.",
+      "sources":["https://www.ain-tourisme.com/visiter-patrimoine/villes-villages-remarquables/"],
+      "creativeReading":{
+        "forms":["ruelle étroite","pignon","pavé","porte","géométrie de façade"],
+        "materials":["pierre","bois","fer"],
+        "textures":["pavé irrégulier","bois patiné","mur minéral"],
+        "palette":["gris chaud","brun bois","ocre","mousse","noir fer"],
+        "symbols":["temps","trace","artisanat","protection"]
+      },
+      "keywords":["Pérouges","médiéval","pierre","bois","pavé","artisanat","patine"],
+      "unlocks":["unlock-perouges-hood","unlock-perouges-leather-belt","unlock-perouges-stone-texture","unlock-perouges-earth-palette"],
+      "drawingLessons":["lesson-perouges-hood","lesson-perouges-weathered-texture"],
+      "encounterHooks":["enc-perouges-maud"],
+      "missionHooks":["mission-perouges-craft-market"]
+    }
+  ],
+  "fictionalPlaces":[
+    {"id":"fp-juj-deux-navettes","name":"L'Atelier des Deux Navettes","commune":"Jujurieux","reality":"fictional","kind":"small-textile-workshop","purpose":["rencontre artisane","petits coupons","cours privés","missions motif"]},
+    {"id":"fp-bourg-verriere","name":"La Verrière 01","commune":"Bourg-en-Bresse","reality":"fictional","kind":"gallery-cafe","purpose":["vernissages","rencontres créatives","petites expositions","missions shooting"]},
+    {"id":"fp-bourg-studio-lentille","name":"Studio Lentille","commune":"Bourg-en-Bresse","reality":"fictional","kind":"photo-studio","purpose":["shootings","portfolio","collaborations"]},
+    {"id":"fp-trevoux-fil-fin","name":"Atelier du Fil Fin","commune":"Trévoux","reality":"fictional","kind":"jewelry-workshop","purpose":["bijou","fil métallique","collaboration accessoires"]},
+    {"id":"fp-ferney-salon-n9","name":"Salon n°9","commune":"Ferney-Voltaire","reality":"fictional","kind":"literary-cafe","purpose":["soirées","journalistes","lectures","réseau culturel"]}
+  ],
+  "npcs":[
+    {"id":"npc-eleonore-martin","name":"Éléonore Martin","reality":"fictional","home":"Jujurieux","role":"chargée de collections textiles","traits":["précise","curieuse","réservée"],"network":["npc-malo-bernard"],"longArc":"Peut devenir référence textile, ouvrir des archives et recommander le joueur pour un projet patrimonial."},
+    {"id":"npc-malo-bernard","name":"Malo Bernard","reality":"fictional","home":"Ambérieu-en-Bugey","role":"photographe architecture et patrimoine","traits":["mobile","observateur","enthousiaste"],"network":["npc-eleonore-martin","npc-lison-girard"],"longArc":"Peut devenir photographe récurrent de la marque."},
+    {"id":"npc-lison-girard","name":"Lison Girard","reality":"fictional","home":"Bourg-en-Bresse","role":"galeriste","traits":["sociable","sélective","franche"],"network":["npc-malo-bernard","npc-adrien-vallet"],"longArc":"Ouvre vernissages, collectionneurs, presse locale et événements privés."},
+    {"id":"npc-adrien-vallet","name":"Adrien Vallet","reality":"fictional","home":"Bourg-en-Bresse","role":"jeune designer-objet","traits":["ambitieux","inventif","compétitif"],"network":["npc-lison-girard"],"longArc":"Collaboration possible ou rivalité créative selon les réponses du joueur."},
+    {"id":"npc-claire-monnier","name":"Claire Monnier","reality":"fictional","home":"Bresse","role":"créatrice de bijoux émaillés contemporains","traits":["patiente","attachée au territoire","exigeante"],"network":[],"longArc":"Transmet des principes de couleur et d'émail ; peut proposer une capsule bijou-vêtement."},
+    {"id":"npc-celeste-roche","name":"Céleste Roche","reality":"fictional","home":"Ferney-Voltaire","role":"programmatrice culturelle","traits":["érudite","vive","très organisée"],"network":[],"longArc":"Peut inviter le joueur à des soirées, débats, performances et commandes culturelles."},
+    {"id":"npc-ines-durand","name":"Inès Durand","reality":"fictional","home":"Villars-les-Dombes","role":"photographe naturaliste","traits":["calme","éthique","attentive"],"network":[],"longArc":"Apprend à observer mouvement et couleur sans déranger le vivant ; collaborations éditoriales possibles."},
+    {"id":"npc-nora-fabre","name":"Nora Fabre","reality":"fictional","home":"Trévoux","role":"bijoutière","traits":["minutieuse","indépendante","directe"],"network":[],"longArc":"Débloque collaborations accessoires et techniques inspirées du fil métallique."},
+    {"id":"npc-maud-perrin","name":"Maud Perrin","reality":"fictional","home":"Pérouges","role":"artisane cuir et petite maroquinerie","traits":["pragmatique","chaleureuse","peu impressionnable"],"network":[],"longArc":"Peut devenir fournisseuse de petites séries et transmettre des finitions cuir."}
+  ],
+  "encounters":[
+    {"id":"enc-juj-eleonore","npc":"npc-eleonore-martin","trigger":"après une visite approfondie des Soieries Bonnet","choices":["poser une question technique","parler de son projet créatif","ne pas déranger"],"possibleEffects":["connaissance textile","contact","future invitation archives"]},
+    {"id":"enc-juj-malo","npc":"npc-malo-bernard","trigger":"extérieur/architecture industrielle","choices":["observer son travail","proposer un café","continuer la visite"],"possibleEffects":["contact photographe","idée shooting"]},
+    {"id":"enc-bourg-lison","npc":"npc-lison-girard","trigger":"vernissage fictif à La Verrière 01","choices":["parler portfolio","parler culture","rester discrète"],"possibleEffects":["réseau","invitation","pression sociale"]},
+    {"id":"enc-bourg-adrien","npc":"npc-adrien-vallet","trigger":"soirée créative","choices":["complimenter son travail","le challenger","proposer une collaboration"],"possibleEffects":["rivalité","collaboration","réputation"]},
+    {"id":"enc-bresse-claire-emaux","npc":"npc-claire-monnier","trigger":"après découverte des émaux bressans","choices":["demander une démonstration","proposer une capsule","acheter une petite pièce"],"possibleEffects":["connaissance","dépense","contact"]},
+    {"id":"enc-ferney-celeste","npc":"npc-celeste-roche","trigger":"événement culturel","choices":["parler mode et littérature","demander les prochains événements","quitter tôt"],"possibleEffects":["réseau culturel","mission"]},
+    {"id":"enc-dombes-ines-photo","npc":"npc-ines-durand","trigger":"observation du mouvement des oiseaux","choices":["demander conseil photo","dessiner à côté d'elle","proposer un projet"],"possibleEffects":["cours mouvement","shooting","contact"]},
+    {"id":"enc-trevoux-nora-bijou","npc":"npc-nora-fabre","trigger":"atelier fictif du Fil Fin","choices":["observer","commander un prototype","proposer une collaboration"],"possibleEffects":["accessoire","coût","relation"]},
+    {"id":"enc-perouges-maud","npc":"npc-maud-perrin","trigger":"marché artisanal fictif","choices":["acheter une chute de cuir","parler finitions","proposer un échange de services"],"possibleEffects":["matière","connaissance","mission"]}
+  ],
+  "missions":[
+    {"id":"mission-juj-archive","title":"Une étoffe sans légende","reality":"fictional","location":"Jujurieux","hook":"Éléonore cherche un regard créatif contemporain sur un petit ensemble d'échantillons.","choices":["accepter bénévolement pour apprendre","négocier une petite rémunération","refuser faute de temps"],"rewards":["connaissance","motif","relation"]},
+    {"id":"mission-juj-foulard","title":"Le foulard du village","reality":"fictional","location":"Jujurieux","hook":"Créer une proposition contemporaine de foulard inspirée des trames locales.","rewards":["portfolio","motif","réputation locale"]},
+    {"id":"mission-bourg-vernissage","title":"Tenue pour un vernissage","reality":"fictional","location":"Bourg-en-Bresse","hook":"Une invitée de galerie veut une pièce sobre mais forte pour le soir même.","risk":"délai court","rewards":["argent","réseau","stress"]},
+    {"id":"mission-bourg-portrait","title":"Portrait contemporain","reality":"fictional","location":"Bourg-en-Bresse","hook":"Malo propose une série photo inspirée du portrait ancien et de la verticalité de Brou.","rewards":["shooting","portfolio","réputation créative"]},
+    {"id":"mission-bresse-modernise-costume","title":"Réinterpréter sans caricaturer","reality":"fictional","location":"Bresse","hook":"Créer une silhouette contemporaine à partir de codes du costume bressan sans le reproduire comme déguisement.","rewards":["connaissance","signature créative","réputation"]},
+    {"id":"mission-ferney-reading-night","title":"Une soirée des Lumières","reality":"fictional","location":"Ferney-Voltaire","hook":"Habiller une intervenante d'une soirée culturelle avec une silhouette inspirée du XVIIIe sans costume historique.","rewards":["réseau culturel","portfolio"]},
+    {"id":"mission-ferney-garden-shoot","title":"Sous la charmille","reality":"fictional","location":"Ferney-Voltaire","hook":"Créer un mini shooting saisonnier autour des lignes du jardin.","rewards":["shooting","palette","portfolio"]},
+    {"id":"mission-dombes-motion-study","title":"Dessiner l'envol","reality":"fictional","location":"Villars-les-Dombes","hook":"Produire plusieurs silhouettes rapides à partir du mouvement observé.","rewards":["cours dessin","inspiration","créativité"]},
+    {"id":"mission-trevoux-accessory-collab","title":"Fil d'or, ligne textile","reality":"fictional","location":"Trévoux","hook":"Nora propose de traduire une ligne de vêtement en accessoire métallique.","rewards":["accessoire","collaboration","réseau artisan"]},
+    {"id":"mission-perouges-craft-market","title":"Petite série pour le marché","reality":"fictional","location":"Pérouges","hook":"Maud propose une mini série commune cuir-textile pour un marché fictif.","rewards":["argent","artisanat","contact"]}
+  ],
+  "unlockCatalog":[
+    {"id":"unlock-juj-foulard-01","type":"accessory","name":"Foulard Trame 01","source":"ain-soieries-bonnet"},
+    {"id":"unlock-juj-blouse-mousseline","type":"top","name":"Blouse Mousseline","source":"ain-soieries-bonnet"},
+    {"id":"unlock-juj-jacquard-jacket","type":"jacket","name":"Veste Façonnée","source":"ain-soieries-bonnet"},
+    {"id":"unlock-juj-velvet-skirt","type":"skirt","name":"Jupe Velours Ligne","source":"ain-soieries-bonnet"},
+    {"id":"unlock-juj-pattern-repeat","type":"pattern","name":"Répétition Navette","source":"ain-soieries-bonnet"},
+    {"id":"unlock-juj-palette-silk","type":"palette","name":"Nuancier de Soie","source":"ain-soieries-bonnet"},
+    {"id":"unlock-brou-cape","type":"outerwear","name":"Cape Brou","source":"ain-brou"},
+    {"id":"unlock-brou-cutwork-collar","type":"component-collar","name":"Col Dentelle de Pierre","source":"ain-brou"},
+    {"id":"unlock-brou-sculpted-sleeve","type":"component-sleeve","name":"Manche Pinacle","source":"ain-brou"},
+    {"id":"unlock-brou-ivory-dress","type":"dress","name":"Robe Ivoire Monument","source":"ain-brou"},
+    {"id":"unlock-brou-stone-lace-pattern","type":"pattern","name":"Ajour Flamboyant","source":"ain-brou"},
+    {"id":"unlock-brou-stainedglass-palette","type":"palette","name":"Vitrail & Pierre","source":"ain-brou"},
+    {"id":"unlock-bresse-hat-inspired","type":"headwear","name":"Volume Cheminée contemporain","source":"ain-planons"},
+    {"id":"unlock-bresse-lace-collar","type":"component-collar","name":"Col Dentelle Noire","source":"ain-planons"},
+    {"id":"unlock-bresse-apron-skirt","type":"skirt","name":"Jupe Tablier Bresse","source":"ain-planons"},
+    {"id":"unlock-bresse-enamel-brooch","type":"jewelry","name":"Broche Émail Bresse","source":"ain-planons"},
+    {"id":"unlock-bresse-blackwhite-palette","type":"palette","name":"Fête & Deuil","source":"ain-planons"},
+    {"id":"unlock-ferney-garden-coat","type":"coat","name":"Manteau Charmille","source":"ain-voltaire"},
+    {"id":"unlock-ferney-bow-blouse","type":"top","name":"Blouse Conversation","source":"ain-voltaire"},
+    {"id":"unlock-ferney-portrait-collar","type":"component-collar","name":"Col Portrait XVIII","source":"ain-voltaire"},
+    {"id":"unlock-ferney-green-palette","type":"palette","name":"Charmille quatre saisons","source":"ain-voltaire"},
+    {"id":"unlock-ferney-salon-backdrop","type":"shooting-backdrop","name":"Salon des Lumières","source":"ain-voltaire"},
+    {"id":"unlock-bird-wing-sleeve","type":"component-sleeve","name":"Manche Envol","source":"ain-parc-oiseaux"},
+    {"id":"unlock-bird-layered-skirt","type":"skirt","name":"Jupe Plumage","source":"ain-parc-oiseaux"},
+    {"id":"unlock-bird-iridescent-palette","type":"palette","name":"Iridescence","source":"ain-parc-oiseaux"},
+    {"id":"unlock-bird-featherlike-motif","type":"pattern","name":"Motif Plume abstraite","source":"ain-parc-oiseaux"},
+    {"id":"unlock-bird-flight-pose","type":"pose","name":"Pose Envol","source":"ain-parc-oiseaux"},
+    {"id":"unlock-trevoux-gold-thread-belt","type":"accessory","name":"Ceinture Fil d'Or","source":"ain-trevoux-art"},
+    {"id":"unlock-trevoux-filigree-earring","type":"jewelry","name":"Boucles Filigrane","source":"ain-trevoux-art"},
+    {"id":"unlock-trevoux-metallic-embroidery","type":"component-detail","name":"Broderie métallique fine","source":"ain-trevoux-art"},
+    {"id":"unlock-trevoux-goldblue-palette","type":"palette","name":"Or & Dombes","source":"ain-trevoux-art"},
+    {"id":"unlock-perouges-hood","type":"component-hood","name":"Capuche Cité","source":"ain-perouges-town"},
+    {"id":"unlock-perouges-leather-belt","type":"accessory","name":"Ceinture Patine","source":"ain-perouges-town"},
+    {"id":"unlock-perouges-stone-texture","type":"texture","name":"Texture Pavé","source":"ain-perouges-town"},
+    {"id":"unlock-perouges-earth-palette","type":"palette","name":"Pierre & Bois","source":"ain-perouges-town"}
+  ],
+  "drawingLessons":[
+    {"id":"lesson-juj-foulard","title":"Dessiner un foulard en mouvement","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Matières"]},
+    {"id":"lesson-juj-silk-folds","title":"Rendre les plis d'une soie légère","levels":["trace","guided","memory","variation"],"skills":["Croquis","Matières"]},
+    {"id":"lesson-juj-repeat-pattern","title":"Construire un motif répétitif","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-juj-velvet-render","title":"Dessiner le velours et sa lumière","levels":["guided","memory","variation"],"skills":["Croquis","Matières"]},
+    {"id":"lesson-brou-architectural-collar","title":"Transformer une arcade en col","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-brou-sculpted-sleeve","title":"Construire une manche sculpturale","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-brou-stainedglass-color","title":"Composer une palette depuis un vitrail","levels":["guided","variation","creation"],"skills":["Créativité","Matières"]},
+    {"id":"lesson-bresse-hat-shape","title":"Dessiner un volume de coiffe","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-bresse-lace-detail","title":"Simplifier une dentelle en motif mode","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-bresse-brooch","title":"Dessiner une broche émaillée","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-ferney-portrait-collar","title":"Dessiner un col depuis un portrait ancien","levels":["trace","guided","memory","variation"],"skills":["Croquis"]},
+    {"id":"lesson-ferney-coat-line","title":"Construire une ligne de manteau inspirée d'un jardin régulier","levels":["guided","memory","variation","creation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-ferney-botanical-border","title":"Créer une bordure botanique stylisée","levels":["guided","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-bird-wing-sleeve","title":"Transformer une aile en manche","levels":["trace","guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-bird-iridescence","title":"Rendre une iridescence sans surcharge","levels":["guided","memory","variation"],"skills":["Matières","Croquis"]},
+    {"id":"lesson-bird-motion-lines","title":"Capturer un mouvement en quelques lignes","levels":["trace","guided","memory","creation"],"skills":["Croquis"]},
+    {"id":"lesson-trevoux-filigree","title":"Passer du filigrane au motif textile","levels":["guided","memory","variation","creation"],"skills":["Croquis","Créativité"]},
+    {"id":"lesson-trevoux-jewelry-proportion","title":"Dessiner un bijou à l'échelle du corps","levels":["trace","guided","memory"],"skills":["Croquis"]},
+    {"id":"lesson-perouges-hood","title":"Construire une capuche simple puis la styliser","levels":["trace","guided","memory","variation"],"skills":["Croquis","Patronage"]},
+    {"id":"lesson-perouges-weathered-texture","title":"Rendre pierre, bois et patine","levels":["guided","memory","variation"],"skills":["Croquis","Matières"]}
+  ],
+  "visualProduction":[
+    {"territory":"Jujurieux","needed":["carte locale illustrée","extérieur Soieries","atelier de tissage","portrait Éléonore","portrait Malo","Atelier des Deux Navettes","6 déblocages","4 planches de cours"]},
+    {"territory":"Bourg-en-Bresse","needed":["carte ville","extérieur Brou","détail dentelle de pierre","vitrail","La Verrière 01","Studio Lentille","portraits Lison et Adrien","6 déblocages","3 cours"]},
+    {"territory":"Bresse / Saint-Cyr-sur-Menthon","needed":["carte locale","Domaine des Saveurs","costume/coiffe en planche documentaire originale","portrait Claire","5 déblocages","3 cours"]},
+    {"territory":"Ferney-Voltaire","needed":["carte","château","charmille quatre saisons","Salon n°9","portrait Céleste","5 déblocages","3 cours"]},
+    {"territory":"Villars-les-Dombes","needed":["carte","ambiance Parc des Oiseaux","planche couleurs/mouvements originale","portrait Inès","5 déblocages","3 cours"]},
+    {"territory":"Trévoux","needed":["carte","ville historique","Atelier du Fil Fin","portrait Nora","4 déblocages","2 cours"]},
+    {"territory":"Pérouges","needed":["carte","cité et ruelles","marché fictif","portrait Maud","4 déblocages","2 cours"]}
+  ]
+}
