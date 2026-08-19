@@ -52,6 +52,23 @@ Chaque visite peut débloquer plusieurs familles :
 
 Le lieu ne doit pas automatiquement produire une « collection toute faite ». Il enrichit le vocabulaire créatif du joueur.
 
+## Règle d'asset modulable — obligatoire
+Tout élément destiné à être posé sur le mannequin ou réutilisé dans une création doit exister sous forme **neutre et personnalisable** :
+- contour / line art noir propre ;
+- intérieur blanc ou transparent ;
+- aucune couleur définitive cuite dans l'asset ;
+- zones de remplissage séparables quand pertinent ;
+- zone motif indépendante ;
+- zone matière / texture indépendante ;
+- détails optionnels indépendants quand pertinent : boutons, passepoil, ceinture, broderie, poche, bordure, fermeture, bijou.
+
+Chaque déblocage créatif peut avoir jusqu'à trois représentations :
+1. `inspirationView` — illustration carnet, colorée si utile ;
+2. `modularAsset` — line art neutre pour mannequin, recoloration, motifs et tissus ;
+3. `drawingLessonAsset` — étapes pédagogiques en traits noirs/gris, du guide au dessin autonome.
+
+Un même patron visuel doit pouvoir produire de nombreuses variantes par couleur, motif, matière et finitions.
+
 ## Cours de dessin
 Niveaux :
 1. `trace` — suivre des repères
