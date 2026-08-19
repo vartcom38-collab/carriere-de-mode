@@ -2,7 +2,10 @@
   function ready(){return window.HauteCoutureCore&&window.HauteCoutureBank}
   function save(s){return HauteCoutureCore.save(s)}
   function enrich(s){if(!s)return s;if(!s.world.feed)s.world.feed=[];if(!s.progression.generatedCount)s.progression.generatedCount=0;if(!s.progression.careerPath)s.progression.careerPath='Libre';const score=(s.missions.completed?.length||0)+(s.player.reputation.local||0)+Math.floor((s.player.reputation.creative||0)*1.5);s.progression.careerLevel=Math.max(s.progression.careerLevel||1,1+Math.floor(score/12));HauteCoutureBank.fillMissions(s,Math.min(10,5+Math.floor(s.progression.careerLevel/2)));s.progression.generatedCount=(s.missions.available||[]).filter(m=>m.generated).length+(s.missions.completed||[]).filter(m=>m.generated).length;return s}
-  function loadComms(){if(window.__HCCommsLoading||window.__HCCommsInstalled)return;window.__HCCommsLoading=true;const s=document.createElement('script');s.src='./communication-engine.js?v=694e6a66';s.onload=()=>{window.__HCCommsLoading=false};document.head.appendChild(s)}
+  function loadExtras(){
+    if(!window.__HCCommsLoading&&!window.__HCCommsInstalled){window.__HCCommsLoading=true;const a=document.createElement('script');a.src='./communication-engine.js?v=694e6a66';a.onload=()=>{window.__HCCommsLoading=false};document.head.appendChild(a)}
+    if(!window.__HCDepthLoading&&!window.__HCDepthInstalled){window.__HCDepthLoading=true;const b=document.createElement('script');b.src='./career-depth-engine.js?v=9398905c';b.onload=()=>{window.__HCDepthLoading=false};document.head.appendChild(b)}
+  }
   function install(){if(!ready()||window.__HCInfiniteInstalled)return;window.__HCInfiniteInstalled=true;
     const core=HauteCoutureCore;
     const originalEnsure=core.ensure,originalFinishDay=core.finishDay,originalComplete=core.completeMission,originalInteract=core.interactNeighborhood;
@@ -12,7 +15,7 @@
     core.completeMission=function(id){let before=core.load();const previous=(before?.missions?.completed||[]).length;let s=originalComplete(id);if(!s)return s;s=enrich(s);const done=(s.missions.completed||[])[s.missions.completed.length-1];if((s.missions.completed||[]).length>previous&&done){const c=s.contacts.find(x=>x.id===done.clientId);if(c&&(c.relationship||0)>=25&&done.onTime){c.referrals=(c.referrals||0)+1}if(done.generated&&done.meta?.occasion){s.carnet.pages.push({id:'proc-memory-'+done.id,type:'commande',title:'Souvenir de '+done.meta.occasion,text:done.title+' — '+done.client+'. '+done.meta.constraint,createdDay:s.world.day})}}
       return save(enrich(s))};
     core.interactNeighborhood=function(kind){let s=originalInteract(kind);if(!s)return s;if(kind==='mercerie'&&((s.world.day+s.inventory.length)%3===0)){const mat=HauteCoutureBank.materialDiscovery(s,s.inventory.length);s.inventory.push(mat);s.carnet.pages.push({id:'mat-page-'+mat.id,type:'matière',title:'Nouvelle matière : '+mat.name,text:mat.memory,createdDay:s.world.day})}return save(enrich(s))};
-    const current=core.load();if(current)save(enrich(current));loadComms();
+    const current=core.load();if(current)save(enrich(current));loadExtras();
   }
   if(ready())install();else{let tries=0;const t=setInterval(()=>{tries++;if(ready()){clearInterval(t);install()}else if(tries>100)clearInterval(t)},50)}
 })();
