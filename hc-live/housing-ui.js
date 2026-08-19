@@ -1,68 +1,75 @@
 (function(){
   if(window.__HCHousingUIInstalled)return;window.__HCHousingUIInstalled=true;
+  const icons={
+    'Bretagne':'⚓','Normandie':'✦','Hauts-de-France':'♜','Île-de-France':'♛','Grand Est':'✿','Pays de la Loire':'♧','Centre-Val de Loire':'♜','Bourgogne-Franche-Comté':'♢','Nouvelle-Aquitaine':'⌁','Auvergne-Rhône-Alpes':'△','Occitanie':'⌂','Provence-Alpes-Côte d’Azur':'❀','Corse':'◇'
+  };
   function install(){
-    const root=document.getElementById('location');
-    if(!root)return false;
-    root.classList.add('hc-housing-da');
-    const shell=root.querySelector('.world-shell');
-    const mapPaper=root.querySelector('.map-paper');
-    const zone=root.querySelector('.france-zone');
-    const explorer=root.querySelector('.explorer');
-    const prop=root.querySelector('.property-panel');
+    const root=document.getElementById('location');if(!root)return false;
+    const shell=root.querySelector('.world-shell'),mapPaper=root.querySelector('.map-paper'),zone=root.querySelector('.france-zone'),explorer=root.querySelector('.explorer'),prop=root.querySelector('.property-panel');
     if(!shell||!mapPaper||!zone||!explorer||!prop)return false;
-
-    // Title and brand adapted to the validated visual direction.
+    root.classList.add('hc-housing-illustrated');
     const top=mapPaper.querySelector('.topline');
-    if(top){
-      top.innerHTML='<div class="hc-housing-brand"><div class="hc-logo">HAUTE COUTURE <span>Le jeu</span></div><div class="hc-housing-title">CHOISIS<br>TON LOGEMENT</div><div class="hc-housing-sub">Ton atelier, ton refuge,<br>ton point de départ</div><p>Installe-toi quelque part en France. Chaque ville a son ambiance, ses opportunités et ses inspirations.</p></div><div class="hc-player-pill"><span class="avatar" id="chosenAvatar">✦</span><span id="chosenName">Personnage</span></div>';
-    }
-
-    const note=zone.querySelector('.map-note');
-    if(note)note.innerHTML='<strong>Bonjour la France ✦</strong><br>Clique sur une région, puis affine jusqu’au département et à la ville pour voir les annonces.';
-
-    // Keep all existing interaction logic, only replace presentation.
-    const style=document.createElement('style');style.id='hcHousingDAStyles';style.textContent=`
-      #location.hc-housing-da{background:#f7f1e7;overflow:auto;color:#3a3f3d}
-      #location.hc-housing-da:before{content:"";position:fixed;inset:0;pointer-events:none;background:
-        radial-gradient(circle at 65% 22%,rgba(207,227,210,.35),transparent 28%),
-        radial-gradient(circle at 34% 68%,rgba(207,227,210,.30),transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.42),rgba(247,241,231,.28));z-index:0}
-      #location .world-shell{position:relative;z-index:1;min-height:100vh;padding:18px 20px 22px;display:grid;grid-template-columns:minmax(760px,1.65fr) minmax(320px,.62fr);gap:14px}
-      #location .paper{background:rgba(255,252,245,.76);border:1px solid rgba(90,74,58,.16);box-shadow:none;border-radius:18px}
-      #location .map-paper{padding:0;overflow:hidden;position:relative;min-height:calc(100vh - 40px)}
-      .hc-housing-brand{position:absolute;left:3.2%;top:3.5%;width:25%;z-index:7;padding:8px 10px}
-      .hc-logo{font:22px Georgia,serif;letter-spacing:.06em;border-bottom:1px solid rgba(76,66,56,.18);padding-bottom:8px;margin-bottom:18px}.hc-logo span{display:block;font:italic 16px cursive;color:#aa7776;text-align:center;margin-top:-2px}
-      .hc-housing-title{font:clamp(35px,3.2vw,54px)/.98 'Trebuchet MS',Arial,sans-serif;letter-spacing:.02em;color:#303432;margin:4px 0 16px}.hc-housing-sub{font:italic 23px/1.25 cursive;color:#b57c7b;margin:0 0 18px}.hc-housing-brand p{font:14px/1.6 Georgia,serif;max-width:240px;color:#5c5650}
-      .hc-player-pill{position:absolute;right:2.4%;top:2%;z-index:9;display:flex;gap:8px;align-items:center;padding:7px 10px;border-radius:999px;background:rgba(255,252,245,.9);border:1px solid rgba(80,70,60,.16);font-size:12px}
-      #location .crumbs{position:absolute;left:31%;right:26%;top:2.5%;z-index:9;margin:0;justify-content:center}.crumb{background:rgba(255,252,245,.88);font-size:11px;padding:6px 9px}.crumb.active{background:#dfe8d7}
-      #location .map-layout{display:block;min-height:calc(100vh - 40px)}
-      #location .france-zone{position:absolute;left:28%;right:25%;top:8%;bottom:4%;min-height:0;border:0;border-radius:0;background:
-        radial-gradient(ellipse at 50% 50%,rgba(255,253,247,.96) 0 54%,transparent 55%),
-        radial-gradient(circle at 12% 45%,rgba(191,215,218,.45),transparent 40%),
-        radial-gradient(circle at 88% 58%,rgba(191,215,218,.45),transparent 42%);overflow:visible}
-      #location .france-svg{width:82%;opacity:.65;filter:drop-shadow(0 6px 14px rgba(80,75,65,.06))}.france-shape{fill:#fdfbf5;stroke:#9ca99b;stroke-width:2}
-      #location .region-pin{border:0;background:rgba(255,253,247,.74);box-shadow:none;color:#3f4440;padding:5px 7px;border-radius:8px;font:12px/1.1 'Trebuchet MS',Arial,sans-serif;text-transform:uppercase;letter-spacing:.02em}
-      #location .region-pin:hover,#location .region-pin.active{background:#e2ebdc;outline:1px solid #9aac91;transform:translate(-50%,-50%) scale(1.05)}
-      #location .map-note{left:6%;right:auto;bottom:2.5%;max-width:250px;background:rgba(255,248,239,.92);border:1px solid rgba(180,132,124,.28);font-size:12px;line-height:1.45;box-shadow:none}
-      #location .map-note strong{font:18px cursive;color:#6f766b}
-      #location .explorer{position:absolute;left:3%;top:47%;width:23%;max-height:39%;z-index:8;border:1px solid rgba(90,80,70,.15);border-radius:14px;background:rgba(234,239,227,.82);padding:13px;overflow:auto}
-      #location .explorer .kicker{font-size:10px;color:#77856c}.explorer h3{font:20px Georgia,serif;margin:4px 0}.explorer p{font:12px/1.4 Georgia,serif}.choice-list{gap:5px}.choice{background:rgba(255,253,248,.86);border:1px solid rgba(90,80,70,.14);border-radius:7px;padding:8px 9px;font-size:12px}.choice:hover,.choice.active{background:#e5ecdf;border-color:#9baa91}
-      #location .property-panel{min-height:calc(100vh - 40px);padding:18px 15px;background:rgba(255,252,246,.9);border-radius:18px;overflow:hidden}
-      #location .property-panel>.kicker{text-align:center;font:20px cursive;text-transform:none;letter-spacing:.03em;color:#514d48;margin-bottom:2px}
-      #location .property-panel h2{font:25px Georgia,serif;text-align:center;margin:4px 0}.scope-badge{align-self:center;background:#e8eee2;padding:6px 9px;font-size:10px}.property-panel>p{text-align:center;font-size:11px;margin:4px 0 10px}
-      #location .listing-stack{display:grid;grid-template-columns:1fr;gap:7px;overflow:auto;padding-right:2px}
-      #location .listing{grid-template-columns:92px 1fr;gap:9px;padding:8px;background:rgba(255,253,248,.82);border:1px solid rgba(88,75,61,.15);border-radius:11px;box-shadow:none}
-      #location .listing:hover,#location .listing.selected{background:#f6f9f1;border-color:#97a889;box-shadow:0 6px 15px rgba(60,70,55,.07)}
-      #location .listing-art{min-height:78px;border-radius:8px;font-size:24px}.listing-art:after{font-size:8px;background:rgba(255,252,245,.82)}
-      #location .listing h3{font:14px Georgia,serif}.listing-meta{font-size:10px}.listing-price{font-size:15px}.listing small{font-size:10px}
-      #location .confirm-wrap{padding-top:9px}.confirm-wrap button{border-radius:8px;background:#849678;font:15px Georgia,serif;padding:11px}.status{font-size:10px}
-      #location .world-back{left:2%;top:auto;bottom:2%;z-index:14;background:rgba(255,252,245,.92);font-size:12px;padding:8px 12px}
-      #location:after{content:"Chaque choix influencera ton quotidien, tes rencontres et les opportunités qui s’offriront à toi.";position:absolute;left:34%;bottom:1.5%;z-index:6;padding:9px 18px;background:rgba(245,221,210,.76);border:1px solid rgba(180,130,120,.2);border-radius:12px;font:13px Georgia,serif;color:#5c5651;pointer-events:none}
-      #location .property-sheet{background:#fbf7ef;border-radius:16px}.preview-info h2{font-family:Georgia,serif}.preview-actions .primary{background:#849678}
-      @media(max-width:1050px){#location .world-shell{grid-template-columns:1fr}.hc-housing-brand{position:relative;left:auto;top:auto;width:auto;padding:18px 18px 0}.hc-housing-title{font-size:38px}.hc-housing-sub{font-size:20px}.hc-player-pill{top:10px;right:10px}#location .map-paper{min-height:760px}#location .france-zone{left:22%;right:6%;top:18%;bottom:8%}#location .explorer{left:3%;top:40%;width:24%;max-height:42%}#location .property-panel{min-height:auto;max-height:none}#location:after{display:none}}
-      @media(max-width:760px){#location .world-shell{padding:6px}.hc-logo{font-size:18px}.hc-housing-title{font-size:32px}.hc-housing-brand p{max-width:65%}#location .map-paper{min-height:900px}#location .france-zone{left:2%;right:2%;top:30%;bottom:24%}#location .explorer{left:4%;right:4%;top:auto;bottom:4%;width:auto;max-height:22%}.region-pin{font-size:9px!important}.hc-player-pill{display:none}#location .crumbs{left:3%;right:3%;top:25%}}
+    if(top)top.innerHTML='<div class="hc-side-intro"><div class="hc-logo">HAUTE COUTURE<span>Le jeu</span></div><h1>CHOISIS<br>TON LOGEMENT</h1><div class="hc-script">Ton atelier, ton refuge,<br>ton point de départ</div><p>Installe-toi quelque part en France. Chaque territoire a son rythme, ses opportunités et ses inspirations.</p></div><div class="hc-player-pill"><span class="avatar" id="chosenAvatar">✦</span><span id="chosenName">Personnage</span></div>';
+    const svg=zone.querySelector('.france-svg');
+    if(svg){svg.setAttribute('viewBox','0 0 720 760');svg.innerHTML=`
+      <defs>
+        <filter id="softwash" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="4" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/></filter>
+        <pattern id="paperDots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#b7cbb6" opacity=".23"/></pattern>
+      </defs>
+      <path class="france-wash" d="M176 90L282 61l78 13 54 40 82-24 75 48 16 70 55 66-25 61 28 82-46 52-15 88-80 35-34 89-70 63-70-28-54 37-62-48-16-69-53-36 5-77-38-53 30-75-29-60 43-58-12-66 42-51z"/>
+      <path class="france-shape" d="M183 98L279 69l79 12 56 39 77-22 70 43 20 67 50 63-24 62 27 77-43 50-15 84-77 33-34 86-66 59-67-26-53 35-58-45-17-67-50-34 5-74-36-51 28-72-27-57 41-57-11-62 39-47z"/>
+      <path class="river-line" d="M418 146c-35 62-26 112 5 149s27 75-8 117-23 109 20 146"/>
+      <path class="river-line" d="M251 137c41 48 48 106 23 151s-12 96 28 133"/>
+      <path class="mountain-line" d="M405 556l28-44 23 30 31-55 37 67"/>
+      <path class="coast-doodle" d="M126 384c18-12 34-12 49 0m-47 13c18-12 34-12 49 0m342 211c18-12 34-12 49 0m-47 13c18-12 34-12 49 0"/>
+    `}
+    let banner=zone.querySelector('.hc-map-banner');if(!banner){banner=document.createElement('div');banner.className='hc-map-banner';banner.innerHTML='<i></i><span>✦ BONJOUR LA FRANCE ✦</span><i></i>';zone.appendChild(banner)}
+    const deco=document.createElement('div');deco.className='hc-map-deco';deco.innerHTML='<span class="d eiffel">♜</span><span class="d lighthouse">⚓</span><span class="d mountain">△</span><span class="d flower">❀</span><span class="d thread">⌁</span><span class="sea west">OCÉAN<br>ATLANTIQUE</span><span class="sea north">LA MANCHE</span><span class="sea south">MÉDITERRANÉE</span>';zone.appendChild(deco);
+    const stage=document.createElement('div');stage.className='hc-drill-stage';stage.id='hcDrillStage';zone.appendChild(stage);
+    const note=zone.querySelector('.map-note');if(note)note.innerHTML='<strong>France → Région → Département → Ville</strong><br>La carte se transforme à chaque étape de ta recherche.';
+    const style=document.createElement('style');style.id='hcHousingIllustratedStyles';style.textContent=`
+      #location.hc-housing-illustrated{background:#f6f1e8;color:#383d3a;overflow:auto}
+      #location.hc-housing-illustrated:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 73% 18%,rgba(195,219,210,.28),transparent 28%),radial-gradient(circle at 33% 73%,rgba(227,194,174,.17),transparent 30%),repeating-linear-gradient(0deg,rgba(90,75,55,.017) 0 1px,transparent 1px 4px);z-index:0}
+      #location .world-shell{position:relative;z-index:1;min-height:100vh;padding:14px;display:grid;grid-template-columns:minmax(820px,1.72fr) minmax(340px,.58fr);gap:14px}
+      #location .paper{background:rgba(255,253,248,.78);border:1px solid rgba(88,75,61,.14);box-shadow:0 12px 35px rgba(73,58,43,.05);border-radius:20px}
+      #location .map-paper{padding:0;min-height:calc(100vh - 28px);overflow:hidden;position:relative}
+      .hc-side-intro{position:absolute;z-index:8;left:3.2%;top:4%;width:24%;max-width:265px}.hc-logo{font:22px Georgia,serif;letter-spacing:.08em;border-bottom:1px solid rgba(80,68,55,.16);padding-bottom:9px;margin-bottom:18px}.hc-logo span{display:block;text-align:center;color:#b88380;font:italic 17px 'Segoe Print','Bradley Hand',cursive;letter-spacing:.02em;margin-top:3px}.hc-side-intro h1{font:42px/1.03 'Trebuchet MS',Arial,sans-serif;letter-spacing:.035em;font-weight:400;margin:0 0 18px}.hc-script{font:italic 22px/1.35 'Segoe Print','Bradley Hand',cursive;color:#b47f7a;margin-bottom:20px}.hc-side-intro p{font:14px/1.65 Georgia,serif;color:#5e5851}.hc-player-pill{position:absolute;right:2.4%;top:2.4%;z-index:10;display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,253,248,.86);border:1px solid rgba(85,74,60,.14);font-size:12px}
+      #location .crumbs{position:absolute;left:29%;right:23%;top:2.5%;z-index:10;display:flex;justify-content:center;gap:7px;margin:0}.crumb{border:1px solid rgba(92,77,60,.18);background:rgba(255,253,248,.9);border-radius:999px;padding:6px 10px;font:11px Georgia,serif}.crumb.active{background:#dfe9da;border-color:#9bad91}
+      #location .map-layout{display:block;min-height:calc(100vh - 28px)}
+      #location .france-zone{position:absolute;left:27%;right:22%;top:8%;bottom:5%;min-height:0;border:0;background:radial-gradient(ellipse at 48% 48%,rgba(248,248,240,.95) 0 54%,rgba(203,224,219,.30) 55% 70%,transparent 71%);overflow:visible}
+      #location .france-svg{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:92%;height:88%;filter:url(#softwash) drop-shadow(0 8px 16px rgba(67,61,51,.05));opacity:1}.france-shape{fill:#fffdf7;stroke:#99a89a;stroke-width:2.2}.france-wash{fill:url(#paperDots);stroke:none}.river-line{fill:none;stroke:#b8d4d1;stroke-width:3;opacity:.55}.mountain-line,.coast-doodle{fill:none;stroke:#9caf9a;stroke-width:2;opacity:.45;stroke-linecap:round}
+      .hc-map-banner{position:absolute;top:2%;left:50%;transform:translateX(-50%) rotate(-2deg);z-index:8;display:flex;align-items:center;gap:4px}.hc-map-banner span{padding:8px 18px;background:#fffdf7;border:1px solid #737a73;box-shadow:0 4px 0 rgba(117,123,115,.06);font:15px 'Segoe Print','Bradley Hand',cursive;letter-spacing:.06em;white-space:nowrap}.hc-map-banner i{width:24px;height:22px;border-top:1px solid #737a73;border-bottom:1px solid #737a73;display:block}
+      #location .region-pin{z-index:6;border:0;background:rgba(255,253,247,.68);box-shadow:none;color:#323734;padding:4px 7px;border-radius:6px;font:11px/1.15 'Segoe Print','Bradley Hand',cursive;text-transform:uppercase;letter-spacing:.01em;transition:.18s}.region-pin:before{content:"✦";display:block;font-size:12px;color:#9cab91}.region-pin:hover,.region-pin.active{background:#e6eedf;outline:1px solid #9eae94;transform:translate(-50%,-50%) scale(1.08)}
+      .hc-map-deco .d{position:absolute;z-index:4;font-size:26px;opacity:.78;color:#71876c}.hc-map-deco .eiffel{left:48%;top:28%;font-size:34px;color:#777a78}.hc-map-deco .lighthouse{left:17%;top:33%;color:#bb8175}.hc-map-deco .mountain{right:22%;bottom:24%;font-size:36px;color:#899a8a}.hc-map-deco .flower{right:17%;bottom:17%;color:#c9887d}.hc-map-deco .thread{left:22%;bottom:26%;font-size:30px;color:#7ea3a1}.hc-map-deco .sea{position:absolute;font:10px/1.3 'Segoe Print','Bradley Hand',cursive;color:#72979c;letter-spacing:.08em;opacity:.82}.sea.west{left:5%;top:55%}.sea.north{left:33%;top:8%}.sea.south{right:27%;bottom:3%}
+      #location .explorer{position:absolute;left:3%;top:50%;width:22.5%;max-height:35%;z-index:9;border:1px solid rgba(96,83,67,.14);border-radius:16px;background:rgba(235,240,228,.78);padding:12px;overflow:auto;backdrop-filter:blur(3px)}#location .explorer .kicker{font-size:9px;color:#78866f}.explorer h3{font:18px Georgia,serif;margin:4px 0}.explorer p{font:11px/1.45 Georgia,serif}.choice-list{display:grid;gap:5px}.choice{background:rgba(255,253,248,.85);border:1px solid rgba(90,80,70,.12);border-radius:9px;padding:8px 9px;font:12px Georgia,serif}.choice small{font-size:9px}.choice:hover,.choice.active{background:#e5ecdf;border-color:#9baa91}
+      #location .map-note{left:29%;bottom:1.5%;max-width:300px;background:rgba(255,247,238,.88);border:1px solid rgba(190,139,122,.25);font:11px/1.45 Georgia,serif;border-radius:14px;box-shadow:none}.map-note strong{font:15px 'Segoe Print','Bradley Hand',cursive;color:#667263}
+      .hc-drill-stage{position:absolute;inset:15% 8% 13%;z-index:7;pointer-events:none;display:none}.hc-drill-stage.active{display:block}.hc-drill-title{position:absolute;left:50%;top:2%;transform:translateX(-50%);font:23px 'Segoe Print','Bradley Hand',cursive;color:#4b554b;text-align:center}.hc-drill-sub{display:block;font:11px Georgia,serif;color:#7b746b;margin-top:5px}.hc-drill-btn{position:absolute;pointer-events:auto;border:1px solid rgba(111,126,105,.38);background:rgba(255,253,247,.94);border-radius:999px;padding:8px 12px;font:12px Georgia,serif;color:#3c443c;box-shadow:0 5px 14px rgba(69,64,55,.07);cursor:pointer;transition:.17s}.hc-drill-btn:before{content:"✿";margin-right:5px;color:#94a68a}.hc-drill-btn:hover{background:#e5ecdf;transform:translateY(-2px)}
+      #location .property-panel{min-height:calc(100vh - 28px);max-height:calc(100vh - 28px);padding:18px 15px;background:rgba(255,253,248,.90);overflow:hidden}.property-panel>.kicker{text-align:center;font:18px 'Segoe Print','Bradley Hand',cursive;text-transform:none;letter-spacing:.02em;color:#514c47}.property-panel h2{font:27px Georgia,serif;text-align:center;margin:4px 0}.scope-badge{align-self:center;background:#e7eee1;font-size:10px;padding:6px 10px}.property-panel>p{text-align:center;font:11px/1.45 Georgia,serif;color:#73695e}.listing-stack{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;overflow:auto!important;padding-right:2px}.listing{grid-template-columns:102px 1fr!important;gap:9px!important;padding:8px!important;background:rgba(255,253,248,.82)!important;border:1px solid rgba(88,75,61,.14)!important;border-radius:12px!important;box-shadow:none!important}.listing:hover,.listing.selected{background:#f5f8f1!important;border-color:#96a88b!important;transform:translateY(-1px)}.listing-art{min-height:80px!important;border-radius:9px!important}.listing h3{font:14px Georgia,serif!important}.listing-meta{font-size:10px!important}.listing-price{font:16px Georgia,serif!important;color:#60705c!important}.listing small{font-size:10px!important}.confirm-wrap{padding-top:9px}.confirm-wrap button{border-radius:9px;background:#879978!important;font:15px Georgia,serif!important}.status{font-size:10px}.world-back{left:2%!important;top:auto!important;bottom:2%!important;z-index:14!important;background:rgba(255,253,248,.9)!important}
+      #location:after{content:"Chaque choix influencera ton quotidien, tes rencontres et les opportunités qui s’offriront à toi.";position:absolute;left:36%;bottom:1.2%;z-index:7;padding:8px 17px;background:rgba(244,221,210,.72);border:1px solid rgba(184,134,121,.18);border-radius:12px;font:12px Georgia,serif;color:#5f5750;pointer-events:none}
+      .property-sheet{background:#fbf7ef!important;border-radius:18px!important}.preview-actions .primary{background:#879978!important}
+      @media(max-width:1050px){#location .world-shell{grid-template-columns:1fr}.map-paper{min-height:790px!important}.hc-side-intro{position:relative;left:auto;top:auto;width:auto;max-width:none;padding:18px}.hc-side-intro h1{font-size:34px}.hc-side-intro p{max-width:55%}#location .france-zone{left:20%;right:4%;top:24%;bottom:7%}#location .explorer{top:54%;left:3%;width:24%;max-height:34%}.property-panel{max-height:none!important;min-height:auto!important}#location:after{display:none}}
+      @media(max-width:760px){#location .world-shell{padding:6px}.hc-side-intro h1{font-size:30px}.hc-script{font-size:18px}.hc-side-intro p{max-width:72%;font-size:12px}.hc-player-pill{display:none}.map-paper{min-height:940px!important}#location .crumbs{left:3%;right:3%;top:25%}#location .france-zone{left:2%;right:2%;top:31%;bottom:27%}#location .explorer{left:4%;right:4%;top:auto;bottom:3%;width:auto;max-height:22%}.region-pin{font-size:8px!important}.hc-map-banner span{font-size:12px;padding:6px 10px}.hc-map-deco .d{font-size:18px}}
     `;document.head.appendChild(style);
-    return true;
+    setupDrillStage(root,stage);return true;
   }
-  let tries=0;const t=setInterval(()=>{tries++;if(install()||tries>120)clearInterval(t)},100);
+  function setupDrillStage(root,stage){
+    const choices=root.querySelector('#choiceList'),crumbs=root.querySelector('#crumbs'),pins=root.querySelector('#regionPins');if(!choices||!crumbs||!pins)return;
+    function render(){
+      const crumbButtons=[...crumbs.querySelectorAll('.crumb')].map(x=>x.textContent.trim());
+      const level=crumbButtons.length;
+      const choiceButtons=[...choices.querySelectorAll('.choice')];
+      const isFrance=level<=1;
+      pins.style.display=isFrance?'block':'none';
+      stage.classList.toggle('active',!isFrance);
+      if(isFrance){stage.innerHTML='';return}
+      const title=crumbButtons[crumbButtons.length-1]||'France';
+      stage.innerHTML='<div class="hc-drill-title">'+escapeHtml(title)+'<span class="hc-drill-sub">'+(level===2?'Choisis un département':level===3?'Choisis une ville ou commune':'Annonces disponibles')+'</span></div>';
+      const usable=choiceButtons.filter(b=>!b.textContent.includes('Voir les autres'));
+      const spots=[[18,25],[48,20],[75,27],[30,43],[62,45],[84,49],[17,65],[45,65],[72,67],[35,82],[66,82],[88,76]];
+      usable.slice(0,12).forEach((b,i)=>{const bt=document.createElement('button');bt.className='hc-drill-btn';bt.textContent=b.childNodes[0]?.textContent?.trim()||b.textContent.trim();const [x,y]=spots[i%spots.length];bt.style.left=x+'%';bt.style.top=y+'%';bt.onclick=()=>b.click();stage.appendChild(bt)});
+    }
+    const obs=new MutationObserver(render);obs.observe(choices,{childList:true,subtree:true});obs.observe(crumbs,{childList:true,subtree:true});setTimeout(render,80);
+  }
+  function escapeHtml(v){return String(v||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  let tries=0;const t=setInterval(()=>{tries++;if(install()||tries>120)clearInterval(t)},80);
 })();
