@@ -1,6 +1,6 @@
 (function(){
   function loadScript(src,test,cb){if(test())return cb();const s=document.createElement('script');s.src=src;s.onload=cb;document.head.appendChild(s)}
-  function loadCore(cb){loadScript('./game-bank.js?v=c5224e26',()=>!!window.HauteCoutureBank,()=>loadScript('./game-core.js?v=3',()=>!!window.HauteCoutureCore,()=>loadScript('./infinite-engine.js?v=7ee6c8cd',()=>!!window.__HCInfiniteInstalled,cb)))}
+  function loadCore(cb){loadScript('./game-bank.js?v=c5224e26',()=>!!window.HauteCoutureBank,()=>loadScript('./game-core.js?v=3',()=>!!window.HauteCoutureCore,()=>loadScript('./infinite-engine.js?v=47382991',()=>!!window.__HCInfiniteInstalled,cb)))}
   function residence(){try{return JSON.parse(localStorage.getItem('haute-couture-residence')||'null')}catch(e){return null}}
   function character(){const id=localStorage.getItem('haute-couture-character');const names={clara:'Clara',ines:'Inès',maya:'Maya',elise:'Élise',salome:'Salomé',anais:'Anaïs',jade:'Jade',camille:'Camille',louise:'Louise',margaux:'Margaux',juliette:'Juliette',romane:'Romane'};return{id,name:names[id]||'Créatrice'}}
   function ensureState(){return HauteCoutureCore.ensure(character(),residence())}
