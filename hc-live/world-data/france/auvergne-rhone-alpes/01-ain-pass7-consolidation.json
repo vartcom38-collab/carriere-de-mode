@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "department": {"code":"01","name":"Ain"},
+  "status":"consolidation-pass-1",
+  "purpose":"Relier les lots Ain existants par des arcs inter-villes, événements saisonniers, retours différés, réseaux PNJ et règles de progression. Les faits patrimoniaux restent réels et sourcés dans les lots de recherche ; les intrigues ci-dessous sont fictives.",
+  "departmentThemes":[
+    "soie et industrie textile",
+    "Bresse et costumes régionaux",
+    "artisanat d'art",
+    "architecture religieuse et civile",
+    "Jura et moyenne montagne",
+    "eau, marais et paysages",
+    "patrimoine industriel",
+    "bijou et lapidaire",
+    "photographie et image",
+    "gastronomie et art de recevoir"
+  ],
+  "crossTerritoryArcs":[
+    {
+      "id":"arc-ain-fils-et-matieres",
+      "title":"Fils, trames et matières",
+      "territories":["Jujurieux","Saint-Rambert-en-Bugey","Neuville-les-Dames","Bugey-Valromey"],
+      "premise":"Le joueur relie soie, schappe, vêtement de travail et artisanat rural dans une recherche personnelle sur la matière.",
+      "steps":[
+        "visiter les Soieries Bonnet et apprendre chaîne/trame",
+        "découvrir la schappe à Saint-Rambert-en-Bugey",
+        "observer l'histoire du bleu de travail à Neuville-les-Dames",
+        "compléter par laine, feutre, bois et pierre du Bugey-Valromey"
+      ],
+      "possibleFinalUnlocks":["collection-theme-matiere-vivante","signature-tag-textile-heritage","portfolio-series-ain-textiles"],
+      "delayedConsequences":["invitation à un projet textile patrimonial","commande inspirée du vêtement de travail","rencontre avec un fournisseur de petite série"]
+    },
+    {
+      "id":"arc-ain-pierre-structure",
+      "title":"Pierre, structure, silhouette",
+      "territories":["Bourg-en-Bresse","Pérouges","Allymes","Fort l'Écluse","Saint-Sorlin-en-Bugey"],
+      "premise":"Transformer architecture, fortification et détail sculpté en vocabulaire de coupe.",
+      "possibleFinalUnlocks":["course-advanced-architecture-to-pattern","collection-theme-structure","shooting-route-stone-and-lines"]
+    },
+    {
+      "id":"arc-ain-eau-mouvement",
+      "title":"Eau et mouvement",
+      "territories":["Valserine","Marais de Lavours","Marais de Vaux","Cerveyrieu","Divonne-les-Bains","Pont-d'Ain"],
+      "premise":"Étudier le flux, la transparence, la brume, les ruptures et les reflets.",
+      "possibleFinalUnlocks":["advanced-material-transparency","pose-series-flow","collection-theme-current"]
+    },
+    {
+      "id":"arc-ain-ornement-precieux",
+      "title":"Ornement précieux",
+      "territories":["Trévoux","Mijoux","Bresse","Meillonnas","Oyonnax"],
+      "premise":"Relier fil métallique, pierres, émail, motifs décoratifs et accessoires industriels.",
+      "possibleFinalUnlocks":["accessory-capsule-ain","jewelry-fashion-collab","surface-design-ornament"]
+    },
+    {
+      "id":"arc-ain-corps-en-mouvement",
+      "title":"Corps en mouvement",
+      "territories":["Villars-les-Dombes","Lélex","Grand Colombier","Crêt de la Neige","Dinoplagne"],
+      "premise":"Observer aile, envol, marche, altitude, poids et rythme pour construire des silhouettes dynamiques.",
+      "possibleFinalUnlocks":["advanced-drawing-motion","technical-layering","collection-theme-motion"]
+    }
+  ],
+  "npcNetwork":[
+    {"npc":"Éléonore Martin","connections":["Malo Bernard","Claire Monnier"],"canTrigger":["archive textile","présentation à une artisane","invitation à Jujurieux"]},
+    {"npc":"Malo Bernard","connections":["Éléonore Martin","Lison Girard","Inès Durand"],"canTrigger":["shooting patrimoine","reportage inter-villes","portfolio Ain"]},
+    {"npc":"Lison Girard","connections":["Adrien Vallet","Iris Montfort"],"canTrigger":["vernissage","collectionneur","soirée privée"]},
+    {"npc":"Nora Fabre","connections":["Camille Rey","Claire Monnier"],"canTrigger":["capsule bijou","prototype métal-textile","réseau artisan"]},
+    {"npc":"Amélie Rochat","connections":["Céleste Roche","Alix"],"canTrigger":["shooting transfrontalier","éditorial","contact lémanique"]},
+    {"npc":"Lina Pavel","connections":["Lison Girard","Malo Bernard"],"canTrigger":["événement privé","habillage dîner","shooting hospitalité"]}
+  ],
+  "seasonalEvents":[
+    {"id":"evt-ain-printemps-herbier","season":"spring","areas":["Marais de Lavours","Marais de Vaux","Bresse"],"effects":["palettes végétales","cours botanique","missions d'observation"]},
+    {"id":"evt-ain-ete-hauteur","season":"summer","areas":["Grand Colombier","Crêt de la Neige","Lélex"],"effects":["croquis plein air","missions mouvement","shootings de lumière longue"]},
+    {"id":"evt-ain-automne-matiere","season":"autumn","areas":["Jujurieux","Saint-Rambert-en-Bugey","Bugey-Valromey"],"effects":["textures plus lourdes","ateliers matière","missions capsule"]},
+    {"id":"evt-ain-hiver-jura","season":"winter","areas":["Mijoux","Lélex","Pays de Gex"],"effects":["vêtement protecteur","superpositions","palette neige-brume"]}
+  ],
+  "returnVisitRules":[
+    {"type":"museum","rule":"Une revisite peut ouvrir une exposition temporaire fictive, une rencontre ou une fiche de carnet de niveau supérieur."},
+    {"type":"nature","rule":"Les palettes et observations varient par saison et météo ; la même zone peut débloquer de nouvelles études sans dupliquer le lieu."},
+    {"type":"artisan","rule":"La confiance se construit : observation -> petit achat -> démonstration -> prototype -> collaboration."},
+    {"type":"city-network","rule":"Une ville déjà connue peut générer des soirées, recommandations et commandes même sans nouvelle visite culturelle."}
+  ],
+  "missionChains":[
+    {
+      "id":"chain-ain-first-editorial",
+      "title":"Premier éditorial dans l'Ain",
+      "entry":"rencontrer Malo Bernard ou Inès Durand",
+      "stages":["choisir un thème culturel","composer 3 looks","trouver un lieu","négocier temps et budget","shooting","retombées réseau"],
+      "possibleLocations":["Brou","Jujurieux","Dombes","Pérouges","Fort l'Écluse"],
+      "outcomes":["portfolio","contact presse locale","nouvelle cliente","fatigue","dépassement de budget"]
+    },
+    {
+      "id":"chain-ain-artisan-capsule",
+      "title":"Capsule artisanale",
+      "entry":"relation suffisante avec Nora Fabre, Camille Rey, Claire Monnier ou Maud Perrin",
+      "stages":["définir 1 matériau","faire 2 prototypes","gérer coût réel","présenter 1 mini-série","accepter ou refuser une petite production"],
+      "outcomes":["réseau artisan","marge variable","signature","retards fournisseur"]
+    },
+    {
+      "id":"chain-ain-heritage-project",
+      "title":"Patrimoine vivant",
+      "entry":"forte connaissance textile + bonne réputation professionnelle",
+      "stages":["invitation","recherche carnet","proposition créative","retours d'experts","révision","présentation"],
+      "outcomes":["prestige culturel","nouveau mentor","critique si approche superficielle"]
+    }
+  ],
+  "drawingCurriculumAin":[
+    {"level":"beginner","lessons":["col simple","jupe cercle","foulard en mouvement","bijou de base","capuche simple"]},
+    {"level":"intermediate","lessons":["manche sculpturale","drapé fluide","veste de travail","motif répétitif","chaussure structurée"]},
+    {"level":"advanced","lessons":["traduire une architecture en patron","rendre la transparence","construire une silhouette technique","créer un motif depuis un paysage","combiner 3 souvenirs culturels dans un look"]}
+  ],
+  "assetRules":{
+    "mannequinAssets":"line art noir neutre sur fond blanc ou transparent",
+    "editableZones":["couleur","motif","matière","bordure","détails","accessoires"],
+    "noBakedColor":true,
+    "separateVersions":["carnet-illustration","mannequin-lineart","drawing-lesson-steps"]
+  },
+  "visualProductionPriorities":[
+    {"priority":1,"territories":["Jujurieux","Bourg-en-Bresse","Pérouges","Oyonnax"],"reason":"forte densité culture + mode + réseau"},
+    {"priority":2,"territories":["Saint-Rambert-en-Bugey","Mijoux","Trévoux","Dombes"],"reason":"matières, accessoires, artisanat"},
+    {"priority":3,"territories":["Pays de Gex","Lélex","Grand Colombier","Marais de Lavours"],"reason":"nature, mouvement, saisons"}
+  ],
+  "qualityChecks":[
+    "ne pas transformer un lieu de mémoire en récompense esthétique",
+    "ne pas inventer un fait culturel réel",
+    "ne pas dupliquer le même type de vêtement pour chaque lieu",
+    "chaque PNJ récurrent doit avoir mémoire, réseau et arc potentiel",
+    "chaque déblocage créatif doit rester modifiable",
+    "les missions doivent accepter refus, négociation ou retour différé"
+  ]
+}
