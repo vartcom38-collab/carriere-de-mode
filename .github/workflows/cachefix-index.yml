@@ -20,18 +20,19 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          old = './main-hub.js?v=cachefix-20260820-2049'
-          new = './main-hub.js?v=cachefix-20260820-2143'
-          if old not in s:
-              raise SystemExit('Expected loader cache key not found')
-          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          new = './main-hub.js?v=cachefix-20260820-2200'
+          s2, n = re.subn(r'\./main-hub\.js\?v=cachefix-20260820-\d+', new, s, count=1)
+          if n != 1:
+              raise SystemExit('Live loader cache key not found')
+          p.write_text(s2, encoding='utf-8')
           PY
       - name: Commit cachefix
         run: |
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Force refresh of live game loader 2143'
+          git commit -m 'Force refresh of live game loader 2200'
           git push
