@@ -4,7 +4,7 @@
   let locationStarted=false,characterStarted=false;
   function add(src,id){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=src;s.async=true;document.head.appendChild(s)}
   function ensureLocation(){if(locationStarted)return;locationStarted=true;add('./location-lite-bootstrap.js?v=f1b2afa8','hcLocationLiteScript')}
-  function ensureCharacters(){if(characterStarted)return;characterStarted=true;add('./character-interaction-prototype.js?v=3e30dd60','hcCharacterInteractionPrototypeScript')}
+  function ensureCharacters(){if(characterStarted)return;characterStarted=true;add('./character-interaction-prototype.js?v=3e30dd60','hcCharacterInteractionPrototypeScript');add('./character-focus-autohide.js?v=7593cf36','hcCharacterFocusAutohideScript')}
   function setHomeState(){
     try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}
     try{localStorage.setItem('haute-couture-screen','home')}catch(e){}
