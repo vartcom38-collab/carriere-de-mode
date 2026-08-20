@@ -7,7 +7,7 @@
     if(!$('#location')?.classList.contains('active'))return;
     if(!window.__HCFranceGeographyInstalled&&!geoLoading){geoLoading=true;load('./france-geography-engine.js?v=6c563790',()=>!!window.__HCFranceGeographyInstalled,()=>{geoLoading=false;ensureVector()})}else ensureVector();
   }
-  function ensureVector(){if(!window.__HCBourgVectorMapInstalled&&!mapLoading){mapLoading=true;load('./bourg-vector-map.js?v=721c57d1',()=>!!window.__HCBourgVectorMapInstalled,()=>{mapLoading=false})}}
+  function ensureVector(){if(!window.__HCBourgVectorMapInstalled&&!mapLoading){mapLoading=true;load('./bourg-vector-map.js?v=ca705722',()=>!!window.__HCBourgVectorMapInstalled,()=>{mapLoading=false})}}
   function boot(){const loc=$('#location');if(!loc)return;new MutationObserver(ensure).observe(loc,{attributes:true,attributeFilter:['class']});if(loc.classList.contains('active'))ensure()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
