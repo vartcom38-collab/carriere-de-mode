@@ -1,10 +1,11 @@
 (function(){
   if(window.__HCLightBootstrapInstalled)return;window.__HCLightBootstrapInstalled=true;
   const $=(s,r=document)=>r.querySelector(s);
-  let locationStarted=false,hubStarted=false;
+  let locationStarted=false,hubStarted=false,characterStarted=false;
   function add(src,id){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=src;s.async=true;document.head.appendChild(s)}
   function ensureLocation(){if(locationStarted)return;locationStarted=true;add('./location-lite-bootstrap.js?v=f1b2afa8','hcLocationLiteScript')}
   function ensureHub(){if(hubStarted)return;hubStarted=true;add('./main-hub-full.js?v=1c50ccf0','hcFullHubScript')}
+  function ensureCharacters(){if(characterStarted)return;characterStarted=true;add('./character-interaction-prototype.js?v=37f45237','hcCharacterInteractionPrototypeScript')}
   function ensureHomeButton(){
     const atelier=$('#atelier');if(!atelier||$('#hcReturnHome'))return;
     const b=document.createElement('button');b.id='hcReturnHome';b.type='button';b.textContent='← Accueil';
@@ -22,13 +23,15 @@
   function sync(){
     const inLocation=$('#location')?.classList.contains('active');
     const inAtelier=$('#atelier')?.classList.contains('active');
-    if(inLocation)ensureLocation();if(inAtelier)ensureHub();
+    const inCharacters=$('#characters')?.classList.contains('active');
+    if(inLocation)ensureLocation();if(inAtelier)ensureHub();if(inCharacters)ensureCharacters();
     ensureHomeButton();const homeBtn=$('#hcReturnHome');if(homeBtn)homeBtn.style.display=inAtelier?'block':'none';
   }
   function boot(){
-    const loc=$('#location'),atelier=$('#atelier');
+    const loc=$('#location'),atelier=$('#atelier'),characters=$('#characters');
     if(loc)new MutationObserver(sync).observe(loc,{attributes:true,attributeFilter:['class']});
     if(atelier)new MutationObserver(sync).observe(atelier,{attributes:true,attributeFilter:['class']});
+    if(characters)new MutationObserver(sync).observe(characters,{attributes:true,attributeFilter:['class']});
     ensureHomeButton();sync();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
