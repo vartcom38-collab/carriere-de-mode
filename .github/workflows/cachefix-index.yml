@@ -22,8 +22,8 @@ jobs:
           from pathlib import Path
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          old = './main-hub.js?v=cachefix-755a6411'
-          new = './main-hub.js?v=cachefix-20260820-1624'
+          old = './main-hub.js?v=cachefix-20260820-1624'
+          new = './main-hub.js?v=cachefix-20260820-1932'
           if old not in s:
               raise SystemExit('Expected loader cache key not found')
           p.write_text(s.replace(old, new, 1), encoding='utf-8')
@@ -33,5 +33,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Force refresh of live game loader'
+          git commit -m 'Force refresh of live game loader 1932'
           git push
