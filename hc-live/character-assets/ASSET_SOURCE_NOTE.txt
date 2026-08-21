@@ -1,0 +1,1 @@
+Le fichier looks-official.webp est maintenant remplacé par le blob valide de looks-user-sprite.webp afin de garantir le chargement des 12 personnages dans character.html.
