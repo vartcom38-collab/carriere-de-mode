@@ -31,7 +31,7 @@
       ['./ines-visual-v6.js?v=49c92907','hcInesVisualV6Script'],
       ['./clara-master-experience-v1.js?v=c289f421','hcClaraMasterExperienceV1Script'],
       ['./clara-card-final-v3.js?v=b9218c9c','hcClaraCardFinalV3Script'],
-      ['./clara-gameplay-profile-v2.js?v=c5130d60','hcClaraGameplayProfileV2Script']
+      ['./clara-gameplay-profile-v2.js?v=3a6c1e06','hcClaraGameplayProfileV2Script']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
