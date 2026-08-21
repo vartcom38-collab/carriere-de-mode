@@ -52,7 +52,7 @@
       ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script'],
       ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script'],
       ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
-      ['./character-clara-ines-v2.js?v=385c9e6d','hcClaraInesV2Script'],
+      ['./character-clara-ines-v2.js?v=maya-profile-20260821-1801','hcClaraInesV2Script'],
       ['./ines-full-lite.js?v=hotfix-20260821-1724','hcInesFullLiteScript'],
       ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script'],
       ['./maya-card-final-v1.js?v=uniform-bg-20260821-1758','hcMayaCardFinalV1Script']
