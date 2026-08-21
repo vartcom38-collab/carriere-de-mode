@@ -44,7 +44,7 @@
       ['./clara-visual-patch.js?v=stable-1925','hcClaraVisualPatchScript'],
       ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
       ['./character-desktop-ipad-polish.js?v=1bb21cc5','hcCharacterDesktopIpadPolishScript'],
-      ['./maya-official-visual.js?v=d60e3ebf','hcMayaOfficialVisualScript'],
+      ['./maya-official-visual.js?v=maya-final-20260821-1755','hcMayaOfficialVisualScript'],
       ['./character-mobile-polish.js?v=1f446660','hcCharacterMobilePolishScript'],
       ['./character-uniform-cards.js?v=e782397b','hcCharacterUniformCardsScript'],
       ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script'],
