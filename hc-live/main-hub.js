@@ -28,7 +28,8 @@
       ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script'],
       ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script'],
       ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
-      ['./character-clara-ines-v2.js?v=385c9e6d','hcClaraInesV2Script']
+      ['./character-clara-ines-v2.js?v=385c9e6d','hcClaraInesV2Script'],
+      ['./ines-official-visual.js?v=20260821-1606','hcInesOfficialVisualScript']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
