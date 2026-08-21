@@ -2,9 +2,11 @@
   if(window.__HCCharacterStandaloneBridge)return;
   window.__HCCharacterStandaloneBridge=true;
 
+  const CREATOR='./character.html?v=responsive-20260821-2212';
+
   function openCreator(e){
     if(e){e.preventDefault();e.stopImmediatePropagation();}
-    location.href='./character.html?v=clean-20260821-1842';
+    location.href=CREATOR;
   }
 
   function finishReturn(){
@@ -20,6 +22,17 @@
     return false;
   }
 
+  function oldCharacterScreenIsOpen(){
+    const panel=document.getElementById('characters');
+    if(!panel)return false;
+    return panel.classList.contains('active') || getComputedStyle(panel).display!=='none';
+  }
+
+  function guardLegacyScreen(){
+    if(location.pathname.endsWith('/character.html'))return;
+    if(oldCharacterScreenIsOpen()) openCreator();
+  }
+
   function boot(){
     const btn=document.getElementById('chooseCharacter');
     if(btn){
@@ -27,10 +40,23 @@
       btn.addEventListener('click',openCreator,true);
     }
 
+    document.addEventListener('click',function(e){
+      const target=e.target && e.target.closest ? e.target.closest('#chooseCharacter,[data-open-character],[data-screen="characters"]') : null;
+      if(target)openCreator(e);
+    },true);
+
+    const legacy=document.getElementById('characters');
+    if(legacy){
+      new MutationObserver(guardLegacyScreen).observe(legacy,{attributes:true,attributeFilter:['class','style']});
+    }
+
+    setTimeout(guardLegacyScreen,0);
+
     if(!finishReturn()){
       let n=0;
       const timer=setInterval(()=>{
-        if(finishReturn()||++n>40)clearInterval(timer);
+        guardLegacyScreen();
+        if(finishReturn()||++n>60)clearInterval(timer);
       },50);
     }
   }
