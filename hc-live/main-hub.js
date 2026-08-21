@@ -54,7 +54,8 @@
       ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
       ['./character-clara-ines-v2.js?v=385c9e6d','hcClaraInesV2Script'],
       ['./ines-full-lite.js?v=hotfix-20260821-1724','hcInesFullLiteScript'],
-      ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script']
+      ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script'],
+      ['./maya-card-final-v1.js?v=final-20260821-1748','hcMayaCardFinalV1Script']
     ]);
   }
 
