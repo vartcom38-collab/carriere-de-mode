@@ -1,1 +1,374 @@
-(function(){if(window.__HCMayaOfficialVisualV3)return;window.__HCMayaOfficialVisualV3=true;const $=(s,r=document)=>r.querySelector(s);const MAYA='data:image/webp;base64,UklGRiwjAABXRUJQVlA4ICAjAACw1gCdASrCAVgCPpVKoUylpCMiohLJeLASiWdu+Bcn0/lqS78Pqe77Zrb9HCSZb59Pv+B6bvph8w3me+lPemP6500PrcZDZ6x7Qf+VzHMwQ5T+Wfkn+X/hvbn2k/sviEZN9dJ2/mC2iWq/4Q9gLh6fsv/S9gf+bf3L0mdOT2QIx7KnoHjNKCnu7NY70p+ma67oX7PA6quf64L5KB0TNjUs72mPGaUFP7bSg58/RMde9loYIcNFqbkS3l8sUV1tzgM3oA8IZRZWzShbpAUqo6L9zHRuGaA5SmhY5xPbDX0aaE7Kutevv5nWahZWzSgzLUS/MF0I+zkkuL2ndJVorpXbl+ia4XR1tWrMw5EI80eaGBUiNKnoH0MiakoJnGqBtYVIv+jn2drlPfoE0Wx9QBXJ3QxgGX2qwO4fxp6g8Z5GS0jCgZbTeDPzeSeKzpAk2sJBVzmJUOa41GGNpYFaZqiW4X+NMmHofgv83exV+6dT8HB/TC7CFASHMhCsk/yWfSVqnR6de+U55eUnmt33U6xufJ70S3sO5Xad3vlEYnyxAvPhPTZ+tlqM4sdxhoRgAb0YkMpbmNI+2g92YhfJ7LnYz29747gwXrzYkXxW3ukeUujKySWZOSns0b2PsWKcgD6CnoHlvZxUE2tuyfvjJLHZSH5dWpZJ3zehWRyln9Cg4+IPN/giQCnj6iH609ossKilN85Azyc0Txlh/GipqMAGCNXQE4Bjz2i5lVn4iUjamZTp6qYGVsvxT0DxqOIWxYpVpI8J7NyIl7kDqIDNPo6q/sm0R1aASiu5J7nto2nXFQpxk4mN1Xh0Xw1mBhCZ9bQN9sj2WZiMqKO9CN2MkggoKCeofwbkqF0SnwRwHHocmo1yTo/8bWJ5Pj5XgtUzG+hfYnzF4UyfCULNLf9/pocLQ9PrJ3oNH5+T50hou4O544uO5TdcEKTKYlvUcJQy3cR8FebLyDQSCSqACFqgAlw9lbNAi5Vc9rLZgU8IuIoq6hs3T6eSZ+9491ZAVhUh+BJk6vUMmnuiodQjfhlxeg4znLw5vL0BmJVO4OSF2SjadIxS7u7kmCM5XeRzPBeE+N29/FvUETWi2kANJzEyHPMDRVZoHpUL+fpqgTptCdWbsJ/gGNIgSmHde4LC5QI8uPveCwKfMZjbS1zrlwhrwK0zZJEZPaXSsNfYFWs+ByZdv8nxzO5Bo60dSP6x+ZKUkjbVslDklqmqvYWOQ9FhwoFMur/jSlvNhfMt3ggAAFbMOzVVW8helEMuPL1y+FcAzvUq5KT1RW4UdOqPLeqK9BFMCov8YrqqxItz9BpghqpZCDIXETnBLcZCV2AcRnLQykcAKpslLyr1EY0wSxYYonewv9+N5ZK1KI7Sz/ATsXn6OlI8m8/9Lhp/GVZn8f/qnJS8XioPe9h48YXU1K5Z6+KivbgRGDkc3wowhLzS9sn8OT9BydplFNetmqgdb8PQYl2fVJM4H1WSVXU9QvXsuTufF+GpwezRK4TQPIpD4igpwDq9mWbeN75lKExNy0Fn+TNKq2X3yfzmfFNb0YJQu0vF7TjkhAxAHZs6VSKxSrULQnbZcGumG29yhB03PCiBeeuivw0d4D9ARATUh/pZUyvpa5AAz+lnqzKJNaNf3akCmX7cHFr46jJfwYaD9nbMt86Lyov3/bqDr1ZRWfWiiYtuo4+lI+c5O9oeZ3kcA/IeIgZjaj2f0FwqL+QVB2w/0G08H2mamwx7zYMZhqoeP/Rcs2K4V6K9ND4wTAYUUnMm0ps+m+MD3+bqAHQKzqqk8vjK/Wz4RaLyklKIi7yUj/a+rVPpmD+BVV3+MbKgWWHRVCfN6tucJh1Xl64g3x5gXs2RGCVSqruFXV/kGtp1g3QZUkn+vptXMRCgFoIBKcJ4P+5aIpbFGemhwLBXyhcBH5KCtglLPZTGY6aQlWTmA3CXdAweNQbS2poZcRxfnLGlp5Qm/zVYTEFeCrHXhllYzbISO/DCcv4GZ565uqzSGCM7+B+hwix+Ew7RLHPUrV5d/Pzg+9FCRwvNP5+1TCWVYzhpsjKbrqOZj0feg+1Exso/+7TCV+zQktorZS6cDJj+sRvDOXhal89FuIou+edZgVcwYGp86Jwx3/LbX9ZWuFewzK+OlwLOE8Pop7p6le3Vj0r8JW0kyJef1k1rjbTXWbGaMLKeEjy9N05cUHEPq1sjES8LTCjqZlj/L1UhXJiV786v5lKS0uQZgCAK0moYD5zMj0T+twQnDadqcmmRCAzmmI0enxGlXxRvLCuOBynfrfKeH2WSYrw/N8rjQ/igAP78Eif0xKUSK9f4o1z8EpJYiWTFZhr0CPLh5aBv31YnOtcgUpomz2+6GOBpNV98IT3D3hBdb7UPtc6XhxD+YZ+VLgosL1XwTndrZkFv9IeYZvh7iILIii4UD226CAP9mtQZ0w1dRV0FQ6Bsrs+3Xlek3G04vkaaS3y8cT3A4kn1fUnMJlolAAK6kMhE8A2iWTxPJfgp8WbX2knP9rE40OktD4EpmvU1vuQ/EVgTVGrhIX3Jnul6zx32Q0dzySL6e/Jtno8qdrSZhAsCd9wgdBGljYL7UDf1NkCSwax4IWIS0PTpQ0mRjyzFtnlryRWloysEEb2SE7wGB+E1q0PC9ALvuzjtQvi/MknGo5h2OAQtmJnr8ZvTQCpx22OoxP6fnWO2jqM2gOAqyvObqFp/YQziEIrlCaVCzeHSxFekADfuYktOOldXrTHcRw4Qp656TMTNqweMoHiZxDLUbZL13U6AHNr4bHHg2KsIDtxlWXBIcqRor4K03Muyqd++Fqb9yUW6cUpYasyGpplE9ntZ8hUZhXrtQt9bg9kcJSpUcsV2zl6/Q2EjE2fgP/Lr8g2bAAek9P7jBVvOc0M871eukVbuWo4ZowsEpWkx4w6brwf7z8W6MVOgyednqqvIPsKRGlXUuI1vQPWrOhiCNLRb8X4KSIsJsQl5ui0psis8gXWr/DY52XyXatsIhiFlqjn15jrv9EBIxg9t6fOWEcJLNvbB3TRSPZSxuH0C1rpXIrhNQxxA4eUZB4mPMcMfZ4qZZ71ooXcj4aj326PSX6AgKxubWpGGxd9sWxCYjrSgrhCFqGdEZwZYYegRwhNSonoPhSy2Bl5VXM8jbafJR8gTwC6LW90Qenjxryvit9Lyohy0nYaC2wJ3nRYoeicq068nqk8vp0wT9n2MeAkDAnPqEO+oal5hSLtQNepkiogYNSNFwp1Wr8GCbIBYRA4cNx+jA7Zu+b2t0rD0O7MCyjnkHbF8OVp7fFOql0+ZWhqBh0A4lkhaSCPlFkvK0GRL9zxPLEUQnwc1sNabxzVEsAZvSq5DVH8fLExoVd4R0pQ8if//2QnuuRVWz+460Pbq2hUQpDXbYYSX4X+GySxaIwHaf8YkgdeDtrebPXWZdTfLoL7yJ4RdNsP8Q5LQdXRsMbASSlHP1DR81ijpQfwBswtJcyoHDOaLvwhBPLvqrTA2lGRow4pt12Qf3F7yVz61w/o9g7xvhK9xHJZztJ3tSS6fYq+/KIgqkfoOJbmf/N79c/Sbvd5LgiZ+jYGaPU0TnKdZsg4dcxrRhMWL2oMiTyRGqvqFm2IyBM0DLA/cbl9q+55o4iC/IUv57XtPsa2HByqSF4NlbX+5dgqdzLzKlBx1G4S9kfGbyg5Z9qeizuSoT/qTOAXNMkEUfVIdnL4Ek4EYfIiEmhspl72GVKoItP4MxNzTvNOaJlsPA4AssAWj5wieTCYqBOBzpOWmZ5UIMfJwQW09sDV6zbB1NN2ucAOZZ7fLaVRV5/U49/lXrHMWoL3KTQ+succRueZdH7yxza2X62dec97Lylrj8w3gR7XV+9A8B4eGgBPFOVnXsmz3NMwWJULE+CzxcejVRcW0zUM5zWLZpxb/zdiK1lXmieFLwtK1jNVtr1XSUmaQEPi/c7Rozrn4x6IUa79UkO6j0BLXlkTma/Q6FZUJLAsdKoI5btat5mxu6kR5V3iM94Ugj6xmL9wu5v7aCv6ZRdf9awMr1OTykM+niICAAQLgN74xmtB7hb9E3Mn3Bk15qIcC3IDUagN6pjBYVufAbjhI0iyQqIYq663uouivL1OWiREK/k/RYjRJTa1873qrb4U8Q/nN0b+MqqkEchtE+CdoBe+uZJgsAubCvd4Q4T6bF1w8T8/D80+vi3B68cz0N9YPhvJjH+LT50UiYGn6bzVsdBuNCaKX8vRlIucC9KK8mXtGOWs/7XpI8PwAewiaQGV9pEsw5ckLuKAb8tnoeKAKfKwhQDTX+pbQ3I11W3hrm4EZh5jZ7EE9x0MFop7AtMr47FZsVRrRn7fAnntzvN+wPf7an2r0AZgQWgvXCTE0WEiq4UbQTFj0l1g4l5zpy3nl3v0S5A/OD1xMP+b9pa7IhTKMZpok/Z+QC/ZRMD5YoavwWPW4IZEZhVBoWR4SOqQ8I8WxbGPySjDOwODVMSQCYpGcsxcpJgANFbEtiSQ/IgLduXaDdWdmT2+rggs2lDaJWYetmFUhr6RnX3Af8vOOoaaptnZ7wvLwWeO+sx3QXAtPjoxiZXZW8I3FvWfTBoUjTkuotDGa1ha3gCsLZ//AiyNdlFJQ3Cjo1IX4lpWVZD7etg+/fL2MjyGx4gAyO9QmxGmQkEsvP6MnJJL3CGyWz85ilmvwusP7Zgcopj7ETOzKT0moYDelHEP3Ts3xHCyJFaK/IAF1GgDNTfCs2Vw7g5cgXj+HqkWS7mjG+piqPwh86RdBouWCbh1EWBgGy/PpCJxv3ET5AwK8C75/nUx03Sp0Qr/My+LtgBfe0YdEKPsjWg/o8+qZrE/oFqglIlBRPJpb4Vzahl9UacOcNykAOE0yJgOFYPy/aFD4igAjDYrtw5YmLelesswmWfc15CaWZFhocha3GuEG5dqoPxb20OKgSBJPtoTg+hw+dXYE/CDfl/dtIndTEWPkO3HYMAAuExIg6yOtGda2h2xQ7Kdcl9q4IhldnTcxLaG9pewmcEjyJGoAcNR5w4JOpl2ejzYbRqRtfw9GB66eZ3b+7TlToywLFacS3sTz9oBqey7qPfseXhaNn7O9qVKwvc1NDg43/1RLvH+11Qrs6LMlZGsLFrN/S8wR5/o+2eyLthkeVCLANq0NA+lcr+2aWKhWyAdQ8VwF/4jOWBCheJ/LLdAXnnLYvOAigKvUfUrARq6JczA2ARPkJdi/XJq6YR2b1EpueQ+Ou62S0fR7aO+YZHhHyOm2dZm8IuBivbiCnz/eBMtrxjSIUYyR1a3vXDBsY7GiW4oNWSAoXEOt/lCYnpxL896U3kMLxF48W1xur7QUARlEHwCaGCKZ5P8EQpvwVq61MBi5k9/ggXrKgnR7+PmC7tJFTt7cOHfRezbcZ5RhI8W2KuskcMMRrH0ryFXmOcAKNI+HavgbEAHHIr+0w+1CBGSdw68NM3NexP9ED8oAPZwie8o6EWFvGze8jJMUjPAYHFz6L6t5K4bBZIQQ1Fq4b3jQNiUFKiDnMcBFhOWiI6VVlRO4F0pc0U1OnkN2BAaIwFaUvT2TZE5CaUUBDtvgn9NAguY2lbf96au3VKQWPZoWCSTnD13j1ne55iZzduCojCPRKI2EmSnHIsxqdGvLrlksQGGZJb9hnt9G6KtVNlGvEEBF8SC2UMHgVMTLelhJDe0HvxjyNhVUsYC1SNQLiSBFVvBLM8ch+rEec7Ws2eMVkYl3nov9XnhgqktmVJ9dOByb3wasVvbxfTvcXmYZ7Hf+o4JOwyq9lfhNUco0JEtsr0urlMEDt3iElADHYrFYb3fD/1Gr6G6dSkvSSKrnrJ14V4PfANEhK+WSvD0S6ZIRbnqI1Ee2MpsFaHi/w1hrhGj8lzF0EJ15sED5l6XgcoGX9vkib6JWSL6u5F5biClssiU3QwygAe9J6F/iQRF0DLZEzkC/yrL7EsHh5cHj/7rs4lIvY0p3wspea8oXjXNrB19l/eWG6MoziUtj0F5DN/Lch7gr1ucsMxLa4UoYIpVJeoW5HDfXSCQ+mH1i0e3gTK1BWZyAAJahXMEjbJQiMjpASZ8juL7jlZySRJy0UrWAdMczutrQau27SJav6ApM1Dlolz0XYWaXoiQpO/dFKKPularQqgyvgdDR1rnlG+NfCvzyALPVJ4alZ0/okUPLLFhdQ9X1c7QqGEVwAGe0fvsDmFJtDZ9cWBwGXDCMlVhvwF2fFoHwtLDsEbr54PD6lueVFheXlckI5Z4is7JUmY3W6rBxqJ8+oX2t8rDZWDG6QAZOa6mIyHLsDkfL2VISfD72m6fVsmvuv2Pg5XOywdcXF/+vEW3NgnZDhOcBLyHKL0NdrP0cVWm7zIelJ2nuqSZTFYEKoPrZENfSikl8KqnVdo6nCzqFQKyP9aqKrs3PYjrxEtWiPy6RFND+r9y3M/qhMQHbtEl6M/uFpIi10NJXADu6/toXLk2DcOrCAf7rc5YkXW7XIgjnaF+y0JBi25AzVwWI6PyJemWXhmSHPUakCOj4W63mVPnSV7e9f+rVyD2EN0/ITg9FmvFC18fRHKjkdM3NGUfwlFtj+BN1K4gjkLadlsC2QzUFbu5i2VsbIVXxI54UzOYzQrlgCDbY5JXYQRRtSbZ92szaLmaqJXHdoC3AvEm6dzdfZSJ91sRCamB0q3jcfXKBoLnJ9UHa/zMErDrOzVTI6xVAmlLTkPt/HLH7HjcLVK7+nbUjLTV6frGJStYGxqPYhqE3FllXIZXAMqhaVzpOSo6tTKb8qscVJqLo2pApgvzbd8VE8OHlkGKgRTGJznSxABnb9w0jfYc6Kk2ig3eIb5Z/sIKKBF68yNJXDeFf+Y19U2KL71+iv56tl2mB29WxpQoepHgTDkCTzw/QLKdgfdEKWkp58vCrr73qHwHnYsX6cTApjWsKdiVLktm/dpHnEjG1Dc5e5tW2mTTnB3tfpJxiUTyzv17Oeat1LVfQEqP7txE8f2WaeV85bz+d/IguDFWYoMgKgAgOmTRuk4uKwn5bV1hTY3E5h9OjFGUcCjmhZB1x6mrFRWFJF+Gl/8TgQDOGo3KjE1KxpdvZ7VqPhPGNww9asQs/pXfp3THy6t5iFiy97tX5nI5WNYKCPIPtDj9WLY1Fw3S7mik9LVRX152z4Wp38hVRSR9NI2UIOJzvx3zjqTRVC3L17lmRDhA7Lr7NClxfq4PWMFfD06GwQkpsEflA/18D/lS9VnJ3BDFJFsNKLvJ6TnRbcqdevxW9Tt5COpJ6hSctiAyph3MtniZbjDJ+cpEhluhZLQ7xwb1gqniQnXkcCQuXZhmzQ35HvJHOIrqmea1sTA1Ioom6BNLlpp8Y/UlK1ZUb2oq+YD6gdExSQANo65/x7YJ8nXICKLwUorrrBnuxAQgjt9eunJnV84qbP3yttrHALmfNc6w9xenT6i9y13rZP/dRoqkohpI/C1OlZ3N+W7FjOBFEk2KDmB3FIJYSW3ghqNKN4Q2xB/IeMpT5zdFnnpaqI+zMRxwTMrYRz+6Fm6UXJ028b1l6eKd8fS7u8I5MdzQdK3RNUSkjucgkTardNgCasWQ/nHFDsRhHo40+KzXkzu7F1hBCNciX2H6afiR3YcpGEOLlSkf/VTu/NPxGfAcMDCTsrWwcO0TFV4kHq0knACLVimKd8kwA/5nkuy0CPi9pft3f9f7/GQstOnDnfNvysL1mThrpci39D6coDHE8eG7a4JVCxhDRJzkD+JA78W2aSrfqAw0JLGMiOHq/QIKpt078isaYKy/fL6l16W5gIlqIVIeOQj+n2zLu/zkrgE2YDhzgHfKOs8HHXGbUgNpqTFl18dJWHOzFFfSRUCwRTBDAc10JTgu5UjYGAnRCiz3hVoNgsB58ZnUz8Fv6dQV0EDNEfWkTxmL/iBXATN8XmqISsGbY1P6pB2LtJSeqwvZlq8UVow3mung6wZPW+pJIMJKkaS4NvcCo2qYEl/Vji0NSvOrvoFPeahbcq2j7MdXV7LBLR/uCsazE1TptdG1vbSzzbZEVoJwDVtC8lA363JxNkAF983gLQkRIdEt8tUm7gCNKF9R941J/sSHEfsEUBZBTnfjncA9Cafga6xlkFK13JYqMIjmGxnv2feRiDmFsPC2hOLNVvFnPKGkdLLixTE/Z7I7tOVv5qKSYmoaEBk9s5r8M+p5BKEZ3vrJEE/7yzmE8jPN9Lhpex6rvnOQSAyZl6RYPJQqeIMqAkhCKCF+gQ04AYR0VWiVHZ93N9SgpWGY4b6iE/3XKR1dAYkesnOlt3wxXDTCerwNw2aHoP+mRFqIYJQAL5wrUS1cu7N3yiV5M6pNX4YXune1SL0IzzO7u6teasWIrpfKVOu77FTZbmk/iEx0R9j/eGUUI75CLf6ExbOnqeZaeML5wgnJjXhM3YjCR+9nIjPSgtCu7rggOQZ6m8oWzocuick812wd2NeElIpH3ugDJxn+nWSOPiGb09ldgA3obxx5SA5NpwP/DOethyJNkTEpcqyL2mN9f0fEs6TmpleKExBmeb0L6VEAUBUYaHQEWgCas6mJ+d45OTEkl1jrvqNYylZtDOHBn9A5Ww36rjGglAAh+6oI+X/OMbiIFQEXuXn/aftzXv6PDgImHG9yaRy3d/toNjFQYX8IdAP+aCZe/kaFN5o8CYev4lH0HOzz4RIZLdTY+IV8JbnG8Ss7gJbixRLthZRBXWDc/6XREhKw2WAgci/lS87HdwTKLyIxp4sj6DUHeLkpS/vsTOsRaftIGZkrufiAsRAy6XPAAtCkZ/bn+Ldp9JzkQmH82ykgGcoDtGSaMlYAd3WX8FmQq/NeE2Tv+pvr8BoXDKNX2YQi1HPee3n3LlKF3ALJDLwpSC1u7RjJLq6jE6jdOLsIk6hcly1nwB5vemiark2wfDMre3LM4yhcBECry/uqOvRiGkknkGC9pqezKDR5DGYIabA3jUF4iyyCk2d6QqOpZCEosIAOxrKlR2+AV7w4Ytm3UraoK7JYb4z6HiQHCTpOvARXrPAern4fhK/C8PeE02s/7JmvBfrcs9t71Wp67y7P9lrEqc4GYtE/bNnT7fy0AlKPDHjA7GV3BovWpDgpDMvmUXvto4/t5QF6zViUXm+lTqsWpOtHSOrV1Jzny/tkq1W9FaECRJi1JvUbuGviiQZjmJBOPAHTxM11xYIJ3PrmHYmZwJOQ9Zs+Nhpolh817sbBjgVyO8CNhGpr1Cp8Ss2D1kv2A6WsKMIVmgDtyFd39gD8Cf8k65+Z1RT+1i1I4MBDMYXg9bY/+rhrXqUREJ3za6KVvx5FvCuNX1o8ry2SiRIQQbSNecyXO6t9XEdIhD4A7svszuKDgayoMECldscp+Xqj1n3km0C7YAePOcM5BNk1WiGnsXbKho5nNgcvG+Imd7zZCvmg8ijbKauN8WBSPIUOBUNMzi7ShnKrB5si139SVPSaVXPeAZhRq5dWRAU/bqPfJwsuUwRCzswCX5GqPDAHW/ZmDy00dM0DEt1hchwNLJxl5F+PLoz9J8GA1xnhspC1IvdFcKIRnIEeQTgKHeJWKN3iv+RV2OrE6fhJfDWSYgmZF4ZyC3+oNEEPFXoJoLHeQAQFe35mWIwjAnIt3qQ9H0+qvYiPzoGBL8SJ2v8nlqdvuWLyoQK3rldEVo4K8Oj5A+eNSlbS2sPL0i4i86QoK10NK65im70RywCW4qFdD8icwpU4fwiunOsSlM/voLmrA5nRnSU1D3dy0+gQhaO9wqtMNgpYDxwXWwJayHxz79ycOE8D+Spfy6zSVtEapVoqPuixVj2Kp1xScF0YvJaAmAdoLxHhMNJf4vbo/b0/MNua3OxOUQLA4hKZaIP7jWvCpSJOEFxtPUfXh+A6gjiRwSx0U77MVuu01LrDGRbmpKRDGrHnp+wWMXjfRVPnx24T7+EYblY/F9XHEcjfwZNDM9Xxesvv+3BPD7GSbdHpE+a8JF8p6q3DpXhaKT8cRs9DKmpSxl6iejXxnqnMTXLLup5WVdcpjRLoG7UBEQt7uWpR80dhg8ASRLJDqT7/hU+UIjHzJhNJMLFXWY3nut6ACCrSbWwIHrB9huFN2VsL9r1tTXMrQDNWl1P4wgTSuHU+V87r1rEYQ7szKeyEfrs3ywEMXBh0SYGdUMj8gEJXelS1oyrD2EdC/c5Nemk941F4RDW8Ldvg346FVr0B7NmmwRVu2IutKJFsNYgMDWhZ48n/RJ+vbBniRNv/l1wdNjDkqWRSHVYtehA5yzMWfdCS1CABb+T30TcUd6VsLPf3h5PmD959Q2Eo0gauYUQ45lqP6vc3fHu89UQ2af4XX4dYWuIbdBH3zxUq+H8dloZ2/T+vFXetGLA8ASxOrlbiGdWfguZZwD3KscGmNh8mCYhH8YPH7cKIgTH4pwQNGlw72MAAaPoHc7j8Eq8nE3XomlCpHYCRP2P+wU6o7SI6sOkUAiGNmk7Ti/h96vMqS+6vSuOa0UxU4xNory1yZf7M+p0KD/gPmjWBFVG7m7487wJ6RzfiJaBXUuWnpZRGHaMzmq8GbWzpcHGPTUBagZG0r9cVwcrnJmXvIMM/Mu9RoxdttE79fgpvySj/6zrFHDb1rH/PXUgg8dYPxvik2KY80BF5zJbDL+01NFzcYJ5j7NYJXRTv+7y2C5w2/IlmY5X+b7cCth6d1Y2c91fqfKHp6Kt+PUy9NZVLkfNWG+wQMjY22/1XkrxeUss5xycfvgWZOQ65R+Xq5CUk0kAuM7vgIQHnp6S52/rDaxRHUZbTYGWFzMcG5LybPxPiP07lTB0vAMNHgcxbxkTz5mtOzzTyIF1LTprgeq9/MsBYdzsxAYa5mUfkACTUSZiaE3r0uswdJ1GS2zzoIhJtNDu3n0QFF+rg+V5bqcm0L/2eyWoPfHLC+I46jSXzLu633mhpT+jHE99zGYhfh6Orw3XrK5gIqg4E7NLcw73Wx4HQpQfJnvxGgxLsd9MmA3FaDbhF1wKpdR864+/kR0A3y18QhW0Q1WM46ElpnT4JifseKsMfm64yGdlVvwl/puXNdWX3arNB5VGPr2q1ikZogHln8dQCjSVMPboCwlXOys/Y9CBS0lUsLZUAKHazycQrQYiOlIPHdfqREiPF/KWkzlHZzTAj5U4m3GFy/xhQaOg8UzqJ5auYF8LIOgj6093i6cs9ApfVG0MHcI00qBpkpEIX43Xq1XLZ0j9N9arsgHD+pGT808kK5bjzvHJ69yGGx15ljos2hpRltA50qUANFHjOmitLJ27aRwVO0m28RnZMut76zqKq1ADmgbXr+tcf/q3HGIOL6Oq7KCKZjQrQJDuxBD20WdFN7jmD2Hi2/J5qwxBwwhv/aMGQ2I8WxhknkqlPU4XYBk1AO+t01Rp/mwYaQ3yYH24Ydb5efUtDMU8Qj7Ui3SaIQOq0vnglxPSqYiQ+ntIPg4kXr/OPcoEDKf8H56FPGgf7duFA+0La5zx23H1Dpd0XCaHUD6Nfhc+QRL8TzBtejwr0nPE3F14vcnoO2x8/r3ROe3TrRQ1SjndYIQu39gUPEeiKLzmnGdraXzdjJQoxiLzv3k6PelBpJmxQOIEGjs7IdPZgRVlatFldj7qk0aDzlfLLvr7AobF6K9DLJcff1dx0jrdmV+eUlk0/h2xTzEcjNVWiKMavTyEiDaLFmNtgAogM/gOdexXTpsvrw/YtoJn1HsQT1tSVuIfH1uPGwLLybZpULk9siVgd/GHrDyKPiCHhskFLSWHgR5QgNCylD4C2Vqv+baE3WAZ883ukrkpC8lYbe7dOjh7U1Hs4BHmhazRnS9ewdE7xppI+v200z59xm0D/eBXsiUrH9QL3vsbl28DjhXnY317cAB1MS6FZeWVQHTjM1BBGSajHY1YWdemfhPzgAOoB68L+mZCrprbFjcp7H6hFP8A5RleXONAe+uyhpRiuus+Rz6cf3zZfPObdDzB3LFCkZEiK1jbONOpAADfQAWn8pmSo0I3fn2d9FSQm6XlY0OEn4RpuCqsgA';function css(){if($('#hcMayaOfficialVisualV3Styles'))return;const s=document.createElement('style');s.id='hcMayaOfficialVisualV3Styles';s.textContent=`html body #characters .hc-person[data-id='maya']{overflow:visible!important}html body #characters .hc-person[data-id='maya'] .fig{position:absolute!important;left:5%!important;right:5%!important;top:4%!important;bottom:19%!important;width:auto!important;height:auto!important;border-radius:20px!important;overflow:hidden!important;background:radial-gradient(circle at 50% 34%,#fffdfa 0 36%,#f9efe4 72%,#f2e4d6 100%)!important;box-shadow:inset 0 0 0 1px rgba(115,86,64,.045)!important;transform:none!important}html body #characters .hc-person[data-id='maya'] .fig:before,html body #characters .hc-person[data-id='maya'] .fig:after{display:none!important}html body #characters .hc-person[data-id='maya'] .fig img.hc-maya-master{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:50% 100%!important;transform:scale(.96)!important;transform-origin:50% 100%!important;mix-blend-mode:multiply!important;filter:drop-shadow(0 9px 10px rgba(71,50,35,.10))!important;background:transparent!important;border:0!important;border-radius:0!important}html body #characters .hc-person[data-id='maya']:hover .fig img.hc-maya-master,html body #characters .hc-person[data-id='maya'].focused .fig img.hc-maya-master{transform:scale(.96)!important}html body #characters .hc-person[data-id='maya'] .tag{background:linear-gradient(180deg,#f6eadb,#f1dfca)!important;border-radius:17px!important}`;document.head.appendChild(s)}function mount(){css();const card=$('#characters .hc-person[data-id="maya"]');if(!card)return false;const fig=$('.fig',card);if(!fig)return false;fig.querySelectorAll('img,svg,.placeholder').forEach(n=>n.remove());const img=document.createElement('img');img.className='hc-maya-master';img.alt='Maya';img.loading='eager';img.decoding='async';img.src=MAYA;fig.prepend(img);const strong=$('.tag strong',card);if(strong)strong.textContent='Maya';const span=$('.tag span',card);if(span)span.textContent='DIRECTION CRÉATIVE · SILHOUETTE';return true}function boot(){let n=0;(function wait(){if(mount())return;if(++n<120)setTimeout(wait,50)})()}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();})();
+(function(){
+
+  if(window.__HCMayaOfficialVisualV4)return;
+  window.__HCMayaOfficialVisualV4=true;
+
+  const $=(s,r=document)=>r.querySelector(s);
+
+  const MAYA='./maya-official.webp?v=maya-20260821-final';
+
+  function css(){
+
+    if($('#hcMayaOfficialVisualV4Styles'))return;
+
+    const s=document.createElement('style');
+
+    s.id='hcMayaOfficialVisualV4Styles';
+
+    s.textContent=`
+
+      /* =========================
+         CARTE MAYA
+         COPIE DU FORMAT INÈS
+         ========================= */
+
+      html body #characters .hc-person[data-id='maya']{
+        overflow:visible!important;
+      }
+
+      html body #characters .hc-person[data-id='maya'] .fig{
+        position:absolute!important;
+
+        left:5%!important;
+        right:5%!important;
+
+        top:4%!important;
+        bottom:19%!important;
+
+        width:auto!important;
+        height:auto!important;
+
+        border-radius:20px!important;
+
+        overflow:hidden!important;
+
+        background:
+          radial-gradient(
+            circle at 50% 34%,
+            #fffdfa 0 36%,
+            #f9efe4 72%,
+            #f2e4d6 100%
+          )!important;
+
+        box-shadow:
+          inset 0 0 0 1px rgba(115,86,64,.045)!important;
+
+        transform:none!important;
+      }
+
+
+      /* On enlève les anciens éléments décoratifs */
+
+      html body #characters .hc-person[data-id='maya'] .fig:before,
+      html body #characters .hc-person[data-id='maya'] .fig:after{
+        display:none!important;
+        content:none!important;
+      }
+
+
+      /* =========================
+         IMAGE MAYA
+         ========================= */
+
+      html body #characters .hc-person[data-id='maya']
+      .fig img.hc-maya-master{
+
+        position:absolute!important;
+
+        inset:0!important;
+
+        width:100%!important;
+        height:100%!important;
+
+        max-width:none!important;
+        max-height:none!important;
+
+        object-fit:contain!important;
+
+        /*
+          On garde les pieds en bas,
+          comme Clara et Inès
+        */
+
+        object-position:50% 100%!important;
+
+
+        /*
+          Maya était trop petite.
+          On l'agrandit légèrement
+          tout en la gardant dans le cadre.
+        */
+
+        transform:
+          translateY(5px)
+          scale(1.055)!important;
+
+        transform-origin:50% 100%!important;
+
+
+        mix-blend-mode:normal!important;
+
+        filter:
+          drop-shadow(
+            0 9px 10px rgba(71,50,35,.10)
+          )!important;
+
+        background:transparent!important;
+
+        border:0!important;
+        border-radius:0!important;
+      }
+
+
+      /* Pas de zoom supplémentaire au survol */
+
+      html body #characters
+      .hc-person[data-id='maya']:hover
+      .fig img.hc-maya-master,
+
+      html body #characters
+      .hc-person[data-id='maya'].focused
+      .fig img.hc-maya-master{
+
+        transform:
+          translateY(5px)
+          scale(1.055)!important;
+      }
+
+
+      /* =========================
+         FOND DU NOM
+         IDENTIQUE À INÈS
+         ========================= */
+
+      html body #characters .hc-person[data-id='maya'] .tag{
+
+        background:
+          linear-gradient(
+            180deg,
+            #f6eadb,
+            #f1dfca
+          )!important;
+
+        border-radius:17px!important;
+      }
+
+
+      /* Nom */
+
+      html body #characters
+      .hc-person[data-id='maya']
+      .tag strong{
+
+        color:#624538!important;
+      }
+
+
+      /* Sous-titre */
+
+      html body #characters
+      .hc-person[data-id='maya']
+      .tag span{
+
+        color:#9b725f!important;
+      }
+
+
+      /* Maya devient un personnage officiel */
+
+      html body #characters
+      .hc-person[data-id='maya']
+      .tag:before{
+
+        content:'SÉLECTION OFFICIELLE'!important;
+
+        position:absolute!important;
+
+        left:50%!important;
+        top:-18px!important;
+
+        transform:translateX(-50%)!important;
+
+        padding:3px 7px!important;
+
+        border-radius:999px!important;
+
+        background:rgba(255,252,247,.90)!important;
+
+        border:
+          1px solid rgba(104,82,62,.06)!important;
+
+        font:
+          600 5px/1 Arial,sans-serif!important;
+
+        letter-spacing:.16em!important;
+
+        color:#a87661!important;
+
+        white-space:nowrap!important;
+      }
+
+
+      html body #characters
+      .hc-person[data-id='maya']
+      .tag:after{
+
+        display:none!important;
+        content:none!important;
+      }
+
+
+      /* Numéro */
+
+      html body #characters
+      .hc-person[data-id='maya']:after{
+
+        content:'03'!important;
+
+        color:#c8a97f!important;
+
+        opacity:1!important;
+      }
+
+
+      /*
+        Les règles globales mettent tous les personnages
+        sauf Clara en mode "portrait en création".
+        On annule ça pour Maya.
+      */
+
+      html body #characters
+      .hc-person[data-id='maya']
+      .fig{
+
+        opacity:1!important;
+        filter:none!important;
+      }
+
+
+      html body #characters
+      .hc-person[data-id='maya']:hover
+      .fig,
+
+      html body #characters
+      .hc-person[data-id='maya'].focused
+      .fig{
+
+        opacity:1!important;
+        filter:none!important;
+      }
+
+    `;
+
+    document.head.appendChild(s);
+  }
+
+
+  function mount(){
+
+    css();
+
+    const card=$(
+      '#characters .hc-person[data-id="maya"]'
+    );
+
+    if(!card)return false;
+
+
+    const fig=$('.fig',card);
+
+    if(!fig)return false;
+
+
+    /*
+      On supprime complètement
+      l'ancien visuel de Maya
+    */
+
+    fig
+      .querySelectorAll(
+        'img,svg,.placeholder'
+      )
+      .forEach(n=>n.remove());
+
+
+    /*
+      On recrée Maya proprement
+      comme Inès
+    */
+
+    const img=document.createElement('img');
+
+    img.className='hc-maya-master';
+
+    img.alt='Maya';
+
+    img.loading='eager';
+
+    img.decoding='async';
+
+    img.src=MAYA;
+
+
+    fig.prepend(img);
+
+
+    /*
+      Infos de carte
+    */
+
+    const strong=$('.tag strong',card);
+
+    if(strong){
+      strong.textContent='Maya';
+    }
+
+
+    const span=$('.tag span',card);
+
+    if(span){
+      span.textContent=
+        'DIRECTION CRÉATIVE · SILHOUETTE';
+    }
+
+
+    card.dataset.hcOfficial='1';
+
+
+    return true;
+  }
+
+
+  function boot(){
+
+    let attempts=0;
+
+    (function wait(){
+
+      if(mount())return;
+
+      attempts++;
+
+      if(attempts<160){
+        setTimeout(wait,50);
+      }
+
+    })();
+  }
+
+
+  if(document.readyState==='loading'){
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      boot,
+      {once:true}
+    );
+
+  }else{
+
+    boot();
+
+  }
+
+})();
