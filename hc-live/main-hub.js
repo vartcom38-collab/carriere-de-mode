@@ -56,7 +56,8 @@
       ['./ines-full-lite.js?v=hotfix-20260821-1724','hcInesFullLiteScript'],
       ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script'],
       ['./maya-card-final-v1.js?v=uniform-bg-20260821-1758','hcMayaCardFinalV1Script'],
-      ['./character-creator-v1.js?v=creator-20260821-1803','hcCharacterCreatorV1Script']
+      ['./character-creator-v1.js?v=creator-20260821-1803','hcCharacterCreatorV1Script'],
+      ['./character-creator-cleanup-v1.js?v=cleanup-20260821-1808','hcCharacterCreatorCleanupV1Script']
     ]);
   }
 
