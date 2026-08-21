@@ -23,15 +23,12 @@ jobs:
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1315'
+          new = './main-hub.js?v=cachefix-20260821-1325'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
-
-          # Replace any prior emergency marker with one definitive page-level guard.
           s = re.sub(r'<style id="hc-no-compare-live">.*?</style>', '', s, flags=re.S)
           s = re.sub(r'<script id="hc-kill-compare-live">.*?</script>', '', s, flags=re.S)
-
           guard = '''<style id="hc-no-compare-live">
 #characters [data-compare],#characters .hc-compare,#characters .hc-compare-panel,.hc-compare-v1{display:none!important}
 </style>
@@ -39,12 +36,14 @@ jobs:
 (function(){
   function killCompare(){
     document.querySelectorAll('#characters [data-compare],#characters .hc-compare,#characters .hc-compare-panel,.hc-compare-v1').forEach(function(n){n.remove()});
-    document.querySelectorAll('#characters .hc-focus-actions button').forEach(function(b){
-      if((b.textContent||'').trim().toLowerCase()==='comparer') b.remove();
+    document.querySelectorAll('#characters .hc-focus button').forEach(function(b){
+      var t=(b.textContent||'').trim().toLowerCase();
+      if(t==='comparer'||t==='retirer'||t==='retirer du comparatif') b.remove();
     });
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',killCompare,{once:true});else killCompare();
-  new MutationObserver(killCompare).observe(document.documentElement,{childList:true,subtree:true});
+  new MutationObserver(killCompare).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+  setInterval(killCompare,400);
 })();
 </script>'''
           s = s.replace('</head>', guard + '\n</head>', 1)
@@ -55,5 +54,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Remove compare button directly from live page'
+          git commit -m 'Force compare removal live 1325' || exit 0
           git push
