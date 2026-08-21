@@ -1,7 +1,6 @@
 (function(){
   if(window.__HCClaraCardFinalV3)return;window.__HCClaraCardFinalV3=true;
   const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
   function css(){
     if($('#hcClaraCardFinalV3Styles'))return;
     const s=document.createElement('style');s.id='hcClaraCardFinalV3Styles';s.textContent=`
@@ -12,15 +11,6 @@
       html body #characters .hc-person[data-id='clara']:hover .fig img.hc-clara-master,html body #characters .hc-person[data-id='clara'].focused .fig img.hc-clara-master{transform:scale(.96)!important}
       html body #characters .hc-person[data-id='clara'] .tag{background:linear-gradient(180deg,#f6eadb,#f1dfca)!important;border-radius:17px!important}
       html body #characters .hc-focus-header-v2[data-id='clara'] .portrait img{object-fit:cover!important;object-position:50% 13%!important;transform:scale(1.18)!important;mix-blend-mode:normal!important;background:#f8eee3!important}
-      #characters .hc-focus[data-clara-active='1'] [data-compare]{display:none!important}
-      #characters .hc-focus[data-clara-active='1'] .hc-focus-actions{grid-template-columns:1fr!important}
-      #characters .hc-focus[data-clara-active='1'] .hc-clara-start-stable{margin:10px 0 12px;padding:12px 13px;border-radius:15px;background:linear-gradient(135deg,#fffaf3,#f2e6d9);border:1px solid rgba(142,101,76,.09)}
-      #characters .hc-clara-start-stable .eyebrow{font:700 7px/1 Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8d7b6f;margin-bottom:7px}
-      #characters .hc-clara-start-stable .pace{font:italic 15px/1.2 Georgia,serif;color:#66564e;margin-bottom:9px}
-      #characters .hc-clara-start-stable .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-      #characters .hc-clara-start-stable .levels div{padding:7px 6px;border-radius:10px;background:rgba(255,253,248,.85);text-align:center;border:1px solid rgba(121,91,70,.06)}
-      #characters .hc-clara-start-stable b{display:block;font:600 6px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#9a8778;margin-bottom:3px}
-      #characters .hc-clara-start-stable span{font:12px Georgia,serif;color:#514944}
     `;document.head.appendChild(s)
   }
   function dist(r,g,b,c){const dr=r-c[0],dg=g-c[1],db=b-c[2];return Math.sqrt(dr*dr+dg*dg+db*db)}
@@ -51,35 +41,7 @@
     })
   }
   function syncPortrait(){const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(!img||!img.src)return;const p=$('#characters .hc-focus-header-v2[data-id="clara"] .portrait img');if(p&&p.src!==img.src)p.src=img.src}
-  function isClaraFocus(focus){
-    if(!focus)return false;
-    if($('#characters .hc-person[data-id="clara"].focused'))return true;
-    if($('#characters .hc-focus-header-v2[data-id="clara"]'))return true;
-    const h=$('h3',focus);return !!h&&h.textContent.trim().toLowerCase()==='clara';
-  }
-  let patching=false;
-  function enhanceFocus(){
-    if(patching)return;patching=true;
-    try{
-      const focus=$('#characters .hc-focus');if(!focus)return;
-      const clara=isClaraFocus(focus);focus.dataset.claraActive=clara?'1':'0';
-      if(!clara){$$('.hc-clara-start-stable,.hc-start-card-v2',focus).forEach(n=>n.remove());return}
-      $$('[data-compare]',focus).forEach(n=>n.remove());
-      $$('.hc-start-card-v2',focus).forEach(n=>n.remove());
-      const stable=$$('.hc-clara-start-stable',focus);stable.slice(1).forEach(n=>n.remove());
-      const primary=$('[data-profile]',focus);if(primary)primary.textContent='Découvrir Clara';
-      const actions=$('.hc-focus-actions',focus);
-      if(actions&&!$('.hc-clara-start-stable',focus)){
-        const box=document.createElement('section');box.className='hc-clara-start-stable';box.innerHTML='<div class="eyebrow">Ton début de partie</div><div class="pace">Lent · sensible · précis</div><div class="levels"><div><b>Technique</b><span>À l’aise</span></div><div><b>Créativité</b><span>Forte</span></div><div><b>Réseau</b><span>Débutante</span></div></div>';actions.before(box)
-      }
-    }finally{patching=false}
-  }
-  function mount(){css();$('#characters .selection-art')?.remove();const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(!card||!img)return false;card.dataset.hcOfficial='1';cutout(img).then(()=>{syncPortrait();setTimeout(syncPortrait,80)});enhanceFocus();return true}
-  function boot(){
-    let n=0;(function wait(){if(mount())return;if(++n<120)setTimeout(wait,50)})();
-    const screen=$('#characters');if(screen)new MutationObserver(()=>queueMicrotask(enhanceFocus)).observe(screen,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-id']});
-    document.addEventListener('click',e=>{if(e.target.closest?.('#characters .hc-person,#characters .hc-focus-nav,#characters .hc-focus-actions'))setTimeout(()=>{syncPortrait();enhanceFocus()},20)},true);
-    setInterval(enhanceFocus,700)
-  }
+  function mount(){css();$('#characters .selection-art')?.remove();const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(!card||!img)return false;card.dataset.hcOfficial='1';cutout(img).then(()=>{syncPortrait();setTimeout(syncPortrait,80)});return true}
+  function boot(){let n=0;(function wait(){if(mount())return;if(++n<120)setTimeout(wait,50)})();document.addEventListener('click',e=>{if(e.target.closest?.('#characters .hc-person[data-id="clara"],#characters .hc-focus-nav'))setTimeout(syncPortrait,40)},true)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
