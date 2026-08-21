@@ -25,7 +25,7 @@
       ['./character-portrait-gallery-v2.js?v=35c1486e','hcCharacterPortraitGalleryV2Script'],
       ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script'],
       ['./character-image-framing-final.js?v=2f3825ba','hcCharacterImageFramingFinalScript'],
-      ['./character-casting-clean-v3.js?v=9ac0b6f9','hcCharacterCastingCleanV3Script']
+      ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
