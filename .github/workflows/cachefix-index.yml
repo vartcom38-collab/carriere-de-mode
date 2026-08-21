@@ -16,20 +16,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Refresh live loader and remove compare at page level
+      - name: Refresh live loader after selector cleanup
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1303'
+          new = './main-hub.js?v=cachefix-20260821-1309'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
-          marker = '<style id="hc-no-compare-live">#characters [data-compare],#characters .hc-compare,#characters .hc-compare-panel,.hc-compare-v1{display:none!important}</style>'
-          if 'id="hc-no-compare-live"' not in s:
-              s = s.replace('</head>', marker + '</head>', 1)
           p.write_text(s, encoding='utf-8')
           PY
       - name: Commit live fix
@@ -37,5 +34,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Force consolidated Clara live'
+          git commit -m 'Force cleaned character selector live 1309'
           git push
