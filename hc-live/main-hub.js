@@ -19,11 +19,12 @@
       ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
       ['./character-desktop-ipad-polish.js?v=1bb21cc5','hcCharacterDesktopIpadPolishScript'],
       ['./ines-official-visual.js?v=53c09206','hcInesOfficialVisualScript'],
-      ['./maya-official-visual.js?v=maya-fix-0925','hcMayaOfficialVisualScript'],
+      ['./maya-official-visual.js?v=d60e3ebf','hcMayaOfficialVisualScript'],
       ['./character-mobile-polish.js?v=1f446660','hcCharacterMobilePolishScript'],
       ['./character-uniform-cards.js?v=e782397b','hcCharacterUniformCardsScript'],
       ['./character-portrait-gallery-v2.js?v=35c1486e','hcCharacterPortraitGalleryV2Script'],
-      ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script']
+      ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script'],
+      ['./character-image-framing-final.js?v=2f3825ba','hcCharacterImageFramingFinalScript']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
