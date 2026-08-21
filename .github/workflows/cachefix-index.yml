@@ -23,7 +23,7 @@ jobs:
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1451'
+          new = './main-hub.js?v=cachefix-20260821-1455'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
@@ -43,7 +43,6 @@ jobs:
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',killCompare,{once:true});else killCompare();
   new MutationObserver(killCompare).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
-  setInterval(killCompare,400);
 })();
 </script>'''
           s = s.replace('</head>', guard + '\n</head>', 1)
@@ -54,5 +53,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Stabilize Ines image loading 1451' || exit 0
+          git commit -m 'Restore stable character loading 1455' || exit 0
           git push
