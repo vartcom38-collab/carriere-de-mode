@@ -1,7 +1,6 @@
 (function(){
   if(window.__HCClaraGameplayProfileV2)return;window.__HCClaraGameplayProfileV2=true;
   const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const DATA={
     background:'École d’arts appliqués à Lyon · stage en atelier de robes de mariée',
     objective:'Décrocher une place dans un atelier reconnu et construire une première mini-collection personnelle.',
@@ -34,37 +33,26 @@
       @media(max-width:850px){.hc-clara-sheet-v1 .hc-clara-path-meta-v2,.hc-clara-sheet-v1 .hc-levels-v2{grid-template-columns:1fr}}
     `;document.head.appendChild(s)
   }
-  function selected(){return $('#characters .hc-person.focused')?.dataset.id||null}
+  function selected(){
+    const card=$('#characters .hc-person.focused');
+    if(card?.dataset.id)return card.dataset.id;
+    const title=$('#characters .hc-focus h3')?.textContent?.trim().toLowerCase();
+    return title==='clara'?'clara':null;
+  }
   function patchFocus(){
-    const focus=$('#characters .hc-focus');if(!focus)return;
+    const focus=$('#characters .hc-focus');if(!focus)return false;
     const isClara=selected()==='clara';
     focus.dataset.hcClara=isClara?'1':'0';
-    if(!isClara){$('.hc-start-card-v2',focus)?.remove();return}
-    const actions=$('.hc-focus-actions',focus);if(!actions)return;
-    const compare=$('[data-compare]',actions);if(compare)compare.style.display='none';
+    if(!isClara){$('.hc-start-card-v2',focus)?.remove();return false}
+    const actions=$('.hc-focus-actions',focus);if(!actions)return false;
+    const compare=$('[data-compare]',actions);if(compare)compare.remove();
     const primary=$('[data-profile]',actions);if(primary)primary.textContent='Découvrir Clara';
     if(!$('.hc-start-card-v2',focus)){
       const c=document.createElement('section');c.className='hc-start-card-v2';
       c.innerHTML=`<div class="eyebrow">Ton début de partie</div><div class="pace">${DATA.pace}</div><div class="hc-start-grid-v2">${DATA.levels.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>`;
       actions.before(c);
     }
-  }
-  function enrichSheet(){
-    const sheet=$('.hc-clara-sheet-v1.open');if(!sheet)return false;
-    const right=$('.hc-clara-right-v1',sheet),left=$('.hc-clara-left-v1',sheet);if(!right||!left)return false;
-    if(!$('.hc-clara-path-meta-v2',sheet)){
-      const meta=document.createElement('div');meta.className='hc-clara-path-meta-v2';
-      meta.innerHTML=`<div class="hc-clara-meta-v2"><b>Milieu de départ</b><p>${DATA.background}</p></div><div class="hc-clara-meta-v2"><b>Premier objectif</b><p>${DATA.objective}</p></div>`;
-      const first=$('.hc-story-v1:nth-of-type(2)',right)||$('.hc-story-v1',right);(first||right).insertAdjacentElement(first?'afterend':'afterbegin',meta);
-    }
-    if(!$('.hc-levels-v2',sheet)){
-      const levels=document.createElement('div');levels.className='hc-levels-v2';levels.innerHTML=DATA.levels.map(x=>`<div class="hc-level-v2"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');right.prepend(levels);
-    }
-    if(!$('.hc-clara-choose-v2',sheet)){
-      const b=document.createElement('button');b.type='button';b.className='hc-clara-choose-v2';b.textContent='✦ Je deviens Clara';b.onclick=chooseClara;right.appendChild(b)
-    }
-    const q=$('.quote',left);if(q&&!q.dataset.v2){q.dataset.v2='1';q.insertAdjacentHTML('beforebegin',`<div style="margin-top:18px;font:italic 14px/1.45 Georgia,serif;color:#78665b">« ${DATA.quote} »</div>`)}
-    return true
+    return true;
   }
   function chooseClara(){
     try{localStorage.setItem('haute-couture-character','clara');localStorage.setItem('haute-couture-selected-character','clara');localStorage.setItem('selectedCharacter','clara')}catch(e){}
@@ -72,10 +60,33 @@
     try{if(typeof window.displayScreen==='function'){window.displayScreen('location');return}}catch(e){}
     const loc=$('#location');if(loc){document.querySelectorAll('.panel,.optionsPanel').forEach(p=>p.classList.remove('active'));loc.classList.add('active');loc.style.display='block'}
   }
-  function watchOpen(){let n=0;const t=setInterval(()=>{if(enrichSheet()||++n>20)clearInterval(t)},40)}
-  function boot(){css();setTimeout(patchFocus,220);document.addEventListener('click',e=>{
-    if(e.target.closest?.('#characters .hc-person,#characters .hc-focus-nav'))setTimeout(patchFocus,20);
-    if(e.target.closest?.('#characters .hc-focus [data-profile]')&&selected()==='clara')watchOpen();
-  },true)}
+  function enrichSheet(){
+    const sheet=$('.hc-clara-sheet-v1.open');if(!sheet)return false;
+    const right=$('.hc-clara-right-v1',sheet),left=$('.hc-clara-left-v1',sheet);if(!right||!left)return false;
+    if(!$('.hc-clara-path-meta-v2',sheet)){
+      const meta=document.createElement('div');meta.className='hc-clara-path-meta-v2';
+      meta.innerHTML=`<div class="hc-clara-meta-v2"><b>Milieu de départ</b><p>${DATA.background}</p></div><div class="hc-clara-meta-v2"><b>Premier objectif</b><p>${DATA.objective}</p></div>`;
+      const blocks=[...right.querySelectorAll('.hc-story-v1')];
+      const anchor=blocks[1]||blocks[0];
+      if(anchor)anchor.insertAdjacentElement('afterend',meta);else right.prepend(meta);
+    }
+    if(!$('.hc-levels-v2',sheet)){
+      const levels=document.createElement('div');levels.className='hc-levels-v2';levels.innerHTML=DATA.levels.map(x=>`<div class="hc-level-v2"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('');right.prepend(levels);
+    }
+    if(!$('.hc-clara-choose-v2',sheet)){
+      const b=document.createElement('button');b.type='button';b.className='hc-clara-choose-v2';b.textContent='✦ Je deviens Clara';b.addEventListener('click',chooseClara);right.appendChild(b)
+    }
+    const q=$('.quote',left);if(q&&!q.dataset.v2){q.dataset.v2='1';q.insertAdjacentHTML('beforebegin',`<div style="margin-top:18px;font:italic 14px/1.45 Georgia,serif;color:#78665b">« ${DATA.quote} »</div>`)}
+    return true;
+  }
+  function watchOpen(){let n=0;const t=setInterval(()=>{if(enrichSheet()||++n>40)clearInterval(t)},50)}
+  function boot(){
+    css();
+    let tries=0;const t=setInterval(()=>{patchFocus();if(++tries>80)clearInterval(t)},125);
+    document.addEventListener('click',e=>{
+      if(e.target.closest?.('#characters .hc-person,#characters .hc-focus-nav,#characters .hc-focus'))setTimeout(patchFocus,30);
+      if(e.target.closest?.('#characters .hc-focus [data-profile]')&&selected()==='clara')watchOpen();
+    },true);
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
