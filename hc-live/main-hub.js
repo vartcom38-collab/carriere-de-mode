@@ -9,31 +9,63 @@
     if(done){s.onload=done;s.onerror=done}
     document.head.appendChild(s)
   }
-  function loadSeries(list,i=0){if(i>=list.length)return;const [src,id]=list[i];add(src,id,()=>loadSeries(list,i+1))}
-  function ensureLocation(){if(locationStarted)return;locationStarted=true;add('./location-lite-bootstrap.js?v=f1b2afa8','hcLocationLiteScript')}
 
-  function ensureCharacters(){
-    if(characterStarted)return;characterStarted=true;
-    const oldArt=$('#characters .selection-art');if(oldArt)oldArt.remove();
-    const oldDim=$('#characters .profile-dim');if(oldDim)oldDim.classList.remove('open');
-
-    /* Minimal source layer: creates/loads portraits only. The creator below owns the whole UI. */
-    loadSeries([
-      ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
-      ['./clara-visual-patch.js?v=stable-1925','hcClaraVisualPatchScript'],
-      ['./maya-official-visual.js?v=maya-final-20260821-1755','hcMayaOfficialVisualScript'],
-      ['./ines-full-lite.js?v=hotfix-20260821-1724','hcInesFullLiteScript'],
-      ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
-      ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script'],
-      ['./maya-card-final-v1.js?v=uniform-bg-20260821-1758','hcMayaCardFinalV1Script'],
-      ['./character-creator-v2.js?v=stable-v3-20260821-1826','hcCharacterCreatorStableV3Script']
-    ]);
+  function ensureLocation(){
+    if(locationStarted)return;
+    locationStarted=true;
+    add('./location-lite-bootstrap.js?v=f1b2afa8','hcLocationLiteScript');
   }
 
-  function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
-  function goHome(){setHomeState();try{if(typeof window.displayScreen==='function'){window.displayScreen('home');return}}catch(e){}document.querySelectorAll('.panel,.optionsPanel').forEach(p=>p.classList.remove('active'));const home=$('#home');if(home){home.style.display='block';home.classList.add('active')}}
-  function ensureHomeButton(){if($('#hcReturnHome'))return;const b=document.createElement('button');b.id='hcReturnHome';b.type='button';b.textContent='← Accueil';b.style.cssText='position:fixed;left:18px;top:18px;z-index:12000;border:1px solid rgba(88,70,52,.25);background:rgba(255,250,244,.97);color:#3a3f3d;border-radius:999px;padding:10px 15px;font:14px Georgia,serif;box-shadow:0 5px 16px rgba(50,40,30,.10);cursor:pointer;display:none;touch-action:manipulation';b.addEventListener('click',goHome);document.body.appendChild(b)}
-  function sync(){const inLocation=$('#location')?.classList.contains('active');const inCharacters=$('#characters')?.classList.contains('active');if(inLocation)ensureLocation();if(inCharacters)ensureCharacters();ensureHomeButton();const homeBtn=$('#hcReturnHome');const homeVisible=$('#home')&&getComputedStyle($('#home')).display!=='none'&&!document.querySelector('.panel.active,.optionsPanel.active');if(homeBtn)homeBtn.style.display=homeVisible?'none':'block'}
-  function boot(){const oldArt=$('#characters .selection-art');if(oldArt)oldArt.remove();const qs=new URLSearchParams(location.search);if(qs.has('home')||qs.has('start')){setHomeState();setTimeout(goHome,0)}document.querySelectorAll('.panel,.optionsPanel').forEach(p=>new MutationObserver(sync).observe(p,{attributes:true,attributeFilter:['class']}));ensureHomeButton();sync()}
+  function ensureCharacters(){
+    if(characterStarted)return;
+    characterStarted=true;
+    add('./character-creator-reset-v1.js?v=reset-20260821-1829','hcCharacterCreatorResetV1Script');
+  }
+
+  function setHomeState(){
+    try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}
+    try{localStorage.setItem('haute-couture-screen','home')}catch(e){}
+  }
+
+  function goHome(){
+    setHomeState();
+    try{
+      if(typeof window.displayScreen==='function'){
+        window.displayScreen('home');
+        return;
+      }
+    }catch(e){}
+    document.querySelectorAll('.panel,.optionsPanel').forEach(p=>p.classList.remove('active'));
+    const home=$('#home');
+    if(home){home.style.display='block';home.classList.add('active')}
+  }
+
+  function ensureHomeButton(){
+    if($('#hcReturnHome'))return;
+    const b=document.createElement('button');
+    b.id='hcReturnHome';b.type='button';b.textContent='← Accueil';
+    b.style.cssText='position:fixed;left:18px;top:18px;z-index:12000;border:1px solid rgba(88,70,52,.25);background:rgba(255,250,244,.97);color:#3a3f3d;border-radius:999px;padding:10px 15px;font:14px Georgia,serif;box-shadow:0 5px 16px rgba(50,40,30,.10);cursor:pointer;display:none;touch-action:manipulation';
+    b.addEventListener('click',goHome);document.body.appendChild(b);
+  }
+
+  function sync(){
+    const inLocation=$('#location')?.classList.contains('active');
+    const inCharacters=$('#characters')?.classList.contains('active');
+    if(inLocation)ensureLocation();
+    if(inCharacters)ensureCharacters();
+    ensureHomeButton();
+    const homeBtn=$('#hcReturnHome');
+    const homeVisible=$('#home')&&getComputedStyle($('#home')).display!=='none'&&!document.querySelector('.panel.active,.optionsPanel.active');
+    if(homeBtn)homeBtn.style.display=homeVisible?'none':'block';
+  }
+
+  function boot(){
+    const qs=new URLSearchParams(location.search);
+    if(qs.has('home')||qs.has('start')){setHomeState();setTimeout(goHome,0)}
+    document.querySelectorAll('.panel,.optionsPanel').forEach(p=>new MutationObserver(sync).observe(p,{attributes:true,attributeFilter:['class']}));
+    ensureHomeButton();
+    sync();
+  }
+
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
