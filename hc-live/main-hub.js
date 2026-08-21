@@ -20,6 +20,7 @@
       ['./clara-visual-patch.js?v=stable-1925','hcClaraVisualPatchScript'],
       ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
       ['./character-desktop-ipad-polish.js?v=1bb21cc5','hcCharacterDesktopIpadPolishScript'],
+      ['./ines-official-visual.js?v=357cb370','hcInesOfficialVisualScript'],
       ['./maya-official-visual.js?v=d60e3ebf','hcMayaOfficialVisualScript'],
       ['./character-mobile-polish.js?v=1f446660','hcCharacterMobilePolishScript'],
       ['./character-uniform-cards.js?v=e782397b','hcCharacterUniformCardsScript'],
@@ -27,12 +28,10 @@
       ['./character-image-framing-final.js?v=2f3825ba','hcCharacterImageFramingFinalScript'],
       ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script'],
       ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script'],
+      ['./ines-visual-v6.js?v=49c92907','hcInesVisualV6Script'],
       ['./clara-master-experience-v1.js?v=62274ce4','hcClaraMasterExperienceV1Script'],
       ['./character-master-experience-all-v1.js?v=f8019fe7','hcCharacterMasterExperienceAllV1Script'],
-      ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
-      ['./ines-full-v2.js?v=d6aa0cc7','hcInesFullV2Script'],
-      ['./ines-official-visual-v2.js?v=78257ea1','hcInesOfficialVisualV2Script'],
-      ['./ines-official-v7.js?v=32f02c95','hcInesOfficialVisualV7Script']
+      ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
