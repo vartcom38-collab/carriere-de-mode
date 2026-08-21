@@ -18,7 +18,7 @@
       ['./clara-visual-patch.js?v=stable-1925','hcClaraVisualPatchScript'],
       ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
       ['./character-desktop-ipad-polish.js?v=1bb21cc5','hcCharacterDesktopIpadPolishScript'],
-      ['./ines-official-visual.js?v=53c09206','hcInesOfficialVisualScript'],
+      ['./ines-official-visual.js?v=357cb370','hcInesOfficialVisualScript'],
       ['./maya-official-visual.js?v=d60e3ebf','hcMayaOfficialVisualScript'],
       ['./character-mobile-polish.js?v=1f446660','hcCharacterMobilePolishScript'],
       ['./character-uniform-cards.js?v=e782397b','hcCharacterUniformCardsScript'],
@@ -26,7 +26,7 @@
       ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script'],
       ['./character-image-framing-final.js?v=2f3825ba','hcCharacterImageFramingFinalScript'],
       ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script'],
-      ['./character-visual-crop-v5.js?v=80366cc1','hcCharacterVisualCropV5Script']
+      ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
