@@ -12,6 +12,8 @@
   function ensureLocation(){if(locationStarted)return;locationStarted=true;add('./location-lite-bootstrap.js?v=f1b2afa8','hcLocationLiteScript')}
   function ensureCharacters(){
     if(characterStarted)return;characterStarted=true;
+    const oldArt=$('#characters .selection-art');if(oldArt)oldArt.remove();
+    const oldDim=$('#characters .profile-dim');if(oldDim)oldDim.classList.remove('open');
     loadSeries([
       ['./character-interaction-prototype.js?v=stable-1925','hcCharacterInteractionPrototypeScript'],
       ['./character-notebook-split-layout.js?v=stable-1925','hcCharacterNotebookSplitScript'],
@@ -22,12 +24,12 @@
       ['./maya-official-visual.js?v=d60e3ebf','hcMayaOfficialVisualScript'],
       ['./character-mobile-polish.js?v=1f446660','hcCharacterMobilePolishScript'],
       ['./character-uniform-cards.js?v=e782397b','hcCharacterUniformCardsScript'],
-      ['./character-portrait-gallery-v2.js?v=35c1486e','hcCharacterPortraitGalleryV2Script'],
       ['./character-casting-stability-v2.js?v=2a74ab3d','hcCharacterCastingStabilityV2Script'],
       ['./character-image-framing-final.js?v=2f3825ba','hcCharacterImageFramingFinalScript'],
       ['./character-casting-clean-v3.js?v=76408f22','hcCharacterCastingCleanV3Script'],
       ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script'],
-      ['./ines-visual-v6.js?v=49c92907','hcInesVisualV6Script']
+      ['./ines-visual-v6.js?v=49c92907','hcInesVisualV6Script'],
+      ['./clara-master-experience-v1.js?v=c289f421','hcClaraMasterExperienceV1Script']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
