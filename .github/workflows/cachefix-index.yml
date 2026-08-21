@@ -23,7 +23,7 @@ jobs:
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1538'
+          new = './main-hub.js?v=cachefix-20260821-1542'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
@@ -53,5 +53,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Rebuild Ines cleanly from Clara 1538' || exit 0
+          git commit -m 'Publish simplified Clara Ines interaction 1542' || exit 0
           git push
