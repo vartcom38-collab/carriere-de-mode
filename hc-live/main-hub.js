@@ -36,7 +36,8 @@
       ['./ines-full-lite.js?v=hotfix-20260821-1724','hcInesFullLiteScript'],
       ['./ines-card-final-v1.js?v=final-20260821-1738','hcInesCardFinalV1Script'],
       ['./maya-card-final-v1.js?v=uniform-bg-20260821-1758','hcMayaCardFinalV1Script'],
-      ['./character-creator-v2.js?v=creator-moodboard-20260821-1819','hcCharacterCreatorV2Script']
+      ['./character-creator-v2.js?v=creator-moodboard-20260821-1819','hcCharacterCreatorV2Script'],
+      ['./character-creator-custom-name-v1.js?v=custom-name-20260821-1822','hcCharacterCreatorCustomNameV1Script']
     ]);
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
