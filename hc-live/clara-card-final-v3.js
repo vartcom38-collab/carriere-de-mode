@@ -4,50 +4,44 @@
   function css(){
     if($('#hcClaraCardFinalV3Styles'))return;
     const s=document.createElement('style');s.id='hcClaraCardFinalV3Styles';s.textContent=`
-      /* Clara = carte maître. Même gabarit que le reste, visuel réellement contenu. */
-      html body #characters .hc-person[data-id='clara']{border-radius:22px!important;overflow:visible!important}
-      html body #characters .hc-person[data-id='clara']:before{border-radius:22px!important;background:linear-gradient(155deg,#fffdfa,#f6ecdf)!important}
-      html body #characters .hc-person[data-id='clara'] .fig{position:absolute!important;left:5%!important;right:5%!important;top:4%!important;bottom:19%!important;width:auto!important;height:auto!important;overflow:hidden!important;border-radius:19px!important;background:radial-gradient(circle at 50% 28%,#fffdf9 0 36%,#f8eee3 73%,#efe0cf 100%)!important;box-shadow:inset 0 0 0 1px rgba(116,89,68,.045)!important;transform:none!important}
-      html body #characters .hc-person[data-id='clara'] .fig:before{display:block!important;content:''!important;position:absolute!important;inset:auto 20% 3% 20%!important;height:9px!important;border-radius:50%!important;background:rgba(83,57,39,.09)!important;filter:blur(4px)!important;z-index:0!important}
-      html body #characters .hc-person[data-id='clara'] .fig:after{display:none!important}
-      html body #characters .hc-person[data-id='clara'] .hc-clara-master{position:absolute!important;left:-5%!important;top:-2%!important;width:110%!important;height:104%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:50% 100%!important;transform:none!important;transform-origin:50% 100%!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;filter:saturate(1.02) contrast(1.015)!important;mix-blend-mode:multiply!important;z-index:1!important}
-      html body #characters .hc-person[data-id='clara']:hover .hc-clara-master,html body #characters .hc-person[data-id='clara'].focused .hc-clara-master{transform:none!important}
-      html body #characters .hc-person[data-id='clara'] .tag{left:4%!important;right:4%!important;bottom:3%!important;width:auto!important;transform:none!important;min-height:12.5%!important;padding:8px 6px 7px!important;border-radius:16px!important;background:linear-gradient(180deg,#f5e8d9,#f0dfcb)!important;border:1px solid rgba(111,84,63,.075)!important}
-      html body #characters .hc-person[data-id='clara'] .tag strong{font:400 16px/1 Georgia,serif!important;color:#4a433e!important}
-      html body #characters .hc-person[data-id='clara'] .tag span{font:600 5.7px/1.15 Arial,sans-serif!important;letter-spacing:.08em!important;color:#8f796b!important}
-      html body #characters .hc-person[data-id='clara'] .tag:before{content:'SÉLECTION OFFICIELLE'!important;display:block!important;position:absolute!important;left:50%!important;top:-16px!important;transform:translateX(-50%)!important;white-space:nowrap!important;padding:3px 7px!important;border-radius:999px!important;background:rgba(255,252,247,.93)!important;border:1px solid rgba(103,82,62,.06)!important;font:600 4.8px/1 Arial,sans-serif!important;letter-spacing:.12em!important;color:#a27661!important}
-      html body #characters .hc-person[data-id='clara'].focused:before{border-color:rgba(203,126,89,.42)!important;box-shadow:0 24px 48px rgba(67,48,34,.15),0 0 0 1px rgba(255,255,255,.7) inset!important}
-      html body #characters .hc-cast.has-focus .hc-person:not(.focused){opacity:1!important;filter:none!important}
-      /* Portrait de droite : même Clara, recadrée volontairement. */
-      html body #characters .hc-focus-header-v2[data-id='clara'] .portrait{background:radial-gradient(circle,#fffaf4,#efe0cf)!important}
-      html body #characters .hc-focus-header-v2[data-id='clara'] .portrait img{width:118%!important;height:118%!important;margin:-5% 0 0 -9%!important;object-fit:cover!important;object-position:50% 12%!important;transform:none!important;mix-blend-mode:multiply!important}
-      /* La comparaison doit rester visible, y compris sur les grands écrans. */
-      .hc-compare-v1{z-index:300!important;left:32px!important;bottom:22px!important;transform:none!important;max-width:calc(100vw - 64px)!important}
-      .hc-compare-v1.open{display:flex!important}
-      .hc-compare-v1 .go{min-width:120px!important}
-      /* Dossier Clara : plus éditorial, sans galerie inutile. */
-      .hc-clara-sheet-v1 .paper{width:min(1160px,95vw)!important;border-radius:30px!important;background:linear-gradient(90deg,#fffdf8 0 49%,#e9ded1 49.3%,#fffdf8 50% 100%)!important;box-shadow:0 34px 90px rgba(44,32,24,.24)!important}
-      .hc-clara-dossier-v1{grid-template-columns:.72fr 1.28fr!important;gap:34px!important}
-      .hc-clara-left-v1{padding:10px 14px!important;position:relative!important;min-height:630px!important;display:flex!important;flex-direction:column!important}
-      .hc-clara-left-v1:after{content:'01';position:absolute;right:10px;top:2px;font:400 46px/1 Georgia,serif;color:#c6a987}
-      .hc-clara-left-v1 h2{font-size:76px!important;color:#302f2c!important}
-      .hc-clara-left-v1 em{color:#936452!important;font-size:15px!important}
-      .hc-clara-left-v1 .quote{margin-top:auto!important;background:linear-gradient(135deg,#f2e5d7,#f7efe5)!important;border:1px solid rgba(151,102,74,.08)!important;padding:18px!important}
-      .hc-clara-right-v1{gap:13px!important}
-      .hc-story-v1{padding:17px 18px!important;border-radius:18px!important;background:rgba(255,250,244,.92)!important}
-      .hc-story-v1 h3{font-size:22px!important}
-      .hc-story-v1 p,.hc-story-v1 li{font-size:13px!important;line-height:1.55!important}
-      @media(max-width:850px){.hc-clara-left-v1{min-height:auto!important}.hc-clara-dossier-v1{grid-template-columns:1fr!important}}
+      html body #characters .hc-person[data-id='clara']{overflow:visible!important}
+      html body #characters .hc-person[data-id='clara'] .fig{position:absolute!important;left:5%!important;right:5%!important;top:4%!important;bottom:19%!important;width:auto!important;height:auto!important;border-radius:20px!important;overflow:hidden!important;background:radial-gradient(circle at 50% 34%,#fffdfa 0 36%,#f9efe4 72%,#f2e4d6 100%)!important;box-shadow:inset 0 0 0 1px rgba(115,86,64,.045)!important;transform:none!important}
+      html body #characters .hc-person[data-id='clara'] .fig:before,html body #characters .hc-person[data-id='clara'] .fig:after{display:none!important}
+      html body #characters .hc-person[data-id='clara'] .fig img.hc-clara-master{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:50% 100%!important;transform:scale(.96)!important;transform-origin:50% 100%!important;mix-blend-mode:normal!important;filter:drop-shadow(0 9px 10px rgba(71,50,35,.10))!important;background:transparent!important;border:0!important;border-radius:0!important}
+      html body #characters .hc-person[data-id='clara']:hover .fig img.hc-clara-master,html body #characters .hc-person[data-id='clara'].focused .fig img.hc-clara-master{transform:scale(.96)!important}
+      html body #characters .hc-person[data-id='clara'] .tag{background:linear-gradient(180deg,#f6eadb,#f1dfca)!important;border-radius:17px!important}
+      html body #characters .hc-focus-header-v2[data-id='clara'] .portrait img{object-fit:cover!important;object-position:50% 13%!important;transform:scale(1.18)!important;mix-blend-mode:normal!important;background:#f8eee3!important}
     `;document.head.appendChild(s)
   }
-  function patch(){
-    const card=$('#characters .hc-person[data-id="clara"]');if(card)card.dataset.hcOfficial='1';
-    const focus=$('#characters .hc-focus');const selected=$('#characters .hc-person.focused')?.dataset.id;
-    if(selected==='clara'&&focus){
-      const p=$('.hc-focus-actions [data-profile]',focus);if(p)p.textContent='Découvrir Clara';
-      const c=$('.hc-focus-actions [data-compare]',focus);if(c&&c.textContent.trim()==='Comparer')c.setAttribute('aria-label','Ajouter Clara au comparatif');
-    }
+  function dist(r,g,b,c){const dr=r-c[0],dg=g-c[1],db=b-c[2];return Math.sqrt(dr*dr+dg*dg+db*db)}
+  function cutout(img){
+    if(!img||img.dataset.hcCutoutV3==='1')return Promise.resolve(false);
+    return new Promise(resolve=>{
+      const src=new Image();src.onload=()=>{
+        try{
+          const max=1000,sc=Math.min(1,max/Math.max(src.naturalWidth,src.naturalHeight));
+          const w=Math.max(2,Math.round(src.naturalWidth*sc)),h=Math.max(2,Math.round(src.naturalHeight*sc));
+          const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src,0,0,w,h);
+          const id=x.getImageData(0,0,w,h),d=id.data;
+          const samples=[];const q=Math.max(3,Math.round(Math.min(w,h)*.025));
+          for(let yy=0;yy<q;yy++)for(let xx=0;xx<q;xx++)[[xx,yy],[w-1-xx,yy],[xx,h-1-yy],[w-1-xx,h-1-yy]].forEach(([px,py])=>{const i=(py*w+px)*4;samples.push([d[i],d[i+1],d[i+2]])});
+          const bg=[0,1,2].map(k=>samples.reduce((a,v)=>a+v[k],0)/samples.length);
+          const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);let head=0,tail=0;
+          const add=p=>{if(p<0||p>=w*h||seen[p])return;const i=p*4;if(dist(d[i],d[i+1],d[i+2],bg)>46)return;seen[p]=1;queue[tail++]=p};
+          for(let xx=0;xx<w;xx++){add(xx);add((h-1)*w+xx)}for(let yy=0;yy<h;yy++){add(yy*w);add(yy*w+w-1)}
+          while(head<tail){const p=queue[head++],px=p%w,py=(p/w)|0;if(px>0)add(p-1);if(px<w-1)add(p+1);if(py>0)add(p-w);if(py<h-1)add(p+w)}
+          let minx=w,miny=h,maxx=0,maxy=0;
+          for(let p=0;p<w*h;p++){const i=p*4;if(seen[p])d[i+3]=0;else if(d[i+3]){const px=p%w,py=(p/w)|0;if(px<minx)minx=px;if(px>maxx)maxx=px;if(py<miny)miny=py;if(py>maxy)maxy=py}}
+          x.putImageData(id,0,0);
+          const pad=Math.max(6,Math.round(Math.min(w,h)*.015));minx=Math.max(0,minx-pad);miny=Math.max(0,miny-pad);maxx=Math.min(w-1,maxx+pad);maxy=Math.min(h-1,maxy+pad);
+          const cw=Math.max(2,maxx-minx+1),ch=Math.max(2,maxy-miny+1),out=document.createElement('canvas');out.width=cw;out.height=ch;out.getContext('2d').drawImage(c,minx,miny,cw,ch,0,0,cw,ch);
+          img.src=out.toDataURL('image/webp',.9);img.dataset.hcCutoutV3='1';img.alt='Clara';resolve(true)
+        }catch(e){resolve(false)}
+      };src.onerror=()=>resolve(false);src.src=img.currentSrc||img.src
+    })
   }
-  function boot(){css();$('#characters .selection-art')?.remove();let n=0;(function wait(){const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(card&&img){patch();return}if(++n<120)setTimeout(wait,50)})();document.addEventListener('click',e=>{if(e.target.closest?.('#characters .hc-person,#characters .hc-focus'))setTimeout(patch,20)},true)}
+  function syncPortrait(){const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(!img||!img.src)return;const p=$('#characters .hc-focus-header-v2[data-id="clara"] .portrait img');if(p&&p.src!==img.src)p.src=img.src}
+  function mount(){css();$('#characters .selection-art')?.remove();const card=$('#characters .hc-person[data-id="clara"]'),img=$('.hc-clara-master',card);if(!card||!img)return false;card.dataset.hcOfficial='1';cutout(img).then(()=>{syncPortrait();setTimeout(syncPortrait,80)});return true}
+  function boot(){let n=0;(function wait(){if(mount())return;if(++n<120)setTimeout(wait,50)})();document.addEventListener('click',e=>{if(e.target.closest?.('#characters .hc-person[data-id="clara"],#characters .hc-focus-nav'))setTimeout(syncPortrait,40)},true)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
