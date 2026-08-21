@@ -19,7 +19,7 @@
     {id:'romane',name:'Romane',note:'Énergique · sportive',strength:'Mouvement · confort · fonction',dream:'Prouver qu’un vêtement fonctionnel peut avoir autant de caractère qu’une pièce spectaculaire.',projection:'Tu remarqueras plus facilement le confort, la construction et les projets liés au mouvement.',accent:'#687785',dress:'#a9b5bd',hair:'#5a453b',skin:'#cb9272',symbol:'△'}
   ];
 
-  let mounted=false,focused=null,compare=[];
+  let mounted=false,focused=null;
   const byId=id=>cast.find(x=>x.id===id);
 
   function installCss(){
@@ -44,10 +44,9 @@
       .hc-person .fig{position:absolute;left:50%;top:1%;width:88%;height:78%;transform:translateX(-50%);transition:transform .23s ease;filter:drop-shadow(0 8px 8px rgba(55,45,35,.1))}
       .hc-person .tag{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);width:94%;text-align:center;color:#4a4a45}.hc-person .tag strong{display:block;font:17px Georgia,serif;font-weight:400}.hc-person .tag span{display:block;margin-top:2px;font:8px Arial,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#838078;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .hc-person:hover,.hc-person:focus-visible,.hc-person.focused{transform:translateY(-7px) scale(1.075);z-index:4}.hc-person.focused .fig,.hc-person:hover .fig{transform:translateX(-50%) translateY(-3px)}
-      .hc-cast.has-focus .hc-person:not(.focused){opacity:.38;filter:saturate(.55)}
-      .hc-focus{position:absolute;right:7.2%;top:17%;width:min(345px,29%);max-height:68%;overflow:auto;padding:17px;background:rgba(255,252,246,.98);border:1px solid rgba(70,64,55,.15);border-radius:18px;box-shadow:0 18px 45px rgba(45,35,28,.18);pointer-events:auto;transform:translateX(calc(100% + 36px));opacity:0;transition:.27s}.hc-focus.open{transform:none;opacity:1}.hc-focus-nav{display:flex;justify-content:space-between;align-items:center}.hc-icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(70,65,58,.17);background:#fffaf2;cursor:pointer;font-size:19px;touch-action:manipulation}.hc-focus h3{font:400 30px/1 Georgia,serif;margin:5px 0}.hc-focus .vibe{font:italic 13px Georgia,serif;color:#777065;margin-bottom:12px}.hc-focus-block{padding:9px 0;border-top:1px solid rgba(70,65,58,.11)}.hc-focus-block b{display:block;font:9px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#718071;margin-bottom:4px}.hc-focus-block p{margin:0;font:12px/1.4 Georgia,serif;color:#514c47}.hc-projection{background:#f0e8df;border-radius:12px;padding:10px!important;margin-top:4px;border:0!important}.hc-focus-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.hc-focus-actions button{min-height:44px;border-radius:11px;border:1px solid rgba(70,65,58,.18);background:#fffaf2;font:11px Arial,sans-serif;cursor:pointer;touch-action:manipulation}.hc-focus-actions .primary{grid-column:1/-1;background:#71806c;color:white;border:0;font:14px Georgia,serif}
-      .hc-compare{position:absolute;left:8%;bottom:4.5%;min-height:42px;max-width:60%;display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:16px;background:rgba(255,252,246,.94);box-shadow:0 7px 20px rgba(50,40,30,.09);pointer-events:auto;opacity:0;transform:translateY(8px);transition:.2s}.hc-compare.open{opacity:1;transform:none}.hc-compare-chip{border:0;background:#e9eee5;border-radius:999px;padding:6px 9px;cursor:pointer;font:10px Arial,sans-serif}.hc-compare strong{font:10px Arial,sans-serif;font-weight:600}.hc-compare-panel{position:absolute;left:8%;bottom:11%;width:min(600px,62%);padding:12px;border-radius:16px;background:rgba(255,252,246,.98);box-shadow:0 16px 40px rgba(50,40,30,.14);pointer-events:auto;display:none}.hc-compare-panel.open{display:block}.hc-compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.hc-compare-col{padding:9px;border-radius:11px;background:#f5f0e8}.hc-compare-col b{font:16px Georgia,serif;font-weight:400}.hc-compare-col small{display:block;margin:3px 0 7px;font:8px Arial,sans-serif;color:#777}.hc-compare-col p{font:10px/1.35 Georgia,serif;margin:0}
-      @media(max-width:900px){.hc-page{left:2%;right:2%;top:2%;bottom:2%}.hc-cast-head{top:4.5%;left:7%;right:7%}.hc-cast-head h2{font-size:29px}.hc-cast-head p{font-size:9px}.hc-grid{left:6%;right:6%;top:15%;bottom:32%;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:1.2% 1.5%;overflow:auto;padding-right:2px}.hc-person .fig{width:78%;height:75%}.hc-person .tag strong{font-size:14px}.hc-person .tag span{font-size:7px}.hc-focus{left:8px;right:8px;top:auto;bottom:2%;width:auto;max-height:30%;border-radius:16px 16px 9px 9px;transform:translateY(calc(100% + 18px))}.hc-focus.open{transform:none}.hc-focus h3{font-size:23px}.hc-focus-block{display:none}.hc-focus .hc-projection{display:block}.hc-compare{left:8px;bottom:33%;max-width:calc(100% - 16px)}.hc-compare-panel{left:8px;right:8px;bottom:40%;width:auto;max-height:26%;overflow:auto}.hc-compare-grid{grid-template-columns:repeat(3,minmax(120px,1fr));overflow-x:auto}}
+      .hc-cast.has-focus .hc-person:not(.focused){opacity:1!important;filter:none!important}
+      .hc-focus{position:absolute;right:7.2%;top:17%;width:min(345px,29%);max-height:68%;overflow:auto;padding:17px;background:rgba(255,252,246,.98);border:1px solid rgba(70,64,55,.15);border-radius:18px;box-shadow:0 18px 45px rgba(45,35,28,.18);pointer-events:auto;transform:translateX(calc(100% + 36px));opacity:0;transition:.27s}.hc-focus.open{transform:none;opacity:1}.hc-focus-nav{display:flex;justify-content:space-between;align-items:center}.hc-icon{width:42px;height:42px;border-radius:50%;border:1px solid rgba(70,65,58,.17);background:#fffaf2;cursor:pointer;font-size:19px;touch-action:manipulation}.hc-focus h3{font:400 30px/1 Georgia,serif;margin:5px 0}.hc-focus .vibe{font:italic 13px Georgia,serif;color:#777065;margin-bottom:12px}.hc-focus-block{padding:9px 0;border-top:1px solid rgba(70,65,58,.11)}.hc-focus-block b{display:block;font:9px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#718071;margin-bottom:4px}.hc-focus-block p{margin:0;font:12px/1.4 Georgia,serif;color:#514c47}.hc-projection{background:#f0e8df;border-radius:12px;padding:10px!important;margin-top:4px;border:0!important}.hc-focus-actions{display:grid;grid-template-columns:1fr;gap:7px;margin-top:11px}.hc-focus-actions button{min-height:44px;border-radius:11px;border:1px solid rgba(70,65,58,.18);background:#fffaf2;font:11px Arial,sans-serif;cursor:pointer;touch-action:manipulation}.hc-focus-actions .primary{background:#71806c;color:white;border:0;font:14px Georgia,serif}
+      @media(max-width:900px){.hc-page{left:2%;right:2%;top:2%;bottom:2%}.hc-cast-head{top:4.5%;left:7%;right:7%}.hc-cast-head h2{font-size:29px}.hc-cast-head p{font-size:9px}.hc-grid{left:6%;right:6%;top:15%;bottom:32%;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:1.2% 1.5%;overflow:auto;padding-right:2px}.hc-person .fig{width:78%;height:75%}.hc-person .tag strong{font-size:14px}.hc-person .tag span{font-size:7px}.hc-focus{left:8px;right:8px;top:auto;bottom:2%;width:auto;max-height:30%;border-radius:16px 16px 9px 9px;transform:translateY(calc(100% + 18px))}.hc-focus.open{transform:none}.hc-focus h3{font-size:23px}.hc-focus-block{display:none}.hc-focus .hc-projection{display:block}}
     `;
     document.head.appendChild(s);
   }
@@ -60,11 +59,10 @@
   function renderFocus(){
     const root=$('.hc-cast'),box=$('.hc-focus',root),c=byId(focused);
     if(!box||!c)return;
-    box.innerHTML=`<div class="hc-focus-nav"><button class="hc-icon" data-nav="-1">‹</button><span>${cast.indexOf(c)+1} / ${cast.length}</span><button class="hc-icon" data-nav="1">›</button></div><h3>${c.name}</h3><div class="vibe">${c.note}</div><div class="hc-focus-block"><b>Son regard</b><p>${c.strength}</p></div><div class="hc-focus-block"><b>Elle recherche</b><p>${c.dream}</p></div><div class="hc-focus-block hc-projection"><b>Et si je devenais elle ?</b><p>${c.projection}</p></div><div class="hc-focus-actions"><button data-compare>${compare.includes(c.id)?'Retirer':'Comparer'}</button><button data-close>Fermer</button><button class="primary" data-profile>Voir son portrait complet</button></div>`;
+    box.innerHTML=`<div class="hc-focus-nav"><button class="hc-icon" data-nav="-1">‹</button><span>${cast.indexOf(c)+1} / ${cast.length}</span><button class="hc-icon" data-nav="1">›</button></div><h3>${c.name}</h3><div class="vibe">${c.note}</div><div class="hc-focus-block"><b>Son regard</b><p>${c.strength}</p></div><div class="hc-focus-block"><b>Elle recherche</b><p>${c.dream}</p></div><div class="hc-focus-block hc-projection"><b>Et si je devenais elle ?</b><p>${c.projection}</p></div><div class="hc-focus-actions"><button data-close>Fermer</button><button class="primary" data-profile>Découvrir ${c.name}</button></div>`;
     $('[data-nav="-1"]',box).onclick=()=>move(-1);
     $('[data-nav="1"]',box).onclick=()=>move(1);
     $('[data-close]',box).onclick=clearFocus;
-    $('[data-compare]',box).onclick=()=>toggleCompare(c.id);
     $('[data-profile]',box).onclick=()=>openNativeProfile(c.id);
   }
 
@@ -92,24 +90,6 @@
     if(i<0)i=0;
     i=(i+delta+cast.length)%cast.length;
     setFocus(cast[i].id);
-  }
-
-  function toggleCompare(id){
-    if(compare.includes(id))compare=compare.filter(x=>x!==id);
-    else if(compare.length<3)compare.push(id);
-    renderCompare();
-    renderFocus();
-  }
-
-  function renderCompare(){
-    const root=$('.hc-cast'),bar=$('.hc-compare',root),panel=$('.hc-compare-panel',root);
-    if(!bar||!panel)return;
-    bar.classList.toggle('open',compare.length>0);
-    bar.innerHTML=compare.length?`<strong>Comparer</strong>${compare.map(id=>`<button class="hc-compare-chip" data-id="${id}">${byId(id).name} ×</button>`).join('')}${compare.length>1?'<button class="hc-compare-chip" data-show>Voir</button>':''}`:'';
-    $$('[data-id]',bar).forEach(b=>b.onclick=()=>toggleCompare(b.dataset.id));
-    $('[data-show]',bar)?.addEventListener('click',()=>panel.classList.toggle('open'));
-    panel.innerHTML=`<div class="hc-compare-grid">${compare.map(id=>{const c=byId(id);return `<div class="hc-compare-col"><b>${c.name}</b><small>${c.note}</small><p>${c.strength}</p><p style="margin-top:7px">${c.projection}</p></div>`}).join('')}</div>`;
-    if(compare.length<2)panel.classList.remove('open');
   }
 
   function openNativeProfile(id){
@@ -140,7 +120,7 @@
 
     const root=document.createElement('div');
     root.className='hc-cast';
-    root.innerHTML='<div class="hc-page"></div><div class="hc-cast-head"><h2>Qui vas-tu devenir ?</h2><p>Choisis un regard, une sensibilité, une manière de créer.</p></div><div class="hc-grid"></div><aside class="hc-focus"></aside><div class="hc-compare"></div><div class="hc-compare-panel"></div>';
+    root.innerHTML='<div class="hc-page"></div><div class="hc-cast-head"><h2>Qui vas-tu devenir ?</h2><p>Choisis un regard, une sensibilité, une manière de créer.</p></div><div class="hc-grid"></div><aside class="hc-focus"></aside>';
     stage.appendChild(root);
 
     const grid=$('.hc-grid',root);
@@ -150,7 +130,6 @@
       b.type='button';
       b.dataset.id=c.id;
       b.innerHTML=`<span class="fig">${figure(c,i)}</span><span class="tag"><strong>${c.name}</strong><span>${c.note}</span></span>`;
-      b.addEventListener('mouseenter',()=>{if(!matchMedia('(pointer:coarse)').matches)setFocus(c.id)});
       b.addEventListener('click',()=>setFocus(c.id));
       grid.appendChild(b);
     });
@@ -164,7 +143,6 @@
       if(e.key==='ArrowLeft')move(-1);
       if(e.key==='Escape')clearFocus();
     });
-    renderCompare();
   }
 
   function sync(){if($('#characters')?.classList.contains('active'))mount()}
