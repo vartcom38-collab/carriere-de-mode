@@ -15,7 +15,7 @@
     const oldArt=$('#characters .selection-art');if(oldArt)oldArt.remove();
     const oldDim=$('#characters .profile-dim');if(oldDim)oldDim.classList.remove('open');
     loadSeries([
-      ['./character-interaction-prototype.js?v=stable-1925','hcCharacterInteractionPrototypeScript'],
+      ['./character-interaction-prototype.js?v=e966568c','hcCharacterInteractionPrototypeScript'],
       ['./character-notebook-split-layout.js?v=stable-1925','hcCharacterNotebookSplitScript'],
       ['./clara-visual-patch.js?v=stable-1925','hcClaraVisualPatchScript'],
       ['./character-casting-final.js?v=158c243a','hcCharacterCastingFinalScript'],
