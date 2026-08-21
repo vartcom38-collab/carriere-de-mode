@@ -32,7 +32,8 @@
       ['./clara-master-experience-v1.js?v=62274ce4','hcClaraMasterExperienceV1Script'],
       ['./character-master-experience-all-v1.js?v=f8019fe7','hcCharacterMasterExperienceAllV1Script'],
       ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script'],
-      ['./ines-portrait-lite.js?v=ac7ac65f','hcInesPortraitLiteScript']
+      ['./ines-portrait-lite.js?v=ac7ac65f','hcInesPortraitLiteScript'],
+      ['./ines-full-lite.js?v=d6a1fac1','hcInesFullLiteScript']
     ])
   }
   function setHomeState(){try{localStorage.setItem('haute-couture-current-screen','home')}catch(e){}try{localStorage.setItem('haute-couture-screen','home')}catch(e){}}
