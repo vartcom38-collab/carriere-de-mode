@@ -65,3 +65,55 @@ function removeCharacterCompare(){
 }
 removeCharacterCompare();
 new MutationObserver(removeCharacterCompare).observe(document.documentElement,{childList:true,subtree:true});
+
+// Inès officielle : reconstruite sur la structure validée de Clara.
+function rebuildInesFromClara(){
+  const normalize=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const cards=[...document.querySelectorAll('#characters .character,.screen-characters .character')];
+  const clara=cards.find(c=>normalize(c.textContent).includes('clara'));
+  const oldInes=cards.find(c=>normalize(c.textContent).includes('ines'));
+  if(!clara||!oldInes)return;
+
+  const ines=clara.cloneNode(true);
+  ines.classList.remove('selected');
+  Object.keys(oldInes.dataset).forEach(k=>ines.dataset[k]=oldInes.dataset[k]);
+
+  const oldText=[];const walkerOld=document.createTreeWalker(oldInes,NodeFilter.SHOW_TEXT);
+  let n;while((n=walkerOld.nextNode())){if(n.nodeValue.trim())oldText.push(n.nodeValue);}
+  const newText=[];const walkerNew=document.createTreeWalker(ines,NodeFilter.SHOW_TEXT);
+  while((n=walkerNew.nextNode())){if(n.nodeValue.trim())newText.push(n);}
+  newText.forEach((node,i)=>{if(oldText[i])node.nodeValue=oldText[i];});
+  if(!normalize(ines.textContent).includes('ines')){
+    [...newText].forEach(node=>{node.nodeValue=node.nodeValue.replace(/Clara/gi,'Inès');});
+  }
+
+  let img=ines.querySelector('img');
+  if(!img){
+    const visual=ines.querySelector('.hc-character-visual,.character-visual,.hc-card-visual,.visual')||ines.firstElementChild;
+    if(visual){img=document.createElement('img');visual.prepend(img);}
+  }
+  if(img){
+    img.src='assets/ines-officielle.svg';
+    img.alt='Inès';
+    img.loading='eager';
+    img.style.width='100%';
+    img.style.height='100%';
+    img.style.display='block';
+    img.style.objectFit='contain';
+    img.style.objectPosition='center bottom';
+    img.style.maxWidth='100%';
+    img.style.maxHeight='100%';
+    const frame=img.parentElement;
+    if(frame){frame.style.overflow='hidden';frame.style.borderRadius=getComputedStyle(clara.querySelector('img')?.parentElement||frame).borderRadius;}
+  }
+
+  oldInes.replaceWith(ines);
+  ines.addEventListener('click',()=>{
+    document.querySelectorAll('.character').forEach(c=>c.classList.remove('selected'));
+    ines.classList.add('selected');
+    const confirm=document.querySelector('.screen-characters .btn.primary');
+    if(confirm){confirm.disabled=false;confirm.textContent='Confirmer ce personnage';}
+  });
+}
+rebuildInesFromClara();
+setTimeout(rebuildInesFromClara,300);
