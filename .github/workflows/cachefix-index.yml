@@ -23,7 +23,7 @@ jobs:
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1502'
+          new = './main-hub.js?v=cachefix-20260821-1508'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
@@ -53,5 +53,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Publish lightweight Ines full body 1502' || exit 0
+          git commit -m 'Publish stable Ines visual pipeline 1508' || exit 0
           git push
