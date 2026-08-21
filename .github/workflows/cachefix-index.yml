@@ -23,7 +23,7 @@ jobs:
           import re
           p = Path('hc-live/index.html')
           s = p.read_text(encoding='utf-8')
-          new = './main-hub.js?v=cachefix-20260821-1255'
+          new = './main-hub.js?v=cachefix-20260821-1301'
           s, n = re.subn(r'\./main-hub\.js\?v=cachefix-\d{8}-\d+', new, s, count=1)
           if n != 1:
               raise SystemExit('Live loader cache key not found')
@@ -37,5 +37,5 @@ jobs:
           git config user.name 'haute-couture-bot'
           git config user.email 'actions@users.noreply.github.com'
           git add hc-live/index.html
-          git commit -m 'Remove compare from live character selection'
+          git commit -m 'Force Clara focus cleanup live'
           git push
