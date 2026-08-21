@@ -19,7 +19,7 @@
   function ensureCharacters(){
     if(characterStarted)return;
     characterStarted=true;
-    add('./character-creator-reset-v1.js?v=reset-20260821-1829','hcCharacterCreatorResetV1Script');
+    add('./character-creator-reset-v2.js?v=reset-v2-20260821-1834','hcCharacterCreatorResetV2Script');
   }
 
   function setHomeState(){
@@ -44,7 +44,7 @@
     if($('#hcReturnHome'))return;
     const b=document.createElement('button');
     b.id='hcReturnHome';b.type='button';b.textContent='← Accueil';
-    b.style.cssText='position:fixed;left:18px;top:18px;z-index:12000;border:1px solid rgba(88,70,52,.25);background:rgba(255,250,244,.97);color:#3a3f3d;border-radius:999px;padding:10px 15px;font:14px Georgia,serif;box-shadow:0 5px 16px rgba(50,40,30,.10);cursor:pointer;display:none;touch-action:manipulation';
+    b.style.cssText='position:fixed;left:18px;top:18px;z-index:120000;border:1px solid rgba(88,70,52,.25);background:rgba(255,250,244,.97);color:#3a3f3d;border-radius:999px;padding:10px 15px;font:14px Georgia,serif;box-shadow:0 5px 16px rgba(50,40,30,.10);cursor:pointer;display:none;touch-action:manipulation';
     b.addEventListener('click',goHome);document.body.appendChild(b);
   }
 
