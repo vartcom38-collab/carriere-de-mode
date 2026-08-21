@@ -55,3 +55,13 @@ document.addEventListener('click',e=>{
 });
 
 document.querySelectorAll('.character').forEach(card=>card.addEventListener('click',()=>{document.querySelectorAll('.character').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');const confirm=document.querySelector('.screen-characters .btn.primary');confirm.disabled=false;confirm.textContent='Confirmer ce personnage';}));
+
+// Sécurité globale : la comparaison n'est plus une fonctionnalité du casting.
+function removeCharacterCompare(){
+  document.querySelectorAll('#characters [data-compare],#characters .hc-compare,#characters .hc-compare-panel,.hc-compare-v1').forEach(n=>n.remove());
+  document.querySelectorAll('#characters .hc-focus-actions button').forEach(b=>{
+    if((b.textContent||'').trim().toLowerCase()==='comparer')b.remove();
+  });
+}
+removeCharacterCompare();
+new MutationObserver(removeCharacterCompare).observe(document.documentElement,{childList:true,subtree:true});
