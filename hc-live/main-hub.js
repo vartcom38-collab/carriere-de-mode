@@ -30,6 +30,7 @@
       ['./character-visual-crop-v5.js?v=469db7b3','hcCharacterVisualCropV5Script'],
       ['./ines-visual-v6.js?v=49c92907','hcInesVisualV6Script'],
       ['./clara-master-experience-v1.js?v=62274ce4','hcClaraMasterExperienceV1Script'],
+      ['./character-master-experience-all-v1.js?v=f8019fe7','hcCharacterMasterExperienceAllV1Script'],
       ['./clara-card-final-v3.js?v=da589317','hcClaraCardFinalV3Script']
     ])
   }
