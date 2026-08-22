@@ -2,17 +2,35 @@
   if(window.__HCCharacterStandaloneBridge)return;
   window.__HCCharacterStandaloneBridge=true;
 
-  const CREATOR='./character.html?v=stable-live-20260822';
   const SCREEN_KEY='haute-couture-current-screen';
 
+  function publicScreen(name){
+    if(name==='location')return 'logement';
+    if(name==='characters'||name==='creator')return 'character';
+    return name;
+  }
+
+  function internalScreen(name){
+    if(name==='logement')return 'location';
+    if(name==='character')return 'characters';
+    return name;
+  }
+
   function saveScreen(name){
-    try{ if(name) localStorage.setItem(SCREEN_KEY,name); }catch(e){}
+    try{ if(name) localStorage.setItem(SCREEN_KEY,publicScreen(name)); }catch(e){}
+  }
+
+  function goTop(path){
+    try{
+      if(window.top!==window.self){window.top.location.href=path;return;}
+    }catch(e){}
+    location.href=path;
   }
 
   function openCreator(e){
     if(e){e.preventDefault();e.stopImmediatePropagation();}
     saveScreen('character');
-    location.href=CREATOR;
+    goTop('../character/');
   }
 
   function patchDisplayScreen(){
@@ -32,15 +50,9 @@
   function finishReturn(){
     const qs=new URLSearchParams(location.search);
     if(!qs.has('characterDone'))return false;
-    try{
-      if(typeof window.displayScreen==='function'){
-        saveScreen('location');
-        window.displayScreen('location');
-        history.replaceState({},'',location.pathname);
-        return true;
-      }
-    }catch(e){}
-    return false;
+    saveScreen('logement');
+    goTop('../logement/');
+    return true;
   }
 
   function restoreSavedScreen(){
@@ -48,10 +60,10 @@
     if(!qs.has('resume'))return false;
     let saved='';
     try{saved=localStorage.getItem(SCREEN_KEY)||''}catch(e){}
-    if(!saved||saved==='character'||saved==='characters'||saved==='creator')return false;
+    if(!saved||saved==='character')return false;
     try{
       if(typeof window.displayScreen==='function'){
-        window.displayScreen(saved);
+        window.displayScreen(internalScreen(saved));
         history.replaceState({},'',location.pathname);
         return true;
       }
@@ -66,7 +78,6 @@
   }
 
   function guardLegacyScreen(){
-    if(location.pathname.endsWith('/character.html'))return;
     if(oldCharacterScreenIsOpen()) openCreator();
   }
 
@@ -89,12 +100,9 @@
       new MutationObserver(guardLegacyScreen).observe(legacy,{attributes:true,attributeFilter:['class','style']});
     }
 
-    setTimeout(guardLegacyScreen,0);
-
     let n=0;
     const timer=setInterval(()=>{
       patchDisplayScreen();
-      guardLegacyScreen();
       if(finishReturn()||restoreSavedScreen()||++n>80)clearInterval(timer);
     },50);
   }
