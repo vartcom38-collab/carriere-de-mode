@@ -4,22 +4,25 @@ Ce document fixe le socle après l’emménagement. Le principe central : le log
 
 ## 1. Hub vivant
 - Le décor dépend du logement exact : ville, région, type, surface, lumière, vue, étage, pièces, potentiel atelier.
-- Les accès sont intégrés au décor : carnet, agenda, téléphone, machine, rangement, fenêtre, carte.
+- Les accès principaux passent par l’interface du jeu : dressing, atelier, téléphone, courrier, sortie, agenda.
+- Le décor reste immersif et n’a pas besoin de hotspots superposés.
 - Le hub change lors d’un déménagement.
 - Les objets importants gardent une mémoire et peuvent suivre la carrière.
 - Lumière, saison, météo et heure modifieront progressivement l’ambiance visuelle.
 
 ## 2. Vie quotidienne légère
-- Énergie, stress, humeur, confiance, inspiration créative.
+- Le temps est la contrainte principale : chaque action fait avancer l’heure et la journée.
+- Stress, humeur, confiance et inspiration créative pourront évoluer plus tard sans devenir des jauges envahissantes.
 - Habitudes : café, promenade, musique.
 - Les habitudes donnent de petits effets et peuvent former des séries.
 - Petits événements du quotidien : colis, voisine, panne légère, lumière particulière.
 - Le but est de donner du rythme, pas de transformer le jeu en simulation domestique lourde.
+- Il n’y a pas de système d’énergie.
 
 ## 3. Missions et commandes
 - Banque de missions modulaires : retouche, vêtement, upcycling, mariage, scène, gala, shooting, capsule, défilé.
 - Chaque mission possède : cliente, budget, délai, difficulté, durée, contexte, contraintes, récompenses, conséquences.
-- Le travail consomme du temps et de l’énergie.
+- Le travail consomme du temps et doit entrer dans l’agenda réel de la partie.
 - Retard, abandon ou réussite influencent réputation et relation.
 - Certaines créations peuvent devenir des « créations marquantes » rares.
 
@@ -85,7 +88,22 @@ Réputations séparées : locale, professionnelle, créative, prestige, clientè
 
 Branches non exclusives : artisanat, mariage, scène/costume, luxe, upcycling, accessoires, éditorial, prêt-à-porter.
 
-## 11. À construire ensuite
+## 11. Socle de partie
+La sauvegarde centrale doit contenir au minimum :
+- horloge et jour de partie ;
+- argent et transactions ;
+- réputation générale + branches internes ;
+- logement actuel ;
+- messages ;
+- agenda ;
+- objectifs ;
+- missions ;
+- relations ;
+- inventaire ;
+- portfolio ;
+- progression et flags narratifs.
+
+## 12. À construire ensuite
 1. Banque massive de missions procédurales.
 2. Banque clients et personnalités.
 3. Banque tissus/matières/mercerie.
