@@ -1,8 +1,8 @@
-/* Haute Couture Live — moteur visuel logement + choix vers Chez Moi. */
+/* Haute Couture Live — moteur visuel logement stable + choix vers Chez Moi. */
 (function(){
-  const BUILD='20260822-1742';
+  const BUILD='20260822-1748';
   const inflight=new Map();
-  let wired=false,observer=null,paintTimer=null;
+  let wired=false,paintTimer=null,listObserver=null;
 
   function loadScript(src,test){return new Promise((resolve,reject)=>{if(test())return resolve();const s=document.createElement('script');s.src=src+'?v='+BUILD;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
   async function loadDeps(){await loadScript('./visual-dna.js',()=>!!window.HCVisualDNA);await loadScript('./visual-service.js',()=>!!window.HCVisualService)}
@@ -24,7 +24,16 @@
     `;document.head.appendChild(s)
   }
 
-  function preview(card){if(!card)return null;let p=card.querySelector('.hc-visual-preview');if(p)return p;ensureStyles();const copy=document.createElement('div');copy.className='hc-visual-copy';while(card.firstChild)copy.appendChild(card.firstChild);p=document.createElement('div');p.className='hc-visual-preview';card.appendChild(p);card.appendChild(copy);card.classList.add('hc-visual-card');return p}
+  function preview(card){
+    if(!card)return null;
+    let p=card.querySelector(':scope > .hc-visual-preview');if(p)return p;
+    ensureStyles();
+    const copy=document.createElement('div');copy.className='hc-visual-copy';
+    while(card.firstChild)copy.appendChild(card.firstChild);
+    p=document.createElement('div');p.className='hc-visual-preview';
+    card.appendChild(p);card.appendChild(copy);card.classList.add('hc-visual-card');
+    return p
+  }
   function label(p,a,b){if(p)p.innerHTML=`<div class="hc-visual-label">${a}<small>${b||''}</small></div>`}
   function showCardImage(p,url){if(p&&url)p.innerHTML=`<img src="${url}" alt="Aperçu du logement">`}
   function showMainImage(url){const m=document.getElementById('mainVisual');if(!m||!url)return;m.style.background='#efe4d9';m.innerHTML=`<img src="${url}" alt="Illustration du logement" style="width:100%;height:100%;object-fit:cover;display:block">`}
@@ -34,7 +43,8 @@
   async function ensureMain(x,p){
     if(!x||!window.HCVisualService)return null;
     const v=hydrate(x),already=cachedMain(x,v);if(already){showCardImage(p,already);return already}
-    const key=v.visualSeed+'|main';if(inflight.has(key)){label(p,'GÉNÉRATION EN COURS…','1 image principale');try{const u=await inflight.get(key);if(u)showCardImage(p,u);return u}catch(e){return null}}
+    const key=v.visualSeed+'|main';
+    if(inflight.has(key)){label(p,'GÉNÉRATION EN COURS…','1 image principale');try{const u=await inflight.get(key);if(u)showCardImage(p,u);return u}catch(e){return null}}
     label(p,'GÉNÉRATION EN COURS…','1 image principale');
     const task=(async()=>{const out=await window.HCVisualService.request(x,ctx(x),'main');return out&&out.url?out.url:null})();inflight.set(key,task);
     try{const u=await task;if(u)showCardImage(p,u);else label(p,'VISUEL EN ATTENTE','On réglera les photos ensuite');return u}catch(e){console.error('HC Magnific main generation failed',e);label(p,'VISUEL INDISPONIBLE','On réglera les photos ensuite');return null}finally{inflight.delete(key)}
@@ -42,9 +52,15 @@
 
   function paintCards(generateSelected){
     const list=items();if(!list.length)return;
-    document.querySelectorAll('.listing[data-id]').forEach(card=>{const x=list.find(a=>String(a.id)===String(card.dataset.id));if(!x)return;const p=preview(card),v=hydrate(x),u=cachedMain(x,v);if(u){showCardImage(p,u);return}let selected=false;try{selected=String(st.listing)===String(x.id)}catch(e){}if(selected){label(p,'PHOTO PRINCIPALE','DA du jeu');if(generateSelected)ensureMain(x,p)}else label(p,'PHOTO DU LOGEMENT','Sélectionne l’annonce')})
+    document.querySelectorAll('.listing[data-id]').forEach(card=>{
+      const x=list.find(a=>String(a.id)===String(card.dataset.id));if(!x)return;
+      const p=preview(card),v=hydrate(x),u=cachedMain(x,v);if(u){showCardImage(p,u);return}
+      let selected=false;try{selected=String(st.listing)===String(x.id)}catch(e){}
+      if(selected){label(p,'PHOTO PRINCIPALE','DA du jeu');if(generateSelected)ensureMain(x,p)}
+      else label(p,'PHOTO DU LOGEMENT','Sélectionne l’annonce')
+    })
   }
-  function schedulePaint(generateSelected){clearTimeout(paintTimer);paintTimer=setTimeout(()=>paintCards(!!generateSelected),30)}
+  function schedulePaint(generateSelected){clearTimeout(paintTimer);paintTimer=setTimeout(()=>paintCards(!!generateSelected),35)}
 
   function paintDetail(x){
     if(!x)return;const v=hydrate(x),u=cachedMain(x,v);if(u)showMainImage(u);else showMainStatus(v,'PHOTO À VENIR');
@@ -53,8 +69,8 @@
   }
 
   function selectedListing(){try{return items().find(a=>String(a.id)===String(st.listing))||null}catch(e){return null}}
-  function chooseHome(x){
-    if(!x)return;
+  function chooseHome(){
+    const x=selectedListing();if(!x)return;
     const now=new Date().toISOString();
     const payload={...st,home:x,chosenAt:now,startingBudget:typeof START_BUDGET!=='undefined'?START_BUDGET:null,estimatedEntryCost:(x.price||0)+(x.charges||0)+(x.price||0)};
     try{
@@ -64,30 +80,25 @@
       localStorage.setItem('haute-couture-screen','chez-moi');
     }catch(e){}
     const btn=document.getElementById('detailVisit');if(btn){btn.textContent='✓ LOGEMENT CHOISI';btn.disabled=true}
-    setTimeout(()=>{location.href='../chez-moi/'},180)
+    location.href='../chez-moi/'
   }
+  function fixChoiceButton(){const btn=document.getElementById('detailVisit');if(!btn)return;btn.textContent='♡ CHOISIR CE LOGEMENT';btn.disabled=false;btn.onclick=chooseHome}
 
-  function fixChoiceButton(){const btn=document.getElementById('detailVisit');if(!btn)return;btn.textContent='♡ CHOISIR CE LOGEMENT';btn.onclick=null}
-  function captureChoice(e){
-    const btn=e.target&&e.target.closest?e.target.closest('#detailVisit'):null;if(!btn)return;
-    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-    const x=selectedListing();if(x)chooseHome(x)
-  }
-
-  function watchDom(){
-    if(observer)return;observer=new MutationObserver(()=>{schedulePaint(false);fixChoiceButton()});observer.observe(document.body,{childList:true,subtree:true});
-    const listings=document.getElementById('listings');if(listings)listings.addEventListener('click',()=>setTimeout(()=>schedulePaint(true),60),true)
+  function watchListings(){
+    const listings=document.getElementById('listings');if(!listings)return;
+    if(!listObserver){listObserver=new MutationObserver(()=>schedulePaint(false));listObserver.observe(listings,{childList:true})}
+    listings.addEventListener('click',()=>setTimeout(()=>schedulePaint(true),80),false)
   }
 
   async function wire(){
-    if(wired)return;wired=true;try{await loadDeps()}catch(e){console.error('HC visual deps failed',e);wired=false;return}
+    if(wired)return;wired=true;
+    try{await loadDeps()}catch(e){console.error('HC visual deps failed',e);wired=false;return}
     const ready=await waitGame();if(!ready){console.error('HC visual engine: game not ready');wired=false;return}
-    document.addEventListener('click',captureChoice,true);
-    watchDom();fixChoiceButton();
-    try{if(typeof openListingDetail==='function'){const originalOpen=openListingDetail;openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=selectedListing();paintDetail(x);setTimeout(fixChoiceButton,0)}catch(e){console.error(e)}return r}}}catch(e){}
-    schedulePaint(false);setTimeout(()=>schedulePaint(false),500);
-    window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain,chooseHome};
+    watchListings();fixChoiceButton();
+    try{if(typeof openListingDetail==='function'){const originalOpen=openListingDetail;openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{paintDetail(selectedListing());setTimeout(fixChoiceButton,0)}catch(e){console.error(e)}return r}}}catch(e){}
+    schedulePaint(false);setTimeout(()=>schedulePaint(false),400);
+    window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain,chooseHome}
   }
 
-  if(document.readyState==='loading')window.addEventListener('load',wire,{once:true});else wire();
+  if(document.readyState==='loading')window.addEventListener('load',wire,{once:true});else wire()
 })();
