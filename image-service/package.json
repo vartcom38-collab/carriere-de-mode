@@ -1,0 +1,6 @@
+{
+  "name":"haute-couture-live-image-service",
+  "private":true,
+  "type":"module",
+  "engines":{"node":">=20"}
+}
