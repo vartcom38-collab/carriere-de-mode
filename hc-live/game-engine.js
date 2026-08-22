@@ -1,4 +1,4 @@
-/* Haute Couture Live — moteur central de partie. Sans système d'énergie. */
+/* Haute Couture Live — moteur central de partie. Temps de jeu, jamais temps réel. */
 (function(){
   const STORAGE_KEY='haute-couture-game-state-v1';
   const VERSION=1;
@@ -9,9 +9,7 @@
   const isoLocal=d=>{const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:00`};
 
   function initialClock(){
-    const d=new Date();d.setSeconds(0,0);
-    if(d.getHours()<8||d.getHours()>21)d.setHours(9,0,0,0);
-    else d.setMinutes(Math.floor(d.getMinutes()/15)*15,0,0);
+    const d=new Date();d.setHours(9,0,0,0);
     return {iso:isoLocal(d),totalMinutes:0,day:1};
   }
 
@@ -65,6 +63,7 @@
   function formatDateTime(s,withTime=true){const d=gameDate(s);return new Intl.DateTimeFormat('fr-FR',withTime?{weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}:{weekday:'short',day:'2-digit',month:'2-digit'}).format(d)}
   function formatTime(iso){return new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}
   function advanceTime(minutes,reason){minutes=Math.max(0,Number(minutes)||0);return mutate(s=>{const before=new Date(s.clock.iso),d=new Date(before.getTime()+minutes*60000);const beforeDay=before.toDateString();s.clock.iso=isoLocal(d);s.clock.totalMinutes=(s.clock.totalMinutes||0)+minutes;if(d.toDateString()!==beforeDay)s.clock.day=(s.clock.day||1)+1;if(reason)s.calendar.push({id:uid('time'),title:reason,type:'activity',start:isoLocal(before),end:isoLocal(d),status:'done'});});}
+  function endDay({wakeHour=9}={}){return mutate(s=>{const before=new Date(s.clock.iso),next=new Date(before);next.setDate(next.getDate()+1);next.setHours(wakeHour,0,0,0);s.calendar.push({id:uid('sleep'),title:'Fin de journée',type:'rest',start:isoLocal(before),end:isoLocal(next),status:'done'});s.clock.iso=isoLocal(next);s.clock.day=(s.clock.day||1)+1;s.clock.totalMinutes=(s.clock.totalMinutes||0)+Math.max(0,Math.round((next-before)/60000));const now=next.getTime();s.calendar.forEach(e=>{if(e.status==='planned'&&e.type!=='deadline'&&new Date(e.start).getTime()<now)e.status='missed'});s.missions.forEach(m=>{if(m.status==='accepted'&&m.deadline&&new Date(m.deadline).getTime()<now)m.late=true});});}
   function transact(amount,label,category='misc'){amount=Number(amount)||0;return mutate(s=>{s.player.money+=amount;s.transactions.unshift({id:uid('tx'),amount,label,category,at:s.clock.iso});localStorage.setItem('haute-couture-bank',JSON.stringify({balance:s.player.money,updatedAt:new Date().toISOString()}));});}
   function addReputation(amount,track='professional',reason=''){amount=Number(amount)||0;return mutate(s=>{s.player.reputation+=amount;s.reputationTracks[track]=(s.reputationTracks[track]||0)+amount;if(reason)s.calendar.push({id:uid('rep'),title:reason,type:'reputation',start:s.clock.iso,status:'done'});localStorage.setItem('haute-couture-player-stats',JSON.stringify({reputation:s.player.reputation}));});}
   function completeObjective(id){return mutate(s=>{const o=s.objectives.find(x=>x.id===id);if(o)o.status='done';});}
@@ -84,7 +83,7 @@
   function nextEvent(s){s=s||load();const now=new Date(s.clock.iso).getTime();return s.calendar.filter(e=>e.status==='planned'&&new Date(e.start).getTime()>=now).sort((a,b)=>new Date(a.start)-new Date(b.start))[0]||null}
   function unreadCount(s){return (s||load()).messages.filter(m=>!m.read).length}
 
-  window.HCGame={get,save,mutate,advanceTime,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
+  window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 
   document.addEventListener('click',e=>{
     const actionEl=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"],[data-action="sortir"]');
