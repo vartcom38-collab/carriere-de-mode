@@ -2,11 +2,31 @@
   if(window.__HCCharacterStandaloneBridge)return;
   window.__HCCharacterStandaloneBridge=true;
 
-  const CREATOR='./character.html?v=responsive-20260821-2212';
+  const CREATOR='./character.html?v=stable-live-20260822';
+  const SCREEN_KEY='haute-couture-current-screen';
+
+  function saveScreen(name){
+    try{ if(name) localStorage.setItem(SCREEN_KEY,name); }catch(e){}
+  }
 
   function openCreator(e){
     if(e){e.preventDefault();e.stopImmediatePropagation();}
+    saveScreen('character');
     location.href=CREATOR;
+  }
+
+  function patchDisplayScreen(){
+    try{
+      if(typeof window.displayScreen!=='function'||window.displayScreen.__hcPersistent)return false;
+      const original=window.displayScreen;
+      function persistentDisplayScreen(name){
+        saveScreen(name);
+        return original.apply(this,arguments);
+      }
+      persistentDisplayScreen.__hcPersistent=true;
+      window.displayScreen=persistentDisplayScreen;
+      return true;
+    }catch(e){return false}
   }
 
   function finishReturn(){
@@ -14,7 +34,24 @@
     if(!qs.has('characterDone'))return false;
     try{
       if(typeof window.displayScreen==='function'){
+        saveScreen('location');
         window.displayScreen('location');
+        history.replaceState({},'',location.pathname);
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+
+  function restoreSavedScreen(){
+    const qs=new URLSearchParams(location.search);
+    if(!qs.has('resume'))return false;
+    let saved='';
+    try{saved=localStorage.getItem(SCREEN_KEY)||''}catch(e){}
+    if(!saved||saved==='character'||saved==='characters'||saved==='creator')return false;
+    try{
+      if(typeof window.displayScreen==='function'){
+        window.displayScreen(saved);
         history.replaceState({},'',location.pathname);
         return true;
       }
@@ -34,6 +71,8 @@
   }
 
   function boot(){
+    patchDisplayScreen();
+
     const btn=document.getElementById('chooseCharacter');
     if(btn){
       btn.onclick=openCreator;
@@ -52,13 +91,12 @@
 
     setTimeout(guardLegacyScreen,0);
 
-    if(!finishReturn()){
-      let n=0;
-      const timer=setInterval(()=>{
-        guardLegacyScreen();
-        if(finishReturn()||++n>60)clearInterval(timer);
-      },50);
-    }
+    let n=0;
+    const timer=setInterval(()=>{
+      patchDisplayScreen();
+      guardLegacyScreen();
+      if(finishReturn()||restoreSavedScreen()||++n>80)clearInterval(timer);
+    },50);
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
