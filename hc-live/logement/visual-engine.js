@@ -1,7 +1,7 @@
-/* Haute Couture Live — logement fluide + photos Magnific en file d'attente. */
+/* Haute Couture Live — logement fluide + photos Magnific + adresses/carte légères. */
 (function(){
-  const BUILD='20260822-1800';
-  let installed=false,depsReady=false,queueRunning=false;
+  const BUILD='20260822-1808';
+  let installed=false,depsReady=false,queueRunning=false,addressRunning=false;
   const queued=new Set(),attempted=new Set();
 
   function $(id){return document.getElementById(id)}
@@ -89,7 +89,7 @@
         const id=queued.values().next().value;queued.delete(id);
         const x=items().find(v=>String(v.id)===String(id));
         if(x)await generateOne(x);
-        await new Promise(r=>setTimeout(r,250));
+        await new Promise(r=>setTimeout(r,350));
       }
     }finally{queueRunning=false}
   }
@@ -100,7 +100,67 @@
       const x=list.find(v=>String(v.id)===String(card.dataset.id));if(!x)return;
       if(!cachedUrl(x)&&!attempted.has(String(x.id)))queued.add(String(x.id));
     });
-    if('requestIdleCallback'in window)requestIdleCallback(()=>runQueue(),{timeout:1200});else setTimeout(runQueue,600)
+    if('requestIdleCallback'in window)requestIdleCallback(()=>runQueue(),{timeout:1800});else setTimeout(runQueue,900)
+  }
+
+  function updateAddressInCard(x){
+    const card=cardFor(x.id);if(!card)return;
+    const meta=card.querySelector('.meta');
+    if(meta)meta.textContent=`${x.address} · ${x.surface} m²`;
+  }
+
+  function findMarkerNear(lat,lng){
+    let best=null,bestD=Infinity;
+    try{
+      if(!window.LIVE_MAP||!LIVE_MAP.eachLayer)return null;
+      LIVE_MAP.eachLayer(layer=>{
+        if(!layer||typeof layer.getLatLng!=='function'||!layer.getElement)return;
+        const node=layer.getElement();if(!node||!node.querySelector||!node.querySelector('.home-pin'))return;
+        const p=layer.getLatLng(),d=Math.abs(p.lat-lat)+Math.abs(p.lng-lng);
+        if(d<bestD){bestD=d;best=layer}
+      })
+    }catch(e){}
+    return bestD<0.02?best:null
+  }
+
+  function updateAddressOnMap(x,oldLat,oldLng){
+    try{
+      const marker=findMarkerNear(oldLat,oldLng);if(!marker)return;
+      if(typeof marker.setLatLng==='function')marker.setLatLng([x.lat,x.lng]);
+      if(typeof marker.setTooltipContent==='function')marker.setTooltipContent(`${x.address}<br>${x.title} · ${x.surface} m²`)
+    }catch(e){}
+  }
+
+  async function resolveAddressesSequential(list,key){
+    if(addressRunning)return;addressRunning=true;
+    try{
+      for(const x of list){
+        if(!x)continue;
+        if(x.address&&x.address!=='Adresse en cours…'&&!/secteur résidentiel$/i.test(x.address)){updateAddressInCard(x);continue}
+        const oldLat=x.lat,oldLng=x.lng;
+        try{
+          if(typeof snapOne==='function')await snapOne(x);
+          else x.address=(st.city||'Ville')+' · secteur résidentiel';
+        }catch(e){x.address=(st.city||'Ville')+' · secteur résidentiel'}
+        updateAddressInCard(x);updateAddressOnMap(x,oldLat,oldLng);
+        await new Promise(r=>setTimeout(r,140));
+      }
+    }finally{addressRunning=false;try{SNAP_RUNNING=false}catch(e){}}
+  }
+
+  function refreshSelectionOnly(){
+    try{
+      const x=selectedListing();
+      if(!LIVE_MAP||!LIVE_MAP.eachLayer)return;
+      LIVE_MAP.eachLayer(layer=>{
+        if(!layer||!layer.getElement||typeof layer.getLatLng!=='function')return;
+        const node=layer.getElement(),pin=node&&node.querySelector?node.querySelector('.home-pin'):null;if(!pin)return;
+        pin.classList.remove('selected');
+        if(!x)return;
+        const p=layer.getLatLng(),d=Math.abs(p.lat-x.lat)+Math.abs(p.lng-x.lng);
+        if(d<0.0015)pin.classList.add('selected')
+      })
+    }catch(e){}
   }
 
   function chooseHome(){
@@ -122,16 +182,19 @@
     try{if(typeof side!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined'||typeof stock!=='function')return false}catch(e){return false}
     installed=true;
 
-    /* Garde le hotfix performance : aucun reverse-geocoding et aucun rerender Leaflet au clic. */
+    /* Vraies adresses, mais une par une et sans render() complet. */
     try{
-      snapAddresses=function(list){try{list.forEach(x=>{if(!x.address||x.address==='Adresse en cours…')x.address=(st.city||'Ville')+' · secteur résidentiel'})}catch(e){}return Promise.resolve()};
-      SNAP_RUNNING=false;
-      refreshListingsOnMap=function(){};
+      snapAddresses=function(list,key){
+        try{SNAP_RUNNING=true}catch(e){}
+        setTimeout(()=>resolveAddressesSequential(list,key),80);
+        return Promise.resolve()
+      };
+      refreshListingsOnMap=refreshSelectionOnly;
     }catch(e){}
 
     try{
       const originalSide=side;
-      side=function(){const r=originalSide.apply(this,arguments);decorateCards();setTimeout(queueVisible,450);return r}
+      side=function(){const r=originalSide.apply(this,arguments);decorateCards();setTimeout(queueVisible,1000);return r}
     }catch(e){}
 
     try{
@@ -145,8 +208,8 @@
     }catch(e){}
 
     fixChoiceButton();
-    loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,900)}});
-    window.HCVisualEngine={build:BUILD,mode:'queued-photos',chooseHome,decorateCards,queueVisible};
+    loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,1400)}});
+    window.HCVisualEngine={build:BUILD,mode:'queued-photos-real-addresses',chooseHome,decorateCards,queueVisible};
     return true
   }
 
