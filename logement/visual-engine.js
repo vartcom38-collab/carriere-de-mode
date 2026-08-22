@@ -1,26 +1,212 @@
-/* Haute Couture Live — visuels logement : 1 image principale par annonce sélectionnée. */
+/* Haute Couture Live — moteur visuel logement robuste.
+   Affiche un aperçu sur chaque annonce et ne génère qu'une image pour l'annonce sélectionnée. */
 (function(){
+  const BUILD='20260822-1722';
   const inflight=new Map();
-  function loadScript(src,test){return new Promise((resolve,reject)=>{if(test())return resolve();const s=document.createElement('script');s.src=src+'?v=20260822-1713';s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
-  async function loadDeps(){await loadScript('./visual-dna.js',()=>!!window.HCVisualDNA);await loadScript('./visual-service.js',()=>!!window.HCVisualService)}
-  function waitGame(){return new Promise(resolve=>{let n=0;const t=setInterval(()=>{n++;try{if(typeof stock==='function'&&typeof openListingDetail==='function'&&typeof side==='function'&&typeof selectListing==='function'){clearInterval(t);resolve(true)}}catch(e){}if(n>160){clearInterval(t);resolve(false)}},50)})}
-  function contextFor(x){return{city:(typeof st!=='undefined'&&st.city)||x.city||'',region:(typeof st!=='undefined'&&st.region)||x.region||'',district:x.district||''}}
-  function hydrate(x){return window.HCVisualDNA.hydrate(x,contextFor(x))}
-  function ensureStyles(){if(document.getElementById('hc-listing-visual-styles'))return;const s=document.createElement('style');s.id='hc-listing-visual-styles';s.textContent=`.listing.hc-with-visual{display:grid!important;grid-template-columns:112px minmax(0,1fr)!important;gap:10px!important;align-items:stretch}.hc-listing-preview{min-height:96px;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,#f7eadc,#e6cbb5 45%,#c7d5bc);display:grid;place-items:center}.hc-listing-preview img{width:100%;height:100%;object-fit:cover;display:block}.hc-listing-label{padding:8px;text-align:center;font:900 8px/1.25 Arial,sans-serif;letter-spacing:.07em;color:#70594f}.hc-listing-label small{display:block;font:italic 9px/1.25 Georgia,serif;letter-spacing:0;margin-top:4px;color:#886f63}.hc-listing-copy{min-width:0;align-self:center}@media(max-width:760px){.listing.hc-with-visual{grid-template-columns:94px minmax(0,1fr)!important}.hc-listing-preview{min-height:84px}}`;document.head.appendChild(s)}
-  function previewFor(card){if(!card)return null;let p=card.querySelector('.hc-listing-preview');if(p)return p;ensureStyles();const copy=document.createElement('div');copy.className='hc-listing-copy';while(card.firstChild)copy.appendChild(card.firstChild);p=document.createElement('div');p.className='hc-listing-preview';card.appendChild(p);card.appendChild(copy);card.classList.add('hc-with-visual');return p}
-  function label(p,text,sub='Sélectionne l’annonce'){if(p)p.innerHTML=`<div class="hc-listing-label">${text}<small>${sub}</small></div>`}
-  function cardImage(p,url){if(p&&url)p.innerHTML=`<img src="${url}" alt="Aperçu du logement">`}
-  function mainImage(url){const m=document.getElementById('mainVisual');if(!m||!url)return;m.style.background='#efe4d9';m.innerHTML=`<img src="${url}" alt="Illustration du logement" style="width:100%;height:100%;object-fit:cover;display:block">`}
-  function mainStatus(v,text){const m=document.getElementById('mainVisual');if(!m)return;m.style.background='linear-gradient(135deg,#fff4ea,#ead5c2 46%,#c9d8c7)';m.innerHTML=`<div style="max-width:520px;padding:18px;background:#fffaf1e8;border:1px solid #d9bfae;border-radius:16px;font:14px/1.5 Georgia,serif;color:#493a33"><b style="display:block;font:900 10px Arial,sans-serif;letter-spacing:.1em;margin-bottom:7px">${text}</b><strong style="font-size:21px">${v.archetypeLabel}</strong><br>${v.architecture} · ${v.decorSignature}</div>`}
-  async function ensureMain(x,p){if(!x||!window.HCVisualService)return null;const v=hydrate(x);if(v.assets&&v.assets.mainImage){cardImage(p,v.assets.mainImage);return v.assets.mainImage}const cached=window.HCVisualService.getCached&&window.HCVisualService.getCached(v.visualSeed,'main');if(cached&&cached.url){v.assets.mainImage=cached.url;window.HCVisualDNA.save(x);cardImage(p,cached.url);return cached.url}const key=v.visualSeed+'|main';if(inflight.has(key)){label(p,'GÉNÉRATION EN COURS…','Une seule image');const url=await inflight.get(key);if(url)cardImage(p,url);return url}label(p,'GÉNÉRATION EN COURS…','Une seule image');const task=(async()=>{const out=await window.HCVisualService.request(x,contextFor(x),'main');return out&&out.url?out.url:null})();inflight.set(key,task);try{const url=await task;if(url)cardImage(p,url);else label(p,'VISUEL EN ATTENTE','Réessaie dans un instant');return url}catch(e){console.error('HC visual generation failed',e);label(p,'VISUEL INDISPONIBLE','Réessaie plus tard');return null}finally{inflight.delete(key)}}
-  function paintCards(generateSelected=false){if(typeof stock!=='function')return;const items=stock();document.querySelectorAll('.listing[data-id]').forEach(card=>{const x=items.find(a=>String(a.id)===String(card.dataset.id));if(!x)return;const v=hydrate(x),p=previewFor(card);if(v.assets&&v.assets.mainImage){cardImage(p,v.assets.mainImage);return}const cached=window.HCVisualService.getCached&&window.HCVisualService.getCached(v.visualSeed,'main');if(cached&&cached.url){v.assets.mainImage=cached.url;window.HCVisualDNA.save(x);cardImage(p,cached.url);return}if(String(st.listing)===String(x.id)){label(p,'PHOTO PRINCIPALE','Génération Magnific');if(generateSelected)ensureMain(x,p)}else label(p,'PHOTO DU LOGEMENT','Sélectionne l’annonce')})}
-  function paintDetail(x){if(!x)return;const v=hydrate(x);if(v.assets&&v.assets.mainImage)mainImage(v.assets.mainImage);else{mainStatus(v,'CHARGEMENT DE LA PHOTO PRINCIPALE…');ensureMain(x,null).then(url=>{if(url)mainImage(url);else mainStatus(v,'VISUEL EN ATTENTE')})}const thumbs=document.querySelectorAll('.thumb');const keys=['main','kitchen','bathroom','window'];const names=['Pièce principale','Cuisine','Salle d’eau','Extérieur / vue'];thumbs.forEach((t,i)=>{const sp=t.querySelector('span');if(sp)sp.textContent=names[i];t.style.cursor='pointer';t.onclick=async()=>{const fresh=hydrate(x);const asset=keys[i]==='main'?fresh.assets.mainImage:fresh.assets.gallery[keys[i]];if(asset){mainImage(asset);return}if(keys[i]==='main'){const url=await ensureMain(x,null);if(url)mainImage(url);return}mainStatus(fresh,'GÉNÉRATION DE CETTE VUE…');try{const out=await window.HCVisualService.request(x,contextFor(x),keys[i]);if(out&&out.url)mainImage(out.url);else mainStatus(fresh,'VUE EN ATTENTE')}catch(e){mainStatus(fresh,'VUE INDISPONIBLE')}}})}
-  async function wire(){try{await loadDeps()}catch(e){console.error('HC visual dependencies failed',e);return}const ready=await waitGame();if(!ready){console.error('HC visual engine: game not ready');return}
-    try{const originalSide=side;side=function(){const r=originalSide.apply(this,arguments);setTimeout(()=>paintCards(false),0);return r}}catch(e){}
-    try{const originalSelect=selectListing;selectListing=function(id,open=false){const r=originalSelect.apply(this,arguments);setTimeout(()=>paintCards(true),10);return r}}catch(e){}
-    try{const originalOpen=openListingDetail;openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=stock().find(a=>String(a.id)===String(st.listing));paintDetail(x)}catch(e){console.error(e)}return r}}catch(e){}
-    setTimeout(()=>paintCards(!!st.listing),50);
-    window.HCVisualEngine={paintCards,paintDetail,ensureMain,contextFor};
+  let wired=false,observer=null,paintTimer=null;
+
+  function loadScript(src,test){
+    return new Promise((resolve,reject)=>{
+      if(test()) return resolve();
+      const s=document.createElement('script');
+      s.src=src+'?v='+BUILD;
+      s.onload=resolve;
+      s.onerror=reject;
+      document.head.appendChild(s);
+    });
   }
-  window.addEventListener('load',wire,{once:true});
+
+  async function loadDeps(){
+    await loadScript('./visual-dna.js',()=>!!window.HCVisualDNA);
+    await loadScript('./visual-service.js',()=>!!window.HCVisualService);
+  }
+
+  function waitGame(){
+    return new Promise(resolve=>{
+      let n=0;
+      const t=setInterval(()=>{
+        n++;
+        try{
+          if(typeof stock==='function' && typeof st!=='undefined'){
+            clearInterval(t);resolve(true);return;
+          }
+        }catch(e){}
+        if(n>240){clearInterval(t);resolve(false)}
+      },50);
+    });
+  }
+
+  function ctx(x){
+    let city='',region='';
+    try{city=st.city||'';region=st.region||''}catch(e){}
+    return {city:city||x.city||'',region:region||x.region||'',district:x.district||''};
+  }
+
+  function hydrate(x){return window.HCVisualDNA.hydrate(x,ctx(x))}
+
+  function ensureStyles(){
+    if(document.getElementById('hc-visual-css'))return;
+    const s=document.createElement('style');
+    s.id='hc-visual-css';
+    s.textContent=`
+      .listing.hc-visual-card{display:grid!important;grid-template-columns:108px minmax(0,1fr)!important;gap:10px!important;align-items:stretch!important}
+      .hc-visual-preview{min-height:92px;border-radius:11px;overflow:hidden;background:linear-gradient(135deg,#f7eadc,#e7ceb9 48%,#c7d5bc);display:grid;place-items:center;position:relative}
+      .hc-visual-preview img{width:100%;height:100%;object-fit:cover;display:block}
+      .hc-visual-label{padding:8px;text-align:center;font:900 8px/1.25 Arial,sans-serif;letter-spacing:.08em;color:#6e584e}
+      .hc-visual-label small{display:block;margin-top:4px;font:italic 9px/1.2 Georgia,serif;letter-spacing:0;color:#846d63}
+      .hc-visual-copy{min-width:0;align-self:center}
+      @media(max-width:760px){.listing.hc-visual-card{grid-template-columns:92px minmax(0,1fr)!important}.hc-visual-preview{min-height:82px}}
+    `;
+    document.head.appendChild(s);
+  }
+
+  function preview(card){
+    if(!card)return null;
+    let p=card.querySelector('.hc-visual-preview');
+    if(p)return p;
+    ensureStyles();
+    const copy=document.createElement('div');
+    copy.className='hc-visual-copy';
+    while(card.firstChild)copy.appendChild(card.firstChild);
+    p=document.createElement('div');
+    p.className='hc-visual-preview';
+    card.appendChild(p);card.appendChild(copy);
+    card.classList.add('hc-visual-card');
+    return p;
+  }
+
+  function label(p,a,b){
+    if(!p)return;
+    p.innerHTML=`<div class="hc-visual-label">${a}<small>${b||''}</small></div>`;
+  }
+
+  function showCardImage(p,url){if(p&&url)p.innerHTML=`<img src="${url}" alt="Aperçu du logement">`}
+  function showMainImage(url){
+    const m=document.getElementById('mainVisual');
+    if(!m||!url)return;
+    m.style.background='#efe4d9';
+    m.innerHTML=`<img src="${url}" alt="Illustration du logement" style="width:100%;height:100%;object-fit:cover;display:block">`;
+  }
+  function showMainStatus(v,text){
+    const m=document.getElementById('mainVisual');if(!m)return;
+    m.style.background='linear-gradient(135deg,#fff4ea,#ead5c2 46%,#c9d8c7)';
+    m.innerHTML=`<div style="max-width:520px;padding:18px;background:#fffaf1e8;border:1px solid #d9bfae;border-radius:16px;font:14px/1.5 Georgia,serif;color:#493a33"><b style="display:block;font:900 10px Arial,sans-serif;letter-spacing:.1em;margin-bottom:7px">${text}</b><strong style="font-size:21px">${v.archetypeLabel}</strong><br>${v.architecture} · ${v.decorSignature}</div>`;
+  }
+
+  function cachedMain(x,v){
+    if(v.assets&&v.assets.mainImage)return v.assets.mainImage;
+    try{
+      const c=window.HCVisualService.getCached&&window.HCVisualService.getCached(v.visualSeed,'main');
+      if(c&&c.url){v.assets.mainImage=c.url;window.HCVisualDNA.save(x);return c.url}
+    }catch(e){}
+    return null;
+  }
+
+  async function ensureMain(x,p){
+    if(!x||!window.HCVisualService)return null;
+    const v=hydrate(x),already=cachedMain(x,v);
+    if(already){showCardImage(p,already);return already}
+    const key=v.visualSeed+'|main';
+    if(inflight.has(key)){
+      label(p,'GÉNÉRATION EN COURS…','1 image principale');
+      try{const u=await inflight.get(key);if(u)showCardImage(p,u);return u}catch(e){return null}
+    }
+    label(p,'GÉNÉRATION EN COURS…','1 image principale');
+    const task=(async()=>{
+      const out=await window.HCVisualService.request(x,ctx(x),'main');
+      return out&&out.url?out.url:null;
+    })();
+    inflight.set(key,task);
+    try{
+      const u=await task;
+      if(u)showCardImage(p,u);else label(p,'VISUEL EN ATTENTE','Réessaie dans un instant');
+      return u;
+    }catch(e){
+      console.error('HC Magnific main generation failed',e);
+      label(p,'VISUEL INDISPONIBLE','Service image');
+      return null;
+    }finally{inflight.delete(key)}
+  }
+
+  function items(){try{return stock()}catch(e){return[]}}
+
+  function paintCards(generateSelected){
+    const list=items();
+    if(!list.length)return;
+    document.querySelectorAll('.listing[data-id]').forEach(card=>{
+      const x=list.find(a=>String(a.id)===String(card.dataset.id));
+      if(!x)return;
+      const p=preview(card),v=hydrate(x),u=cachedMain(x,v);
+      if(u){showCardImage(p,u);return}
+      let selected=false;
+      try{selected=String(st.listing)===String(x.id)}catch(e){}
+      if(selected){
+        label(p,'PHOTO PRINCIPALE','DA du jeu');
+        if(generateSelected)ensureMain(x,p);
+      }else label(p,'PHOTO DU LOGEMENT','Sélectionne l’annonce');
+    });
+  }
+
+  function schedulePaint(generateSelected){
+    clearTimeout(paintTimer);
+    paintTimer=setTimeout(()=>paintCards(!!generateSelected),30);
+  }
+
+  function paintDetail(x){
+    if(!x)return;
+    const v=hydrate(x),u=cachedMain(x,v);
+    if(u)showMainImage(u);
+    else{
+      showMainStatus(v,'CHARGEMENT DE LA PHOTO PRINCIPALE…');
+      ensureMain(x,null).then(url=>url?showMainImage(url):showMainStatus(v,'VISUEL EN ATTENTE'));
+    }
+    const keys=['main','kitchen','bathroom','window'];
+    const names=['Pièce principale','Cuisine','Salle d’eau','Extérieur / vue'];
+    document.querySelectorAll('.thumb').forEach((t,i)=>{
+      const sp=t.querySelector('span');if(sp)sp.textContent=names[i];
+      t.style.cursor='pointer';
+      t.onclick=async()=>{
+        const fresh=hydrate(x);
+        const asset=keys[i]==='main'?cachedMain(x,fresh):fresh.assets.gallery[keys[i]];
+        if(asset){showMainImage(asset);return}
+        if(keys[i]==='main'){const url=await ensureMain(x,null);if(url)showMainImage(url);return}
+        showMainStatus(fresh,'GÉNÉRATION DE CETTE VUE…');
+        try{const out=await window.HCVisualService.request(x,ctx(x),keys[i]);if(out&&out.url)showMainImage(out.url);else showMainStatus(fresh,'VUE EN ATTENTE')}catch(e){showMainStatus(fresh,'VUE INDISPONIBLE')}
+      };
+    });
+  }
+
+  function watchDom(){
+    if(observer)return;
+    observer=new MutationObserver(()=>schedulePaint(false));
+    observer.observe(document.body,{childList:true,subtree:true});
+    const listings=document.getElementById('listings');
+    if(listings){
+      listings.addEventListener('click',()=>setTimeout(()=>schedulePaint(true),60),true);
+    }
+  }
+
+  async function wire(){
+    if(wired)return;wired=true;
+    try{await loadDeps()}catch(e){console.error('HC visual deps failed',e);wired=false;return}
+    const ready=await waitGame();
+    if(!ready){console.error('HC visual engine: game not ready');wired=false;return}
+    watchDom();
+    try{
+      if(typeof openListingDetail==='function'){
+        const originalOpen=openListingDetail;
+        openListingDetail=function(){
+          const r=originalOpen.apply(this,arguments);
+          try{const x=items().find(a=>String(a.id)===String(st.listing));paintDetail(x)}catch(e){console.error(e)}
+          return r;
+        };
+      }
+    }catch(e){}
+    schedulePaint(false);
+    setTimeout(()=>schedulePaint(false),500);
+    window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain};
+  }
+
+  if(document.readyState==='loading') window.addEventListener('load',wire,{once:true});
+  else wire();
 })();
