@@ -85,4 +85,13 @@
   function unreadCount(s){return (s||load()).messages.filter(m=>!m.read).length}
 
   window.HCGame={get,save,mutate,advanceTime,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
+
+  document.addEventListener('click',e=>{
+    const atelier=e.target.closest&&e.target.closest('[data-action="atelier"]');
+    if(!atelier)return;
+    if(location.pathname.includes('/chez-moi/')){
+      e.preventDefault();e.stopImmediatePropagation();
+      location.href='../atelier/';
+    }
+  },true);
 })();
