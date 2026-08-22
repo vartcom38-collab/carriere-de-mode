@@ -1,6 +1,6 @@
-/* Haute Couture Live — moteur visuel logement + parcours de visite. */
+/* Haute Couture Live — moteur visuel logement + choix vers Chez Moi. */
 (function(){
-  const BUILD='20260822-1736';
+  const BUILD='20260822-1742';
   const inflight=new Map();
   let wired=false,observer=null,paintTimer=null;
 
@@ -20,10 +20,6 @@
       .hc-visual-label{padding:8px;text-align:center;font:900 8px/1.25 Arial,sans-serif;letter-spacing:.08em;color:#6e584e}
       .hc-visual-label small{display:block;margin-top:4px;font:italic 9px/1.2 Georgia,serif;letter-spacing:0;color:#846d63}
       .hc-visual-copy{min-width:0;align-self:center}
-      .hc-visit-box{margin:0 0 12px;padding:13px 14px;border:1px dashed #d7b9a8;border-radius:13px;background:#fff7ef;font:13px/1.45 Georgia,serif;color:#58483f}
-      .hc-visit-box b{display:block;font:900 10px Arial,sans-serif;letter-spacing:.1em;margin-bottom:7px;color:#438f8a}
-      .hc-visit-box .hc-visit-points{display:grid;gap:5px;margin-top:8px}
-      .hc-visit-box .hc-visit-points span:before{content:'✓';margin-right:7px;color:#438f8a}
       @media(max-width:760px){.listing.hc-visual-card{grid-template-columns:92px minmax(0,1fr)!important}.hc-visual-preview{min-height:82px}}
     `;document.head.appendChild(s)
   }
@@ -51,47 +47,46 @@
   function schedulePaint(generateSelected){clearTimeout(paintTimer);paintTimer=setTimeout(()=>paintCards(!!generateSelected),30)}
 
   function paintDetail(x){
-    if(!x)return;const v=hydrate(x),u=cachedMain(x,v);if(u)showMainImage(u);else showMainStatus(v,'PHOTO À VENIR — VISITE DISPONIBLE');
+    if(!x)return;const v=hydrate(x),u=cachedMain(x,v);if(u)showMainImage(u);else showMainStatus(v,'PHOTO À VENIR');
     const keys=['main','kitchen','bathroom','window'],names=['Pièce principale','Cuisine','Salle d’eau','Extérieur / vue'];
     document.querySelectorAll('.thumb').forEach((t,i)=>{const sp=t.querySelector('span');if(sp)sp.textContent=names[i];t.style.cursor='pointer';t.onclick=async()=>{const fresh=hydrate(x),asset=keys[i]==='main'?cachedMain(x,fresh):fresh.assets.gallery[keys[i]];if(asset){showMainImage(asset);return}if(keys[i]==='main'){const url=await ensureMain(x,null);if(url)showMainImage(url);return}showMainStatus(fresh,'GÉNÉRATION DE CETTE VUE…');try{const out=await window.HCVisualService.request(x,ctx(x),keys[i]);if(out&&out.url)showMainImage(out.url);else showMainStatus(fresh,'VUE EN ATTENTE')}catch(e){showMainStatus(fresh,'VUE INDISPONIBLE')}}})
   }
 
   function selectedListing(){try{return items().find(a=>String(a.id)===String(st.listing))||null}catch(e){return null}}
-  function saveResidence(x){
+  function chooseHome(x){
     if(!x)return;
-    const payload={...st,home:x,rentedAt:new Date().toISOString(),startingBudget:typeof START_BUDGET!=='undefined'?START_BUDGET:null,estimatedEntryCost:(x.price||0)+(x.charges||0)+(x.price||0)};
-    try{localStorage.setItem('haute-couture-home',JSON.stringify(payload));localStorage.setItem('haute-couture-residence',JSON.stringify({...x,city:st.city,region:st.region,selectedAt:new Date().toISOString()}));localStorage.setItem('haute-couture-current-screen','logement-visite')}catch(e){}
-  }
-  function setVisitStep(){document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('on',i===5))}
-  function showVisitMode(x){
-    ensureStyles();setVisitStep();saveResidence(x);
-    const card=document.querySelector('.actions-card');if(card&&!document.getElementById('hcVisitBox')){const box=document.createElement('div');box.id='hcVisitBox';box.className='hc-visit-box';box.innerHTML=`<b>VISITE DU LOGEMENT</b>Tu es sur place. Prends le temps de vérifier si ce logement fonctionne vraiment pour ta vie et ta carrière.<div class="hc-visit-points"><span>${x.surface} m² à organiser</span><span>${x.tags&&x.tags[0]?x.tags[0]:'Lumière à vérifier'}</span><span>${x.potential||'Potentiel couture à évaluer'}</span></div>`;card.insertBefore(box,card.firstChild)}
-    const btn=document.getElementById('detailVisit');if(btn){btn.dataset.visitMode='1';btn.textContent='✓ CHOISIR CE LOGEMENT';btn.onclick=()=>confirmResidence(x)}
-    const available=document.querySelector('.available');if(available)available.textContent='Visite en cours · logement réservé pendant ta décision';
-  }
-  function confirmResidence(x){
-    saveResidence(x);
+    const now=new Date().toISOString();
+    const payload={...st,home:x,chosenAt:now,startingBudget:typeof START_BUDGET!=='undefined'?START_BUDGET:null,estimatedEntryCost:(x.price||0)+(x.charges||0)+(x.price||0)};
+    try{
+      localStorage.setItem('haute-couture-home',JSON.stringify(payload));
+      localStorage.setItem('haute-couture-residence',JSON.stringify({...x,city:st.city,region:st.region,selectedAt:now}));
+      localStorage.setItem('haute-couture-current-screen','chez-moi');
+      localStorage.setItem('haute-couture-screen','chez-moi');
+    }catch(e){}
     const btn=document.getElementById('detailVisit');if(btn){btn.textContent='✓ LOGEMENT CHOISI';btn.disabled=true}
-    const available=document.querySelector('.available');if(available)available.textContent='Ton logement est enregistré ♡';
-    setTimeout(()=>{location.href='../'},700)
+    setTimeout(()=>{location.href='../chez-moi/'},180)
   }
-  function fixVisitButton(){
-    const btn=document.getElementById('detailVisit');if(!btn)return;
-    btn.onclick=()=>{const x=selectedListing();if(!x)return;showVisitMode(x)};
+
+  function fixChoiceButton(){const btn=document.getElementById('detailVisit');if(!btn)return;btn.textContent='♡ CHOISIR CE LOGEMENT';btn.onclick=null}
+  function captureChoice(e){
+    const btn=e.target&&e.target.closest?e.target.closest('#detailVisit'):null;if(!btn)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    const x=selectedListing();if(x)chooseHome(x)
   }
 
   function watchDom(){
-    if(observer)return;observer=new MutationObserver(()=>{schedulePaint(false);fixVisitButton()});observer.observe(document.body,{childList:true,subtree:true});
+    if(observer)return;observer=new MutationObserver(()=>{schedulePaint(false);fixChoiceButton()});observer.observe(document.body,{childList:true,subtree:true});
     const listings=document.getElementById('listings');if(listings)listings.addEventListener('click',()=>setTimeout(()=>schedulePaint(true),60),true)
   }
 
   async function wire(){
     if(wired)return;wired=true;try{await loadDeps()}catch(e){console.error('HC visual deps failed',e);wired=false;return}
     const ready=await waitGame();if(!ready){console.error('HC visual engine: game not ready');wired=false;return}
-    watchDom();fixVisitButton();
-    try{if(typeof openListingDetail==='function'){const originalOpen=openListingDetail;openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=selectedListing();paintDetail(x);setTimeout(fixVisitButton,0)}catch(e){console.error(e)}return r}}}catch(e){}
+    document.addEventListener('click',captureChoice,true);
+    watchDom();fixChoiceButton();
+    try{if(typeof openListingDetail==='function'){const originalOpen=openListingDetail;openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=selectedListing();paintDetail(x);setTimeout(fixChoiceButton,0)}catch(e){console.error(e)}return r}}}catch(e){}
     schedulePaint(false);setTimeout(()=>schedulePaint(false),500);
-    window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain,showVisitMode,confirmResidence};
+    window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain,chooseHome};
   }
 
   if(document.readyState==='loading')window.addEventListener('load',wire,{once:true});else wire();
