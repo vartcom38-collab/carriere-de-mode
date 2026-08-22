@@ -1,21 +1,42 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Haute Couture</title>
-  <style>
-    html,body{margin:0;min-height:100%;background:#f6f4ee;color:#3a3f3d;font-family:Arial,sans-serif}
-    body{display:grid;place-items:center;min-height:100vh}
-    a{color:#3a3f3d}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Haute Couture Live</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fbf7f1}
+#game{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fbf7f1}
+#loading{position:fixed;inset:0;display:grid;place-items:center;background:#fbf7f1;z-index:5;font:700 13px Arial,sans-serif;letter-spacing:.18em;color:#111;transition:opacity .2s}
+#loading.hide{opacity:0;pointer-events:none}
+</style>
 </head>
 <body>
-  <p>Chargement de Haute Couture… <a href="./play/index.html">Ouvrir le jeu</a></p>
-  <script>
-    window.addEventListener('DOMContentLoaded', function () {
-      window.location.href = './play/index.html';
-    }, { once: true });
-  </script>
+<div id="loading">HAUTE COUTURE ✦ LIVE ✦</div>
+<iframe id="game" title="Haute Couture Live"></iframe>
+<script>
+(function(){
+  const KEY='haute-couture-current-screen';
+  const frame=document.getElementById('game');
+  const loading=document.getElementById('loading');
+  function current(){return localStorage.getItem(KEY)||'character';}
+  function target(screen){
+    if(screen==='character'||screen==='characters'||screen==='creator') return './hc-live/character.html?v=root-stable-20260822';
+    return './hc-live/?resume=1';
+  }
+  function restore(){
+    const screen=current();
+    if(screen!=='character'&&screen!=='characters'&&screen!=='creator'){
+      try{
+        const w=frame.contentWindow;
+        if(w&&typeof w.displayScreen==='function') w.displayScreen(screen);
+        else setTimeout(function(){try{if(typeof frame.contentWindow.displayScreen==='function')frame.contentWindow.displayScreen(screen);}catch(e){}},250);
+      }catch(e){}
+    }
+  }
+  frame.src=target(current());
+  frame.addEventListener('load',function(){loading.classList.add('hide');restore();});
+})();
+</script>
 </body>
 </html>
