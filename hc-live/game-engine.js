@@ -87,11 +87,11 @@
   window.HCGame={get,save,mutate,advanceTime,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 
   document.addEventListener('click',e=>{
-    const actionEl=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"]');
+    const actionEl=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"]');
     if(!actionEl||!location.pathname.includes('/chez-moi/'))return;
     const action=actionEl.getAttribute('data-action');
-    if(action!=='atelier'&&action!=='telephone')return;
+    if(!['atelier','telephone','agenda'].includes(action))return;
     e.preventDefault();e.stopImmediatePropagation();
-    location.href=action==='atelier'?'../atelier/':'../telephone/';
+    location.href=action==='atelier'?'../atelier/':action==='telephone'?'../telephone/':'../agenda/';
   },true);
 })();
