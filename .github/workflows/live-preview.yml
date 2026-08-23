@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -53,23 +53,15 @@ jobs:
           base64 -d hc-live/atelier-dream/atelier-dream-fixed.webp.b64 > hc-live/atelier-dream/atelier-dream.webp
           test -s hc-live/atelier-dream/atelier-dream.webp
 
-      - name: Install HD Atelier raster library
+      - name: Restore Atelier raster piece library
         shell: bash
         run: |
-          set -e
-          rm -rf hc-live/atelier-raster/pieces /tmp/atelier-hd-fixed.zip
+          rm -rf hc-live/atelier-raster/pieces
           mkdir -p hc-live/atelier-raster/pieces
-          archive="hc-live/atelier-raster/hd-pieces.zip"
-          if unzip -t "$archive" >/dev/null 2>&1; then
-            unzip -oq "$archive" -d hc-live/atelier-raster/pieces
-          else
-            echo "HD archive is missing its central directory; rebuilding it from local file records..."
-            zip -FF "$archive" --out /tmp/atelier-hd-fixed.zip >/tmp/zip-repair.log 2>&1 || { cat /tmp/zip-repair.log; exit 1; }
-            unzip -t /tmp/atelier-hd-fixed.zip
-            unzip -oq /tmp/atelier-hd-fixed.zip -d hc-live/atelier-raster/pieces
-          fi
-          for name in top-drape corset cache jupe plisse pantalon anneau manche noeud; do
-            test -s "hc-live/atelier-raster/pieces/${name}.webp"
+          for src in hc-live/atelier-raster/pieces-src/*.webp.b64; do
+            name="$(basename "$src" .b64)"
+            base64 -d "$src" > "hc-live/atelier-raster/pieces/$name"
+            test -s "hc-live/atelier-raster/pieces/$name"
           done
 
       - name: Verify Atelier raster library
@@ -77,7 +69,7 @@ jobs:
         run: |
           test -s hc-live/atelier-raster/index.html
           for name in top-drape corset cache jupe plisse pantalon anneau manche noeud; do
-            file "hc-live/atelier-raster/pieces/${name}.webp"
+            test -s "hc-live/atelier-raster/pieces/${name}.webp"
           done
 
       - name: Configure Pages
