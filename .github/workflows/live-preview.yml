@@ -27,14 +27,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Verify clean accueil
         run: test -s hc-live/index.html
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build OpenClo locally for Atelier
+        shell: bash
+        run: |
+          rm -rf /tmp/openclo
+          git clone --depth 1 https://github.com/fwzhuang/openclo.git /tmp/openclo
+          cd /tmp/openclo
+          npm ci
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('vite.config.ts')
+          s=p.read_text()
+          s=s.replace("base: '/',", "base: '/carriere-de-mode/atelier/openclo/',")
+          p.write_text(s)
+          PY
+          npm run build
+          rm -rf "$GITHUB_WORKSPACE/hc-live/atelier/openclo"
+          mkdir -p "$GITHUB_WORKSPACE/hc-live/atelier/openclo"
+          cp -a dist/. "$GITHUB_WORKSPACE/hc-live/atelier/openclo/"
+          cp LICENSE "$GITHUB_WORKSPACE/hc-live/atelier/openclo/OPEN_SOURCE_LICENSE.txt"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
       - name: Upload clean game preview
         uses: actions/upload-pages-artifact@v3
         with:
           path: hc-live
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
