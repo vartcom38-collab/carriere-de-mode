@@ -16,7 +16,7 @@
 <div class="page">
   <header class="top">
     <div class="brand"><button class="back" onclick="location.href='../chez-moi/'">← CHEZ MOI</button><h1>Téléphone <em>& réseau</em></h1></div>
-    <span class="version">SOCIAL V3 · 0 CRÉDIT</span>
+    <span class="version">SOCIAL V4 · RASTER</span>
   </header>
   <main class="shell">
     <aside class="side"></aside>
@@ -24,7 +24,7 @@
       <div class="phone">
         <div class="notch"></div>
         <div class="phonebar"><span id="hc-clock">09:00</span><span>HC SOCIAL · 0 CRÉDIT</span></div>
-        <div class="screen"><div class="loading">Ouverture de ton téléphone…<br><small>Messages, réseau, médias, tendances et opportunités.</small></div></div>
+        <div class="screen"><div class="loading">Ouverture de ton réseau…<br><small>Feed, stories, explore, messages et profil.</small></div></div>
         <nav class="dock"></nav>
       </div>
     </section>
@@ -33,27 +33,11 @@
 </div>
 <script src="../game-engine.js?v=20260823-social-v3"></script>
 <script>
-/* HCGame.get() used to save and emit hc-game-state on every read. On the phone,
-   the social modules also listen to that event, creating a recursive read/event loop.
-   Make reads side-effect free on this route; mutations still use HCGame.mutate/save. */
-(function(){
-  if(!window.HCGame||!HCGame.storageKey)return;
-  const originalGet=HCGame.get.bind(HCGame);
-  HCGame.get=function(){
-    try{
-      const raw=localStorage.getItem(HCGame.storageKey);
-      if(raw)return JSON.parse(raw);
-    }catch(e){}
-    return originalGet();
-  };
-})();
+(function(){if(!window.HCGame||!HCGame.storageKey)return;const originalGet=HCGame.get.bind(HCGame);HCGame.get=function(){try{const raw=localStorage.getItem(HCGame.storageKey);if(raw)return JSON.parse(raw)}catch(e){}return originalGet()}})();
 </script>
 <script>
-(function(){
-  const refreshClock=()=>{try{const s=window.HCGame&&HCGame.get();const el=document.getElementById('hc-clock');if(el&&s)el.textContent=HCGame.formatTime(s.clock.iso)}catch(e){}};
-  refreshClock();window.addEventListener('hc-game-state',refreshClock);
-  setTimeout(()=>{if(!window.HCPhone){const el=document.querySelector('.screen .loading');if(el)el.innerHTML='Le module social tarde à se charger.<br><small>Recharge la page pour relancer la synchronisation.</small>'}},3500);
-})();
+(function(){const refreshClock=()=>{try{const s=window.HCGame&&HCGame.get(),el=document.getElementById('hc-clock');if(el&&s)el.textContent=HCGame.formatTime(s.clock.iso)}catch(e){}};refreshClock();window.addEventListener('hc-game-state',refreshClock)})();
 </script>
+<script src="./phone-real-social-ui.js?v=20260823-real-social1"></script>
 </body>
 </html>
