@@ -14,16 +14,30 @@
   };
   const COLOR_HEX={ivoire:'#f3ecdd',noir:'#232326','bleu nuit':'#273953',sauge:'#83967f',terracotta:'#b76f5f','rose poudré':'#d9aaa8',bordeaux:'#7d3140',champagne:'#d9c09c','vert bouteille':'#2f5647',prune:'#6b405b',camel:'#b78862',naturel:'#d7c3a5','blanc cassé':'#efe8dc',olive:'#70744c','bleu ciel':'#9fc6d5',ocre:'#c29446',corail:'#d98774',brut:'#34485d',indigo:'#3d4e72','écru':'#e7ddc7','gris pierre':'#88837c','noir et blanc':'#b9b6b2','rose chiné':'#c59899','vert forêt':'#405746',marine:'#2d3c54','rouge profond':'#8c2f36','rose ancien':'#b9848a',nude:'#d8b5a1','rose pâle':'#e6c3c6','bleu brume':'#b8cbd2',anthracite:'#4d4b4c',mousse:'#66735b'};
   const PATTERNS=['Uni','Rayures','Pois','Carreaux','Fleurs'];
+  function variantId(materialId,color,pattern='Uni'){return [materialId,color,pattern].join('|');}
+  function starterVariants(iso){return [
+    {id:variantId('coton','ivoire','Uni'),materialId:'coton',color:'ivoire',pattern:'Uni',buyPrice:0,source:'Kit de départ',boughtAt:iso,starter:true},
+    {id:variantId('coton','noir','Uni'),materialId:'coton',color:'noir',pattern:'Uni',buyPrice:0,source:'Kit de départ',boughtAt:iso,starter:true},
+    {id:variantId('satin','ivoire','Uni'),materialId:'satin',color:'ivoire',pattern:'Uni',buyPrice:0,source:'Kit de départ',boughtAt:iso,starter:true}
+  ];}
   function ensure(){
     if(!window.HCGame)return null;
     let s=HCGame.get();
-    if(!s.materials){HCGame.mutate(st=>{st.materials={discovered:{coton:{at:st.clock.iso,source:'Début de carrière'},satin:{at:st.clock.iso,source:'Début de carrière'}},ownedVariants:[],history:[]};});s=HCGame.get();}
+    const needsInit=!s.materials;
+    const needsStarter=!!s.materials&&(!Array.isArray(s.materials.ownedVariants)||s.materials.ownedVariants.length===0);
+    if(needsInit||needsStarter){HCGame.mutate(st=>{
+      st.materials=st.materials||{discovered:{},ownedVariants:[],history:[]};
+      st.materials.discovered=st.materials.discovered||{};
+      if(!st.materials.discovered.coton)st.materials.discovered.coton={at:st.clock.iso,source:'Début de carrière'};
+      if(!st.materials.discovered.satin)st.materials.discovered.satin={at:st.clock.iso,source:'Début de carrière'};
+      st.materials.ownedVariants=Array.isArray(st.materials.ownedVariants)?st.materials.ownedVariants:[];
+      if(st.materials.ownedVariants.length===0){st.materials.ownedVariants.push(...starterVariants(st.clock.iso));st.materials.history=Array.isArray(st.materials.history)?st.materials.history:[];st.materials.history.push({type:'starter-kit',at:st.clock.iso,source:'Kit de départ'});}
+    });s=HCGame.get();}
     if(!s.materials.discovered)s.materials.discovered={};
     if(!Array.isArray(s.materials.ownedVariants))s.materials.ownedVariants=[];
     if(!Array.isArray(s.materials.history))s.materials.history=[];
     return s.materials;
   }
-  function variantId(materialId,color,pattern='Uni'){return [materialId,color,pattern].join('|');}
   function discover(materialId,source='Découverte'){const m=MATERIALS[materialId];if(!m||!window.HCGame)return false;ensure();let changed=false;HCGame.mutate(st=>{st.materials=st.materials||{discovered:{},ownedVariants:[],history:[]};if(!st.materials.discovered[materialId]){st.materials.discovered[materialId]={at:st.clock.iso,source};st.materials.history.push({type:'discover',materialId,source,at:st.clock.iso});changed=true;}});return changed;}
   function isDiscovered(id){const x=ensure();return !!x?.discovered?.[id];}
   function discoveredList(){const x=ensure();return Object.keys(x?.discovered||{}).map(id=>({...MATERIALS[id],discoveryInfo:x.discovered[id]})).filter(Boolean);}
@@ -31,7 +45,7 @@
   function owns(materialId,color,pattern='Uni'){return owned().some(v=>v.id===variantId(materialId,color,pattern));}
   function priceFor(materialId,color,pattern='Uni'){const m=MATERIALS[materialId];if(!m)return 0;const colorIndex=Math.max(0,m.colors.indexOf(color));const pat=pattern==='Uni'?0:4;return Math.round(8+(m.baseSale*9)+colorIndex*1.2+pat);}
   function buy(materialId,color,pattern='Uni',source='Mercerie'){if(!window.HCGame||!isDiscovered(materialId))return {ok:false,reason:'undiscovered'};const id=variantId(materialId,color,pattern);if(owns(materialId,color,pattern))return {ok:true,already:true};const price=priceFor(materialId,color,pattern),s=HCGame.get();if(Number(s.player.money)<price)return {ok:false,reason:'money',price};HCGame.mutate(st=>{st.player.money-=price;st.transactions.unshift({id:'mat-'+Date.now(),amount:-price,label:`${MATERIALS[materialId].name} ${color} · ${pattern}`,category:'materials',at:st.clock.iso});st.materials.ownedVariants.push({id,materialId,color,pattern,buyPrice:price,source,boughtAt:st.clock.iso});st.materials.history.push({type:'buy',id,price,source,at:st.clock.iso});});return {ok:true,price,id};}
-  function saleImpact(variant){const m=MATERIALS[variant?.materialId];if(!m)return 0;return Math.round((variant.buyPrice||priceFor(variant.materialId,variant.color,variant.pattern))*m.baseSale*1.55);}
+  function saleImpact(variant){const m=MATERIALS[variant?.materialId];if(!m)return 0;const base=variant?.starter?priceFor(variant.materialId,variant.color,variant.pattern):(variant.buyPrice||priceFor(variant.materialId,variant.color,variant.pattern));return Math.round(base*m.baseSale*1.55);}
   function swatchStyle(v){const c=COLOR_HEX[v.color]||'#ddd';if(v.pattern==='Rayures')return `repeating-linear-gradient(135deg,${c} 0 10px,rgba(255,255,255,.55) 10px 15px)`;if(v.pattern==='Pois')return `radial-gradient(circle at 25% 25%,rgba(255,255,255,.7) 0 3px,transparent 4px),${c}`;if(v.pattern==='Carreaux')return `linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),${c}`;if(v.pattern==='Fleurs')return `radial-gradient(circle at 25% 35%,rgba(255,255,255,.65) 0 4px,transparent 5px),radial-gradient(circle at 70% 70%,rgba(255,255,255,.5) 0 3px,transparent 4px),${c}`;return c;}
   window.HCMaterials={catalog:MATERIALS,colors:COLOR_HEX,patterns:PATTERNS,ensure,discover,isDiscovered,discoveredList,owned,owns,buy,priceFor,saleImpact,variantId,swatchStyle};
 })();
