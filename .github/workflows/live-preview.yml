@@ -53,6 +53,16 @@ jobs:
           base64 -d hc-live/atelier-dream/atelier-dream-fixed.webp.b64 > hc-live/atelier-dream/atelier-dream.webp
           test -s hc-live/atelier-dream/atelier-dream.webp
 
+      - name: Restore Atelier raster piece library
+        shell: bash
+        run: |
+          mkdir -p hc-live/atelier-raster/pieces
+          for src in hc-live/atelier-raster/pieces-src/*.webp.b64; do
+            name="$(basename "$src" .b64)"
+            base64 -d "$src" > "hc-live/atelier-raster/pieces/$name"
+            test -s "hc-live/atelier-raster/pieces/$name"
+          done
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
