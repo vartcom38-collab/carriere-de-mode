@@ -47,6 +47,12 @@ jobs:
           cp package/dist/pixi.min.js "$GITHUB_WORKSPACE/hc-live/vendor/pixi.min.js"
           test -s "$GITHUB_WORKSPACE/hc-live/vendor/pixi.min.js"
 
+      - name: Restore Atelier Dream visual
+        shell: bash
+        run: |
+          base64 -d hc-live/atelier-dream/atelier-dream-fixed.webp.b64 > hc-live/atelier-dream/atelier-dream.webp
+          test -s hc-live/atelier-dream/atelier-dream.webp
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
