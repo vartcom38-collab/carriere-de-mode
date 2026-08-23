@@ -63,6 +63,28 @@ jobs:
             test -s "hc-live/atelier-raster/pieces/$name"
           done
 
+      - name: Wire neutral piece sketches into Atelier
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('hc-live/atelier-raster/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('src="./croquis-base.webp" alt="${name}"', 'src="./pieces/${id}.webp" alt="${name}"')
+          s = s.replace('src="./croquis-base.webp" alt="${p.name}"', 'src="./pieces/${p.id}.webp" alt="${p.name}"')
+          s = s.replace('.thumb img{height:125%;max-width:100%;object-fit:contain;', '.thumb img{width:100%;height:100%;object-fit:contain;')
+          p.write_text(s, encoding='utf-8')
+          required = [
+              'top-drape.webp','corset.webp','cache.webp','jupe.webp','plisse.webp',
+              'pantalon.webp','anneau.webp','manche.webp','noeud.webp'
+          ]
+          for name in required:
+              q = Path('hc-live/atelier-raster/pieces') / name
+              assert q.exists() and q.stat().st_size > 0, name
+          assert './pieces/${id}.webp' in s
+          assert './pieces/${p.id}.webp' in s
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
