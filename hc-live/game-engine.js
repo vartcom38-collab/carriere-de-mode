@@ -31,7 +31,9 @@ function unreadCount(s){return(s||load()).messages.filter(m=>!m.read).length}
 window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,registerVisit,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"],[data-action="sortir"]');if(!el||!location.pathname.includes('/chez-moi/'))return;const action=el.getAttribute('data-action');if(!['atelier','telephone','agenda','sortir'].includes(action))return;e.preventDefault();e.stopImmediatePropagation();location.href=action==='atelier'?'../atelier/':action==='telephone'?'../telephone/':action==='agenda'?'../agenda/':'../ville/'},true);
 if(location.pathname.includes('/telephone/')){
-  const loadUI=()=>{if(document.querySelector('script[data-hc-phone-ui]'))return;const u=document.createElement('script');u.src='./phone-ui-v2.js?v=20260823-phone-ui2';u.defer=true;u.dataset.hcPhoneUi='1';u.onerror=()=>console.warn('[HCGame] phone UI v2 failed to load');document.head.appendChild(u)};
-  if(window.HCPhone)loadUI();else{const s=document.createElement('script');s.src='./phone-gameplay-engine.js?v=20260823-phone-core2';s.defer=true;s.onload=loadUI;s.onerror=()=>console.warn('[HCGame] phone gameplay engine failed to load');document.head.appendChild(s)}
+  const add=(src,tag,onload)=>{if(document.querySelector(`script[${tag}]`)){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(tag,'1');s.onload=()=>onload&&onload();s.onerror=()=>console.warn('[HCGame] failed to load '+src);document.head.appendChild(s)};
+  const loadUI=()=>add('./phone-ui-v2.js?v=20260823-phone-ui3','data-hc-phone-ui',()=>add('./phone-social-ui.js?v=20260823-social-ui1','data-hc-social-ui'));
+  const loadDynamics=()=>add('./phone-social-dynamics.js?v=20260823-social-dyn1','data-hc-social-dynamics',loadUI);
+  if(window.HCPhone)loadDynamics();else add('./phone-gameplay-engine.js?v=20260823-phone-core2','data-hc-phone-core',loadDynamics);
 }
 })();
