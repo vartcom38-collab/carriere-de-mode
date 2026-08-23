@@ -56,9 +56,18 @@ jobs:
       - name: Install HD Atelier raster library
         shell: bash
         run: |
-          rm -rf hc-live/atelier-raster/pieces
+          set -e
+          rm -rf hc-live/atelier-raster/pieces /tmp/atelier-hd-fixed.zip
           mkdir -p hc-live/atelier-raster/pieces
-          unzip -oq hc-live/atelier-raster/hd-pieces.zip -d hc-live/atelier-raster/pieces
+          archive="hc-live/atelier-raster/hd-pieces.zip"
+          if unzip -t "$archive" >/dev/null 2>&1; then
+            unzip -oq "$archive" -d hc-live/atelier-raster/pieces
+          else
+            echo "HD archive is missing its central directory; rebuilding it from local file records..."
+            zip -FF "$archive" --out /tmp/atelier-hd-fixed.zip >/tmp/zip-repair.log 2>&1 || { cat /tmp/zip-repair.log; exit 1; }
+            unzip -t /tmp/atelier-hd-fixed.zip
+            unzip -oq /tmp/atelier-hd-fixed.zip -d hc-live/atelier-raster/pieces
+          fi
           for name in top-drape corset cache jupe plisse pantalon anneau manche noeud; do
             test -s "hc-live/atelier-raster/pieces/${name}.webp"
           done
@@ -67,7 +76,9 @@ jobs:
         shell: bash
         run: |
           test -s hc-live/atelier-raster/index.html
-          test -s hc-live/atelier-raster/hd-pieces.zip
+          for name in top-drape corset cache jupe plisse pantalon anneau manche noeud; do
+            file "hc-live/atelier-raster/pieces/${name}.webp"
+          done
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
