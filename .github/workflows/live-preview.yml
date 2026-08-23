@@ -63,6 +63,46 @@ jobs:
             test -s "hc-live/atelier-raster/pieces/$name"
           done
 
+      - name: Rebuild sharper neutral piece sketches
+        shell: bash
+        run: |
+          python3 -m pip install --quiet pillow
+          base64 -d hc-live/atelier-raster/left-sprite.webp.b64 > /tmp/atelier-left-sprite.webp
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps, ImageFilter
+
+          src = Image.open('/tmp/atelier-left-sprite.webp').convert('RGB')
+          boxes = {
+              'top-drape': (12, 28, 132, 194),
+              'corset': (136, 28, 254, 194),
+              'cache': (258, 28, 376, 194),
+              'jupe': (12, 250, 132, 440),
+              'plisse': (136, 250, 254, 440),
+              'pantalon': (258, 250, 376, 440),
+              'anneau': (12, 705, 132, 850),
+              'manche': (136, 705, 254, 850),
+              'noeud': (258, 705, 376, 850),
+          }
+          out = Path('hc-live/atelier-raster/pieces')
+          out.mkdir(parents=True, exist_ok=True)
+          for name, box in boxes.items():
+              crop = src.crop(box)
+              gray = ImageOps.grayscale(crop)
+              gray = ImageOps.autocontrast(gray, cutoff=1)
+              gray = gray.filter(ImageFilter.UnsharpMask(radius=1.15, percent=190, threshold=2))
+              rgb = Image.merge('RGB', (gray, gray, gray))
+              ratio = min(620 / rgb.width, 760 / rgb.height)
+              size = (round(rgb.width * ratio), round(rgb.height * ratio))
+              rgb = rgb.resize(size, Image.Resampling.LANCZOS)
+              canvas = Image.new('RGB', (768, 768), (252, 248, 243))
+              x = (768 - rgb.width) // 2
+              y = (768 - rgb.height) // 2
+              canvas.paste(rgb, (x, y))
+              canvas = canvas.filter(ImageFilter.UnsharpMask(radius=0.8, percent=120, threshold=1))
+              canvas.save(out / f'{name}.webp', 'WEBP', quality=95, method=6)
+          PY
+
       - name: Wire neutral piece sketches into Atelier
         shell: bash
         run: |
@@ -80,7 +120,7 @@ jobs:
           ]
           for name in required:
               q = Path('hc-live/atelier-raster/pieces') / name
-              assert q.exists() and q.stat().st_size > 0, name
+              assert q.exists() and q.stat().st_size > 10000, name
           assert './pieces/${id}.webp' in s
           assert './pieces/${p.id}.webp' in s
           PY
