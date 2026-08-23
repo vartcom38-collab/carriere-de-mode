@@ -27,14 +27,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Verify clean accueil
         run: test -s hc-live/index.html
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Bundle PixiJS locally for Atelier
+        shell: bash
+        run: |
+          rm -rf /tmp/pixi-vendor
+          mkdir -p /tmp/pixi-vendor hc-live/vendor
+          cd /tmp/pixi-vendor
+          npm pack pixi.js@8.6.6 >/tmp/pixi-pack-name.txt
+          tar -xzf "$(cat /tmp/pixi-pack-name.txt)"
+          cp package/dist/pixi.min.js "$GITHUB_WORKSPACE/hc-live/vendor/pixi.min.js"
+          test -s "$GITHUB_WORKSPACE/hc-live/vendor/pixi.min.js"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
       - name: Upload clean game preview
         uses: actions/upload-pages-artifact@v3
         with:
           path: hc-live
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
