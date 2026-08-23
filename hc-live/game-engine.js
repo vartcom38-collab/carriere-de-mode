@@ -25,7 +25,7 @@
       clock:initialClock(),
       player:{name:character.name||character.prenom||character.firstName||'Clara',money:starting,reputation:Number(legacyStats.reputation||0),level:1,city},
       home:{listingId:home?.id||null,city,type:home?.title||'Mon logement',address:home?.address||city,rent:Number(home?.price||0)+Number(home?.charges||0)},
-      objectives:[],messages:[],calendar:[],missions:[],relationships:{},inventory:[],portfolio:[],transactions:[],flags:{introBootstrapped:false},
+      objectives:[],messages:[],calendar:[],missions:[],relationships:{},inventory:[],portfolio:[],transactions:[],flags:{introBootstrapped:false,visitedLocations:[]},
       reputationTracks:{local:0,professional:0,creative:0,prestige:0,clientele:0,mariage:0,scene:0,luxe:0}
     };
     bootstrap(state);
@@ -33,8 +33,9 @@
   }
 
   function bootstrap(s){
+    s.flags=s.flags||{};s.flags.visitedLocations=s.flags.visitedLocations||[];
     if(s.flags?.introBootstrapped)return s;
-    s.flags=s.flags||{};s.flags.introBootstrapped=true;
+    s.flags.introBootstrapped=true;
     const now=s.clock.iso;
     s.objectives.push(
       {id:'intro-phone',title:'Regarder ton téléphone',status:'active',category:'decouverte'},
@@ -70,6 +71,7 @@
   function markMessageRead(id){return mutate(s=>{const m=s.messages.find(x=>x.id===id);if(m)m.read=true;});}
   function addMessage(msg){return mutate(s=>s.messages.unshift({id:msg.id||uid('msg'),from:msg.from||'Contact',avatar:msg.avatar||'•',subject:msg.subject||'',text:msg.text||'',receivedAt:s.clock.iso,read:false,action:msg.action||null}));}
   function schedule(evt){return mutate(s=>s.calendar.push({id:evt.id||uid('evt'),title:evt.title||'Événement',type:evt.type||'event',start:evt.start||s.clock.iso,end:evt.end||null,status:evt.status||'planned',location:evt.location||null,missionId:evt.missionId||null}));}
+  function registerVisit(place){place=String(place||'').trim();if(!place)return;const out=mutate(s=>{s.flags=s.flags||{};s.flags.visitedLocations=s.flags.visitedLocations||[];if(!s.flags.visitedLocations.includes(place))s.flags.visitedLocations.push(place)});window.dispatchEvent(new CustomEvent('hc-travel-visited',{detail:{place}}));return out}
   function offerFirstMission(){
     return mutate(s=>{
       let m=s.missions.find(x=>x.id==='mission-ines-robe');
@@ -83,7 +85,7 @@
   function nextEvent(s){s=s||load();const now=new Date(s.clock.iso).getTime();return s.calendar.filter(e=>e.status==='planned'&&new Date(e.start).getTime()>=now).sort((a,b)=>new Date(a.start)-new Date(b.start))[0]||null}
   function unreadCount(s){return (s||load()).messages.filter(m=>!m.read).length}
 
-  window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
+  window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,registerVisit,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 
   document.addEventListener('click',e=>{
     const actionEl=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"],[data-action="sortir"]');
@@ -93,4 +95,13 @@
     e.preventDefault();e.stopImmediatePropagation();
     location.href=action==='atelier'?'../atelier/':action==='telephone'?'../telephone/':action==='agenda'?'../agenda/':'../ville/';
   },true);
+
+  // The phone's complete social gameplay is isolated in its own module and loaded only on the phone route.
+  if(location.pathname.includes('/telephone/')&&!window.HCPhone){
+    const script=document.createElement('script');
+    script.src='./phone-gameplay-engine.js?v=20260823-phone-core2';
+    script.defer=true;
+    script.onerror=()=>console.warn('[HCGame] phone gameplay engine failed to load');
+    document.head.appendChild(script);
+  }
 })();
