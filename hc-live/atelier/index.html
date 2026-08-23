@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Haute Couture Live — Atelier moteur mode</title>
 <style>
-:root{--bg:#f5f0eb;--paper:#fff;--ink:#241f1b;--muted:#887d74;--line:#e7ddd5;--accent:#d7786c;--dark:#26211e;--green:#4b8e87}
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}button{font:inherit;cursor:pointer}.app{height:100vh;display:grid;grid-template-rows:64px 1fr}.top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid var(--line);z-index:20}.left,.right{display:flex;align-items:center;gap:9px}.back,.btn{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 13px;font-size:10px;font-weight:900}.btn.dark{background:var(--dark);color:#fff;border-color:var(--dark)}.brand{font:700 20px Georgia,serif}.brand em{font-weight:400;color:var(--accent)}.pill{font-size:10px;color:var(--muted);background:#f8f5f2;border-radius:999px;padding:9px 11px}.workspace{min-height:0;position:relative;background:#ece5df}.engine{position:absolute;inset:0;border:0;width:100%;height:100%;background:#fff}.loading{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(145deg,#fbf8f5,#eee6df);z-index:5;transition:.3s}.loading.hide{opacity:0;pointer-events:none}.card{width:min(560px,88vw);background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 26px 80px rgba(64,46,35,.13);text-align:center}.logo{width:58px;height:58px;margin:0 auto 15px;border-radius:18px;background:var(--dark);color:#fff;display:grid;place-items:center;font:30px Georgia,serif}.card h1{font:32px Georgia,serif;margin:0 0 9px}.card h1 em{font-weight:400;color:var(--accent)}.card p{font:15px/1.55 Georgia,serif;color:#6c615a;margin:0 auto 18px;max-width:450px}.progress{height:5px;background:#eee6e0;border-radius:999px;overflow:hidden;margin:18px 0}.progress i{display:block;height:100%;width:45%;background:var(--green);border-radius:999px;animation:load 1.4s ease-in-out infinite}@keyframes load{0%{transform:translateX(-120%)}100%{transform:translateX(330%)}}.fallback{position:absolute;right:14px;bottom:14px;z-index:7;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:0 10px 35px rgba(40,30,24,.1);font-size:10px;color:var(--muted)}.fallback b{color:var(--ink)}.fallback button{margin-left:7px;border:0;background:var(--dark);color:white;border-radius:9px;padding:7px 9px;font-size:9px;font-weight:900}.modebadge{position:absolute;left:14px;bottom:14px;z-index:7;background:rgba(38,33,30,.92);color:#fff;border-radius:999px;padding:9px 12px;font-size:9px;font-weight:900;letter-spacing:.05em}.notice{display:none;position:absolute;inset:0;z-index:12;background:#f6f1ed;place-items:center;padding:20px}.notice.show{display:grid}.notice .card{text-align:left}.notice h2{font:27px Georgia,serif;margin:0 0 8px}.notice ul{font:13px/1.6 Georgia,serif;color:#625850;padding-left:18px}.notice .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-@media(max-width:760px){.brand,.pill{display:none}.top{padding:0 8px}.back,.btn{padding:9px 10px}.fallback{left:10px;right:10px;bottom:10px}.modebadge{display:none}}
+:root{--bg:#f5f0eb;--ink:#241f1b;--muted:#887d74;--line:#e7ddd5;--accent:#d7786c;--dark:#26211e;--green:#4b8e87}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Arial,sans-serif}button{font:inherit;cursor:pointer}.app{height:100vh;display:grid;grid-template-rows:64px 1fr}.top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:#fff;border-bottom:1px solid var(--line);z-index:20}.left,.right{display:flex;align-items:center;gap:9px}.back,.btn{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 13px;font-size:10px;font-weight:900}.btn.dark{background:var(--dark);color:#fff;border-color:var(--dark)}.brand{font:700 20px Georgia,serif}.brand em{font-weight:400;color:var(--accent)}.pill{font-size:10px;color:var(--muted);background:#f8f5f2;border-radius:999px;padding:9px 11px}.workspace{min-height:0;position:relative;background:#ece5df}.engine{position:absolute;inset:0;border:0;width:100%;height:100%;background:#fff}.loading{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(145deg,#fbf8f5,#eee6df);z-index:5;transition:.3s}.loading.hide{opacity:0;pointer-events:none}.card{width:min(560px,88vw);background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 26px 80px rgba(64,46,35,.13);text-align:center}.logo{width:58px;height:58px;margin:0 auto 15px;border-radius:18px;background:var(--dark);color:#fff;display:grid;place-items:center;font:30px Georgia,serif}.card h1{font:32px Georgia,serif;margin:0 0 9px}.card h1 em{font-weight:400;color:var(--accent)}.card p{font:15px/1.55 Georgia,serif;color:#6c615a;margin:0 auto 18px;max-width:450px}.progress{height:5px;background:#eee6e0;border-radius:999px;overflow:hidden;margin:18px 0}.progress i{display:block;height:100%;width:45%;background:var(--green);border-radius:999px;animation:load 1.4s ease-in-out infinite}@keyframes load{0%{transform:translateX(-120%)}100%{transform:translateX(330%)}}.badge{position:absolute;left:14px;bottom:14px;z-index:7;background:rgba(38,33,30,.92);color:#fff;border-radius:999px;padding:9px 12px;font-size:9px;font-weight:900;letter-spacing:.05em}.notice{display:none;position:absolute;inset:0;z-index:12;background:#f6f1ed;place-items:center;padding:20px}.notice.show{display:grid}.notice .card{text-align:left}.notice h2{font:27px Georgia,serif;margin:0 0 8px}.notice ul{font:13px/1.6 Georgia,serif;color:#625850;padding-left:18px}.notice .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.error{display:none;position:absolute;inset:0;z-index:10;background:#f5f0eb;place-items:center;padding:20px}.error.show{display:grid}
+@media(max-width:760px){.brand,.pill{display:none}.top{padding:0 8px}.back,.btn{padding:9px 10px}.badge{display:none}}
 </style>
 </head>
 <body>
@@ -25,46 +25,25 @@
   </div>
 </header>
 <main class="workspace">
-  <iframe id="engine" class="engine" src="https://openclo.sdar.dev/" allow="clipboard-read; clipboard-write; fullscreen" referrerpolicy="no-referrer"></iframe>
-  <div class="loading" id="loading">
-    <div class="card">
-      <div class="logo">✦</div>
-      <h1>Chargement du <em>vrai moteur vêtement</em></h1>
-      <p>Cette version ne redessine plus un faux atelier en HTML. Elle charge OpenClo, un véritable moteur mode navigateur avec outils 2D, couture 3D, tissus et simulation.</p>
-      <div class="progress"><i></i></div>
-      <small style="color:#8d8178">Premier chargement potentiellement plus long : WebGPU / WASM.</small>
-    </div>
-  </div>
-  <div class="modebadge">TEST MOTEUR OPEN SOURCE · OPENCLO</div>
-  <div class="fallback"><b>Écran vide ?</b> Le site externe peut bloquer l’intégration dans une iframe.<button id="externalBtn">OUVRIR LE MOTEUR</button></div>
-  <section class="notice" id="notice">
-    <div class="card">
-      <h2>Pourquoi ce test ?</h2>
-      <p style="text-align:left">On change enfin de méthode : comme pour la carte, l’Atelier s’appuie maintenant sur un vrai moteur spécialisé au lieu de fabriquer nous-mêmes toutes les fonctions graphiques.</p>
-      <ul>
-        <li>OpenClo est open source sous licence MIT.</li>
-        <li>Il tourne dans le navigateur avec WebGPU / WASM.</li>
-        <li>Il propose des outils de patron, couture, tissu et visualisation 3D.</li>
-        <li>Ce premier test sert à valider le moteur ; l’interface Fashion Sketch de notre jeu viendra ensuite autour.</li>
-      </ul>
-      <div class="actions"><button class="btn dark" id="closeInfo">RETOURNER AU MOTEUR</button><button class="btn" id="repoBtn">VOIR LE PROJET OPEN SOURCE</button></div>
-    </div>
-  </section>
+  <iframe id="engine" class="engine" src="./openclo/" allow="clipboard-read; clipboard-write; fullscreen"></iframe>
+  <div class="loading" id="loading"><div class="card"><div class="logo">✦</div><h1>Chargement du <em>moteur mode local</em></h1><p>OpenClo est maintenant compilé et servi depuis ton propre jeu. Plus d’iframe externe bloquée.</p><div class="progress"><i></i></div><small style="color:#8d8178">Le premier chargement peut être plus long : WebGPU / WASM.</small></div></div>
+  <div class="badge">MOTEUR OPEN SOURCE AUTO-HÉBERGÉ · OPENCLO</div>
+  <section class="error" id="error"><div class="card"><div class="logo">!</div><h1>Le moteur n’est pas encore disponible</h1><p>Le build GitHub Pages est probablement encore en cours, ou OpenClo n’a pas compilé. Recharge dans un instant.</p><button class="btn dark" onclick="location.reload()">RECHARGER</button></div></section>
+  <section class="notice" id="notice"><div class="card"><h2>Ce qui a changé</h2><p style="text-align:left">On n’affiche plus le site externe d’OpenClo. À chaque déploiement, GitHub télécharge le code open source, le compile puis l’intègre directement dans <b>/atelier/openclo/</b>.</p><ul><li>Même domaine que le jeu : plus de blocage « n’autorise pas la connexion ».</li><li>Moteur réellement hébergé avec ton jeu.</li><li>Licence MIT conservée dans le build.</li><li>On pourra ensuite travailler l’intégration et l’interface fashion autour du moteur.</li></ul><div class="actions"><button class="btn dark" id="closeInfo">RETOURNER AU MOTEUR</button></div></div></section>
 </main>
 </div>
-<script src="../game-engine.js?v=20260823-openclo1"></script>
+<script src="../game-engine.js?v=20260823-openclo-local1"></script>
 <script>
 (function(){
-  const engine=document.getElementById('engine'),loading=document.getElementById('loading');
-  function status(){try{const s=HCGame.get();document.getElementById('time').textContent=HCGame.formatDateTime(s,true);document.getElementById('money').textContent=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(s.player.money||0)}catch(e){}}
-  status();window.addEventListener('hc-game-state',status);
-  engine.addEventListener('load',()=>setTimeout(()=>loading.classList.add('hide'),700));
-  setTimeout(()=>loading.classList.add('hide'),6500);
-  const open=()=>window.open('https://openclo.sdar.dev/','_blank','noopener');
-  document.getElementById('externalBtn').onclick=open;document.getElementById('openBtn').onclick=open;
-  document.getElementById('infoBtn').onclick=()=>document.getElementById('notice').classList.add('show');
-  document.getElementById('closeInfo').onclick=()=>document.getElementById('notice').classList.remove('show');
-  document.getElementById('repoBtn').onclick=()=>window.open('https://github.com/fwzhuang/openclo','_blank','noopener');
+ const engine=document.getElementById('engine'),loading=document.getElementById('loading'),error=document.getElementById('error');
+ function status(){try{const s=HCGame.get();document.getElementById('time').textContent=HCGame.formatDateTime(s,true);document.getElementById('money').textContent=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(s.player.money||0)}catch(e){}}
+ status();window.addEventListener('hc-game-state',status);
+ engine.addEventListener('load',()=>setTimeout(()=>loading.classList.add('hide'),900));
+ engine.addEventListener('error',()=>{loading.classList.add('hide');error.classList.add('show')});
+ setTimeout(()=>loading.classList.add('hide'),9000);
+ document.getElementById('openBtn').onclick=()=>window.open('./openclo/','_blank','noopener');
+ document.getElementById('infoBtn').onclick=()=>document.getElementById('notice').classList.add('show');
+ document.getElementById('closeInfo').onclick=()=>document.getElementById('notice').classList.remove('show');
 })();
 </script>
 </body>
