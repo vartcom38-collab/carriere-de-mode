@@ -33,6 +33,22 @@
 </div>
 <script src="../game-engine.js?v=20260823-social-v3"></script>
 <script>
+/* HCGame.get() used to save and emit hc-game-state on every read. On the phone,
+   the social modules also listen to that event, creating a recursive read/event loop.
+   Make reads side-effect free on this route; mutations still use HCGame.mutate/save. */
+(function(){
+  if(!window.HCGame||!HCGame.storageKey)return;
+  const originalGet=HCGame.get.bind(HCGame);
+  HCGame.get=function(){
+    try{
+      const raw=localStorage.getItem(HCGame.storageKey);
+      if(raw)return JSON.parse(raw);
+    }catch(e){}
+    return originalGet();
+  };
+})();
+</script>
+<script>
 (function(){
   const refreshClock=()=>{try{const s=window.HCGame&&HCGame.get();const el=document.getElementById('hc-clock');if(el&&s)el.textContent=HCGame.formatTime(s.clock.iso)}catch(e){}};
   refreshClock();window.addEventListener('hc-game-state',refreshClock);
