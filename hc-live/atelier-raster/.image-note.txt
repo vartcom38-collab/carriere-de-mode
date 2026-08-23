@@ -1,0 +1,1 @@
+Raster asset refresh marker — valid croquis PNG/WebP assets are being rebuilt.
