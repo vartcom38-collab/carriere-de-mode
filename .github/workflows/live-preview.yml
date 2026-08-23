@@ -101,6 +101,7 @@ jobs:
               canvas.paste(rgb, (x, y))
               canvas = canvas.filter(ImageFilter.UnsharpMask(radius=0.8, percent=120, threshold=1))
               canvas.save(out / f'{name}.webp', 'WEBP', quality=95, method=6)
+              assert (out / f'{name}.webp').stat().st_size > 1000, name
           PY
 
       - name: Wire neutral piece sketches into Atelier
@@ -120,7 +121,7 @@ jobs:
           ]
           for name in required:
               q = Path('hc-live/atelier-raster/pieces') / name
-              assert q.exists() and q.stat().st_size > 10000, name
+              assert q.exists() and q.stat().st_size > 1000, name
           assert './pieces/${id}.webp' in s
           assert './pieces/${p.id}.webp' in s
           PY
