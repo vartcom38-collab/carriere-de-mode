@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Atelier de rêve — Prototype interactif</title>
+<style>
+:root{--ink:#211d1a;--paper:#f8f4ee;--accent:#dd7468;--gold:#b79360}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#171513;font-family:Inter,Arial,sans-serif;overflow:hidden}
+body{display:grid;place-items:center}
+#frame{position:relative;width:min(100vw,177.78vh);aspect-ratio:16/9;background:#f6f1e9;box-shadow:0 30px 80px #0008;overflow:hidden}
+#dream{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+#draw{position:absolute;left:27.7%;top:7.2%;width:46.5%;height:73.8%;touch-action:none;cursor:crosshair}
+#status{position:absolute;left:50%;top:7.5%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:#211d1ae8;color:white;font:600 11px/1 Arial;opacity:0;transition:.2s;pointer-events:none}
+#status.show{opacity:1}
+.hot{position:absolute;border:0;background:transparent;padding:0;cursor:pointer;border-radius:14px}
+.hot:focus-visible{outline:2px solid var(--accent)}
+#sel{left:.9%;top:8%;width:4.7%;height:8%}#pencil{left:.9%;top:16%;width:4.7%;height:8%}#marker{left:.9%;top:24.2%;width:4.7%;height:8%}#water{left:.9%;top:32.4%;width:4.7%;height:8%}#fill{left:.9%;top:40.7%;width:4.7%;height:8%}#layersBtn{left:.9%;top:68.5%;width:4.7%;height:8%}
+#undo{left:36.6%;top:1%;width:3.6%;height:5.7%}#redo{left:40.3%;top:1%;width:3.6%;height:5.7%}#save{left:79.6%;top:1%;width:8.3%;height:5.7%}
+#mat1{left:78.8%;top:11%;width:5.7%;height:10%}#mat2{left:85.2%;top:11%;width:5.7%;height:10%}#mat3{left:91.6%;top:11%;width:5.7%;height:10%}#mat4{left:78.8%;top:22.3%;width:5.7%;height:10%}#mat5{left:85.2%;top:22.3%;width:5.7%;height:10%}
+#colorHot{left:80%;top:34.4%;width:11%;height:14%}
+#clear{left:1.1%;top:78.2%;width:4.2%;height:4.8%}
+#toolbox{position:absolute;left:29%;top:27%;width:4.4%;height:25%;display:none;background:#fffdf9e8;border:1px solid #d9cfc6;border-radius:14px;padding:10px 8px;box-shadow:0 12px 30px #0002;backdrop-filter:blur(10px)}
+#toolbox.show{display:block}#toolbox label{display:block;font-size:8px;font-weight:800;color:#6e6258;margin:0 0 5px}#toolbox input[type=range]{width:100%;accent-color:#2a2521}#toolbox input[type=color]{width:100%;height:32px;border:0;background:none;padding:0}
+#panel{position:absolute;right:1.1%;bottom:2.3%;width:18.5%;padding:10px 12px;background:#fffdf9ef;border:1px solid #e6ddd5;border-radius:14px;box-shadow:0 12px 28px #0001;display:none;color:var(--ink)}
+#panel.show{display:block}#panel b{font:700 15px Georgia,serif}#panel p{margin:4px 0 0;font-size:10px;color:#766b63;line-height:1.35}
+#layerPanel{position:absolute;right:1.1%;top:54%;width:18.8%;background:#fffdf9f4;border:1px solid #e6ddd5;border-radius:14px;padding:10px 12px;display:none;box-shadow:0 10px 30px #0002}
+#layerPanel.show{display:block}.layer{display:grid;grid-template-columns:20px 1fr 38px;align-items:center;gap:7px;padding:8px 4px;border-bottom:1px solid #eee6df;font-size:10px}.layer:last-child{border-bottom:0}.eye{border:0;background:none}.opacity{font-size:9px;color:#897d73;text-align:right}
+#tint{position:absolute;left:42.6%;top:16.2%;width:18.2%;height:59.8%;border-radius:48% 45% 44% 44%;mix-blend-mode:multiply;opacity:0;pointer-events:none;filter:blur(12px)}
+#hint{position:absolute;left:50%;bottom:1%;transform:translateX(-50%);background:#221e1acc;color:white;border-radius:999px;padding:8px 13px;font-size:10px;backdrop-filter:blur(6px)}
+@media(max-width:900px){#hint{font-size:8px}.hot{border-radius:7px}}
+</style>
+</head>
+<body>
+<div id="frame">
+<img id="dream" src="./atelier-dream.webp" alt="Atelier Fashion Studio" />
+<div id="tint"></div>
+<canvas id="draw"></canvas>
+<div id="status"></div>
+<div id="toolbox"><label>TAILLE</label><input id="size" type="range" min="1" max="26" value="3"><label style="margin-top:8px">COULEUR</label><input id="brush" type="color" value="#2b2724"><label style="margin-top:8px">OPACITÉ</label><input id="alpha" type="range" min="10" max="100" value="100"></div>
+<div id="layerPanel"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font:700 17px Georgia,serif">CALQUES</b><button class="eye" id="closeLayers">×</button></div><div class="layer"><button class="eye">◉</button><span>Drapé épaule</span><span class="opacity">100%</span></div><div class="layer"><button class="eye">◉</button><span>Nœud & anneau</span><span class="opacity">100%</span></div><div class="layer"><button class="eye">◉</button><span>Jupe drapée</span><span class="opacity">100%</span></div><div class="layer"><button class="eye">◉</button><span>Corps</span><span class="opacity">100%</span></div><div class="layer"><button class="eye" id="drawEye">◉</button><span>Dessin libre</span><span class="opacity" id="drawOpacity">100%</span></div></div>
+<div id="panel"><b id="panelTitle">Lin naturel</b><p id="panelText">Matière appliquée au look de démonstration. Le moteur final utilisera des masques séparés par pièce.</p></div>
+<div id="hint">Prototype V3 · clique Crayon / Marqueur / Aquarelle puis dessine directement sur le croquis</div>
+<button class="hot" id="sel" aria-label="Sélection"></button><button class="hot" id="pencil" aria-label="Crayon"></button><button class="hot" id="marker" aria-label="Marqueur"></button><button class="hot" id="water" aria-label="Aquarelle"></button><button class="hot" id="fill" aria-label="Remplir"></button><button class="hot" id="layersBtn" aria-label="Calques"></button><button class="hot" id="undo" aria-label="Annuler"></button><button class="hot" id="redo" aria-label="Rétablir"></button><button class="hot" id="save" aria-label="Sauvegarder"></button><button class="hot" id="clear" aria-label="Effacer"></button>
+<button class="hot" id="mat1"></button><button class="hot" id="mat2"></button><button class="hot" id="mat3"></button><button class="hot" id="mat4"></button><button class="hot" id="mat5"></button><button class="hot" id="colorHot"></button>
+</div>
+<script>
+const $=s=>document.querySelector(s),canvas=$('#draw'),ctx=canvas.getContext('2d'),frame=$('#frame');let tool='select',drawing=false,last=null,history=[],future=[];const status=t=>{const s=$('#status');s.textContent=t;s.classList.add('show');clearTimeout(s._t);s._t=setTimeout(()=>s.classList.remove('show'),900)};
+function fitCanvas(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2),old=document.createElement('canvas');old.width=canvas.width;old.height=canvas.height;old.getContext('2d').drawImage(canvas,0,0);canvas.width=Math.max(1,r.width*d);canvas.height=Math.max(1,r.height*d);ctx.setTransform(d,0,0,d,0,0);if(old.width)ctx.drawImage(old,0,0,r.width,r.height)}addEventListener('resize',fitCanvas);setTimeout(fitCanvas,80);
+function snap(){try{return canvas.toDataURL()}catch(e){return null}}function push(){const s=snap();if(s){history.push(s);if(history.length>25)history.shift();future=[]}}function restore(data){if(!data){ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);return}const im=new Image();im.onload=()=>{ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);ctx.drawImage(im,0,0,canvas.clientWidth,canvas.clientHeight)};im.src=data}
+function setTool(t){tool=t;const draw=['pencil','marker','water'].includes(t);$('#toolbox').classList.toggle('show',draw);canvas.style.pointerEvents=draw?'auto':'none';status(t==='pencil'?'Crayon':t==='marker'?'Marqueur':t==='water'?'Aquarelle':'Sélection')}
+$('#sel').onclick=()=>setTool('select');$('#pencil').onclick=()=>setTool('pencil');$('#marker').onclick=()=>setTool('marker');$('#water').onclick=()=>setTool('water');
+function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}canvas.onpointerdown=e=>{if(!['pencil','marker','water'].includes(tool))return;push();drawing=true;last=pos(e);canvas.setPointerCapture?.(e.pointerId)};canvas.onpointermove=e=>{if(!drawing)return;const p=pos(e),base=+$('#size').value;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=$('#brush').value;ctx.globalAlpha=(+$('#alpha').value/100)*(tool==='water'?.22:tool==='marker'?.55:1);ctx.lineWidth=base*(tool==='marker'?2.2:tool==='water'?3.4:1);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.globalAlpha=1;last=p};canvas.onpointerup=canvas.onpointercancel=()=>drawing=false;
+$('#undo').onclick=()=>{if(!history.length)return status('Rien à annuler');const now=snap();if(now)future.push(now);restore(history.pop());status('Annulé')};$('#redo').onclick=()=>{if(!future.length)return status('Rien à rétablir');const now=snap();if(now)history.push(now);restore(future.pop());status('Rétabli')};$('#clear').onclick=()=>{push();ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);status('Dessin effacé')};
+$('#save').onclick=()=>{localStorage.setItem('hc-atelier-dream-drawing',snap()||'');status('Création sauvegardée')};
+const mats=[['Lin naturel','#e8dcc9'],['Satin écru','#efe7db'],['Soie champagne','#cfae7e'],['Coton noir','#282526'],['Denim clair','#8097aa']];['mat1','mat2','mat3','mat4','mat5'].forEach((id,i)=>$('#'+id).onclick=()=>{const [n,c]=mats[i];$('#panelTitle').textContent=n;$('#panel').classList.add('show');$('#tint').style.background=c;$('#tint').style.opacity=i===0?'0':i===3?'.26':'.16';status(n)});
+$('#colorHot').onclick=()=>{const input=document.createElement('input');input.type='color';input.value='#efe5da';input.oninput=()=>{$('#tint').style.background=input.value;$('#tint').style.opacity='.15'};input.click()};
+$('#layersBtn').onclick=()=>$('#layerPanel').classList.add('show');$('#closeLayers').onclick=()=>$('#layerPanel').classList.remove('show');let drawVisible=true;$('#drawEye').onclick=()=>{drawVisible=!drawVisible;canvas.style.opacity=drawVisible?'1':'0';$('#drawEye').textContent=drawVisible?'◉':'○';status(drawVisible?'Dessin visible':'Dessin masqué')};
+$('#fill').onclick=()=>{status('Remplir · moteur de masque prévu dans la prochaine étape')};
+try{const saved=localStorage.getItem('hc-atelier-dream-drawing');if(saved)restore(saved)}catch(e){}
+setTool('select');
+</script>
+</body>
+</html>
