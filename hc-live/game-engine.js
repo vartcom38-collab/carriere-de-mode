@@ -36,6 +36,11 @@ if(location.pathname.includes('/telephone/')){
   if(window.HCPhone)loadDynamics();else addScript('./phone-gameplay-engine.js?v=20260824-phone-core3','data-hc-phone-core',loadDynamics);
 }
 if(location.pathname.includes('/ville/')){
+  if(window.L&&typeof window.L.map==='function'&&!window.__HC_LEAFLET_CAPTURED){
+    window.__HC_LEAFLET_CAPTURED=true;
+    const originalMap=window.L.map;
+    window.L.map=function(){const m=originalMap.apply(this,arguments);window.HCLeafletMap=m;window.dispatchEvent(new CustomEvent('hc-map-ready',{detail:{map:m}}));return m};
+  }
   addScript('../travel/france/cities/nimes-rich-content.js?v=20260824-rich2','data-hc-nimes-rich',()=>addScript('./rich-place-ui.js?v=20260824-rich2','data-hc-rich-place-ui'));
 }
 })();
