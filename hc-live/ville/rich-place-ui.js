@@ -5,6 +5,7 @@ function load(src,attr,onload){if(document.querySelector('script['+attr+']')){on
 load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecycle',()=>{
   load('../travel/france/departments/30.js?v=20260824-gard-total','data-hc-gard-base',()=>{
     load('../travel/france/departments/30-gard-complete-pack.js?v=20260824-gard-total','data-hc-gard-complete',()=>{
+      load('nimes-local-life-v1.js?v=20260824-nimes-local-life','data-hc-nimes-local-life');
       load('../travel/france/departments/gard-gameplay-engine.js?v=20260824-gard-total','data-hc-gard-gameplay');
       load('tour-magne-v2.js?v=20260824-tour-v2','data-hc-tour-magne',()=>{
         load('rich-place-ui-maison-v2.js?v=20260824-maison-v3','data-hc-rich-maison-core',()=>{
