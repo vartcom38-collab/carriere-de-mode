@@ -1,113 +1,68 @@
-/* Haute Couture Live — Nîmes rich cultural + fashion content pilot
-   Facts are sourced from official / institutional sources. Fashion readings and gameplay rewards are creative interpretation.
-*/
+/* Haute Couture Live — Nîmes, carnet culturel et mode riche.
+   Les faits historiques proviennent de sources officielles/institutionnelles.
+   La lecture mode et les récompenses de gameplay sont des interprétations créatives du jeu. */
 (function(){
 'use strict';
-const data={
- cityId:'nimes',city:'Nîmes',department:'30',region:'Occitanie',
- sourcePolicy:'real facts verified; fashion reading/gameplay fictional and clearly separated',
- places:{
-  'nimes-arenes':{
-   officialSources:[
-    {label:'Arènes de Nîmes — histoire',url:'https://www.arenes-nimes.com/histoire-des-arenes/'},
-    {label:'Arènes de Nîmes — monument',url:'https://www.arenes-nimes.com/monuments/arenes-de-nimes-2/'}
-   ],
-   heroSearch:'Arènes de Nîmes façade amphithéâtre',
-   gallerySearch:['Arènes de Nîmes arcades','Arènes de Nîmes intérieur gradins','Arènes de Nîmes gladiateurs décor sculpté','Arènes de Nîmes velum'],
-   facts:{
-    summary:'Amphithéâtre romain construit vers la fin du Ier siècle / autour de 100 apr. J.-C., remarquablement conservé et encore utilisé comme lieu de spectacle.',
-    architecture:['133 m de long','101 m de large','piste ovale 68 × 38 m','façade d’environ 21 m','120 arcades sur deux niveaux','60 colonnes engagées'],
-    history:['Antiquité : jeux et spectacles','Moyen Âge : transformation en forteresse puis quartier habité','XIXe siècle : disparition progressive des habitations et restauration','Aujourd’hui : scène culturelle et événementielle'],
-    anecdotes:['Les habitants ont réutilisé l’amphithéâtre comme quartier d’habitation, ce qui a contribué à sa conservation.','Un système de mâts et de câbles permettait de soutenir un velum.','Des décors sculptés représentent notamment des gladiateurs et la louve allaitant Romulus et Remus.'],
-    objectsAndDetails:[
-     {id:'arenes-bulls',title:'Avant-corps de taureaux',kind:'sculpture_architecturale',observe:'Entrée principale, puissance animale, frontalité, relief.'},
-     {id:'arenes-gladiators',title:'Gladiateurs en combat',kind:'relief',observe:'Dynamique du corps, tension, équipement, silhouettes opposées.'},
-     {id:'arenes-wolf',title:'Louve de Rome',kind:'relief',observe:'Symbole fondateur, composition narrative, figure animale.'},
-     {id:'arenes-arcades',title:'Rythme des arcades',kind:'architecture',observe:'Répétition, verticalité, ombre/lumière, superposition.'}
-    ]
-   },
-   fashionReading:{
-    concept:'Architecture du corps',
-    palette:[{name:'Calcaire chaud',hex:'#C8A77D'},{name:'Ivoire poussière',hex:'#E9DFC9'},{name:'Ombre pierre',hex:'#5D514A'},{name:'Bronze patiné',hex:'#7E6A4A'}],
-    materials:['lin lavé','gabardine structurée','cuir patiné','organza fumé'],
-    motifs:['arcades répétées','ellipse','bandes superposées','frise figurative'],
-    jewelry:['manchette bronze martelé','boucle inspirée d’un anneau antique'],
-    accessories:['ceinture large cuir','sandale lacée reinterpretée'],
-    silhouettes:['robe colonne drapée','veste architecturée à découpes arquées','cape circulaire'],
-    atelierUnlocks:[
-     {id:'cut-arcade-panel',type:'garment_detail',title:'Découpe arcade',assetRequired:true,tags:['romanité','architecture','arcade','nimes']},
-     {id:'pattern-elliptic-cape',type:'garment',title:'Cape elliptique',assetRequired:true,tags:['romanité','ellipse','cape','nimes']}
-    ]
-   },
-   visitChapters:[
-    {id:'arrival',title:'Face à la façade',unlock:'first_visit'},
-    {id:'circulation',title:'Dans les galeries',unlock:'first_visit'},
-    {id:'sculpted-details',title:'Chercher les reliefs',unlock:'visit>=2'},
-    {id:'medieval-life',title:'Quand les Arènes étaient un quartier',unlock:'visit>=2'},
-    {id:'designer-eye',title:'Lire l’amphithéâtre comme un vêtement',unlock:'careerYears>=1'}
-   ]
-  },
-  'nimes-musee-romanite':{
-   officialSources:[
-    {label:'Musée de la Romanité — histoire des collections',url:'https://museedelaromanite.fr/histoire-des-collections'},
-    {label:'Ville de Nîmes — Musée de la Romanité',url:'https://www.nimes.fr/que-faire-a-nimes/culture/les-musees-le-planetarium/musee-de-la-romanite'},
-    {label:'POP — Muséofile',url:'https://pop.culture.gouv.fr/notice/museo/M0455'}
-   ],
-   heroSearch:'Musée de la Romanité Nîmes façade',
-   gallerySearch:['Musée de la Romanité mosaïque de Penthée','Musée de la Romanité mosaïque enclos du gouverneur','Musée de la Romanité buste Apollon bronze','Musée de la Romanité Silène','Musée de la Romanité Vénus statue'],
-   facts:{
-    summary:'Musée d’archéologie ouvert en 2018 face aux Arènes, présentant environ 25 siècles d’histoire de Nîmes et des collections archéologiques locales et régionales.',
-    architecture:['Bâtiment contemporain conçu par Elizabeth de Portzamparc','façade évoquant une toge de verre plissée','lames de verre renvoyant à l’idée de mosaïque','jardin archéologique méditerranéen','rooftop panoramique'],
-    history:['Les collections archéologiques nîmoises se constituent depuis le XVIe siècle.','La Maison Carrée devient un premier musée à partir de 1823.','Le Musée de la Romanité ouvre en 2018.','Les collections continuent de s’enrichir grâce à l’archéologie contemporaine.'],
-    anecdotes:['Jean-François Séguier, érudit nîmois, a déchiffré la dédicace de la Maison Carrée.','Le musée mêle collections et dispositifs multimédias pour raconter la romanisation de Nîmes.'],
-    objectsAndDetails:[
-     {id:'romanite-apollon',title:'Buste d’Apollon en bronze',kind:'sculpture',observe:'Bronze, visage idéalisé, lumière sur le métal, coiffure.'},
-     {id:'romanite-eagles',title:'Frise aux aigles',kind:'relief',observe:'Rythme héraldique, ailes, symétrie, répétition.'},
-     {id:'romanite-penthee',title:'Mosaïque de Penthée',kind:'mosaic',observe:'Narration, tesselles, palette, géométrie et bordures.'},
-     {id:'romanite-governor',title:'Mosaïque dite de l’enclos du gouverneur',kind:'mosaic',observe:'Réseau géométrique et composition pavimentaire.'},
-     {id:'romanite-silene',title:'Silène',kind:'sculpture',observe:'Expression, volume, drapé et traitement de surface.'},
-     {id:'romanite-venus',title:'Vénus',kind:'sculpture',observe:'Canon du corps, posture, douceur des volumes.'},
-     {id:'romanite-dolium',title:'Dolium',kind:'object',observe:'Grand contenant, courbe, terre cuite, proportion utilitaire.'}
-    ]
-   },
-   fashionReading:{
-    concept:'De la mosaïque au drapé',
-    palette:[{name:'Marbre ivoire',hex:'#E7DDC8'},{name:'Terre cuite',hex:'#B76F4E'},{name:'Bronze ancien',hex:'#7E6B4D'},{name:'Noir tesselle',hex:'#2E2926'},{name:'Rouge pompéien',hex:'#8C3F36'}],
-    materials:['soie plissée','organza','lin','cuir bronze','jacquard géométrique'],
-    motifs:['mosaïque tessellée','frise aux aigles','grecque géométrique','médaillon central'],
-    jewelry:['pendentif médaillon','manchette bronze','boucles en forme de disque'],
-    accessories:['ceinture drapée','sac rigide mosaïque','sandale à brides'],
-    silhouettes:['toge contemporaine','robe drapée asymétrique','jupe panneaux mosaïque','manteau à bordure frise'],
-    atelierUnlocks:[
-     {id:'motif-roman-mosaic-border',type:'motif',title:'Bordure mosaïque romaine',assetRequired:true,tags:['romanité','mosaïque','géométrique','nimes']},
-     {id:'pleat-toga-glass',type:'garment_detail',title:'Plissé toga',assetRequired:true,tags:['romanité','plissé','toge','nimes']},
-     {id:'palette-romanite-museum',type:'palette',title:'Palette Musée de la Romanité',assetRequired:true,tags:['romanité','bronze','terre-cuite','ivoire']}
-    ]
-   },
-   visitChapters:[
-    {id:'facade',title:'La toge de verre',unlock:'first_visit'},
-    {id:'gaul',title:'Avant Rome : les Volques Arécomiques',unlock:'first_visit'},
-    {id:'romanization',title:'La romanisation de Nîmes',unlock:'first_visit'},
-    {id:'mosaics',title:'Lire les mosaïques',unlock:'visit>=2'},
-    {id:'sculptures',title:'Corps, dieux et visages',unlock:'visit>=2'},
-    {id:'archives',title:'Comment une collection se construit',unlock:'careerYears>=1'},
-    {id:'new-archaeology',title:'L’archéologie continue',unlock:'careerYears>=2'}
-   ]
-  },
-  'nimes-tour-magne':{
-   officialSources:[{label:'Arènes de Nîmes — histoire de la Tour Magne',url:'https://www.arenes-nimes.com/histoire-de-la-tour-magne/'}],
-   heroSearch:'Tour Magne Nîmes',
-   facts:{summary:'Tour dominante de l’enceinte augustéenne, intégrant une tour gauloise plus ancienne et témoignant de la superposition des périodes gauloise et romaine.',anecdotes:['La construction romaine a englobé une tour gauloise préexistante.','La tour romaine a atteint environ 36 mètres de haut.']},
-   fashionReading:{concept:'Strates et verticalité',palette:[{name:'Pierre claire',hex:'#C8B08C'},{name:'Vert garrigue',hex:'#75825D'},{name:'Terre',hex:'#8C684B'}],materials:['laine sèche','lin','cuir naturel'],motifs:['strates','verticales','enceinte'],silhouettes:['manteau colonne','robe à panneaux superposés'],atelierUnlocks:[{id:'construction-strata-panel',type:'garment_detail',title:'Panneaux stratifiés',assetRequired:true,tags:['tour-magne','strates','verticalité']}]}
-  },
-  'nimes-maison-carree':{
-   officialSources:[{label:'Maison Carrée — site documentaire officiel',url:'https://www.maisoncarree.eu/'}],
-   heroSearch:'Maison Carrée Nîmes',
-   facts:{summary:'Temple romain majeur de Nîmes, documenté à travers son architecture, son histoire, son quartier et une riche iconographie ancienne.',anecdotes:['Le site documentaire rassemble dessins, peintures, gravures, photographies et objets liés au monument.']},
-   fashionReading:{concept:'Proportion classique',palette:[{name:'Ivoire temple',hex:'#E6D9BE'},{name:'Ombre grise',hex:'#716961'}],materials:['crêpe lourd','gabardine','soie mate'],motifs:['colonnade','fronton','module répétitif'],silhouettes:['robe colonne','tailleur à proportions strictes'],atelierUnlocks:[{id:'classic-column-dress',type:'garment',title:'Robe colonne classique',assetRequired:true,tags:['maison-carree','colonne','classique','romanité']}]}
-  }
+const data={cityId:'nimes',city:'Nîmes',department:'30',region:'Occitanie',sourcePolicy:'faits réels vérifiés; lecture mode et gameplay séparés',places:{
+'nimes-arenes':{
+ officialSources:[
+  {label:'Arènes de Nîmes — histoire',url:'https://www.arenes-nimes.com/histoire-des-arenes/'},
+  {label:'Arènes de Nîmes — visite virtuelle et bas-reliefs',url:'https://arenes-webdoc.nimes.fr/fr/explorer/visite-virtuelle/'},
+  {label:'Arènes de Nîmes — monument',url:'https://www.arenes-nimes.com/monuments/arenes-de-nimes-2/'}
+ ],
+ media:{hero:'https://commons.wikimedia.org/wiki/Special:FilePath/Arena%20de%20Nimes.jpg',gallery:[
+  {url:'https://commons.wikimedia.org/wiki/Special:FilePath/01%20Bas-relief%20des%20ar%C3%A8nes%20de%20N%C3%AEmes.jpg',caption:'Bas-relief des Arènes — un détail à regarder de près.'},
+  {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Amphitheatre%20of%20Nimes.jpeg',caption:'Vue générale de l’amphithéâtre.'}
+ ]},
+ facts:{
+  summary:'Les Arènes de Nîmes ne sont pas seulement un décor antique : elles sont un bâtiment conçu pour faire circuler, asseoir, protéger et impressionner une foule. Construit vers 100 apr. J.-C., l’amphithéâtre conserve sa piste, l’essentiel de ses gradins, ses galeries intérieures et la totalité de ses arcades. Sa conservation exceptionnelle tient aussi à une histoire inattendue : pendant des siècles, le monument a été réutilisé comme forteresse puis comme véritable quartier d’habitation.',
+  longRead:[
+   'À l’époque romaine, l’amphithéâtre fonctionne comme une immense machine de spectacle. Il mesure environ 133 mètres de long sur 101 mètres de large, avec une piste ovale de 68 mètres sur 38. La façade atteint environ 21 mètres de haut. Ses 120 arcades, réparties sur deux niveaux, créent ce rythme régulier que l’on perçoit immédiatement en arrivant : plein, vide, ombre, lumière, pierre, répétition.',
+   'Les blocs placés au sommet accueillaient des mâts. Des câbles permettaient d’y tendre un velum, une grande toile destinée à protéger une partie du public du soleil. Pour un regard de styliste, ce détail est précieux : l’architecture n’est plus seulement minérale, elle dialogue déjà avec le textile, la tension, la suspension et la couverture du corps.',
+   'Les spectacles suivaient une organisation précise. Le matin pouvait être consacré aux venationes, des chasses et présentations d’animaux. À midi avaient lieu des exécutions publiques. L’après-midi était réservé aux combats de gladiateurs, les munera. Le monument était donc pensé autour de la visibilité, de la hiérarchie sociale et du déplacement de milliers de personnes.',
+   'Après l’interdiction des combats de gladiateurs en 404, les Arènes changent radicalement de fonction. Dès le VIe siècle, les Wisigoths les transforment en forteresse, le castrum arenarum. Puis l’espace devient progressivement habité. Un véritable quartier finit par se développer dans les murs, avec près de 250 maisons, une école et deux églises. Cette occupation, qui peut sembler incongrue aujourd’hui, a aussi contribué à préserver le monument au lieu de le laisser servir uniquement de carrière de pierres.',
+   'Au XIXe siècle, les habitations sont progressivement supprimées et le monument est dégagé puis restauré. Aujourd’hui, les Arènes restent une scène vivante. Leur histoire n’est donc pas une succession de ruines : c’est celle d’un bâtiment qui change continuellement de fonction tout en conservant sa structure.'
+  ],
+  architecture:['133 m de long','101 m de large','piste ovale 68 × 38 m','façade env. 21 m','120 arcades sur deux niveaux','60 colonnes engagées','mâts et câbles du velum'],
+  history:['Vers 100 apr. J.-C. : construction et spectacles romains.','404 : fin légale des combats de gladiateurs.','VIe siècle : transformation en forteresse wisigothe.','Moyen Âge–XIXe siècle : quartier habité dans l’amphithéâtre.','XIXe siècle : dégagement et restauration du monument.','Aujourd’hui : patrimoine et grande scène culturelle.'],
+  anecdotes:['Le monument a accueilli près de 250 maisons, une école et deux églises lorsqu’il était habité.','Le combat de gladiateurs encore visible sur la façade est très érodé et constitue la seule scène de ce type encore conservée sur place.','La présence d’un velum rappelle que le confort du public faisait partie de la conception de l’édifice.'],
+  objectsAndDetails:[
+   {id:'arenes-bulls',title:'Les taureaux de la porte d’honneur',kind:'sculpture architecturale',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Arenes%20de%20Nimes%20-%20taureaux.jpg',text:'L’entrée principale se distingue par un fronton triangulaire orné de puissants avant-corps de taureaux. Cette entrée était liée aux magistrats, aux notables et à l’éditeur des jeux. Regarde la frontalité des têtes, leur masse et leur emplacement au-dessus du passage : la sculpture n’est pas indépendante de l’architecture, elle renforce le prestige de l’entrée.',observe:'Volume animal, symétrie, frontalité, masse, relation entre sculpture et porte.'},
+   {id:'arenes-gladiators',title:'Le combat de gladiateurs',kind:'bas-relief',image:'https://commons.wikimedia.org/wiki/Special:FilePath/01%20Bas-relief%20des%20ar%C3%A8nes%20de%20N%C3%AEmes.jpg',text:'Sur la façade, entre les travées 6 et 7, subsiste une scène très érodée de combat de gladiateurs. À l’origine, les parapets du niveau supérieur étaient davantage décorés de scènes représentant les jeux. Presque tout a disparu. Ce fragment est donc intéressant autant pour ce qu’il montre que pour ce qu’il fait imaginer du décor perdu.',observe:'Opposition de deux corps, équipement, gestes, diagonales, tension et érosion de la pierre.'},
+   {id:'arenes-wolf',title:'La louve de Rome',kind:'relief',text:'Un peu plus loin sur la façade apparaît la louve allaitant Romulus et Remus. Cette image renvoie directement au mythe fondateur de Rome. Dans une ville de Gaule romanisée, ce motif raconte aussi l’intégration symbolique de Nemausus à la culture romaine.',observe:'Animal central, récit fondateur, composition narrative et pouvoir du symbole.'},
+   {id:'arenes-arcades',title:'Le rythme des 120 arcades',kind:'architecture',image:'https://commons.wikimedia.org/wiki/Special:FilePath/Amphitheatre%20of%20Nimes.jpeg',text:'Les arcades sont l’un des grands motifs visuels du monument. Elles ne sont pas une simple décoration répétée : elles structurent la circulation et allègent visuellement la masse de la façade. Pour un œil de créateur, cette répétition peut devenir découpe, panneau, ajour, bordure ou construction modulaire.',observe:'Répétition, verticalité, ombre et lumière, superposition des niveaux.'}
+  ]
  },
- tagsIndex:{romanite:['nimes-arenes','nimes-musee-romanite','nimes-tour-magne','nimes-maison-carree'],mosaic:['nimes-musee-romanite'],drape:['nimes-musee-romanite','nimes-arenes'],architecture:['nimes-arenes','nimes-tour-magne','nimes-maison-carree']}
-};
+ fashionReading:{concept:'Architecture du corps',essay:'Lire les Arènes comme un vêtement consiste à transformer la logique de l’édifice en logique de coupe. L’ellipse devient cape ou volume circulaire ; les arcades deviennent découpes répétées ; les gradins inspirent des strates ; le velum évoque des pans de tissu mis sous tension. La pierre chaude peut être traduite par du lin, de la gabardine ou un cuir patiné, tandis que les ombres profondes suggèrent des contrastes plus graphiques.',palette:[{name:'Calcaire chaud',hex:'#C8A77D'},{name:'Ivoire poussière',hex:'#E9DFC9'},{name:'Ombre pierre',hex:'#5D514A'},{name:'Bronze patiné',hex:'#7E6A4A'}],materials:['lin lavé','gabardine structurée','cuir patiné','organza fumé'],motifs:['arcades répétées','ellipse','bandes superposées','frise figurative'],jewelry:['manchette bronze martelé','boucle inspirée d’un anneau antique'],accessories:['ceinture large en cuir','sandale lacée réinterprétée'],silhouettes:['robe colonne drapée','veste architecturée à découpes arquées','cape elliptique'],atelierUnlocks:[{id:'cut-arcade-panel',type:'garment_detail',title:'Découpe arcade',assetRequired:true,tags:['romanité','architecture','arcade','nimes']},{id:'pattern-elliptic-cape',type:'garment',title:'Cape elliptique',assetRequired:true,tags:['romanité','ellipse','cape','nimes']}]},
+ visitChapters:[{id:'arrival',title:'Face à la façade',unlock:'first_visit'},{id:'circulation',title:'Dans les galeries',unlock:'first_visit'},{id:'sculpted-details',title:'Chercher les reliefs',unlock:'visit>=2'},{id:'medieval-life',title:'Quand les Arènes étaient un quartier',unlock:'visit>=2'},{id:'designer-eye',title:'Lire l’amphithéâtre comme un vêtement',unlock:'careerYears>=1'}]
+},
+'nimes-musee-romanite':{
+ officialSources:[{label:'Musée de la Romanité — histoire des collections',url:'https://museedelaromanite.fr/histoire-des-collections'},{label:'Musée de la Romanité — dossier pédagogique Mosaïque de Penthée',url:'https://museedelaromanite.fr/content/uploads/2020/10/DOSSIER-PEDAGOGIQUE-ARCHI-PRIVEE_bd-p-1.pdf'},{label:'Inrap — Mosaïque de Penthée',url:'https://galeriemuseale.inrap.fr/index.php/Detail/objects/198614/view/pdf/export_format/_pdf_ca_objects_summary'},{label:'Ville de Nîmes — Musée de la Romanité',url:'https://www.nimes.fr/que-faire-a-nimes/culture/les-musees-le-planetarium/musee-de-la-romanite'}],
+ media:{hero:'https://medias.objectifgard.com/api/v1/images/view/6620e11e3fdacb7eaf6b55b7/article/image.jpg',gallery:[{url:'https://1.bp.blogspot.com/-5jmkKP6ECfM/XwHv65ZrOJI/AAAAAAAAHfk/UJVxsfGEs3ULGcGYODgwATkGyQ_m8YimACLcBGAsYHQ/s1600/Nimes%2BMosaic%2B1280px-Pentheus_mosaic01.jpg',caption:'Mosaïque de Penthée — l’un des grands ensembles du musée.'},{url:'https://www.francetoday.com/wp-content/uploads/2019/05/Romanity-4-mosaic-small.jpg',caption:'La mosaïque présentée dans le parcours du musée.'}]},
+ facts:{summary:'Face aux Arènes, le Musée de la Romanité met en regard la ville actuelle et plusieurs millénaires d’histoire. Ouvert en 2018, il rassemble les collections archéologiques nîmoises dans un bâtiment contemporain conçu par Elizabeth de Portzamparc. Le parcours ne se limite pas aux “grands objets” : mosaïques, sculptures, inscriptions, verreries, monnaies, lampes, objets en os ou ivoire et céramiques permettent de reconstruire des usages, des croyances et des manières de vivre.',
+  longRead:[
+   'Les collections nîmoises ont une histoire beaucoup plus ancienne que le bâtiment actuel. Dès le XVIe siècle, antiquaires et érudits rassemblent des inscriptions, sculptures et objets découverts dans la ville et ses environs. Au fil des siècles, ces fonds s’enrichissent avec les découvertes archéologiques et avec la constitution de musées successifs.',
+   'Le musée actuel ouvre en 2018. Son architecture établit volontairement un dialogue avec les Arènes situées juste en face. La façade de verre est souvent décrite comme une enveloppe plissée, presque textile. Cette présence contemporaine évite de pasticher l’Antiquité : elle met au contraire en scène la confrontation entre deux époques.',
+   'Le fonds est extrêmement varié : inscriptions latines, fragments architecturaux, mosaïques, sculptures, verreries, lampes à huile, objets en os et ivoire, céramiques, bronzes et monnaies. Pour le jeu, cette diversité est essentielle, car elle permet de ne pas réduire la Romanité à la toge et au gladiateur. On peut travailler aussi sur la lumière, la vaisselle, les bijoux, les techniques, les motifs domestiques et les objets de la vie quotidienne.',
+   'Parmi les œuvres les plus parlantes figure la mosaïque de Penthée, découverte lors de fouilles à Nîmes en 2007 dans une riche maison romaine. Le pavement associe un damier noir et blanc, un cratère d’où part un rinceau polychrome, une tresse à deux brins, seize ellipses avec des oiseaux, les quatre Saisons, des masques de Tragédie et de Comédie, des Ménades dansantes et, au centre, le meurtre de Penthée par sa mère Agavé, scène tirée des Bacchantes d’Euripide.',
+   'La fabrication elle-même est une leçon de matière. Selon l’Inrap, le décor est exécuté en opus tessellatum. Plusieurs couches préparent le sol avant la pose finale des tesselles, petites pièces de quelques millimètres. Autrement dit, l’image n’est pas simplement peinte : elle est construite pièce par pièce, par assemblage. Cette logique fait immédiatement écho au patchwork, au jacquard, à la broderie ou au travail de surface dans la mode.'
+  ],
+  architecture:['Bâtiment contemporain conçu par Elizabeth de Portzamparc','enveloppe de verre plissée','dialogue direct avec les Arènes','jardin archéologique méditerranéen','terrasse panoramique'],
+  history:['XVIe siècle : premiers grands ensembles d’antiquités et collections savantes.','1823 : la Maison Carrée sert de premier musée.','XXe–XXIe siècles : enrichissement continu par l’archéologie.','2018 : ouverture du Musée de la Romanité actuel.'],
+  anecdotes:['Le musée permet de lire Nîmes comme une ville où l’archéologie continue encore aujourd’hui.','La richesse des collections montre que la Romanité se raconte aussi par des objets ordinaires : lampes, vaisselle, monnaies, petits accessoires et objets de toilette.'],
+  objectsAndDetails:[
+   {id:'romanite-penthee',title:'La mosaïque de Penthée',kind:'mosaïque',image:'https://1.bp.blogspot.com/-5jmkKP6ECfM/XwHv65ZrOJI/AAAAAAAAHfk/UJVxsfGEs3ULGcGYODgwATkGyQ_m8YimACLcBGAsYHQ/s1600/Nimes%2BMosaic%2B1280px-Pentheus_mosaic01.jpg',text:'Découverte à Nîmes en 2007, elle ornait une fastueuse domus. Son panneau central est d’une richesse spectaculaire : oiseaux, Saisons, masques de théâtre, Ménades et scène mythologique cohabitent dans un système géométrique extrêmement organisé. C’est une œuvre idéale pour apprendre à regarder simultanément narration, couleur, rythme et technique.',observe:'Tresse polychrome, ellipses, oiseaux, Saisons, masques, Ménades, médaillon central et bordures.'},
+   {id:'romanite-technique-mosaic',title:'Comment se construit une mosaïque ?',kind:'technique',text:'La mosaïque de Penthée est réalisée en opus tessellatum. Une succession de couches prépare le support avant la pose de petites tesselles d’environ quelques millimètres. Ce qui paraît être une image continue est donc en réalité un assemblage patient d’unités. Pour une styliste, c’est une excellente analogie avec le perlage, la broderie, le patchwork ou le montage d’un motif textile.',observe:'Échelle des tesselles, joints, changement de direction des lignes, densité des détails.'},
+   {id:'romanite-theatre-masks',title:'Les masques de Tragédie et de Comédie',kind:'iconographie',text:'Dans la mosaïque de Penthée, des formes en cloche accueillent des masques de théâtre. Ils rappellent que le décor domestique peut contenir tout un monde de références littéraires et scéniques. Le masque est aussi un motif très fertile en costume : visage caché, exagération des traits, identité sociale et jeu entre personne et personnage.',observe:'Expression, symétrie, contour du visage, chevelure et théâtralité.'},
+   {id:'romanite-menades',title:'Les Ménades dansantes',kind:'figure mythologique',text:'Les Ménades occupent les angles du décor central. Elles portent des vêtements partiellement ouverts, sont couronnées de lierre et tiennent le thyrse ou le tambourin. Leur posture dansante donne du mouvement à un pavement pourtant fixe. Pour le costume, elles sont une source directe sur le drapé, le geste, l’asymétrie et les accessoires rituels.',observe:'Drapés ouverts, mouvement du corps, couronne végétale, thyrse, tambourin.'},
+   {id:'romanite-lamps',title:'Les lampes à huile',kind:'objet quotidien',text:'Le musée conserve de nombreuses lampes à huile. Elles permettent d’aborder une question très concrète : comment éclairait-on les espaces domestiques ? Leur petite taille, leur argile et leurs décors montrent qu’un objet utilitaire peut aussi porter une identité visuelle.',observe:'Terre cuite, bec, réservoir, poignée éventuelle, décor moulé.'},
+   {id:'romanite-apollon',title:'Buste d’Apollon en bronze',kind:'sculpture',text:'Le bronze change totalement la perception par rapport au marbre : surface sombre, reflets, patine et sensation de métal vivant. Un visage idéalisé permet aussi d’observer la construction d’un canon esthétique et le traitement de la coiffure.',observe:'Patine, reflets, coiffure, idéalisation du visage et transition cou/épaules.'}
+  ]},
+ fashionReading:{concept:'De la tesselle au drapé',essay:'Le Musée de la Romanité offre plusieurs portes d’entrée créatives. La mosaïque inspire le motif construit par petites unités ; les Ménades donnent des idées de drapés mobiles ; le bronze appelle des accessoires patinés ; les lampes et objets quotidiens apportent des formes fonctionnelles ; la façade contemporaine du musée suggère le plissé et l’enveloppe. Une collection peut donc mélanger archéologie et modernité sans tomber dans le costume historique littéral.',palette:[{name:'Marbre ivoire',hex:'#E7DDC8'},{name:'Terre cuite',hex:'#B76F4E'},{name:'Bronze ancien',hex:'#7E6B4D'},{name:'Noir tesselle',hex:'#2E2926'},{name:'Rouge pompéien',hex:'#8C3F36'}],materials:['soie plissée','organza','lin','cuir bronze','jacquard géométrique'],motifs:['tresse polychrome','mosaïque tessellée','médaillon','rinceau','masques de théâtre'],jewelry:['pendentif médaillon','manchette bronze','boucles disque'],accessories:['ceinture drapée','sac rigide mosaïque','sandale à brides'],silhouettes:['toge contemporaine','robe drapée asymétrique','jupe à panneaux mosaïque','manteau bordé d’une frise'],atelierUnlocks:[{id:'motif-roman-mosaic-border',type:'motif',title:'Bordure mosaïque romaine',assetRequired:true,tags:['romanité','mosaïque','géométrique','nimes']},{id:'pleat-toga-glass',type:'garment_detail',title:'Plissé toga',assetRequired:true,tags:['romanité','plissé','toge','nimes']},{id:'palette-romanite-museum',type:'palette',title:'Palette Musée de la Romanité',assetRequired:true,tags:['romanité','bronze','terre-cuite','ivoire']}]},
+ visitChapters:[{id:'facade',title:'La façade : une enveloppe contemporaine',unlock:'first_visit'},{id:'collections',title:'Comprendre comment les collections se sont formées',unlock:'first_visit'},{id:'penthee',title:'Lire la mosaïque de Penthée',unlock:'first_visit'},{id:'technique',title:'Comprendre la fabrication des mosaïques',unlock:'visit>=2'},{id:'objects',title:'Objets ordinaires, vie quotidienne',unlock:'visit>=2'},{id:'designer-eye',title:'Construire une collection à partir du musée',unlock:'careerYears>=1'}]
+},
+'nimes-tour-magne':{officialSources:[{label:'Arènes de Nîmes — histoire de la Tour Magne',url:'https://www.arenes-nimes.com/histoire-de-la-tour-magne/'}],media:{hero:'https://static.apidae-tourisme.com/filestore/objets-touristiques/images/151/180/28226711-diaporama.jpg',gallery:[]},facts:{summary:'La Tour Magne domine Nîmes et raconte littéralement une superposition d’époques : la construction romaine a englobé une tour gauloise préexistante.',longRead:['La Tour Magne est intéressante parce qu’elle matérialise la stratification historique. Elle ne remplace pas complètement ce qui existait auparavant : elle l’absorbe et le transforme. Cette idée de structure ancienne prise dans une enveloppe nouvelle peut devenir un principe de création textile ou de construction de vêtement.'],anecdotes:['La tour romaine a intégré une tour gauloise plus ancienne.','Elle dominait l’enceinte augustéenne.']},fashionReading:{concept:'Strates et verticalité',essay:'Superposer plutôt que remplacer : une base ancienne peut rester visible sous une construction nouvelle.',palette:[{name:'Pierre claire',hex:'#C8B08C'},{name:'Vert garrigue',hex:'#75825D'},{name:'Terre',hex:'#8C684B'}],materials:['laine sèche','lin','cuir naturel'],motifs:['strates','verticales','enceinte'],silhouettes:['manteau colonne','robe à panneaux superposés'],atelierUnlocks:[{id:'construction-strata-panel',type:'garment_detail',title:'Panneaux stratifiés',assetRequired:true,tags:['tour-magne','strates','verticalité']}]}},
+'nimes-maison-carree':{officialSources:[{label:'Maison Carrée — histoire officielle',url:'https://www.arenes-nimes.com/histoire-de-la-maison-carree/'},{label:'Maison Carrée — site documentaire',url:'https://www.maisoncarree.eu/'}],media:{hero:'https://commons.wikimedia.org/wiki/Special:FilePath/Maison%20Carr%C3%A9e%20in%20N%C3%AEmes.jpg',gallery:[]},facts:{summary:'Temple romain majeur de Nîmes, la Maison Carrée est un exercice de proportion, de mise en scène du pouvoir et de culture impériale.',longRead:['Le temple du forum était dédié aux princes de la jeunesse. Une inscription en lettres de bronze doré était fixée sur l’entablement. Le monument permet aussi de comprendre le culte impérial, ses cérémonies et le rôle des élites locales dans l’organisation de fêtes et de spectacles.'],anecdotes:['Le culte impérial pouvait offrir une voie d’ascension sociale à de riches affranchis intégrés au collège des Augustales.','La fonction de flaminique était l’une des rares fonctions officielles accessibles à une femme dans la cité romaine.']},fashionReading:{concept:'Proportion classique',essay:'Ici, la force vient moins de l’ornement que de la proportion, du rythme de la colonnade et du contrôle du vide.',palette:[{name:'Ivoire temple',hex:'#E6D9BE'},{name:'Ombre grise',hex:'#716961'}],materials:['crêpe lourd','gabardine','soie mate'],motifs:['colonnade','fronton','module répétitif'],silhouettes:['robe colonne','tailleur à proportions strictes'],atelierUnlocks:[{id:'classic-column-dress',type:'garment',title:'Robe colonne classique',assetRequired:true,tags:['maison-carree','colonne','classique','romanité']}]}}
+},tagsIndex:{romanite:['nimes-arenes','nimes-musee-romanite','nimes-tour-magne','nimes-maison-carree'],mosaic:['nimes-musee-romanite'],drape:['nimes-musee-romanite','nimes-arenes'],architecture:['nimes-arenes','nimes-tour-magne','nimes-maison-carree']}};
 window.HCNimesRichContent=data;
 })();
