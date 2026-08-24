@@ -7,35 +7,14 @@
 <title>Haute Couture Live — Téléphone</title>
 <style>
 :root{--ink:#111;--muted:#777;--line:#ececec}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f4f1ee;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,textarea{font:inherit}.page{min-height:100vh;display:grid;place-items:center;padding:18px}.phone{width:min(100%,480px);height:min(900px,calc(100vh - 36px));background:#fff;border:10px solid #1d1d1f;border-radius:42px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.18);display:flex;flex-direction:column}.phonebar{height:48px;flex:0 0 auto;display:grid;grid-template-columns:60px 1fr 60px;align-items:end;padding:9px 10px 7px;border-bottom:1px solid var(--line);background:#fff;font-size:11px;font-weight:700}.phonebar .time{text-align:center}.phonebar .status{text-align:right;font-size:9px;color:#555}.homeback{border:0;background:none;text-align:left;padding:0 4px;font-size:25px;line-height:1;cursor:pointer;color:#111}.screen{flex:1;min-height:0;overflow:auto;background:#fff}.dock{height:66px;flex:0 0 auto;background:#fff;border-top:1px solid var(--line)}.loading{height:100%;display:grid;place-items:center;text-align:center;padding:32px;color:#777;font:16px/1.5 Georgia,serif}.loading small{font:11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.retry{border:0;background:#111;color:#fff;border-radius:8px;padding:10px 14px;margin-top:14px;font:700 11px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.deskback{position:fixed;left:18px;top:18px;border:0;background:#fff;border-radius:999px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.1);font-size:11px;font-weight:700;cursor:pointer}@media(max-width:720px){html,body,.page{background:#fff}.page{padding:0;display:block}.phone{width:100%;height:100vh;border:0;border-radius:0;box-shadow:none}.phonebar{height:calc(48px + env(safe-area-inset-top));padding-top:max(9px,env(safe-area-inset-top));}.dock{height:calc(66px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}.deskback{display:none}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f4f1ee;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,textarea{font:inherit}.page{min-height:100vh;display:grid;place-items:center;padding:18px}.phone{width:min(100%,480px);height:min(900px,calc(100vh - 36px));background:#fff;border:10px solid #1d1d1f;border-radius:42px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.18);display:flex;flex-direction:column}.phonebar{height:48px;flex:0 0 auto;display:grid;grid-template-columns:92px 1fr 72px;align-items:end;padding:9px 10px 7px;border-bottom:1px solid var(--line);background:#fff;font-size:11px;font-weight:700;position:relative;z-index:100}.phonebar .time{text-align:center}.phonebar .status{text-align:right;font-size:9px;color:#555}.homeback{border:0;background:none;text-align:left;padding:0 4px;font-size:11px;line-height:1;cursor:pointer;color:#111;font-weight:800;position:relative;z-index:110;pointer-events:auto;touch-action:manipulation}.screen{flex:1;min-height:0;overflow:auto;background:#fff}.dock{height:66px;flex:0 0 auto;background:#fff;border-top:1px solid var(--line)}.loading{height:100%;display:grid;place-items:center;text-align:center;padding:32px;color:#777;font:16px/1.5 Georgia,serif}.loading small{font:11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.retry{border:0;background:#111;color:#fff;border-radius:8px;padding:10px 14px;margin-top:14px;font:700 11px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}@media(max-width:720px){html,body,.page{background:#fff}.page{padding:0;display:block}.phone{width:100%;height:100vh;border:0;border-radius:0;box-shadow:none}.phonebar{height:calc(48px + env(safe-area-inset-top));padding-top:max(9px,env(safe-area-inset-top));}.dock{height:calc(66px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom)}}
 </style>
-<script>
-/* La page téléphone utilise uniquement l'UI sociale réaliste.
-   Le moteur central essayait encore de charger l'ancienne UI en parallèle : on bloque
-   uniquement ces deux anciens scripts, sans bloquer le moteur social ni les triggers. */
-(function(){
- const original=Element.prototype.appendChild;
- Element.prototype.appendChild=function(node){
-   try{
-     if(node&&node.tagName==='SCRIPT'){
-       const src=String(node.src||'');
-       if(src.includes('phone-ui-v2.js')||src.includes('phone-social-ui.js')){
-         console.info('[HCPhone] legacy UI blocked:',src);
-         return node;
-       }
-     }
-   }catch(e){}
-   return original.call(this,node);
- };
-})();
-</script>
 </head>
 <body>
-<button class="deskback" onclick="location.href='../chez-moi/'">← Chez moi</button>
 <main class="page">
   <section class="phone">
     <div class="phonebar">
-      <button class="homeback" aria-label="Retour chez moi" onclick="location.href='../chez-moi/'">‹</button>
+      <button class="homeback" type="button" aria-label="Retour chez moi" onclick="window.location.href='../chez-moi/'">‹ Chez moi</button>
       <span class="time" id="hc-clock">09:00</span>
       <span class="status">HC SOCIAL</span>
     </div>
@@ -43,9 +22,8 @@
     <nav class="dock"></nav>
   </section>
 </main>
-<script src="../game-engine.js?v=20260824-phone-clean1"></script>
+<script src="../game-engine.js?v=20260824-phone-clean2"></script>
 <script>
-/* Sur cette route, une lecture ne doit jamais émettre un nouvel événement de jeu. */
 (function(){
  if(!window.HCGame||!HCGame.storageKey)return;
  const originalGet=HCGame.get.bind(HCGame);
@@ -54,8 +32,10 @@
  updateClock();window.addEventListener('hc-game-state',updateClock);
 })();
 </script>
-<script src="./phone-photo-bank.js?v=20260824-bank1"></script>
-<script src="./phone-real-social-ui.js?v=20260824-real2"></script>
+<script src="./phone-photo-bank.js?v=20260824-bank2"></script>
+<script src="./phone-career-live.js?v=20260824-career1"></script>
+<script src="./phone-real-social-ui-v5.js?v=20260824-real-v5"></script>
+<script src="./phone-responsive-v5.js?v=20260824-responsive1"></script>
 <script>
 setTimeout(()=>{
  if(!window.__HC_REAL_SOCIAL_UI__){
