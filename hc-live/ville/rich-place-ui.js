@@ -9,6 +9,7 @@ load('../travel/france/departments/30.js?v=20260824-gard-total','data-hc-gard-ba
       load('rich-place-ui-maison-v2.js?v=20260824-maison-v3','data-hc-rich-maison-core',()=>{
         load('fashion-translation-patch.js?v=20260824-mode-v3','data-hc-fashion-translation');
         load('nimes-heritage-expansion-v1.js?v=20260824-nimes-core-roman','data-hc-nimes-heritage-expansion');
+        load('nimes-textile-museums-v1.js?v=20260824-nimes-textile-museums','data-hc-nimes-textile-museums');
       });
     });
   });
