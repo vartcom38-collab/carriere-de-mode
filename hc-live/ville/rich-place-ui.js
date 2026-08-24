@@ -11,6 +11,7 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
           load('fashion-translation-patch.js?v=20260824-mode-v3','data-hc-fashion-translation');
           load('nimes-heritage-expansion-v1.js?v=20260824-nimes-core-roman','data-hc-nimes-heritage-expansion');
           load('nimes-textile-museums-v1.js?v=20260824-nimes-textile-museums','data-hc-nimes-textile-museums');
+          load('nimes-city-culture-v1.js?v=20260824-nimes-city-culture','data-hc-nimes-city-culture');
         });
       });
     });
