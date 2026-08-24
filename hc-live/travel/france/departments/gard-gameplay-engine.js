@@ -1,0 +1,27 @@
+/* Haute Couture Live — Gard contextual gameplay engine.
+   Connects the Gard content pack to HCGame without flooding a new game with every contact at once.
+*/
+(function(){
+'use strict';
+const KEY='haute-couture-gard-runtime-v1';
+const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+const write=s=>{localStorage.setItem(KEY,JSON.stringify(s));return s};
+const pack=()=>window.HCGardComplete||null;
+const game=()=>window.HCGame||null;
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+function state(){const s=read();s.discoveredCharacters=s.discoveredCharacters||[];s.encounters=s.encounters||[];s.missionsOffered=s.missionsOffered||[];s.visits=s.visits||{};s.cityProgress=s.cityProgress||{};return s}
+function save(s){return write(s)}
+function placeBy(any){const p=pack();if(!p)return null;const n=norm(any);return p.places.find(x=>x.id===any||norm(x.name)===n)||null}
+function charactersForCity(city){const p=pack();if(!p)return[];const n=norm(city);return p.characters.filter(c=>norm(c.home).includes(n)||n.includes(norm(c.home))) }
+function contactMessage(c){return {from:c.name,avatar:(c.name||'?').slice(0,1),subject:'Ravi·e de t’avoir croisée',text:`On s’est croisées autour de ${c.home}. ${c.role}. Garde mon contact — j’ai peut-être quelque chose qui pourrait t’intéresser bientôt.`}}
+function discoverCharacter(c,reason){const g=game(),s=state();if(!c||s.discoveredCharacters.includes(c.id))return false;s.discoveredCharacters.push(c.id);s.encounters.push({characterId:c.id,reason,at:g?.get?.().clock?.iso||null});save(s);if(g){g.mutate(gs=>{gs.relationships=gs.relationships||{};if(!gs.relationships[c.name])gs.relationships[c.name]={affinity:3,trust:2,history:[`Rencontre dans le Gard : ${reason||c.home}`],characterId:c.id,role:c.role};});g.addMessage(contactMessage(c));}window.dispatchEvent(new CustomEvent('hc-gard-character-discovered',{detail:c}));return true}
+function chooseEncounter(place){const p=pack();if(!p||!place)return null;let pool=charactersForCity(place.city);if(!pool.length){const eco=place.ecosystem;pool=p.characters.filter(c=>norm(c.home).includes(norm(eco)))}const s=state(),unseen=pool.filter(c=>!s.discoveredCharacters.includes(c.id));if(!unseen.length)return null;const idx=(Object.keys(s.visits).reduce((a,k)=>a+Number(s.visits[k]||0),0)+unseen.length)%unseen.length;return unseen[idx]}
+function visit(any,{forceEncounter=false}={}){const place=placeBy(any);if(!place)return null;const s=state();s.visits[place.id]=(s.visits[place.id]||0)+1;s.cityProgress[place.city]=(s.cityProgress[place.city]||0)+1;save(s);const g=game();if(g)g.registerVisit(place.id);const count=s.visits[place.id];let c=null;if(forceEncounter||count===1||count%3===0)c=chooseEncounter(place);if(c)discoverCharacter(c,place.name);window.dispatchEvent(new CustomEvent('hc-gard-place-visited',{detail:{place,visitCount:count,character:c}}));return {place,visitCount:count,character:c}}
+function buildMission(c,hook,index){const id=`gard-${c.id}-${index}`;const type=/mariage/i.test(hook)?'mariage':/shoot|éditorial|lookbook/i.test(hook)?'editorial':/bijou|fermoir|boucle/i.test(hook)?'accessoire':/retouche/i.test(hook)?'retouche':'creation';return {id,title:hook.charAt(0).toUpperCase()+hook.slice(1),client:c.name,type,status:'offered',reward:70+index*35,difficulty:1+Math.min(index,3),durationMinutes:120+index*60,brief:`${c.name} (${c.role}) te contacte pour : ${hook}. La proposition doit rester cohérente avec le lieu, la relation et ton niveau de carrière.`,deadline:null,gardCharacterId:c.id}}
+function offerMission(characterId){const p=pack(),g=game();if(!p||!g)return null;const c=p.characters.find(x=>x.id===characterId);if(!c)return null;const s=state();const hooks=c.missionHooks||[];const used=s.missionsOffered.filter(x=>x.startsWith(c.id+':')).length;const hook=hooks[used%Math.max(1,hooks.length)]||'création sur mesure';const key=`${c.id}:${used}`;const m=buildMission(c,hook,used);s.missionsOffered.push(key);save(s);g.mutate(gs=>{if(!gs.missions.some(x=>x.id===m.id))gs.missions.push(m)});g.addMessage({from:c.name,avatar:c.name[0],subject:'J’ai une idée pour toi',text:`${hook}. Ça te dirait qu’on en parle ?`,action:'gard-mission:'+m.id});window.dispatchEvent(new CustomEvent('hc-gard-mission-offered',{detail:m}));return m}
+function seedContextual(){const p=pack(),g=game();if(!p||!g)return;const gs=g.get(),city=gs.player?.city||gs.home?.city||'';const pool=charactersForCity(city);if(pool.length){const s=state();const unseen=pool.filter(c=>!s.discoveredCharacters.includes(c.id));if(unseen.length&&s.discoveredCharacters.length===0)discoverCharacter(unseen[0],`installation à ${city}`)}}
+function stats(){const s=state(),p=pack();return {placesVisited:Object.keys(s.visits).length,totalVisits:Object.values(s.visits).reduce((a,b)=>a+Number(b||0),0),charactersDiscovered:s.discoveredCharacters.length,totalCharacters:p?.characters?.length||0,missionsOffered:s.missionsOffered.length,cityProgress:s.cityProgress}}
+window.HCGardGameplay={visit,discoverCharacter,offerMission,placeBy,charactersForCity,stats,state,pack};
+window.addEventListener('hc-travel-visited',e=>{const d=e.detail?.place;if(!d)return;const p=placeBy(d);if(p){const s=state();if(!s.visits[p.id]){s.visits[p.id]=1;s.cityProgress[p.city]=(s.cityProgress[p.city]||0)+1;save(s);const c=chooseEncounter(p);if(c)discoverCharacter(c,p.name)}}});
+setTimeout(seedContextual,600);
+})();
