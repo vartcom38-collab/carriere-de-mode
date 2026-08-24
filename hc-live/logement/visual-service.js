@@ -78,3 +78,18 @@
   function configure(url){if(url)localStorage.setItem(ENDPOINT_KEY,url);else localStorage.removeItem(ENDPOINT_KEY)}
   window.HCVisualService={request,waitForTask,configure,endpoint,statusEndpoint,getCached,provider:PROVIDER};
 })();
+
+/* Chez moi — raccourci Book injecté sans toucher au gros hub historique. */
+(function(){
+  if(!/\/chez-moi\/?$/.test(location.pathname))return;
+  const add=()=>{
+    if(document.getElementById('hc-book-shortcut'))return;
+    const grid=document.querySelector('.actions-grid');if(!grid)return;
+    const b=document.createElement('button');
+    b.id='hc-book-shortcut';b.className='action-card ready';
+    b.innerHTML='<span class="icon">▤</span><b>Mon Book</b><small>Inspis, lieux, matières, palettes, silhouettes et pépites sauvegardées.</small>';
+    b.onclick=()=>location.href='../book/';
+    const end=document.getElementById('endDayBtn');grid.insertBefore(b,end||null);
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add();
+})();
