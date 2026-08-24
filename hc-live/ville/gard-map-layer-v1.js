@@ -26,7 +26,7 @@ function markerIcon(place){const ready=READY.has(place.id),html=`<div style="wid
 function addMarker(layer,place,pt){const m=L.marker([pt.lat,pt.lng],{icon:markerIcon(place)}).bindTooltip(`<b>${esc(place.name)}</b><br>${READY.has(place.id)?'Lieu de gameplay disponible':'Lieu préparé du Gard'}`).on('click',()=>openPlace(place));m.addTo(layer);return m}
 function run(map,p){const layer=L.layerGroup().addTo(map),cache=readCache(),city=norm(currentCity()),all=(p.places||[]).filter(x=>!SKIP.has(x.id));const priority=[...all].sort((a,b)=>{const ac=norm(a.city)===city?0:1,bc=norm(b.city)===city?0:1;if(ac!==bc)return ac-bc;return (READY.has(b.id)?1:0)-(READY.has(a.id)?1:0)});const base=centerOf(map),done=new Set();
   priority.filter(x=>x.real===false&&norm(x.city)===city).forEach(place=>{const pt=fakeOffset(base,place.id);addMarker(layer,place,pt);done.add(place.id)});
-  priority.filter(x=>cache[x.id]).forEach(place=>{addMarker(layer,place,cache[x.id]);done.add(place.id)});
+  priority.filter(place=>cache[place.id]).forEach(place=>{addMarker(layer,place,cache[place.id]);done.add(place.id)});
   let i=0;async function next(){while(i<priority.length&&done.has(priority[i].id))i++;if(i>=priority.length)return;const place=priority[i++];if(place.real===false){if(norm(place.city)===city){addMarker(layer,place,fakeOffset(base,place.id));done.add(place.id)}setTimeout(next,50);return}const pt=await geocode(place,cache);if(pt){addMarker(layer,place,pt);done.add(place.id)}setTimeout(next,1150)}next();
   window.HCGardMapLayer={layer,readyIds:[...READY],openPlace,visit:resolveVisit,refresh:()=>location.reload()};window.dispatchEvent(new CustomEvent('hc-gard-map-layer-ready',{detail:{ready:READY.size,total:all.length}}));
 }
