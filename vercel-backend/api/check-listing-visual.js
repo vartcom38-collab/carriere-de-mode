@@ -1,10 +1,9 @@
 const MAGNIFIC_BASE='https://api.magnific.com/v1/ai/text-to-image/imagen4-fast';
 
 function cors(req,res){
-  res.setHeader('Access-Control-Allow-Origin','https://vartcom38-collab.github.io');
-  res.setHeader('Vary','Origin');
+  res.setHeader('Access-Control-Allow-Origin','*');
   res.setHeader('Access-Control-Allow-Methods','GET,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers','Content-Type');
+  res.setHeader('Access-Control-Allow-Headers','Content-Type, Accept');
   if(req.method==='OPTIONS'){
     res.status(204).end();
     return true;
