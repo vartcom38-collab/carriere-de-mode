@@ -35,6 +35,9 @@ if(location.pathname.includes('/telephone/')){
   const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');
   if(window.HCPhone)loadDynamics();else addScript('./phone-gameplay-engine.js?v=20260824-phone-core3','data-hc-phone-core',loadDynamics);
 }
+if(location.pathname.includes('/agenda/')){
+  addScript('./nimes-event-flow-v1.js?v=20260825-agenda-events1','data-hc-nimes-agenda-events');
+}
 if(location.pathname.includes('/ville/')){
   if(window.L&&typeof window.L.map==='function'&&!window.__HC_LEAFLET_CAPTURED){
     window.__HC_LEAFLET_CAPTURED=true;
