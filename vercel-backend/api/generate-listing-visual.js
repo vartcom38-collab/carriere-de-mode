@@ -12,6 +12,10 @@ function cors(req,res){
   return false;
 }
 
+function magnificKey(){
+  return process.env.MAGNIFIC_API_KEY||process.env['CLÉ_API_MAGNIFIC']||process.env.CLE_API_MAGNIFIC||'';
+}
+
 function buildPrompt(body){
   const v=body.visual||body.metadata||{};
   const base=String(body.promptText||body.prompt||'').trim();
@@ -58,7 +62,7 @@ export default async function handler(req,res){
   if(cors(req,res))return;
   if(req.method!=='POST')return res.status(405).json({error:'method_not_allowed'});
 
-  const apiKey=process.env.MAGNIFIC_API_KEY;
+  const apiKey=magnificKey();
   if(!apiKey)return res.status(503).json({error:'magnific_not_configured'});
 
   const body=req.body||{};
