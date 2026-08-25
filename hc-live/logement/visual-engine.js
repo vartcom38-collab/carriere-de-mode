@@ -1,6 +1,6 @@
-/* Haute Couture Live — logement fluide + photos Magnific + adresses/carte légères. */
+/* Haute Couture Live — logement fluide + photos réelles + adresses/carte légères. */
 (function(){
-  const BUILD='20260822-1808';
+  const BUILD='20260825-realestate1';
   let installed=false,depsReady=false,queueRunning=false,addressRunning=false;
   const queued=new Set(),attempted=new Set();
 
@@ -48,7 +48,7 @@
     return slot
   }
   function setSlot(slot,text){if(slot)slot.textContent=text}
-  function setImage(slot,url){if(slot&&url)slot.innerHTML=`<img src="${url}" alt="Photo du logement">`}
+  function setImage(slot,url){if(slot&&url)slot.innerHTML=`<img src="${url}" alt="Photo réelle du logement">`}
   function cardFor(id){return document.querySelector(`.listing[data-id="${CSS.escape(String(id))}"]`)}
 
   function decorateCards(){
@@ -63,7 +63,7 @@
 
   function showMain(url){
     const m=$('mainVisual');if(!m)return;
-    if(url){m.className='';m.style.position='absolute';m.style.inset='0';m.innerHTML=`<img src="${url}" alt="Photo du logement" style="width:100%;height:100%;display:block;object-fit:cover">`}
+    if(url){m.className='';m.style.position='absolute';m.style.inset='0';m.innerHTML=`<img src="${url}" alt="Photo réelle du logement" style="width:100%;height:100%;display:block;object-fit:cover">`}
     else{m.style.position='absolute';m.style.inset='0';m.className='gallery-illustration';m.innerHTML=''}
   }
 
@@ -72,14 +72,14 @@
     const id=String(x.id),card=cardFor(id),slot=slotForCard(card);
     const existing=cachedUrl(x);if(existing){setImage(slot,existing);return}
     if(attempted.has(id))return;
-    attempted.add(id);setSlot(slot,'GÉNÉRATION…');
+    attempted.add(id);setSlot(slot,'PHOTO EN CHARGEMENT…');
     try{
       const out=await window.HCVisualService.request(x,context(x),'main');
       if(out&&out.url){
         setImage(slot,out.url);
         try{if(String(st.listing)===id&&$('detailModal')?.classList.contains('open'))showMain(out.url)}catch(e){}
       }else setSlot(slot,'PHOTO EN ATTENTE');
-    }catch(e){console.error('HC photo generation',id,e);setSlot(slot,'PHOTO INDISPONIBLE')}
+    }catch(e){console.error('HC housing photo',id,e);setSlot(slot,'PHOTO INDISPONIBLE')}
   }
 
   async function runQueue(){
@@ -182,7 +182,6 @@
     try{if(typeof side!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined'||typeof stock!=='function')return false}catch(e){return false}
     installed=true;
 
-    /* Vraies adresses, mais une par une et sans render() complet. */
     try{
       snapAddresses=function(list,key){
         try{SNAP_RUNNING=true}catch(e){}
@@ -209,7 +208,7 @@
 
     fixChoiceButton();
     loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,1400)}});
-    window.HCVisualEngine={build:BUILD,mode:'queued-photos-real-addresses',chooseHome,decorateCards,queueVisible};
+    window.HCVisualEngine={build:BUILD,mode:'real-estate-photos-real-addresses',chooseHome,decorateCards,queueVisible};
     return true
   }
 
