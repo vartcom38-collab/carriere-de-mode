@@ -1,0 +1,37 @@
+/* Haute Couture Live — moteur de réalisation Atelier v1.
+   Couche additive : transforme un croquis choisi en création réelle, achète/consomme la matière,
+   avance le temps, sauvegarde la création puis permet l'envoi à la cliente.
+   Le bridge client historique reste intact mais son raccourci de validation est masqué quand ce moteur est actif.
+*/
+(function(){
+'use strict';
+if(window.HCAtelierRealisationEngine)return;
+const K={
+ board:'haute-couture-atelier-board-v2',sketch:'haute-couture-atelier-selected-sketch-v2',fabric:'haute-couture-atelier-selected-fabric-v1',
+ fabrics:'haute-couture-fabric-library-v1',orders:'haute-couture-client-orders-v1',creations:'haute-couture-atelier-creations-v1',library:'haute-couture-creation-library-v1',
+ ledger:'haute-couture-material-ledger-v1',production:'haute-couture-atelier-production-history-v1'
+};
+const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch(e){return f}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function game(){try{return window.parent?.HCGame||window.top?.HCGame||window.HCGame||null}catch(e){return window.HCGame||null}}
+function money(){return Number(game()?.get?.().player?.money||0)}
+function now(){return game()?.get?.().clock?.iso||new Date().toISOString()}
+function activeOrder(){return read(K.orders,[]).find(x=>x.status==='accepted'||x.status==='alterations_needed')||null}
+function saveOrder(o){let a=read(K.orders,[]).filter(x=>x.id!==o.id);a.unshift(o);write(K.orders,a.slice(0,100));window.dispatchEvent(new CustomEvent('hc-client-order',{detail:o}))}
+function formatMoney(n){return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(Number(n)||0)}
+function estimate(){return window.HCAtelierRealisationPreflight?.estimate?.()||null}
+function materialPlan(e){const f=e?.fabric||{};const meterPrice=Number(f.meter||f.pricePerMeter||0);const needed=Math.max(0,Number(e?.meters||0));const lib=read(K.fabrics,[]);const source=lib.find(x=>x.id===f.id)||f;const available=Number(source.stockMeters||0);const fromStock=Math.min(available,needed);const toBuy=Math.max(0,Math.round((needed-fromStock)*10)/10);const purchaseCost=Math.round(toBuy*meterPrice*100)/100;return{fabricId:f.id||null,name:f.name||f.title||'Matière',needed,available,fromStock,toBuy,meterPrice,purchaseCost,supplier:f.supplier||source.supplier||null}}
+function canRealise(){const e=estimate();if(!e)return{ok:false,reasons:['Pré-calcul indisponible']};const p=materialPlan(e),reasons=[...(e.warnings||[])];if(p.toBuy>0&&p.meterPrice<=0)reasons.push('Prix matière indisponible : retourne chez le fournisseur');if(p.purchaseCost>money())reasons.push('Budget insuffisant pour acheter la matière nécessaire');return{ok:reasons.length===0,reasons,estimate:e,material:p}}
+function consumeMaterial(plan,creationId){let lib=read(K.fabrics,[]);const i=lib.findIndex(x=>x.id===plan.fabricId);if(i>=0&&plan.fromStock>0){lib[i]={...lib[i],stockMeters:Math.max(0,Math.round((Number(lib[i].stockMeters||0)-plan.fromStock)*10)/10)};write(K.fabrics,lib)}
+ if(plan.purchaseCost>0){game()?.transact?.(-plan.purchaseCost,'Matière création — '+plan.name,'atelier')}
+ let ledger=read(K.ledger,[]);ledger.unshift({id:'mat-'+Date.now(),creationId,fabricId:plan.fabricId,name:plan.name,meters:plan.needed,fromStock:plan.fromStock,purchasedMeters:plan.toBuy,meterPrice:plan.meterPrice,cost:plan.purchaseCost,supplier:plan.supplier,at:now()});write(K.ledger,ledger.slice(0,1000));
+}
+function persistCreation(e,plan){const order=activeOrder(),id='creation-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);const board=e.board||read(K.board,null),sketch=e.sketch||read(K.sketch,null)||window.__HC_SELECTED_SKETCH__||null;const c={id,type:order?'client-order':'personal',status:order?'realised_pending_send':'realised',name:sketch?.name||order?.garment||'Création',orderId:order?.id||null,clientName:order?.clientName||null,garment:order?.garment||null,occasion:order?.occasion||null,board,sketch,fabric:e.fabric,material:{...plan},complexity:e.complexity,workMinutes:e.minutes,createdAt:now(),city:game()?.get?.().player?.city||'Nîmes'};
+ let arr=read(K.creations,[]);arr.unshift(c);write(K.creations,arr.slice(0,500));let lib=read(K.library,[]);lib=[c,...lib.filter(x=>x.id!==c.id)];write(K.library,lib.slice(0,500));let hist=read(K.production,[]);hist.unshift({creationId:id,orderId:c.orderId,workMinutes:c.workMinutes,meters:plan.needed,cost:plan.purchaseCost,at:c.createdAt});write(K.production,hist.slice(0,1000));return c
+}
+function realise(){const chk=canRealise();if(!chk.ok)return{ok:false,...chk};const e=chk.estimate,plan=chk.material,creation=persistCreation(e,plan);consumeMaterial(plan,creation.id);game()?.advanceTime?.(Number(e.minutes||0),'Réalisation — '+creation.name);const order=activeOrder();if(order){order.design={...(order.design||{}),pieces:(e.pieces||[]).map(x=>x.name||x),fabric:e.fabric,board:e.board,sketch:{id:e.sketch?.id,name:e.sketch?.name,direction:e.sketch?.direction,url:e.sketch?.url||'',provider:e.sketch?.provider||'magnific'},realisationId:creation.id,realisedAt:creation.createdAt,materialUsed:plan.needed,materialCost:plan.purchaseCost};order.status='realised_pending_send';order.progress='realised';saveOrder(order)}window.dispatchEvent(new CustomEvent('hc-atelier-realised',{detail:creation}));return{ok:true,creation,material:plan,estimate:e}}
+function sendToClient(creationId){const order=activeOrder()||read(K.orders,[]).find(x=>x.status==='realised_pending_send'&&x.design?.realisationId===creationId);if(!order)return{ok:false,error:'Aucune commande cliente liée'};order.status='ready_for_fitting';order.progress='realised_sent';order.sentAt=now();saveOrder(order);let cs=read(K.creations,[]),c=cs.find(x=>x.id===creationId);if(c){c.status='sent_to_client';c.sentAt=order.sentAt;write(K.creations,cs);let lib=read(K.library,[]),lc=lib.find(x=>x.id===creationId);if(lc){lc.status='sent_to_client';lc.sentAt=order.sentAt;write(K.library,lib)}}window.dispatchEvent(new CustomEvent('hc-atelier-sent-client',{detail:{order,creationId}}));return{ok:true,order}}
+function hideLegacyShortcut(){const b=document.getElementById('hcSubmitClientOrder');if(b){b.style.display='none';const card=b.closest('.hc-order-card');if(card&&!card.querySelector('.hc-realise-guidance')){const n=document.createElement('div');n.className='hc-order-note hc-realise-guidance';n.innerHTML='<b>Flux de production :</b> compose → génère 3 croquis → choisis → <b>RÉALISER</b> → envoyer à la cliente.';b.parentNode.insertBefore(n,b)}}}
+function observeLegacy(){hideLegacyShortcut();new MutationObserver(hideLegacyShortcut).observe(document.body,{childList:true,subtree:true})}
+function boot(){observeLegacy();window.HCAtelierRealisationEngine={version:1,canRealise,estimate,materialPlan,realise,sendToClient,activeOrder,keys:K};window.dispatchEvent(new CustomEvent('hc-atelier-realisation-engine-ready',{detail:{version:1}}))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,220));else setTimeout(boot,220);
+})();
