@@ -31,6 +31,9 @@ function unreadCount(s){return(s||load()).messages.filter(m=>!m.read).length}
 window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,registerVisit,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"],[data-action="sortir"]');if(!el||!location.pathname.includes('/chez-moi/'))return;const action=el.getAttribute('data-action');if(!['atelier','telephone','agenda','sortir'].includes(action))return;e.preventDefault();e.stopImmediatePropagation();location.href=action==='atelier'?'../atelier/':action==='telephone'?'../telephone/':action==='agenda'?'../agenda/':'../ville/'},true);
 const addScript=(src,tag,onload)=>{if(document.querySelector(`script[${tag}]`)){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(tag,'1');s.onload=()=>onload&&onload();s.onerror=()=>console.warn('[HCGame] failed to load '+src);document.head.appendChild(s)};
+if(location.pathname.includes('/chez-moi/')){
+  addScript('./real-home-visual-v1.js?v=20260825-realhome1','data-hc-real-home-visual');
+}
 if(location.pathname.includes('/telephone/')){
   const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');
   if(window.HCPhone)loadDynamics();else addScript('./phone-gameplay-engine.js?v=20260824-phone-core3','data-hc-phone-core',loadDynamics);
