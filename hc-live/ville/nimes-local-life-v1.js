@@ -1,5 +1,5 @@
 /* Haute Couture Live — Nîmes local life expansion.
-   Real civic/cultural places use institutional sources. Shops, studios, cafés, clients and relationship arcs are fictionalized gameplay so the career can renew over decades.
+   Real civic/cultural places use institutional sources. Shops, cafés, clients and relationship arcs are fictionalized gameplay so the career can renew over decades.
 */
 (function(){
 'use strict';
@@ -22,7 +22,6 @@ wait(()=>{
   {id:'nimes-mercerie-atelier',name:'Mercerie des Arceaux',city:'Nîmes',category:'mode-shop',ecosystem:'nimes',real:false,fictionalized:true,tags:['galon','boutons','dentelle','doublure','ruban'],visit:{durationMinutes:40,baseCulture:'first_visit',revisitAdds:['new_stock','special_order','encounter']},stockRotation:['galons anciens','boutons nacre','dentelle coton','ruban velours','doublure imprimée','passementerie métallique']},
   {id:'nimes-brocante-textile',name:'Brocante textile du centre',city:'Nîmes',category:'vintage+market',ecosystem:'nimes',real:false,fictionalized:true,tags:['linge ancien','vêtement vintage','bouton','broderie','patron'],visit:{durationMinutes:75,baseCulture:'first_visit',revisitAdds:['rare_object','archive','encounter']},lootPool:['lot de boutons anciens','napperon brodé','châle abîmé','coupon de serge','patron incomplet','broche fantaisie']},
   {id:'nimes-cafe-creative',name:'Café des Croquis',city:'Nîmes',category:'cafe+people',ecosystem:'nimes',real:false,fictionalized:true,tags:['rencontre','croquis','réseau','client'],visit:{durationMinutes:45,baseCulture:'first_visit',revisitAdds:['encounter','client','rumour','social_post']}},
-  {id:'nimes-photo-studio',name:'Studio lumière du centre',city:'Nîmes',category:'creative-studio',ecosystem:'nimes',real:false,fictionalized:true,tags:['photo','lookbook','portrait','campagne'],visit:{durationMinutes:120,baseCulture:'first_visit',revisitAdds:['shoot','mission','collaboration']}},
   {id:'nimes-atelier-broderie',name:'Atelier de broderie — Nîmes',city:'Nîmes',category:'artisan+mode',ecosystem:'nimes',real:false,fictionalized:true,tags:['broderie','soutache','perle','fil métal'],visit:{durationMinutes:90,baseCulture:'first_visit',revisitAdds:['sample','collaboration','rush_order']}},
   {id:'nimes-hotel-test',name:'Hôtel des Arènes',city:'Nîmes',category:'hotel+travel',ecosystem:'nimes',real:false,fictionalized:true,tags:['hôtel','chambre','voyage','repos','chez-moi temporaire'],visit:{durationMinutes:15,baseCulture:'first_visit',revisitAdds:['invitation','client','event']}},
   {id:'nimes-showroom-test',name:'Showroom Maison Mistral',city:'Nîmes',category:'showroom+prestige',ecosystem:'nimes',real:false,fictionalized:true,tags:['showroom','acheteur','presse','invitation','prestige'],visit:{durationMinutes:90,baseCulture:'first_visit',revisitAdds:['buyer','press','invitation','mission']}}
