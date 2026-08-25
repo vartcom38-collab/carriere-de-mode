@@ -20,7 +20,7 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
                     load('nimes-cafe-gameplay-v3.js?v=20260825-nimes-cafe-gameplay1','data-hc-nimes-cafe-gameplay-v3',()=>{
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
                         load('../logement/visual-service.js?v=20260825-studio-photo1','data-hc-visual-service',()=>{
-                          load('nimes-studio-photo-v1.js?v=20260825-nimes-studio1','data-hc-nimes-studio-photo',()=>{
+                          load('nimes-studio-photo-v1.js?v=20260825-nimes-studio3','data-hc-nimes-studio-photo',()=>{
                             load('gard-map-layer-v1.js?v=20260825-gard-map3','data-hc-gard-map-layer',()=>{
                               load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera2','data-hc-nimes-ephemera');
                             });
