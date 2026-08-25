@@ -1,0 +1,14 @@
+/* Haute Couture Live — UI conséquences de production v1
+   Rend visibles les métriques de qualité, brief, temps et retouche dans le pré-vol et après fabrication.
+*/
+(function(){
+'use strict';
+if(window.HCAtelierProductionConsequencesUI)return;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function css(){if(document.getElementById('hcProdConsUiCss'))return;const s=document.createElement('style');s.id='hcProdConsUiCss';s.textContent=`.hcp-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px}.hcp-metric{border:1px solid #e6d8ce;border-radius:13px;padding:10px;background:#fff}.hcp-metric small{display:block;font:900 7px Arial;letter-spacing:.1em;color:#a17a66}.hcp-metric b{display:block;font:18px Georgia,serif;margin-top:4px}.hcp-note{border:1px dashed #d7c2b4;border-radius:12px;padding:10px;background:#fff7f1;font:10px/1.5 Georgia,serif;color:#66564d}@media(max-width:720px){.hcp-metrics{grid-template-columns:1fr 1fr}}`;document.head.appendChild(s)}
+function metrics(){const pre=window.HCAtelierRealisationPreflight,e=pre?.estimate?.();return e?.productionConsequences||window.HCAtelierProductionConsequences?.metrics?.(e?.minutes,e?.complexity)||null}
+function inject(root){if(!root||root.querySelector('.hcp-metrics'))return;const m=metrics();if(!m)return;const target=root.querySelector('article');if(!target)return;const block=document.createElement('div');block.innerHTML=`<div class="hcp-metrics"><div class="hcp-metric"><small>QUALITÉ ESTIMÉE</small><b>${m.quality}/100</b></div><div class="hcp-metric"><small>RESPECT DU BRIEF</small><b>${m.briefFit}/100</b></div><div class="hcp-metric"><small>RISQUE DE RETOUCHE</small><b>${m.retouchRisk}%</b></div><div class="hcp-metric"><small>IMPACT TEMPS</small><b>×${m.timeMultiplier}</b></div></div><div class="hcp-note">Ces valeurs viennent de ta composition réelle : compatibilité, techniques maîtrisées, complexité et adéquation au brief. Elles n'empêchent jamais de réaliser la tenue, mais elles influenceront l'essayage et la réaction cliente.</div>`;const actions=[...target.children].find(x=>x.querySelector?.('#hcConfirmRealise,#hcDoneClose'));if(actions)target.insertBefore(block,actions);else target.appendChild(block)}
+function observe(){new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(!(n instanceof HTMLElement))continue;if(n.id==='hcRealisationPreflight')setTimeout(()=>inject(n),20);n.querySelectorAll?.('#hcRealisationPreflight').forEach(x=>setTimeout(()=>inject(x),20))}}).observe(document.body,{childList:true,subtree:true})}
+function boot(){css();observe();const existing=document.getElementById('hcRealisationPreflight');if(existing)inject(existing);window.HCAtelierProductionConsequencesUI={version:1,inject}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,500));else setTimeout(boot,500);
+})();
