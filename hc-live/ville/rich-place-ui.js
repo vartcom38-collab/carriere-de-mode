@@ -20,6 +20,7 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
                   load('nimes-cafe-v2.js?v=20260825-nimes-cafe4','data-hc-nimes-cafe-v2',()=>{
                     load('nimes-cafe-gameplay-v3.js?v=20260825-client-order2','data-hc-nimes-cafe-gameplay-v3',()=>{
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
+                        load('nimes-atelier-discovery-bridge-v1.js?v=20260825-nimes-atelier-discovery1','data-hc-nimes-atelier-discovery-bridge');
                         load('gard-map-layer-v1.js?v=20260825-gard-map5','data-hc-gard-map-layer',()=>{
                           load('nimes-living-career-v1.js?v=20260825-living-career1','data-hc-nimes-living-career',()=>{
                             load('nimes-long-life-v1.js?v=20260825-long-life1','data-hc-nimes-long-life');
