@@ -16,15 +16,17 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
             load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui2','data-hc-nimes-place-ui',()=>{
               load('nimes-brocante-v2.js?v=20260825-nimes-brocante3','data-hc-nimes-brocante-v2',()=>{
                 load('nimes-brocante-seller-v1.js?v=20260825-nimes-brocante-seller2','data-hc-nimes-brocante-seller',()=>{
-                  load('gard-map-layer-v1.js?v=20260825-gard-map2','data-hc-gard-map-layer',()=>{
-                    load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera1','data-hc-nimes-ephemera');
+                  load('nimes-cafe-v2.js?v=20260825-nimes-cafe2','data-hc-nimes-cafe-v2',()=>{
+                    load('gard-map-layer-v1.js?v=20260825-gard-map2','data-hc-gard-map-layer',()=>{
+                      load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera1','data-hc-nimes-ephemera');
+                    });
                   });
                 });
               });
             });
           });
         });
-        load('tour-magne-v2.js?v=20260824-tour-v2','data-hc-tour-magne',()=>{
+        load('tour-magne-v2.js?v=20260824-tour-v2','data-hc-tour-v2',()=>{
           load('rich-place-ui-maison-v2.js?v=20260824-maison-v3','data-hc-rich-maison-core',()=>{
             load('fashion-translation-patch.js?v=20260824-mode-v3','data-hc-fashion-translation');
             load('nimes-heritage-expansion-v1.js?v=20260824-nimes-core-roman','data-hc-nimes-heritage-expansion');
