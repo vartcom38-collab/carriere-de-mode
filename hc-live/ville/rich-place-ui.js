@@ -9,16 +9,16 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
         load('../travel/france/france-discovery-search-v1.js?v=20260824-france-search-v1','data-hc-france-discovery',()=>{
           load('france-discovery-search-ui-v1.js?v=20260824-france-search-ui-v1','data-hc-france-discovery-ui');
         });
-        load('nimes-local-life-v1.js?v=20260825-nimes-local-life2','data-hc-nimes-local-life',()=>{
+        load('nimes-local-life-v1.js?v=20260825-nimes-local-life3','data-hc-nimes-local-life',()=>{
           load('../travel/france/departments/gard-gameplay-engine.js?v=20260824-gard-total','data-hc-gard-gameplay');
           load('../travel/france/departments/gard-world-mechanics-v2.js?v=20260824-gard-world-v2','data-hc-gard-world-v2',()=>{
             load('../travel/france/cities/nimes-career-thread-v1.js?v=20260824-nimes-thread-v1','data-hc-nimes-thread');
-            load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui2','data-hc-nimes-place-ui',()=>{
-              load('nimes-brocante-v2.js?v=20260825-nimes-brocante3','data-hc-nimes-brocante-v2',()=>{
-                load('nimes-brocante-seller-v1.js?v=20260825-nimes-brocante-seller2','data-hc-nimes-brocante-seller',()=>{
-                  load('nimes-cafe-v2.js?v=20260825-nimes-cafe2','data-hc-nimes-cafe-v2',()=>{
-                    load('gard-map-layer-v1.js?v=20260825-gard-map2','data-hc-gard-map-layer',()=>{
-                      load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera1','data-hc-nimes-ephemera');
+            load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui3','data-hc-nimes-place-ui',()=>{
+              load('nimes-brocante-v2.js?v=20260825-nimes-brocante4','data-hc-nimes-brocante-v2',()=>{
+                load('nimes-brocante-seller-v1.js?v=20260825-nimes-brocante-seller3','data-hc-nimes-brocante-seller',()=>{
+                  load('nimes-cafe-v2.js?v=20260825-nimes-cafe3','data-hc-nimes-cafe-v2',()=>{
+                    load('gard-map-layer-v1.js?v=20260825-gard-map3','data-hc-gard-map-layer',()=>{
+                      load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera2','data-hc-nimes-ephemera');
                     });
                   });
                 });
