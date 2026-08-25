@@ -1,5 +1,6 @@
-/* Haute Couture Live — Studio Lumière Nîmes v2.
+/* Haute Couture Live — Studio Lumière Nîmes v3.
    Lieu vivant : Noé -> intention -> sujet -> type -> modèle -> DA -> cadrage -> priorité -> récap -> génération -> sélection.
+   Génération directe : Studio -> Vercel -> Magnific.
 */
 (function(){
 'use strict';
@@ -8,14 +9,17 @@ const PHOTO_KEY='haute-couture-photo-library-v1';
 const DRAFT_KEY='haute-couture-ateliergram-drafts-v1';
 const STATE_KEY='haute-couture-nimes-photo-studio-state-v2';
 const CREATION_KEYS=['haute-couture-creations-v1','haute-couture-atelier-creations-v1','haute-couture-creation-library-v1'];
-const SUPABASE='https://pmsowlrsbyczjjwzuzsr.supabase.co/functions/v1/hc-generate-listing-visual';
+const VERCEL_BASE='https://carriere-de-mode-visuals-vartcom38-7358s-projects.vercel.app';
+const GENERATE=VERCEL_BASE+'/api/generate-listing-visual';
+const CHECK=VERCEL_BASE+'/api/check-listing-visual';
 const $=s=>document.querySelector(s);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch(e){return f}};
 const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const GAME=()=>window.HCGame||null;
 const money=()=>Number(GAME()?.get?.().player?.money||0);
 const fmt=n=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(n)||0);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const NOE={
  name:'Noé Carrière',role:'Photographe mode · portrait & éditorial',
  image:'https://images.pexels.com/photos/1689731/pexels-photo-1689731.jpeg?auto=compress&cs=tinysrgb&w=900',
@@ -49,7 +53,31 @@ function studioState(){return read(STATE_KEY,{visits:0,relation:0,lastChoice:nul
 function saveStudioState(p){const s=studioState();Object.assign(s,p);write(STATE_KEY,s)}
 function subjects(){for(const k of CREATION_KEYS){const arr=read(k,[]);if(Array.isArray(arr)&&arr.length)return arr.map((x,i)=>({id:x.id||'creation-'+i,name:x.name||x.title||'Création '+(i+1),description:x.description||x.notes||x.prompt||x.summary||'création issue de l’Atelier'})).slice(0,8)}const f=read('haute-couture-fabric-library-v1',[])[0],sk=read('haute-couture-techniques-v1',[])[0];return[{id:'atelier-prototype',name:'Prototype Atelier actuel',description:[f?.name||'matière à définir',sk?.name||sk?.title||'construction couture','silhouette contemporaine'].join(', ')}]}
 function prompt(st,i){const t=TYPES[st.type],d=DAS[st.da],m=MODELS[st.model],p=PRIORITIES[st.priority],f=FRAMINGS[st.framing];return `High-end French fashion photography for a ${t.label.toLowerCase()}. Subject: ${st.subject.description}. Model direction: ${m.desc}. Art direction: ${d.desc}. Framing strategy: ${f.desc}. Visual priority: ${p.desc}. Shot: ${t.shots[i]}. Preserve one coherent garment across the entire series, realistic textile behavior, refined couture finish, premium composition, sophisticated Nîmes sensibility, no tourist clichés, no text, no logo, no watermark.`}
-async function generate(st,i){const seed='studio-'+st.subject.id+'-'+st.type+'-'+st.da+'-'+st.model+'-'+Date.now()+'-'+i;const p=prompt(st,i);const r=await fetch(SUPABASE,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({listingId:seed,visualSeed:seed,promptKey:'shot'+(i+1),promptText:p,city:'Nîmes',district:'centre'})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('HTTP '+r.status));if(!d.publicUrl)throw new Error('Aucune image renvoyée');return d.publicUrl}
+async function generate(st,i){
+ const seed='studio-'+st.subject.id+'-'+st.type+'-'+st.da+'-'+st.model+'-'+Date.now()+'-'+i;
+ const p=prompt(st,i);
+ let r;
+ try{
+   r=await fetch(GENERATE,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({listingId:seed,visualSeed:seed,promptKey:'shot'+(i+1),promptText:p,city:'Nîmes',district:'centre'})});
+ }catch(e){throw new Error('Vercel inaccessible · '+(e?.message||String(e)))}
+ const d=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error([d.error||('HTTP '+r.status),d.message].filter(Boolean).join(' · '));
+ if(d.publicUrl)return d.publicUrl;
+ const taskId=d.taskId;
+ if(!taskId)throw new Error('Magnific n’a renvoyé ni image ni taskId');
+ const started=Date.now();
+ while(Date.now()-started<180000){
+   await sleep(1800);
+   let pr;
+   try{pr=await fetch(CHECK+'?taskId='+encodeURIComponent(taskId),{headers:{Accept:'application/json'},cache:'no-store'})}
+   catch(e){throw new Error('Suivi Vercel inaccessible · '+(e?.message||String(e)))}
+   const pd=await pr.json().catch(()=>({}));
+   if(!pr.ok)throw new Error([pd.error||('HTTP '+pr.status),pd.message].filter(Boolean).join(' · '));
+   if(pd.publicUrl)return pd.publicUrl;
+   if(pd.status==='FAILED')throw new Error('Magnific a échoué sur cette image');
+ }
+ throw new Error('Magnific met trop de temps à terminer cette image');
+}
 function landing(body,place,st={}){const ss=studioState();saveStudioState({visits:(ss.visits||0)+1});body.innerHTML=`<div class="si-wrap"><div class="si-head"><span class="si-badge">STUDIO LUMIÈRE · ${fmt(money())}</span><button class="si-btn soft" data-city>RETOUR À LA VILLE</button></div><div class="si-hero"><section class="si-cover"><img src="https://images.pexels.com/photos/66134/pexels-photo-66134.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Studio photo"><div class="si-over"><div class="si-k">NÎMES · STUDIO PHOTO</div><h3>Studio Lumière</h3><p>Un lieu pour transformer une création en image de carrière : série, sélection, Book, Ateliergram, campagne.</p></div></section><aside class="si-person"><img src="${NOE.image}" alt="${NOE.name}"><div class="si-k">PHOTOGRAPHE · PERSONNAGE FICTIF</div><h3>${NOE.name}</h3><p>${NOE.role}</p><div class="si-meta">RELATION · ${ss.relation||0}<br>VISITES · ${ss.visits||0}</div><div class="si-actions" style="margin-top:10px"><button class="si-btn alt" id="profile">VOIR SA FICHE</button></div></aside></div><div class="si-card"><div class="si-dialogue"><img src="${NOE.image}" alt="${NOE.name}"><div><div class="si-k">NOÉ</div><blockquote>« Avant de parler lumière, dis-moi ce que tu veux que les gens retiennent. La pièce ? La matière ? Ton univers ? »</blockquote><div class="si-choices"><button class="si-btn" data-intent="creation">JE VEUX MONTRER LA CRÉATION</button><button class="si-btn alt" data-intent="identity">JE VEUX CONSTRUIRE MON IMAGE</button><button class="si-btn soft" data-intent="explore">JE VEUX TESTER UNE DIRECTION</button></div></div></div></div></div>`;body.querySelector('[data-city]').onclick=()=>window.HCNimesPlaceUI?.close?.();$('#profile').onclick=()=>profile(body,place,st);body.querySelectorAll('[data-intent]').forEach(b=>b.onclick=()=>{st.intent=b.dataset.intent;saveStudioState({lastChoice:st.intent,relation:(studioState().relation||0)+1});chooseSubject(body,place,st)})}
 function profile(body,place,st){body.innerHTML=`<div class="si-wrap"><div class="si-head"><button class="si-btn soft" id="back">← RETOUR AU STUDIO</button><span class="si-badge">FICHE PERSONNAGE</span></div><div class="si-hero"><section class="si-cover"><img src="${NOE.image}" alt="${NOE.name}"><div class="si-over"><div class="si-k">PHOTOGRAPHE MODE</div><h3>${NOE.name}</h3><p>${NOE.bio}</p></div></section><aside class="si-card"><div class="si-k">TEMPÉRAMENT</div><h3>${NOE.traits.join(' · ')}</h3><p>${NOE.likes}</p><div class="si-note">${NOE.unlock}</div></aside></div></div>`;$('#back').onclick=()=>landing(body,place,st)}
 function chooseSubject(body,place,st){const subs=subjects();st.subject=st.subject||subs[0];body.innerHTML=`<div class="si-wrap"><div class="si-head"><button class="si-btn soft" id="back">← NOÉ</button><span class="si-badge">1 · SUJET</span></div><div class="si-card"><div class="si-dialogue"><img src="${NOE.image}" alt="Noé"><div><div class="si-k">NOÉ</div><blockquote>« Très bien. Maintenant, montre-moi exactement ce qu’on photographie. »</blockquote></div></div></div><div><h3 class="si-title">Choisir le sujet</h3><div class="si-grid">${subs.map(s=>`<article class="si-card choice ${st.subject.id===s.id?'on':''}" data-sub="${s.id}"><div class="si-k">CRÉATION / PROTOTYPE</div><h3>${esc(s.name)}</h3><p>${esc(s.description)}</p></article>`).join('')}</div></div><div class="si-actions"><button class="si-btn" id="next">CONTINUER</button></div></div>`;$('#back').onclick=()=>landing(body,place,st);body.querySelectorAll('[data-sub]').forEach(x=>x.onclick=()=>{st.subject=subs.find(s=>s.id===x.dataset.sub);chooseSubject(body,place,st)});$('#next').onclick=()=>chooseType(body,place,st)}
