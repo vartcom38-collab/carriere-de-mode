@@ -13,18 +13,16 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
           load('../travel/france/departments/gard-gameplay-engine.js?v=20260824-gard-total','data-hc-gard-gameplay');
           load('../travel/france/departments/gard-world-mechanics-v2.js?v=20260824-gard-world-v2','data-hc-gard-world-v2',()=>{
             load('../travel/france/cities/nimes-career-thread-v1.js?v=20260824-nimes-thread-v1','data-hc-nimes-thread');
-            load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui5','data-hc-nimes-place-ui',()=>{
+            load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui4','data-hc-nimes-place-ui',()=>{
               load('nimes-brocante-v2.js?v=20260825-nimes-brocante4','data-hc-nimes-brocante-v2',()=>{
                 load('nimes-brocante-seller-v1.js?v=20260825-nimes-brocante-seller3','data-hc-nimes-brocante-seller',()=>{
                   load('nimes-cafe-v2.js?v=20260825-nimes-cafe4','data-hc-nimes-cafe-v2',()=>{
                     load('nimes-cafe-gameplay-v3.js?v=20260825-nimes-cafe-gameplay1','data-hc-nimes-cafe-gameplay-v3',()=>{
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
-                        load('../logement/visual-service.js?v=20260825-studio-photo2','data-hc-visual-service',()=>{
-                          load('nimes-studio-photo-v1.js?v=20260825-nimes-studio2','data-hc-nimes-studio-photo',()=>{
-                            load('nimes-studio-photo-v2.js?v=20260825-nimes-studio-v2-2','data-hc-nimes-studio-photo-v2',()=>{
-                              load('gard-map-layer-v1.js?v=20260825-gard-map3','data-hc-gard-map-layer',()=>{
-                                load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera2','data-hc-nimes-ephemera');
-                              });
+                        load('../logement/visual-service.js?v=20260825-studio-photo1','data-hc-visual-service',()=>{
+                          load('nimes-studio-photo-v1.js?v=20260825-nimes-studio1','data-hc-nimes-studio-photo',()=>{
+                            load('gard-map-layer-v1.js?v=20260825-gard-map3','data-hc-gard-map-layer',()=>{
+                              load('nimes-map-ephemera-v1.js?v=20260825-nimes-ephemera2','data-hc-nimes-ephemera');
                             });
                           });
                         });
