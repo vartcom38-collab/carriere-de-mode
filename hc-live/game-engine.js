@@ -41,6 +41,6 @@ if(location.pathname.includes('/ville/')){
     const originalMap=window.L.map;
     window.L.map=function(){const m=originalMap.apply(this,arguments);window.HCLeafletMap=m;window.dispatchEvent(new CustomEvent('hc-map-ready',{detail:{map:m}}));return m};
   }
-  addScript('../travel/france/cities/nimes-rich-content.js?v=20260824-rich2','data-hc-nimes-rich',()=>addScript('./rich-place-ui.js?v=20260825-living-map-v2','data-hc-rich-place-ui'));
+  addScript('../travel/france/cities/nimes-rich-content.js?v=20260824-rich2','data-hc-nimes-rich',()=>addScript('./rich-place-ui.js?v=20260825-living-map-v3','data-hc-rich-place-ui'));
 }
 })();
