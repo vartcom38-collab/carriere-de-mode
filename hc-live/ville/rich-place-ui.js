@@ -14,11 +14,14 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
           load('../travel/france/departments/gard-world-mechanics-v2.js?v=20260824-gard-world-v2','data-hc-gard-world-v2',()=>{
             load('../travel/france/cities/nimes-career-thread-v1.js?v=20260824-nimes-thread-v1','data-hc-nimes-thread');
             load('nimes-place-interfaces-v1.js?v=20260825-nimes-place-ui4','data-hc-nimes-place-ui',()=>{
-              load('nimes-station-v2.js?v=20260825-station-v2','data-hc-nimes-station-v2');
+              load('nimes-station-v2.js?v=20260825-nimes-station-v2','data-hc-nimes-station-v2');
               load('nimes-brocante-v2.js?v=20260825-nimes-brocante4','data-hc-nimes-brocante-v2',()=>{
                 load('nimes-brocante-seller-v1.js?v=20260825-nimes-brocante-seller3','data-hc-nimes-brocante-seller',()=>{
                   load('nimes-cafe-v2.js?v=20260825-nimes-cafe4','data-hc-nimes-cafe-v2',()=>{
                     load('nimes-cafe-gameplay-v3.js?v=20260825-client-order2','data-hc-nimes-cafe-gameplay-v3',()=>{
+                      load('../client-orders/client-fitting-engine-v1.js?v=20260825-fitting1','data-hc-client-fitting-engine',()=>{
+                        load('nimes-client-fitting-v2.js?v=20260825-fitting-ui2','data-hc-nimes-client-fitting-v2');
+                      });
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
                         load('nimes-atelier-discovery-bridge-v1.js?v=20260825-nimes-atelier-discovery1','data-hc-nimes-atelier-discovery-bridge');
                         load('gard-map-layer-v1.js?v=20260825-gard-map5','data-hc-gard-map-layer',()=>{
