@@ -12,11 +12,15 @@ function cors(req,res){
   return false;
 }
 
+function magnificKey(){
+  return process.env.MAGNIFIC_API_KEY||process.env['CLÉ_API_MAGNIFIC']||process.env.CLE_API_MAGNIFIC||'';
+}
+
 export default async function handler(req,res){
   if(cors(req,res))return;
   if(req.method!=='GET')return res.status(405).json({error:'method_not_allowed'});
 
-  const apiKey=process.env.MAGNIFIC_API_KEY;
+  const apiKey=magnificKey();
   if(!apiKey)return res.status(503).json({error:'magnific_not_configured'});
 
   const taskId=String(req.query?.taskId||'').trim();
