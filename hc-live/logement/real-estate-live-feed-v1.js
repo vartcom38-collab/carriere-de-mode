@@ -1,18 +1,31 @@
-/* Haute Couture Live — annonces immobilières réelles v2
+/* Haute Couture Live — annonces immobilières réelles v3
    ChercherTrouver prioritaire : une annonce conserve sa galerie complète.
    Le stock d'une ville s'enrichit par pagination quand la joueuse explore de nouveaux secteurs de carte.
 */
 (function(){
 'use strict';
-if(window.HCRealEstateLiveFeed)return;
-const CACHE_KEY='haute-couture-real-listings-cache-v2';
+if(window.HCRealEstateLiveFeed?.version>=3)return;
+const CACHE_KEY='haute-couture-real-listings-cache-v3';
 const USED_KEY='haute-couture-real-listings-used-v1';
 const ENDPOINT_KEY='haute-couture-real-estate-api-endpoint';
 const DEFAULT_ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
 const CELL=.0042;
+try{
+  localStorage.removeItem('haute-couture-real-listings-cache-v1');
+  localStorage.removeItem('haute-couture-real-listings-cache-v2');
+  localStorage.removeItem('haute-couture-housing-spatial-market-v1');
+  localStorage.removeItem('haute-couture-housing-gallery-assignments-v1');
+}catch(e){}
 const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v}catch(e){return f}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
-const endpoint=()=>localStorage.getItem(ENDPOINT_KEY)||window.HC_REAL_ESTATE_API_ENDPOINT||DEFAULT_ENDPOINT;
+function endpoint(){
+ const stored=String(localStorage.getItem(ENDPOINT_KEY)||'').trim();
+ if(stored&&/carriere-de-mode-visuals-vartcom38-7358s-projects\.vercel\.app/i.test(stored)){
+   try{localStorage.removeItem(ENDPOINT_KEY)}catch(e){}
+   return window.HC_REAL_ESTATE_API_ENDPOINT||DEFAULT_ENDPOINT;
+ }
+ return stored||window.HC_REAL_ESTATE_API_ENDPOINT||DEFAULT_ENDPOINT;
+}
 const cityKey=()=>{try{return String(st.cityCode||st.city||'').trim()}catch(e){return''}};
 const cityName=()=>{try{return String(st.city||'').trim()}catch(e){return''}};
 let loading=false,lastKey='',live=[],boundMap=null,mapTimer=null;
@@ -24,7 +37,7 @@ function acceptUnique(x){const u=usage(),pid=String(x.realPropertyId||x.id),pics
 function inferTitle(x){const source=String(x.title||''),desc=String(x.description||'').toLowerCase(),surface=Number(x.surface||0),rooms=Number(x.rooms||1);if(x.attic)return'Studio mansardé';if(x.loft)return surface>=30?'Petit loft':'Rez-de-chaussée atelier';if(x.old)return'Appartement ancien';if(rooms>=2)return'Deux-pièces créatif';if(/rénov|refait à neuf|renov/.test(desc))return'T1 rénové';if(/studio/i.test(source)||rooms===1)return'Studio lumineux';return source||'Appartement à louer'}
 function gameplay(x){const surface=Number(x.surface||0),rooms=Number(x.rooms||1),balcony=!!x.balcony;const atelier=surface>=38?5:surface>=31?4:surface>=24?3:surface>=19?2:1,storage=Math.max(4,Math.round(surface*.32)+(x.storage?3:0)),receive=rooms>=2&&surface>=28;return{atelierCapacity:atelier,storageCapacity:storage,canReceiveClients:receive,homeWorkTimePercent:atelier>=4?-8:atelier===3?-4:atelier===2?3:8,inspirationBonus:balcony?2:surface>=32?1:0,privacy:rooms>=2?'bonne':'limitée',summary:atelier>=4?'Vrai potentiel d’atelier à domicile':atelier===3?'Coin couture confortable':atelier===2?'Coin couture compact':'Espace de travail très contraint'}}
 function normalize(x){const g=(x.gallery||[]).filter(p=>p?.url),lat=Number(x.lat),lng=Number(x.lng),surface=Number(x.surface||0),price=Number(x.price||0),charges=Number(x.charges||0);const y={...x,id:x.id||('real-'+x.realPropertyId),realListing:true,originalListingTitle:x.title||'',title:inferTitle(x),surface,price,charges,rooms:Number(x.rooms||1),floor:Number(x.floor||0),balcony:!!x.balcony,elevator:!!x.elevator,furnished:!!x.furnished,dpe:x.dpe||'—',lat:Number.isFinite(lat)?lat:null,lng:Number.isFinite(lng)?lng:null,address:`${x.city||cityName()} · secteur de l’annonce`,tags:[x.attic?'Mansardé':x.old?'Charme ancien':x.loft?'Volume atelier':'Annonce réelle',x.openKitchen?'Cuisine ouverte':x.storage?'Rangements signalés':'Agencement à découvrir',x.furnished?'Meublé':'Non meublé'],potential:'',gallery:g};y.gameplay=gameplay(y);y.potential=`${y.gameplay.summary}. Rangement ${y.gameplay.storageCapacity}/20${y.gameplay.canReceiveClients?' · possibilité de recevoir une cliente sur rendez-vous':''}.`;y.visual=y.visual||{};y.visual.assets=y.visual.assets||{};if(g[0]?.url)y.visual.assets.mainImage=g[0].url;y.visual.mainImageSource='real-listing';y.visual.mainImageProvider=x.source||'cherchertrouver';return y}
-function valid(x){return x&&x.gallery?.length>=2&&Number.isFinite(Number(x.lat))&&Number.isFinite(Number(x.lng))&&Number(x.price)>0&&Number(x.surface)>=8}
+function valid(x){return x&&Array.isArray(x.gallery)&&x.gallery.length>=2&&Number.isFinite(Number(x.lat))&&Number.isFinite(Number(x.lng))&&Number(x.price)>0&&Number(x.surface)>=8}
 function bucket(key=cityKey()){const c=cache();if(!c[key])c[key]={at:0,provider:'cherchertrouver',listings:[],nextCursor:null,hasMore:true,exploredCells:{},pages:0};c[key].exploredCells=c[key].exploredCells||{};return{all:c,b:c[key]}}
 function mergeUnique(base,next){const seen=new Set(base.map(x=>String(x.id))),out=[...base];for(const x of next){if(!x||seen.has(String(x.id)))continue;seen.add(String(x.id));out.push(x)}return out}
 function query(cursor){const q=new URLSearchParams();q.set('city',cityName()||cityKey());q.set('limit','12');if(cursor)q.set('cursor',cursor);return q}
@@ -45,6 +58,6 @@ function install(){let originalStock,originalOpen;try{if(typeof stock!=='functio
  openListingDetail=function(){const out=originalOpen.apply(this,arguments);try{const x=stock().find(a=>String(a.id)===String(st.listing));if(x?.realListing)renderGallery(x)}catch(e){}return out};
  try{const oldDraw=drawListings;drawListings=function(){const r=oldDraw.apply(this,arguments);setTimeout(()=>{ensureMapWatch();fetchCity(false)},140);return r}}catch(e){}
  try{const oldSide=side;side=function(){const r=oldSide.apply(this,arguments);if(st.level==='listing')setTimeout(()=>fetchCity(false),100);return r}}catch(e){}
- setInterval(ensureMapWatch,650);setTimeout(()=>fetchCity(false),350);window.HCRealEstateLiveFeed={version:2,fetchCity,fetchNextForMap,current,configure,endpoint,reset,keys:{cache:CACHE_KEY,used:USED_KEY}};return true}
+ setInterval(ensureMapWatch,650);setTimeout(()=>fetchCity(false),350);window.HCRealEstateLiveFeed={version:3,fetchCity,fetchNextForMap,current,configure,endpoint,reset,keys:{cache:CACHE_KEY,used:USED_KEY}};return true}
 let tries=0;const timer=setInterval(()=>{tries++;if(install()||tries>180)clearInterval(timer)},60);
 })();
