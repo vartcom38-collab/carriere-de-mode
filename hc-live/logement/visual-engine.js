@@ -1,6 +1,6 @@
 /* Haute Couture Live — logement fluide + photos réelles + adresses/carte légères. */
 (function(){
-  const BUILD='20260825-realestate2';
+  const BUILD='20260826-housing-market1';
   let installed=false,depsReady=false,queueRunning=false,addressRunning=false;
   const queued=new Set(),attempted=new Set();
 
