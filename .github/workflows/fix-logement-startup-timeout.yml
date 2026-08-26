@@ -1,8 +1,38 @@
-name: Disabled legacy logement geography fix
+name: One-shot legacy logement startup repair
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-logement-startup-timeout.yml'
+permissions:
+  contents: write
 jobs:
-  noop:
+  patch:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Disabled after successful legacy logement geography repair."
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Restore legacy geography URLs and render UI immediately
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('logement/index.html')
+          s=p.read_text()
+          s=s.replace('https://geo.api.gouv.fr/regions?fields=nom,code&format=geojson&geometry=contour','https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions-version-simplifiee.geojson')
+          s=s.replace('https://geo.api.gouv.fr/departements?fields=nom,code,codeRegion&format=geojson&geometry=contour','https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson')
+          old="el('topBudget').textContent=money(START_BUDGET);el('bookBudget').textContent=money(START_BUDGET);loadAll();"
+          new="el('topBudget').textContent=money(START_BUDGET);el('bookBudget').textContent=money(START_BUDGET);try{initFilters();render()}catch(e){console.error('HC logement immediate render',e)};loadAll();"
+          if old in s:
+              s=s.replace(old,new,1)
+          elif new not in s:
+              raise SystemExit('startup target not found')
+          p.write_text(s)
+          PY
+      - name: Commit only logement index
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add logement/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "restore legacy logement startup without blank screen"
+          git push origin HEAD:main
