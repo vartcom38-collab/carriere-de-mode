@@ -1,0 +1,25 @@
+name: Verify real-estate production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait briefly for Vercel
+        run: sleep 25
+      - name: Check health
+        run: |
+          set -e
+          echo '--- HEALTH ---'
+          curl -fsSL --retry 6 --retry-delay 10 https://carriere-de-mode-visuals.vercel.app/api/health
+          echo
+      - name: Check Nimes real-estate feed
+        run: |
+          set -e
+          echo '--- NIMES ---'
+          curl -fsSL --retry 3 --retry-delay 10 'https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings?insee=30189&city=N%C3%AEmes&limit=5'
+          echo
