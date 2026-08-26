@@ -1,0 +1,37 @@
+name: Housing cache bust oneoff
+on:
+  push:
+    paths:
+      - '.github/workflows/housing-cache-bust-oneoff.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Force fresh housing scripts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('hc-live/logement/index.html')
+          s=p.read_text()
+          s=s.replace('<script src="./visual-engine.js"></script>','<script src="./visual-engine.js?v=20260826-real-housing-feed4"></script>')
+          p.write_text(s)
+          p=Path('hc-live/logement/visual-engine.js')
+          s=p.read_text().replace("20260826-real-housing-feed2","20260826-real-housing-feed4")
+          p.write_text(s)
+          p=Path('hc-live/logement/visual-service.js')
+          s=p.read_text().replace('real-estate-photo-library-v2.js?v=20260825-realestate2','real-estate-photo-library-v2.js?v=20260826-realestate3')
+          p.write_text(s)
+          PY
+      - name: Commit cache bust
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add hc-live/logement/index.html hc-live/logement/visual-engine.js hc-live/logement/visual-service.js
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "force fresh real housing scripts"
+          git push origin HEAD:main
