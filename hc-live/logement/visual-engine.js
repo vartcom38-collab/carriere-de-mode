@@ -1,6 +1,6 @@
 /* Haute Couture Live — logement fluide + photos réelles + adresses/carte légères. */
 (function(){
-  const BUILD='20260826-housing-market1';
+  const BUILD='20260826-real-housing-feed2';
   let installed=false,depsReady=false,queueRunning=false,addressRunning=false;
   const queued=new Set(),attempted=new Set();
 
@@ -15,7 +15,8 @@
     try{
       await loadScript('./visual-dna.js',()=>!!window.HCVisualDNA);
       await loadScript('./visual-service.js',()=>!!window.HCVisualService);
-      depsReady=!!(window.HCVisualDNA&&window.HCVisualService);
+      await loadScript('./real-estate-live-feed-v1.js',()=>!!window.HCRealEstateLiveFeed);
+      depsReady=!!(window.HCVisualDNA&&window.HCVisualService&&window.HCRealEstateLiveFeed);
     }catch(e){console.error('HC photos: dépendances indisponibles',e);depsReady=false}
     return depsReady;
   }
@@ -33,6 +34,7 @@
 
   function hydrate(x){try{return window.HCVisualDNA.hydrate(x,context(x))}catch(e){return null}}
   function cachedUrl(x){
+    if(x?.realListing&&x.gallery?.[0]?.url)return x.gallery[0].url;
     const v=hydrate(x);if(!v)return'';
     if(v.assets&&v.assets.mainImage)return v.assets.mainImage;
     try{const c=window.HCVisualService.getCached(v.visualSeed,'main');return c&&c.url?c.url:''}catch(e){return''}
@@ -71,6 +73,7 @@
     if(!x||!depsReady)return;
     const id=String(x.id),card=cardFor(id),slot=slotForCard(card);
     const existing=cachedUrl(x);if(existing){setImage(slot,existing);return}
+    if(x.realListing)return;
     if(attempted.has(id))return;
     attempted.add(id);setSlot(slot,'PHOTO EN CHARGEMENT…');
     try{
@@ -97,7 +100,7 @@
     if(!depsReady)return;
     const list=items();
     document.querySelectorAll('.listing[data-id]').forEach(card=>{
-      const x=list.find(v=>String(v.id)===String(card.dataset.id));if(!x)return;
+      const x=list.find(v=>String(v.id)===String(card.dataset.id));if(!x||x.realListing)return;
       if(!cachedUrl(x)&&!attempted.has(String(x.id)))queued.add(String(x.id));
     });
     if('requestIdleCallback'in window)requestIdleCallback(()=>runQueue(),{timeout:1800});else setTimeout(runQueue,900)
@@ -136,6 +139,7 @@
     try{
       for(const x of list){
         if(!x)continue;
+        if(x.realListing){updateAddressInCard(x);continue}
         if(x.address&&x.address!=='Adresse en cours…'&&!/secteur résidentiel$/i.test(x.address)){updateAddressInCard(x);continue}
         const oldLat=x.lat,oldLng=x.lng;
         try{
@@ -201,14 +205,14 @@
       openListingDetail=function(){
         const r=originalOpen.apply(this,arguments);const x=selectedListing();
         fixChoiceButton();
-        if(x&&depsReady){const url=cachedUrl(x);if(url)showMain(url);else{showMain('');if(!attempted.has(String(x.id))){queued.add(String(x.id));runQueue()}}}
+        if(x&&depsReady){const url=cachedUrl(x);if(url)showMain(url);else{showMain('');if(!x.realListing&&!attempted.has(String(x.id))){queued.add(String(x.id));runQueue()}}}
         return r
       }
     }catch(e){}
 
     fixChoiceButton();
-    loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,1400)}});
-    window.HCVisualEngine={build:BUILD,mode:'real-estate-photos-real-addresses',chooseHome,decorateCards,queueVisible};
+    loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,1400);setTimeout(()=>window.HCRealEstateLiveFeed?.fetchCity?.(false),400)}});
+    window.HCVisualEngine={build:BUILD,mode:'real-listings-first',chooseHome,decorateCards,queueVisible};
     return true
   }
 
