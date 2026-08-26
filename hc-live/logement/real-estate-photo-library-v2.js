@@ -25,25 +25,15 @@ const LIB=[
 {id:'px-6265833',url:p('6265833'),source:'Pexels',sourcePage:'https://www.pexels.com/photo/interior-with-living-space-and-kitchen-corner-6265833/',types:['Deux-pièces créatif','Petit loft','Rez-de-chaussée atelier'],surface:[32,60],standing:['moyen','premium'],features:['open-kitchen','living-room','wood','workspace','loft'],territories:['Occitanie','Nîmes','France'],actualLocation:null},
 {id:'px-5507233',url:p('5507233'),source:'Pexels',sourcePage:'https://www.pexels.com/photo/throw-pillows-on-a-couch-5507233/',types:['Appartement ancien','Deux-pièces créatif'],surface:[30,60],standing:['moyen','premium'],features:['living-room','warm','wood-floor','french-style'],territories:['Provence-Alpes-Côte d’Azur','Nice','south-france','France'],actualLocation:'Nice, Provence-Alpes-Côte d’Azur, France'}
 ];
-window.HCRealEstatePhotoLibrary={version:'2.1',items:LIB};
+window.HCRealEstatePhotoLibrary={version:'2.0',items:LIB};
 })();
 
-/* Compatibilité historique : charge seulement le shim qui ne génère plus aucune fausse galerie. */
+/* Charge la couche spatiale après la bibliothèque. Elle attend elle-même la carte/stock. */
 (function(){
-  if(window.HCHousingMarketExpansion?.version>=2||document.querySelector('script[data-hc-housing-market-expansion-v2]'))return;
+  if(window.HCHousingMarketExpansion||document.querySelector('script[data-hc-housing-market-expansion]'))return;
   const s=document.createElement('script');
-  s.src='./housing-market-expansion-v1.js?v=20260826-housing-market2';
+  s.src='./housing-market-expansion-v1.js?v=20260826-housing-market1';
   s.defer=true;
-  s.setAttribute('data-hc-housing-market-expansion-v2','1');
-  document.head.appendChild(s);
-})();
-
-/* Charge explicitement la version fraîche du flux réel ; une v1/v2 déjà en mémoire ne bloque plus la v3. */
-(function(){
-  if(window.HCRealEstateLiveFeed?.version>=3||document.querySelector('script[data-hc-real-estate-live-feed-v3]'))return;
-  const s=document.createElement('script');
-  s.src='./real-estate-live-feed-v1.js?v=20260826-real-listings3';
-  s.defer=true;
-  s.setAttribute('data-hc-real-estate-live-feed-v3','1');
+  s.setAttribute('data-hc-housing-market-expansion','1');
   document.head.appendChild(s);
 })();

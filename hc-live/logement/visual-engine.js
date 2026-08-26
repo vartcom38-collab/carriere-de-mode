@@ -1,7 +1,6 @@
 /* Haute Couture Live — logement fluide + photos réelles + adresses/carte légères. */
 (function(){
-  const BUILD='20260826-real-housing-feed5';
-  const CURRENT_ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
+  const BUILD='20260826-housing-market1';
   let installed=false,depsReady=false,queueRunning=false,addressRunning=false;
   const queued=new Set(),attempted=new Set();
 
@@ -10,37 +9,13 @@
   function selectedListing(){try{return items().find(x=>String(x.id)===String(st.listing))||null}catch(e){return null}}
   function context(x){return{city:(typeof st!=='undefined'&&st.city)||x.city||'',region:(typeof st!=='undefined'&&st.region)||x.region||'',district:x.district||''}}
 
-  function purgeLegacyHousing(){
-    try{
-      localStorage.removeItem('haute-couture-housing-spatial-market-v1');
-      localStorage.removeItem('haute-couture-housing-gallery-assignments-v1');
-      localStorage.removeItem('haute-couture-real-listings-cache-v2');
-      const ep=String(localStorage.getItem('haute-couture-real-estate-api-endpoint')||'');
-      if(!ep||/vartcom38-7358s-projects\.vercel\.app/i.test(ep))localStorage.setItem('haute-couture-real-estate-api-endpoint',CURRENT_ENDPOINT);
-    }catch(e){}
-  }
-
-  function neutralizeLegacyGallery(){
-    const thumbs=[...document.querySelectorAll('#detailModal .thumb')];
-    thumbs.forEach((th,i)=>{const span=th.querySelector('span');if(span)span.textContent=`Photo ${i+1}`});
-    const main=$('mainVisual');
-    if(main&&main.classList.contains('gallery-illustration')){
-      main.style.position='absolute';main.style.inset='0';
-    }
-  }
-
   function loadScript(src,test){return new Promise((resolve,reject)=>{if(test())return resolve();const s=document.createElement('script');s.src=src+'?v='+BUILD;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
   async function loadDeps(){
     if(depsReady)return true;
     try{
       await loadScript('./visual-dna.js',()=>!!window.HCVisualDNA);
       await loadScript('./visual-service.js',()=>!!window.HCVisualService);
-      await loadScript('./real-estate-live-feed-v1.js',()=>!!window.HCRealEstateLiveFeed);
-      depsReady=!!(window.HCVisualDNA&&window.HCVisualService&&window.HCRealEstateLiveFeed);
-      if(depsReady){
-        try{window.HCRealEstateLiveFeed.configure(CURRENT_ENDPOINT)}catch(e){}
-        try{window.HCRealEstateLiveFeed.reset()}catch(e){}
-      }
+      depsReady=!!(window.HCVisualDNA&&window.HCVisualService);
     }catch(e){console.error('HC photos: dépendances indisponibles',e);depsReady=false}
     return depsReady;
   }
@@ -58,7 +33,6 @@
 
   function hydrate(x){try{return window.HCVisualDNA.hydrate(x,context(x))}catch(e){return null}}
   function cachedUrl(x){
-    if(x?.realListing&&x.gallery?.[0]?.url)return x.gallery[0].url;
     const v=hydrate(x);if(!v)return'';
     if(v.assets&&v.assets.mainImage)return v.assets.mainImage;
     try{const c=window.HCVisualService.getCached(v.visualSeed,'main');return c&&c.url?c.url:''}catch(e){return''}
@@ -97,7 +71,6 @@
     if(!x||!depsReady)return;
     const id=String(x.id),card=cardFor(id),slot=slotForCard(card);
     const existing=cachedUrl(x);if(existing){setImage(slot,existing);return}
-    if(x.realListing)return;
     if(attempted.has(id))return;
     attempted.add(id);setSlot(slot,'PHOTO EN CHARGEMENT…');
     try{
@@ -124,7 +97,7 @@
     if(!depsReady)return;
     const list=items();
     document.querySelectorAll('.listing[data-id]').forEach(card=>{
-      const x=list.find(v=>String(v.id)===String(card.dataset.id));if(!x||x.realListing)return;
+      const x=list.find(v=>String(v.id)===String(card.dataset.id));if(!x)return;
       if(!cachedUrl(x)&&!attempted.has(String(x.id)))queued.add(String(x.id));
     });
     if('requestIdleCallback'in window)requestIdleCallback(()=>runQueue(),{timeout:1800});else setTimeout(runQueue,900)
@@ -163,7 +136,6 @@
     try{
       for(const x of list){
         if(!x)continue;
-        if(x.realListing){updateAddressInCard(x);continue}
         if(x.address&&x.address!=='Adresse en cours…'&&!/secteur résidentiel$/i.test(x.address)){updateAddressInCard(x);continue}
         const oldLat=x.lat,oldLng=x.lng;
         try{
@@ -209,8 +181,6 @@
     if(installed)return true;
     try{if(typeof side!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined'||typeof stock!=='function')return false}catch(e){return false}
     installed=true;
-    purgeLegacyHousing();
-    neutralizeLegacyGallery();
 
     try{
       snapAddresses=function(list,key){
@@ -223,25 +193,22 @@
 
     try{
       const originalSide=side;
-      side=function(){const r=originalSide.apply(this,arguments);decorateCards();neutralizeLegacyGallery();setTimeout(queueVisible,1000);return r}
+      side=function(){const r=originalSide.apply(this,arguments);decorateCards();setTimeout(queueVisible,1000);return r}
     }catch(e){}
 
     try{
       const originalOpen=openListingDetail;
       openListingDetail=function(){
         const r=originalOpen.apply(this,arguments);const x=selectedListing();
-        fixChoiceButton();neutralizeLegacyGallery();
-        if(x&&depsReady){const url=cachedUrl(x);if(url)showMain(url);else{showMain('');if(!x.realListing&&!attempted.has(String(x.id))){queued.add(String(x.id));runQueue()}}}
-        setTimeout(()=>{neutralizeLegacyGallery();try{if(x?.realListing&&window.HCRealEstateLiveFeed)window.HCRealEstateLiveFeed.fetchCity(false)}catch(e){}},60);
+        fixChoiceButton();
+        if(x&&depsReady){const url=cachedUrl(x);if(url)showMain(url);else{showMain('');if(!attempted.has(String(x.id))){queued.add(String(x.id));runQueue()}}}
         return r
       }
     }catch(e){}
 
     fixChoiceButton();
-    const galleryObserver=new MutationObserver(()=>neutralizeLegacyGallery());
-    try{galleryObserver.observe(document.getElementById('detailModal')||document.body,{subtree:true,childList:true,characterData:true})}catch(e){}
-    loadDeps().then(ok=>{if(ok){decorateCards();neutralizeLegacyGallery();setTimeout(queueVisible,1400);setTimeout(()=>window.HCRealEstateLiveFeed?.fetchCity?.(true),400)}});
-    window.HCVisualEngine={build:BUILD,mode:'real-listings-first',chooseHome,decorateCards,queueVisible,neutralizeLegacyGallery,purgeLegacyHousing};
+    loadDeps().then(ok=>{if(ok){decorateCards();setTimeout(queueVisible,1400)}});
+    window.HCVisualEngine={build:BUILD,mode:'real-estate-photos-real-addresses',chooseHome,decorateCards,queueVisible};
     return true
   }
 
