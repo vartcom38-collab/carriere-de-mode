@@ -1,5 +1,5 @@
 const PROVIDER_URL='https://cherchertrouver.immo/api/v1/annonces';
-function json(res,status,body){res.status(status).setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','s-maxage=900, stale-while-revalidate=3600');return res.end(JSON.stringify(body))}
+function json(res,status,body){res.status(status).setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=900');return res.end(JSON.stringify(body))}
 const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null};
 const arr=v=>Array.isArray(v)?v:[];
 function apiKey(){let k=String(process.env.CHERCHERTROUVER_API_KEY||process.env.CHERCHER_TROUVER_API_KEY||'').trim();k=k.replace(/^X-Api-Key\s*:\s*/i,'').replace(/^Bearer\s+/i,'').trim();if((k.startsWith('"')&&k.endsWith('"'))||(k.startsWith("'")&&k.endsWith("'")))k=k.slice(1,-1).trim();return k}
@@ -15,8 +15,8 @@ function normalize(a){
 export default async function handler(req,res){
  if(req.method!=='GET')return json(res,405,{ok:false,error:'method_not_allowed'});
  const key=apiKey();if(!key)return json(res,503,{ok:false,configured:false,provider:'cherchertrouver',error:'CHERCHERTROUVER_API_KEY_missing'});
- const city=String(req.query?.city||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));if(!city)return json(res,400,{ok:false,error:'city_required'});
- const q=new URLSearchParams();q.set('transaction','location');q.set('ville',city);q.set('page_size',String(limit));q.set('sort','recent');
+ const city=String(req.query?.city||'').trim(),cursor=String(req.query?.cursor||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));if(!city)return json(res,400,{ok:false,error:'city_required'});
+ const q=new URLSearchParams();q.set('transaction','location');q.set('ville',city);q.set('page_size',String(limit));q.set('sort','recent');if(cursor)q.set('cursor',cursor);
  const minSurface=n(req.query?.surfaceMin);if(minSurface)q.set('surface_min',String(minSurface));
  const maxPrice=n(req.query?.budgetMax);if(maxPrice)q.set('prix_max',String(maxPrice));
  try{const response=await fetch(`${PROVIDER_URL}?${q.toString()}`,{headers:{Accept:'application/json','X-Api-Key':key}});const data=await response.json().catch(()=>({}));if(!response.ok)return json(res,response.status,{ok:false,configured:true,provider:'cherchertrouver',error:data?.error||data?.message||`provider_${response.status}`,providerStatus:response.status,providerCode:data?.code||null});const listings=arr(data.items).map(normalize).filter(Boolean);return json(res,200,{ok:true,configured:true,provider:'cherchertrouver',city,count:listings.length,total:Number(data.total||listings.length),hasMore:Boolean(data.has_more),nextCursor:data.next_cursor||null,quota:{itemsLimit:n(response.headers.get('x-quota-items-limit')),itemsUsed:n(response.headers.get('x-quota-items-used')),requestsLimit:n(response.headers.get('x-quota-requests-limit')),requestsUsed:n(response.headers.get('x-quota-requests-used'))},listings});}catch(e){return json(res,502,{ok:false,configured:true,provider:'cherchertrouver',error:'provider_unreachable',message:String(e?.message||e)})}
