@@ -1,49 +1,59 @@
-/* Haute Couture Live — visuels logement : vraies photos curées, uniques et raccord avec l'annonce. */
+/* Haute Couture Live — client de génération d'images à la demande. */
 (function(){
   const CACHE_KEY='haute-couture-visual-service-cache-v1';
-  const ASSIGN_KEY='haute-couture-real-estate-photo-assignments-v2';
   const ENDPOINT_KEY='haute-couture-visual-api-endpoint';
   const LEGACY_ENDPOINT='https://pmsowlrsbyczjjwzuzsr.supabase.co/functions/v1/hc-generate-listing-visual';
   const DEFAULT_ENDPOINT='https://carriere-de-mode-visuals-vartcom38-7358s-projects.vercel.app/api/generate-listing-visual';
-  const DEFAULT_STATUS_ENDPOINT='https://carriere-de-mode-visuals-vartcom38-7358s-projects.vercel.app/api/check-listing-visual';
-  const PROVIDER='magnific',REAL_PROVIDER='curated-real-photo-library';
-  const FALLBACK=[
-    {id:'fb-1',url:'https://images.pexels.com/photos/8142976/pexels-photo-8142976.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1050&fit=crop',types:['Studio lumineux','T1 rénové'],surface:[18,32],features:['studio','compact','bright'],territories:['France']},
-    {id:'fb-2',url:'https://images.pexels.com/photos/20290959/pexels-photo-20290959.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1050&fit=crop',types:['Studio mansardé'],surface:[16,34],features:['attic','skylight','sloped-ceiling'],territories:['France']},
-    {id:'fb-3',url:'https://images.pexels.com/photos/6265833/pexels-photo-6265833.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1050&fit=crop',types:['Deux-pièces créatif','Petit loft'],surface:[30,60],features:['living-room','open-kitchen','loft'],territories:['France']}
-  ];
-  const baseScript=document.currentScript&&document.currentScript.src?document.currentScript.src:location.href;
-  let libraryFailed=false;
-  const libraryReady=new Promise(resolve=>{
-    if(window.HCRealEstatePhotoLibrary?.items?.length)return resolve(true);
-    const s=document.createElement('script');s.src=new URL('./real-estate-photo-library-v2.js?v=20260825-realestate2',baseScript).href;s.defer=true;
-    s.onload=()=>resolve(true);s.onerror=()=>{libraryFailed=true;console.warn('[Housing] curated photo library unavailable; fallback used');resolve(false)};document.head.appendChild(s)
-  });
-  const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch(e){return f}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-  function cache(){return read(CACHE_KEY,{})} function saveCache(c){write(CACHE_KEY,c)}
-  function assignments(){return read(ASSIGN_KEY,{})} function saveAssignments(a){write(ASSIGN_KEY,a)}
-  function endpoint(){const stored=localStorage.getItem(ENDPOINT_KEY);if(stored===LEGACY_ENDPOINT){localStorage.removeItem(ENDPOINT_KEY);return window.HC_VISUAL_API_ENDPOINT||DEFAULT_ENDPOINT}return stored||window.HC_VISUAL_API_ENDPOINT||DEFAULT_ENDPOINT}
-  function statusEndpoint(){return window.HC_VISUAL_STATUS_ENDPOINT||DEFAULT_STATUS_ENDPOINT}
+  const PROVIDER='magnific';
+  function cache(){try{return JSON.parse(localStorage.getItem(CACHE_KEY)||'{}')}catch(e){return{}}}
+  function saveCache(c){try{localStorage.setItem(CACHE_KEY,JSON.stringify(c))}catch(e){}}
+  function endpoint(){
+    const stored=localStorage.getItem(ENDPOINT_KEY);
+    if(stored===LEGACY_ENDPOINT){localStorage.removeItem(ENDPOINT_KEY);return window.HC_VISUAL_API_ENDPOINT||DEFAULT_ENDPOINT}
+    return stored||window.HC_VISUAL_API_ENDPOINT||DEFAULT_ENDPOINT;
+  }
   function key(seed,view){return seed+'|'+view}
   function getCached(seed,view){return cache()[key(seed,view)]||null}
-  function remember(seed,view,url,provider=PROVIDER,meta={}){const c=cache();c[key(seed,view)]={url,at:new Date().toISOString(),provider,...meta};saveCache(c)}
-  function library(){if(window.HCRealEstatePhotoLibrary?.items?.length)return window.HCRealEstatePhotoLibrary.items;return libraryFailed?FALLBACK:[]}
-  function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-  function territory(context={},listing={}){const city=context.city||listing.city||'',region=context.region||listing.region||'';return{city,region,south:/occitanie|provence|cote d.azur|paca/i.test(region)||/nimes|montpellier|marseille|nice|avignon|arles/i.test(city)}}
-  function hardCompatible(photo,listing){const title=norm(listing.title||listing.type),f=(photo.features||[]).map(norm);if(title.includes('mansarde')&&!f.some(x=>/attic|sloped-ceiling|skylight/.test(x)))return false;if(title.includes('loft')&&!f.some(x=>/loft|open-space|workspace|brick/.test(x)))return false;if(title.includes('atelier')&&!f.some(x=>/workspace|loft|open-plan|open-space/.test(x)))return false;return true}
-  function score(photo,listing,context){if(!hardCompatible(photo,listing))return-9999;let s=0;const title=listing.title||listing.type||'',surface=Number(listing.surface||0),t=territory(context,listing),types=photo.types||[],terr=photo.territories||[],features=(photo.features||[]).map(norm),nt=norm(title);if(types.includes(title))s+=70;else if(types.some(x=>nt.includes(norm(x))||norm(x).includes(nt)))s+=35;if(photo.surface&&surface){if(surface>=photo.surface[0]&&surface<=photo.surface[1])s+=35;else s-=Math.min(30,Math.abs(surface-((photo.surface[0]+photo.surface[1])/2))*2)}if(t.city&&terr.includes(t.city))s+=55;if(t.region&&terr.includes(t.region))s+=35;if(t.south&&terr.includes('south-france'))s+=20;if(terr.includes('France'))s+=5;if(nt.includes('lumineux')&&features.some(x=>/bright|large-window|sunlight/.test(x)))s+=18;if(nt.includes('ancien')&&features.some(x=>/parquet|classic|french-style|warm/.test(x)))s+=20;if(listing.balcony&&features.some(x=>/balcony|balcony-view/.test(x)))s+=25;if(surface<=20&&features.some(x=>/small-space|compact|studio/.test(x)))s+=20;if(surface>=35&&features.some(x=>/open-plan|living-room|loft|open-space/.test(x)))s+=12;return s}
-  function assignmentScope(context,listing){const t=territory(context,listing);return norm(t.city||t.region||'france')}
-  function chooseRealPhoto(listing,context={}){if(!listing)return null;const all=library();if(!all.length)return null;const a=assignments(),id=String(listing.id||listing.visual?.visualSeed||'listing'),scope=assignmentScope(context,listing),existing=a[id];if(existing){const p=all.find(x=>x.id===existing.photoId);if(p&&hardCompatible(p,listing))return p}const used=new Set(Object.entries(a).filter(([k,v])=>k!==id&&v&&v.scope===scope).map(([,v])=>v.photoId));const ranked=all.map(p=>({p,s:score(p,listing,context)})).filter(x=>x.s>-9000).sort((x,y)=>y.s-x.s||String(x.p.id).localeCompare(String(y.p.id)));const pick=ranked.find(x=>!used.has(x.p.id))||ranked[0];if(!pick?.p)return null;a[id]={photoId:pick.p.id,scope,city:territory(context,listing).city,region:territory(context,listing).region,assignedAt:new Date().toISOString()};saveAssignments(a);return pick.p}
-  function resolveRealPhoto(listing,view='main',context={}){const p=chooseRealPhoto(listing,context);return p?{url:p.url,provider:REAL_PROVIDER,photoId:p.id,source:p.source||'Pexels',sourcePage:p.sourcePage||null,real:true}:null}
-  function setAsset(listing,view,url,provider,meta={}){const v=listing.visual;if(!v||!url)return;v.assets=v.assets||{thumbnail:null,mainImage:null,gallery:{}};v.assets.gallery=v.assets.gallery||{};if(view==='main')v.assets.mainImage=url;else if(view==='thumbnail')v.assets.thumbnail=url;else v.assets.gallery[view]=url;v.visualStatus=view==='main'?'main_ready':'gallery_partial';v.generationStage=view==='main'?'real_photo_ready':v.visualStatus;if(provider===REAL_PROVIDER){v.mainImageSource='real-photo';v.mainImageProvider=REAL_PROVIDER;v.realPhotoId=meta.photoId||v.realPhotoId;v.realPhotoSourcePage=meta.sourcePage||v.realPhotoSourcePage}if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing)}
-  function ensureRealMain(listing,context={}){const real=resolveRealPhoto(listing,'main',context);if(!real)return null;setAsset(listing,'main',real.url,REAL_PROVIDER,real);remember(listing.visual?.visualSeed||listing.id,'main',real.url,REAL_PROVIDER,{photoId:real.photoId,sourcePage:real.sourcePage});return real}
-  function patchDNA(){const d=window.HCVisualDNA;if(!d||d.__realEstatePhotosPatched||typeof d.hydrate!=='function')return false;const original=d.hydrate.bind(d);d.hydrate=function(listing,context){const v=original(listing,context);try{ensureRealMain(listing,context||{})}catch(e){}return listing?.visual||v};d.__realEstatePhotosPatched=true;return true}
-  patchDNA();let patchTries=0;const patchTimer=setInterval(()=>{patchTries++;if(patchDNA()||patchTries>120)clearInterval(patchTimer)},25);
-  async function waitForTask(taskId,{timeoutMs=180000,intervalMs=2500}={}){const started=Date.now();while(Date.now()-started<timeoutMs){await new Promise(r=>setTimeout(r,intervalMs));const res=await fetch(statusEndpoint()+'?taskId='+encodeURIComponent(taskId),{headers:{Accept:'application/json'}});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||('visual_status_'+res.status));const url=data.publicUrl||data.url||data.public_url||null;if(url)return{url,provider:data.provider||PROVIDER,taskId};if(data.status==='FAILED')throw new Error('visual_generation_failed')}return{pending:true,provider:PROVIDER,taskId,reason:'visual_generation_timeout'}}
-  async function request(listing,context={},view='main'){if(!listing||!listing.visual)throw new Error('visual_dna_missing');if(view==='main'||view==='thumbnail'){await libraryReady;const real=resolveRealPhoto(listing,view,context);if(real){setAsset(listing,view,real.url,REAL_PROVIDER,real);remember(listing.visual.visualSeed||listing.id,view,real.url,REAL_PROVIDER,{photoId:real.photoId,sourcePage:real.sourcePage});return real}}const v=listing.visual,found=getCached(v.visualSeed,view);if(found&&found.url){setAsset(listing,view,found.url,found.provider,found);return{url:found.url,cached:true,provider:found.provider||PROVIDER}}const api=endpoint();v.visualStatus='generating';v.generationStage='generating_'+view;if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing);const prompt=(v.prompts&&v.prompts[view])||(v.prompts&&v.prompts.main)||'';const res=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({listingId:listing.id,visualSeed:v.visualSeed,promptKey:view,promptText:prompt,view,prompt,provider:PROVIDER,city:context.city||listing.city||'',district:context.district||listing.district||'',context,visual:{archetypeLabel:v.archetypeLabel||v.archetype||'',architecture:v.architecture||'',palette:v.palette||'',decorSignature:v.decorSignature||'',floorMaterial:v.floorMaterial||'',furnitureSignature:v.furnitureSignature||'',lightSignature:v.lightSignature||'',viewSignature:v.viewSignature||view,creativeFeature:v.creativeFeature||''},metadata:{citySignature:v.citySignature,archetype:v.archetype,palette:v.palette,architecture:v.architecture,decor:v.decorSignature,imageStyle:v.imageStyle}})});const data=await res.json().catch(()=>({}));if(!res.ok){v.visualStatus='pending';v.generationStage='provider_wait';return{pending:true,provider:PROVIDER,reason:data.error||('visual_api_'+res.status)}}let url=data.publicUrl||data.url||data.public_url||null;if(!url&&(data.pending||data.status==='IN_PROGRESS')){const taskId=data.jobId||data.taskId||data.id||null;if(!taskId)return{pending:true,provider:data.provider||PROVIDER,reason:'visual_api_missing_task_id'};const waited=await waitForTask(taskId);if(waited?.url)url=waited.url;else return waited}if(!url)return{pending:true,provider:data.provider||PROVIDER,reason:'visual_api_missing_url'};remember(v.visualSeed,view,url,data.provider||PROVIDER);setAsset(listing,view,url,data.provider||PROVIDER);return{url,cached:!!data.cached,provider:data.provider||PROVIDER}}
-  function configure(url){if(url)localStorage.setItem(ENDPOINT_KEY,url);else localStorage.removeItem(ENDPOINT_KEY)}function resetAssignments(){localStorage.removeItem(ASSIGN_KEY)}
-  window.HCVisualService={request,waitForTask,configure,endpoint,statusEndpoint,getCached,resolveRealPhoto,ensureRealMain,chooseRealPhoto,resetAssignments,libraryReady,provider:REAL_PROVIDER,fallbackProvider:PROVIDER};
+  function remember(seed,view,url){const c=cache();c[key(seed,view)]={url,at:new Date().toISOString(),provider:PROVIDER};saveCache(c)}
+  function setAsset(listing,view,url){const v=listing.visual;if(!v||!url)return;if(view==='main')v.assets.mainImage=url;else if(view==='thumbnail')v.assets.thumbnail=url;else v.assets.gallery[view]=url;v.visualStatus=view==='main'?'main_ready':'gallery_partial';v.generationStage=v.visualStatus;if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing)}
+  async function request(listing,context={},view='main'){
+    if(!listing||!listing.visual)throw new Error('visual_dna_missing');
+    const v=listing.visual,found=getCached(v.visualSeed,view);if(found&&found.url){setAsset(listing,view,found.url);return{url:found.url,cached:true,provider:found.provider||PROVIDER}}
+    const api=endpoint();
+    v.visualStatus='generating';v.generationStage='generating_'+view;
+    if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing);
+    const prompt=(v.prompts&&v.prompts[view])||(v.prompts&&v.prompts.main)||'';
+    const res=await fetch(api,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      listingId:listing.id,
+      visualSeed:v.visualSeed,
+      promptKey:view,
+      promptText:prompt,
+      view,
+      prompt,
+      provider:PROVIDER,
+      city:context.city||listing.city||'',
+      district:context.district||listing.district||'',
+      context,
+      visual:{
+        archetypeLabel:v.archetypeLabel||v.archetype||'',
+        architecture:v.architecture||'',
+        palette:v.palette||'',
+        decorSignature:v.decorSignature||'',
+        floorMaterial:v.floorMaterial||'',
+        furnitureSignature:v.furnitureSignature||'',
+        lightSignature:v.lightSignature||'',
+        viewSignature:v.viewSignature||view,
+        creativeFeature:v.creativeFeature||''
+      },
+      metadata:{citySignature:v.citySignature,archetype:v.archetype,palette:v.palette,architecture:v.architecture,decor:v.decorSignature,imageStyle:v.imageStyle}
+    })});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok){v.visualStatus='pending';v.generationStage='provider_wait';if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing);return{pending:true,provider:PROVIDER,reason:data.error||('visual_api_'+res.status)}}
+    const url=data.publicUrl||data.url||data.public_url||null;
+    if((data.pending||data.status==='IN_PROGRESS')&&!url){v.visualStatus='pending';v.generationStage='provider_wait';if(window.HCVisualDNA&&window.HCVisualDNA.save)window.HCVisualDNA.save(listing);return{pending:true,provider:data.provider||PROVIDER,jobId:data.jobId||data.taskId||data.id||null}}
+    if(!url)return{pending:true,provider:data.provider||PROVIDER,reason:'visual_api_missing_url'};
+    remember(v.visualSeed,view,url);setAsset(listing,view,url);return{url,cached:!!data.cached,provider:data.provider||PROVIDER};
+  }
+  function configure(url){if(url)localStorage.setItem(ENDPOINT_KEY,url);else localStorage.removeItem(ENDPOINT_KEY)}
+  window.HCVisualService={request,configure,endpoint,getCached,provider:PROVIDER};
 })();
-
-/* Chez moi — raccourci Book injecté sans toucher au gros hub historique. */
-(function(){if(!/\/chez-moi\/?$/.test(location.pathname))return;const add=()=>{if(document.getElementById('hc-book-shortcut'))return;const grid=document.querySelector('.actions-grid');if(!grid)return;const b=document.createElement('button');b.id='hc-book-shortcut';b.className='action-card ready';b.innerHTML='<span class="icon">▤</span><b>Mon Book</b><small>Inspis, lieux, matières, palettes, silhouettes et pépites sauvegardées.</small>';b.onclick=()=>location.href='../book/';const end=document.getElementById('endDayBtn');grid.insertBefore(b,end||null)};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',add);else add()})();
