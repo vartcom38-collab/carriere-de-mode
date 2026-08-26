@@ -1,43 +1,23 @@
-const PROVIDER_URL='https://api.stream.estate/documents/properties';
+const PROVIDER_URL='https://api-v2.stream.estate/properties';
 function json(res,status,body){res.status(status).setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','s-maxage=900, stale-while-revalidate=3600');return res.end(JSON.stringify(body))}
 const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null};
 const arr=v=>Array.isArray(v)?v:[];
-const cleanPictures=v=>[...new Set(arr(v).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)))].slice(0,18);
-function bestAdvert(p){const ads=arr(p.adverts).filter(a=>!a?.expired);const withPics=ads.filter(a=>cleanPictures(a?.pictures).length>=2);return (withPics[0]||ads[0]||arr(p.adverts)[0]||{});}
-function featureText(p,a){return [...arr(p.features),...arr(a.features),p.description,a.description].filter(Boolean).join(' ').toLowerCase()}
-function normalize(p){
-  const a=bestAdvert(p),city=p.city||{},loc=p.locations||city.locations||{},pics=cleanPictures(a.pictures?.length?a.pictures:p.pictures);
-  if(pics.length<2)return null;
-  const text=featureText(p,a),surface=n(a.surface)??n(p.surface),rooms=n(a.room)??n(p.room),bedrooms=n(p.bedroom),price=n(a.price)??n(p.price),charges=n(a.rentalCharges)??0,pledge=n(a.rentalPledge)??price;
-  const balcony=/balcon|terrasse|loggia|extérieur|jardin/.test(text),attic=/mansard|sous.?toit|combles|velux|pente/.test(text),loft=/loft|atelier|verrière|open.?space/.test(text),old=/parquet|moulure|cheminée|ancien|haussmann/.test(text),openKitchen=/cuisine ouverte|coin cuisine|kitchenette/.test(text),storage=/placard|dressing|rangement|cellier|penderie/.test(text);
-  return {
-    id:'real-'+String(p.uuid||p['@id']||a.uuid||'').replace(/[^a-zA-Z0-9_-]/g,'-'),
-    realPropertyId:String(p.uuid||p['@id']||''),realAdvertId:String(a.uuid||''),source:'stream-estate',sourcePublisher:a.publisher?.name||null,sourceUrl:a.url||null,
-    city:city.name||city.originalName||'',cityInsee:city.insee||'',zipcode:city.zipcode||'',department:city.department?.name||'',region:city.region?.name||'',
-    lat:n(loc.lat),lng:n(loc.lon),title:a.title||p.title||'Appartement à louer',surface,rooms:rooms||1,bedrooms:bedrooms||Math.max(0,(rooms||1)-1),price,charges,deposit:pledge,
-    floor:n(a.floor)??n(p.floor)??0,elevator:Boolean(a.elevator??p.elevator),furnished:Boolean(a.furnished??p.furnished),dpe:a.energy?.category||p.energy?.category||null,
-    balcony,attic,loft,old,openKitchen,storage,
-    description:a.description||p.description||'',features:[...new Set([...arr(a.features),...arr(p.features)])],
-    gallery:pics.map((url,i)=>({id:`${String(p.uuid||a.uuid||'property')}-${i}`,url,order:i})),
-    pictureCount:pics.length,createdAt:a.createdAt||p.createdAt||null,updatedAt:a.updatedAt||p.updatedAt||null
-  };
+function pictureUrls(v){return [...new Set(arr(v).map(x=>typeof x==='string'?x:x?.url).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)))].slice(0,18)}
+function firstListing(item){const ls=arr(item?.listings).filter(x=>x&&x.transactionStatus!=='EXPIRED');return ls[0]||arr(item?.listings)[0]||{}}
+function locInfo(p){const l=p?.locations||{};const city=l.city||l.municipality||l.municipalDistrict||l.neighborhood||l.subNeighborhood||{};const coords=p?.coordinates?.coordinates||p?.location?.coordinates||p?.centroid?.coordinates||city?.centroid?.coordinates||[];return{city:city?.name||'',insee:city?.uniqueCode||'',zip:arr(city?.postalCodes)[0]||'',lng:n(coords[0]),lat:n(coords[1])}}
+function normalize(item){
+ const p=item?.property||item||{},a=firstListing(item),pics=pictureUrls(p.pictures?.length?p.pictures:a.pictures);if(pics.length<2)return null;
+ const loc=locInfo(p),surface=n(p.area?.displayed)??n(p.area?.indoor?.living)??n(a.area),rooms=n(p.unit?.rooms)??n(a.rooms),bedrooms=n(p.unit?.bedrooms)??n(a.bedrooms),price=n(p.pricing?.displayed)??n(a.displayedPrice),charges=n(p.pricing?.rentalCharges)??n(a.rentalCharges)??0;
+ const description=String(a.description||p.description||''),text=description.toLowerCase(),out=p.area?.outdoor||{};
+ const balcony=Boolean(n(out.balcony)>0||a.balcony||a.terrace||a.garden||/balcon|terrasse|loggia|jardin/.test(text)),attic=/mansard|sous.?toit|combles|velux|pente/.test(text),loft=/loft|atelier|verrière|open.?space/.test(text),old=p.constructionStatus==='OLD'||Boolean(a.parquet||a.fireplace)||/moulure|ancien|haussmann/.test(text),openKitchen=Boolean(a.equippedKitchen&&/ouverte|kitchenette|coin cuisine/.test(text)||/cuisine ouverte|coin cuisine|kitchenette/.test(text)),storage=Boolean(a.storage||a.dressing||a.cellar||a.basement||/placard|dressing|rangement|cellier|penderie/.test(text));
+ const id=String(item?.id||p.id||a.id||'property');
+ return{id:'real-'+id.replace(/[^a-zA-Z0-9_-]/g,'-'),realPropertyId:id,realAdvertId:String(a.id||''),source:'stream-estate-v2',sourcePublisher:item?.publishers?.[0]?.agencyName||null,sourceUrl:a.url||null,city:loc.city,cityInsee:loc.insee,zipcode:loc.zip,department:'',region:'',lat:loc.lat,lng:loc.lng,title:a.title||'Appartement à louer',surface,rooms:rooms||1,bedrooms:bedrooms||Math.max(0,(rooms||1)-1),price,charges,deposit:n(p.pricing?.deposit)??price,floor:n(a.floor)??0,elevator:Boolean(a.elevator),furnished:Boolean(a.furnished),dpe:a.energy?.category||p.energy?.category||null,balcony,attic,loft,old,openKitchen,storage,description,features:[],gallery:pics.map((url,i)=>({id:`${id}-${i}`,url,order:i})),pictureCount:pics.length,createdAt:p.createdAt||a.createdAt||null,updatedAt:p.updatedAt||a.updatedAt||null};
 }
 export default async function handler(req,res){
-  if(req.method!=='GET')return json(res,405,{ok:false,error:'method_not_allowed'});
-  const key=process.env.STREAM_ESTATE_API_KEY||process.env.STREAMESTATE_API_KEY;
-  if(!key)return json(res,503,{ok:false,configured:false,provider:'stream-estate',error:'STREAM_ESTATE_API_KEY_missing'});
-  const insee=String(req.query?.insee||'').trim(),city=String(req.query?.city||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));
-  if(!insee&&!city)return json(res,400,{ok:false,error:'insee_or_city_required'});
-  const q=new URLSearchParams();q.set('transactionType','1');q.set('withCoherentPrice','true');q.set('withLocation','true');q.set('itemsPerPage',String(limit));q.set('order[createdAt]','desc');
-  if(insee)q.append('includedInseeCodes[]',insee);
-  const minSurface=n(req.query?.surfaceMin);if(minSurface)q.set('surfaceMin',String(minSurface));
-  const maxPrice=n(req.query?.budgetMax);if(maxPrice)q.set('budgetMax',String(maxPrice));
-  try{
-    const response=await fetch(`${PROVIDER_URL}?${q.toString()}`,{headers:{Accept:'application/json','X-API-KEY':key}});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok)return json(res,response.status,{ok:false,configured:true,provider:'stream-estate',error:data?.message||data?.error||`provider_${response.status}`});
-    let listings=arr(data['hydra:member']).map(normalize).filter(Boolean);
-    if(city&&!insee){const target=city.toLowerCase();listings=listings.filter(x=>String(x.city||'').toLowerCase().includes(target));}
-    return json(res,200,{ok:true,configured:true,provider:'stream-estate',insee:insee||null,city:city||null,count:listings.length,total:Number(data['hydra:totalItems']||listings.length),listings});
-  }catch(e){return json(res,502,{ok:false,configured:true,provider:'stream-estate',error:'provider_unreachable',message:String(e?.message||e)});}
+ if(req.method!=='GET')return json(res,405,{ok:false,error:'method_not_allowed'});
+ const key=process.env.STREAM_ESTATE_API_KEY||process.env.STREAMESTATE_API_KEY;if(!key)return json(res,503,{ok:false,configured:false,provider:'stream-estate-v2',error:'STREAM_ESTATE_API_KEY_missing'});
+ const insee=String(req.query?.insee||'').trim(),city=String(req.query?.city||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));if(!insee&&!city)return json(res,400,{ok:false,error:'insee_or_city_required'});
+ const property={type:{in:['FLAT','HOUSE']},transaction:{type:'RENT'},locations:{countryCode:'FR'}};if(insee)property.locations.in={uniqueCodes:[insee]};const minSurface=n(req.query?.surfaceMin),maxPrice=n(req.query?.budgetMax);if(minSurface)property.area={displayed:{gte:minSurface}};if(maxPrice)property.pricing={displayed:{lte:maxPrice}};
+ const body={criteria:{property},paginationType:'PAGE',page:1,size:limit};
+ try{const response=await fetch(PROVIDER_URL,{method:'POST',headers:{Accept:'application/json','Content-Type':'application/json','X-API-KEY':key},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)return json(res,response.status,{ok:false,configured:true,provider:'stream-estate-v2',error:data?.detail||data?.title||data?.message||data?.error||`provider_${response.status}`,providerStatus:response.status});let listings=arr(data.items).map(normalize).filter(Boolean);if(city&&!insee){const target=city.toLowerCase();listings=listings.filter(x=>String(x.city||'').toLowerCase().includes(target))}return json(res,200,{ok:true,configured:true,provider:'stream-estate-v2',insee:insee||null,city:city||null,count:listings.length,total:Number(data.totalItems||listings.length),listings});}catch(e){return json(res,502,{ok:false,configured:true,provider:'stream-estate-v2',error:'provider_unreachable',message:String(e?.message||e)})}
 }
