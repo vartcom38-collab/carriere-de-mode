@@ -27,3 +27,13 @@ const LIB=[
 ];
 window.HCRealEstatePhotoLibrary={version:'2.0',items:LIB};
 })();
+
+/* Charge la couche spatiale après la bibliothèque. Elle attend elle-même la carte/stock. */
+(function(){
+  if(window.HCHousingMarketExpansion||document.querySelector('script[data-hc-housing-market-expansion]'))return;
+  const s=document.createElement('script');
+  s.src='./housing-market-expansion-v1.js?v=20260826-housing-market1';
+  s.defer=true;
+  s.setAttribute('data-hc-housing-market-expansion','1');
+  document.head.appendChild(s);
+})();
