@@ -21,5 +21,5 @@ jobs:
         run: |
           set -e
           echo '--- NIMES ---'
-          curl -fsSL --retry 3 --retry-delay 10 'https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings?insee=30189&city=N%C3%AEmes&limit=5'
+          curl -sS -w '\nHTTP_STATUS:%{http_code}\n' 'https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings?insee=30189&city=N%C3%AEmes&limit=5'
           echo
