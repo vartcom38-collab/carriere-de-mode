@@ -1,18 +1,19 @@
-/* Haute Couture Live — logement racine : vraies annonces + exploration spatiale persistante. */
+/* Haute Couture Live — logement racine : vraies annonces + exploration spatiale persistante, sans rerender de carte. */
 (function(){
 'use strict';
-if(window.HCVisualEngine?.mode==='direct-real-spatial-listings')return;
-const BUILD='20260826-root-real-housing3';
+if(window.HCVisualEngine?.mode==='direct-real-spatial-listings-stable')return;
+const BUILD='20260826-root-real-housing4';
 const ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
-const CACHE='haute-couture-root-real-housing-v3';
+const CACHE='haute-couture-root-real-housing-v4';
 const CELL=.0038;
-let installed=false,loading=false,real=[],lastCity='',nextCursor=null,hasMore=true,pages=0,boundMap=null,mapTimer=null;
+let installed=false,loading=false,real=[],lastCity='',nextCursor=null,hasMore=true,pages=0,boundMap=null,mapTimer=null,initialMapSwapDone=false;
+const markerIds=new Set();
 
 function read(){try{return JSON.parse(localStorage.getItem(CACHE)||'{}')||{}}catch(e){return{}}}
 function write(v){try{localStorage.setItem(CACHE,JSON.stringify(v))}catch(e){}}
 function purge(){
   try{
-    ['haute-couture-housing-spatial-market-v1','haute-couture-housing-gallery-assignments-v1','haute-couture-real-listings-cache-v1','haute-couture-real-listings-cache-v2','haute-couture-real-listings-cache-v3'].forEach(k=>localStorage.removeItem(k));
+    ['haute-couture-housing-spatial-market-v1','haute-couture-housing-gallery-assignments-v1','haute-couture-real-listings-cache-v1','haute-couture-real-listings-cache-v2','haute-couture-real-listings-cache-v3','haute-couture-root-real-housing-v3'].forEach(k=>localStorage.removeItem(k));
     localStorage.setItem('haute-couture-real-estate-api-endpoint',ENDPOINT);
   }catch(e){}
 }
@@ -47,29 +48,63 @@ function decorateCards(){
 }
 function note(text){const n=document.getElementById('mapNote');if(n)n.textContent=text}
 async function request(cursor=null){const q=new URLSearchParams({city:city(),limit:'12'});if(cityCode())q.set('insee',cityCode());if(cursor)q.set('cursor',cursor);const r=await fetch(ENDPOINT+'?'+q.toString(),{headers:{Accept:'application/json'},mode:'cors'});const data=await r.json();if(!r.ok||!data.ok)throw new Error(data.error||('http_'+r.status));return data}
+function appendMarkers(list){
+  try{
+    if(!LIVE_MAP||typeof addListingMarkers!=='function'||!Array.isArray(list)||!list.length)return;
+    const fresh=list.filter(x=>!markerIds.has(String(x.id)));
+    if(!fresh.length)return;
+    fresh.forEach(x=>markerIds.add(String(x.id)));
+    addListingMarkers(LIVE_MAP,fresh);
+  }catch(e){console.error('HC append housing markers',e)}
+}
+function syncSideOnly(){try{if(typeof side==='function')side()}catch(e){}setTimeout(decorateCards,60)}
 async function fetchFirst(force=false){
   const c=city();if(!c||loading)return real;if(!force&&real.length&&lastCity===c)return real;loading=true;
-  try{const data=await request(null);const fresh=(data.listings||[]).map(normalize).filter(valid);real=fresh;lastCity=c;nextCursor=data.nextCursor||null;hasMore=Boolean(data.hasMore&&data.nextCursor);pages=1;saveState();if(real.length){try{if(typeof side==='function')side();if(typeof drawListings==='function'&&st.level==='listing')drawListings()}catch(e){}setTimeout(decorateCards,80);note(`${real.length} vraies annonces chargées à ${c}. Déplace la carte pour découvrir d’autres secteurs.`)}window.dispatchEvent(new CustomEvent('hc-real-estate-feed-status',{detail:{ok:true,count:real.length,provider:data.provider||'cherchertrouver'}}));return real}
-  catch(e){console.error('HC direct real estate',e);window.dispatchEvent(new CustomEvent('hc-real-estate-feed-status',{detail:{ok:false,error:String(e.message||e)}}));return real}
+  try{
+    const data=await request(null),fresh=(data.listings||[]).map(normalize).filter(valid);real=fresh;lastCity=c;nextCursor=data.nextCursor||null;hasMore=Boolean(data.hasMore&&data.nextCursor);pages=1;saveState();
+    if(real.length){
+      syncSideOnly();
+      if(!initialMapSwapDone&&typeof st!=='undefined'&&st.level==='listing'&&typeof drawListings==='function'){
+        initialMapSwapDone=true;markerIds.clear();
+        try{drawListings()}catch(e){}
+      }else appendMarkers(real);
+      note(`${real.length} vraies annonces chargées à ${c}. Déplace la carte pour découvrir d’autres secteurs.`);
+    }
+    window.dispatchEvent(new CustomEvent('hc-real-estate-feed-status',{detail:{ok:true,count:real.length,provider:data.provider||'cherchertrouver'}}));return real;
+  }catch(e){console.error('HC direct real estate',e);window.dispatchEvent(new CustomEvent('hc-real-estate-feed-status',{detail:{ok:false,error:String(e.message||e)}}));return real}
   finally{loading=false}
 }
-function currentCell(){try{if(!LIVE_MAP)return'';const c=LIVE_MAP.getCenter();return `${Math.floor(c.lat/CELL)}:${Math.floor(c.lng/CELL)}`}catch(e){return''}}
+function currentCell(){try{if(!LIVE_MAP)return'';const c=LIVE_MAP.getCenter(),z=Math.floor(LIVE_MAP.getZoom()||0);return `${Math.floor(c.lat/CELL)}:${Math.floor(c.lng/CELL)}:${Math.floor(z/2)}`}catch(e){return''}}
 async function fetchNextForSector(){
   try{if(typeof st==='undefined'||st.level!=='listing'||!LIVE_MAP)return[]}catch(e){return[]}
   const cell=currentCell();if(!cell||loading)return[];const {all,key,b}=cityState();if(b.cells[cell])return[];b.cells[cell]=Date.now();all[key]=b;write(all);
   if(!real.length){await fetchFirst(false);return real}if(!hasMore||!nextCursor||pages>=12){note('Tous les secteurs disponibles pour cette ville ont été explorés pour le moment.');return[]}
-  loading=true;try{const data=await request(nextCursor),fresh=(data.listings||[]).map(normalize).filter(valid).filter(x=>!real.some(y=>String(y.id)===String(x.id)));real=merge(real,fresh);nextCursor=data.nextCursor||null;hasMore=Boolean(data.hasMore&&data.nextCursor);pages++;saveState();if(fresh.length){try{if(typeof side==='function')side();if(typeof drawListings==='function')drawListings()}catch(e){}setTimeout(decorateCards,90);note(`${fresh.length} nouvelle${fresh.length>1?'s':''} vraie${fresh.length>1?'s':''} annonce${fresh.length>1?'s':''} découverte${fresh.length>1?'s':''} dans ce secteur. Continue à déplacer la carte.`)}return fresh}catch(e){console.error('HC sector housing',e);return[]}finally{loading=false}
+  loading=true;
+  try{
+    const data=await request(nextCursor),fresh=(data.listings||[]).map(normalize).filter(valid).filter(x=>!real.some(y=>String(y.id)===String(x.id)));
+    real=merge(real,fresh);nextCursor=data.nextCursor||null;hasMore=Boolean(data.hasMore&&data.nextCursor);pages++;saveState();
+    if(fresh.length){syncSideOnly();appendMarkers(fresh);note(`${fresh.length} nouvelle${fresh.length>1?'s':''} vraie${fresh.length>1?'s':''} annonce${fresh.length>1?'s':''} découverte${fresh.length>1?'s':''} dans ce secteur. Continue à déplacer la carte.`)}
+    return fresh;
+  }catch(e){console.error('HC sector housing',e);return[]}
+  finally{loading=false}
 }
-function bindMap(){try{if(!LIVE_MAP||boundMap===LIVE_MAP)return;boundMap=LIVE_MAP;LIVE_MAP.on('moveend',()=>{clearTimeout(mapTimer);mapTimer=setTimeout(fetchNextForSector,350)});LIVE_MAP.on('zoomend',()=>{clearTimeout(mapTimer);mapTimer=setTimeout(fetchNextForSector,350)});setTimeout(fetchNextForSector,650)}catch(e){}}
+function bindMap(){
+  try{
+    if(!LIVE_MAP||boundMap===LIVE_MAP)return;
+    boundMap=LIVE_MAP;markerIds.clear();real.forEach(x=>markerIds.add(String(x.id)));
+    LIVE_MAP.on('moveend',()=>{clearTimeout(mapTimer);mapTimer=setTimeout(fetchNextForSector,650)});
+    setTimeout(fetchNextForSector,900);
+  }catch(e){}
+}
 function install(){
   if(installed)return true;try{if(typeof stock!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined')return false}catch(e){return false}
   installed=true;purge();hydrateFromCache();const oldStock=stock,oldOpen=openListingDetail;
   stock=function(){return real.length?real:oldStock.apply(this,arguments)};
   openListingDetail=function(){const out=oldOpen.apply(this,arguments);try{const x=stock().find(a=>String(a.id)===String(st.listing));if(x?.realListing)renderGallery(x)}catch(e){}return out};
-  try{const oldSide=side;side=function(){const out=oldSide.apply(this,arguments);if(st.level==='listing')setTimeout(()=>fetchFirst(false),40);setTimeout(decorateCards,60);return out}}catch(e){}
-  try{const oldDraw=drawListings;drawListings=function(){const out=oldDraw.apply(this,arguments);setTimeout(()=>{bindMap();fetchFirst(false);decorateCards()},80);return out}}catch(e){}
-  setInterval(bindMap,500);setTimeout(()=>fetchFirst(true),250);
-  window.HCVisualEngine={build:BUILD,mode:'direct-real-spatial-listings',fetchFirst,fetchNextForSector,renderGallery,decorateCards};return true;
+  try{const oldSide=side;side=function(){const out=oldSide.apply(this,arguments);if(st.level==='listing')setTimeout(()=>fetchFirst(false),80);setTimeout(decorateCards,80);return out}}catch(e){}
+  try{const oldDraw=drawListings;drawListings=function(){const out=oldDraw.apply(this,arguments);setTimeout(()=>{bindMap();fetchFirst(false);decorateCards()},140);return out}}catch(e){}
+  setInterval(bindMap,900);setTimeout(()=>fetchFirst(true),300);
+  window.HCVisualEngine={build:BUILD,mode:'direct-real-spatial-listings-stable',fetchFirst,fetchNextForSector,renderGallery,decorateCards,appendMarkers};return true;
 }
 purge();let n=0;const t=setInterval(()=>{n++;if(install()||n>200)clearInterval(t)},40);
 })();
