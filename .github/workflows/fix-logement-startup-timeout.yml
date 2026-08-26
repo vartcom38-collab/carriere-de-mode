@@ -1,32 +1,8 @@
-name: One-shot restore logement geography
+name: Disabled legacy logement geography fix
 on:
-  push:
-    paths:
-      - '.github/workflows/fix-logement-startup-timeout.yml'
-permissions:
-  contents: write
+  workflow_dispatch:
 jobs:
-  patch:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-      - name: Keep legacy logement but use reliable geography endpoints
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('logement/index.html')
-          s=p.read_text()
-          s=s.replace('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/regions-version-simplifiee.geojson','https://geo.api.gouv.fr/regions?fields=nom,code&format=geojson&geometry=contour')
-          s=s.replace('https://raw.githubusercontent.com/gregoiredavid/france-geojson/master/departements-version-simplifiee.geojson','https://geo.api.gouv.fr/departements?fields=nom,code,codeRegion&format=geojson&geometry=contour')
-          p.write_text(s)
-          PY
-      - name: Commit stable legacy logement geography repair
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add logement/index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "restore legacy logement with reliable geography loading"
-          git push origin HEAD:main
+      - run: echo "Disabled after successful legacy logement geography repair."
