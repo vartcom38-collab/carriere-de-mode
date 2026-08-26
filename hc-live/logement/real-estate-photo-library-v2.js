@@ -37,3 +37,13 @@ window.HCRealEstatePhotoLibrary={version:'2.0',items:LIB};
   s.setAttribute('data-hc-housing-market-expansion','1');
   document.head.appendChild(s);
 })();
+
+/* Charge le flux d'annonces réelles en dernier : il prend la priorité seulement s'il retourne des biens réels. */
+(function(){
+  if(window.HCRealEstateLiveFeed||document.querySelector('script[data-hc-real-estate-live-feed]'))return;
+  const s=document.createElement('script');
+  s.src='./real-estate-live-feed-v1.js?v=20260826-real-listings1';
+  s.defer=true;
+  s.setAttribute('data-hc-real-estate-live-feed','1');
+  document.head.appendChild(s);
+})();
