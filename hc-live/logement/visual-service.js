@@ -16,7 +16,7 @@
   let libraryFailed=false;
   const libraryReady=new Promise(resolve=>{
     if(window.HCRealEstatePhotoLibrary?.items?.length)return resolve(true);
-    const s=document.createElement('script');s.src=new URL('./real-estate-photo-library-v2.js?v=20260825-realestate2',baseScript).href;s.defer=true;
+    const s=document.createElement('script');s.src=new URL('./real-estate-photo-library-v2.js?v=20260826-realestate3',baseScript).href;s.defer=true;
     s.onload=()=>resolve(true);s.onerror=()=>{libraryFailed=true;console.warn('[Housing] curated photo library unavailable; fallback used');resolve(false)};document.head.appendChild(s)
   });
   const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch(e){return f}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
