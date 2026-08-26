@@ -35,3 +35,4 @@ jobs:
           if git diff --cached --quiet; then exit 0; fi
           git commit -m "force fresh real housing scripts"
           git push origin HEAD:main
+# trigger 20260826-real-housing-feed4
