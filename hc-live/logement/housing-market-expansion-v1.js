@@ -1,48 +1,26 @@
-/* Haute Couture Live — marché immobilier spatial v1
-   Additif : nouvelles annonces selon les zones explorées, galeries persistantes,
-   unicité des photos principales et effets gameplay du logement.
+/* Haute Couture Live — legacy housing market compatibility shim v2.
+   Real spatial discovery now belongs to HCRealEstateLiveFeed.
+   This file intentionally does not create listings or mutate galleries.
 */
 (function(){
 'use strict';
-if(window.HCHousingMarketExpansion)return;
-const MARKET_KEY='haute-couture-housing-spatial-market-v1';
-const GALLERY_KEY='haute-couture-housing-gallery-assignments-v1';
-const CELL=.0042;
-const p=id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1050&fit=crop`;
-const HERO=['7534270','7511693','7018832','6585626','6903161','7019013','7031715','6315809','7031723','6933852','29252608','30580543','8089275','6890400','19916702','7214447','7045945','7587807','16451357','6890399','7166558','6585628','6045084','6044810','18071863','8082324','7174402','20290907','33893215','8142976','6782427','6969987','6447393','6447384','8082559','6636309','6920435','6681821','20290959','6265833'];
-const KITCHEN=['7018832','7534270','7511693','6585626','6903161','7019013','7031723','6933852','6890400','19916702','7214447','6890399','7166558','6585628','6265833','6636309','6782427','6447384'];
-const STORAGE=['7005019','6538895','7045298','6527036','6312079','6758770','7214472','7214474','7019017','6527064','7214470','7060819','16015330','6920435'];
-const VIEW=['6933770','7031592','36962616','15508726','37067617','35505627','35459396','23893995','18302453','31458376','33893215','26925314','6758514'];
-const TYPES=[['Studio lumineux',17,25,1],['Studio mansardé',14,22,.88],['T1 rénové',20,30,1.05],['Deux-pièces créatif',28,42,1.18],['Petit loft',31,48,1.30],['Appartement ancien',25,44,1.12],['Rez-de-chaussée atelier',25,40,1.04]];
-const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v}catch(e){return f}};
-const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
-function hash(s){let x=2166136261;for(const c of String(s)){x^=c.charCodeAt(0);x=Math.imul(x,16777619)}return x>>>0}
-function rng(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
-function market(){const m=read(MARKET_KEY,{version:1,cities:{}});m.cities=m.cities||{};return m}
-function galleryStore(){const g=read(GALLERY_KEY,{version:1,assignments:{},usedHeroes:[]});g.assignments=g.assignments||{};g.usedHeroes=g.usedHeroes||[];return g}
-function cityId(){try{return String(st.cityCode||st.city||'ville')}catch(e){return'ville'}}
-function regionMultiplier(){try{return Number(D()?.rent||1)}catch(e){return 1}}
-function cellId(lat,lng){return `${Math.floor(Number(lat)/CELL)}:${Math.floor(Number(lng)/CELL)}`}
-function cellCenter(key){const [a,b]=String(key).split(':').map(Number);return{lat:(a+.5)*CELL,lng:(b+.5)*CELL}}
-function homeGameplay(x){const surface=Number(x.surface||0),rooms=Number(x.rooms||1),balcony=!!x.balcony;let atelier=surface>=38?5:surface>=31?4:surface>=24?3:surface>=19?2:1;const storage=Math.max(4,Math.round(surface*.32)+(x.furnished?1:3));const receive=rooms>=2&&surface>=28;const work=atelier>=4?-8:atelier===3?-4:atelier===2?3:8;const inspiration=balcony?2:surface>=32?1:0;return{atelierCapacity:atelier,storageCapacity:storage,canReceiveClients:receive,homeWorkTimePercent:work,inspirationBonus:inspiration,privacy:rooms>=2?'bonne':'limitée',summary:atelier>=4?'Vrai potentiel d’atelier à domicile':atelier===3?'Coin couture confortable':atelier===2?'Coin couture compact':'Espace de travail très contraint'}}
-function makeListing(key,index){const seed=hash(cityId()+'|'+key+'|'+index),r=rng(seed),c=cellCenter(key),t=TYPES[Math.floor(r()*TYPES.length)],surface=Math.round(t[1]+r()*(t[2]-t[1])),price=Math.round((385+surface*13.8)*regionMultiplier()*t[3]*(.9+r()*.22)/10)*10,charges=Math.round((35+r()*70)/5)*5,rooms=surface>=28?2:1,floor=Math.floor(r()*6),balcony=r()>.57,elevator=floor>=3&&r()>.45,furnished=r()>.48,dpe=['C','D','D','E','E'][Math.floor(r()*5)],lat=c.lat+(r()-.5)*CELL*.72,lng=c.lng+(r()-.5)*CELL*.72;const x={id:`spatial-${cityId()}-${key.replace(':','-')}-${index}`,spatial:true,cell:key,title:t[0],surface,price,charges,rooms,floor,balcony,elevator,furnished,dpe,lat,lng,address:'Adresse en cours…',tags:[['Très lumineux','Belle lumière','Lumière douce','Lumière traversante'][Math.floor(r()*4)],surface>34?'Vrai atelier possible':surface>25?'Coin couture confortable':'Coin couture compact',['Bon état','Charme ancien','Rénové récemment','Volumes atypiques'][Math.floor(r()*4)]],potential:''};x.gameplay=homeGameplay(x);x.potential=`${x.gameplay.summary}. Rangement ${x.gameplay.storageCapacity}/20${x.gameplay.canReceiveClients?' · possibilité de recevoir une cliente sur rendez-vous':''}.`;return x}
-function cityBucket(m){const id=cityId();if(!m.cities[id])m.cities[id]={city:typeof st!=='undefined'?st.city:'',createdAt:new Date().toISOString(),cells:{}};return m.cities[id]}
-function discoverCell(key){const m=market(),b=cityBucket(m);if(b.cells[key])return[];const count=(hash(cityId()+'|'+key)%5===0)?2:1,list=[];for(let i=0;i<count;i++)list.push(makeListing(key,i));b.cells[key]={discoveredAt:new Date().toISOString(),listings:list};write(MARKET_KEY,m);list.forEach(ensureGallery);return list}
-function spatialListings(){const m=market(),b=m.cities[cityId()];if(!b)return[];return Object.values(b.cells||{}).flatMap(c=>c.listings||[])}
-function pickDistinct(pool,seed,avoid=[]){const a=pool.filter(id=>!avoid.includes(id));if(!a.length)return pool[seed%pool.length];return a[seed%a.length]}
-function ensureGallery(x){if(!x)return null;const g=galleryStore(),id=String(x.id);if(g.assignments[id]){x.gallery=g.assignments[id];applyHeroToVisual(x);return x.gallery}const used=new Set(g.usedHeroes||[]),seed=hash(id);let hero=HERO.find(pid=>!used.has(pid));if(!hero)hero=HERO[seed%HERO.length];const kitchen=pickDistinct(KITCHEN,seed+7,[hero]),storage=pickDistinct(STORAGE,seed+13,[hero,kitchen]),view=pickDistinct(VIEW,seed+19,[hero,kitchen,storage]);const gallery={hero:p(hero),heroId:hero,kitchen:p(kitchen),storage:p(storage),view:p(view),labels:['Pièce principale','Cuisine','Rangements / coin travail','Extérieur / vue'],source:'Pexels · photos réelles curées',assignedAt:new Date().toISOString()};g.assignments[id]=gallery;if(!used.has(hero))g.usedHeroes.push(hero);write(GALLERY_KEY,g);x.gallery=gallery;applyHeroToVisual(x);return gallery}
-function applyHeroToVisual(x){try{if(!x.gallery?.hero)return;if(window.HCVisualDNA?.hydrate)window.HCVisualDNA.hydrate(x,{city:st.city,region:st.region});x.visual=x.visual||{};x.visual.assets=x.visual.assets||{};x.visual.assets.mainImage=x.gallery.hero;x.visual.mainImageSource='real-photo';x.visual.mainImageProvider='curated-spatial-gallery';window.HCVisualDNA?.save?.(x)}catch(e){}}
-function galleryDetail(x){const g=ensureGallery(x);if(!g)return;const main=document.getElementById('mainVisual'),thumbs=[...document.querySelectorAll('#detailModal .thumb')];const pics=[g.hero,g.kitchen,g.view,g.storage],labels=['Pièce principale','Cuisine','Extérieur / vue','Rangements / coin travail'];function show(url,label){if(!main)return;main.className='';main.style.position='absolute';main.style.inset='0';main.innerHTML=`<img src="${url}" alt="${label}" style="width:100%;height:100%;display:block;object-fit:cover">`}show(pics[0],labels[0]);thumbs.forEach((th,i)=>{const url=pics[i];th.innerHTML=`<img src="${url}" alt="${labels[i]}" style="width:100%;height:100%;object-fit:cover;display:block"><span>${labels[i]}</span>`;th.style.cursor='pointer';th.onclick=()=>show(url,labels[i])});
- const gp=x.gameplay||homeGameplay(x);x.gameplay=gp;let card=document.getElementById('hcHomeGameplayCard');if(!card){card=document.createElement('div');card.id='hcHomeGameplayCard';card.className='about-card';const about=document.querySelector('#detailModal .about-card');about?.insertAdjacentElement('afterend',card)}if(card){const time=gp.homeWorkTimePercent<0?`${Math.abs(gp.homeWorkTimePercent)}% plus rapide`:gp.homeWorkTimePercent>0?`${gp.homeWorkTimePercent}% plus lent`:'neutre';card.innerHTML=`<h3>CE QUE CE LOGEMENT CHANGE DANS TON JEU</h3><div class="about-list"><div>Atelier à domicile : <b>${gp.atelierCapacity}/5</b> · ${gp.summary}</div><div>Rangement matières : <b>${gp.storageCapacity}/20</b></div><div>Travail à domicile : <b>${time}</b></div><div>Recevoir une cliente : <b>${gp.canReceiveClients?'oui, sur rendez-vous':'non, espace trop contraint'}</b></div><div>Inspiration / confort : <b>+${gp.inspirationBonus}</b>${x.balcony?' grâce à l’extérieur':''}</div></div>`}}
-function visibleCellKeys(){try{if(!LIVE_MAP||st.level!=='listing')return[];const c=LIVE_MAP.getCenter(),base=cellId(c.lat,c.lng),[a,b]=base.split(':').map(Number),keys=[];for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++)keys.push(`${a+y}:${b+x}`);return keys}catch(e){return[]}}
-function addNewMarkers(list){try{if(!list.length||!LIVE_MAP||typeof addListingMarkers!=='function')return;addListingMarkers(LIVE_MAP,list)}catch(e){}}
-function discoverVisible(){if(typeof st==='undefined'||st.level!=='listing')return[];const fresh=[];for(const k of visibleCellKeys())fresh.push(...discoverCell(k));if(fresh.length){try{if(typeof snapAddresses==='function')snapAddresses(fresh,'spatial-'+Date.now())}catch(e){};try{side()}catch(e){};addNewMarkers(fresh);const note=document.getElementById('mapNote');if(note)note.textContent=`${fresh.length} nouvelle${fresh.length>1?'s':''} annonce${fresh.length>1?'s':''} découverte${fresh.length>1?'s':''} dans ce secteur. Déplace la carte pour explorer d’autres rues.`}return fresh}
-function installMapWatch(){let bound=null,timer=null;const bind=()=>{try{if(!LIVE_MAP||LIVE_MAP===bound)return false;bound=LIVE_MAP;LIVE_MAP.on('moveend',()=>{clearTimeout(timer);timer=setTimeout(discoverVisible,220)});setTimeout(discoverVisible,350);return true}catch(e){return false}};if(!bind()){let n=0;const id=setInterval(()=>{n++;if(bind()||n>120)clearInterval(id)},100)}}
-function install(){let originalStock,originalOpen;try{if(typeof stock!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined')return false;originalStock=stock;originalOpen=openListingDetail}catch(e){return false}
- stock=function(){const base=originalStock.apply(this,arguments)||[],extra=spatialListings(),seen=new Set(),all=[];for(const x of [...base,...extra]){if(!x||seen.has(String(x.id)))continue;seen.add(String(x.id));x.gameplay=x.gameplay||homeGameplay(x);ensureGallery(x);all.push(x)}return all};
- openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=stock().find(a=>String(a.id)===String(st.listing));if(x)galleryDetail(x)}catch(e){}return r};
- try{const oldDraw=drawListings;drawListings=function(){const r=oldDraw.apply(this,arguments);setTimeout(discoverVisible,260);return r}}catch(e){}
- try{stock().forEach(ensureGallery)}catch(e){}
- installMapWatch();window.HCHousingMarketExpansion={version:1,discoverVisible,discoverCell,spatialListings,ensureGallery,homeGameplay,keys:{market:MARKET_KEY,galleries:GALLERY_KEY}};window.dispatchEvent(new CustomEvent('hc-housing-market-ready',{detail:{version:1}}));return true}
-let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>160)clearInterval(poll)},60);
+if(window.HCHousingMarketExpansion?.version>=2)return;
+const LEGACY_KEYS=[
+  'haute-couture-housing-spatial-market-v1',
+  'haute-couture-housing-gallery-assignments-v1'
+];
+try{LEGACY_KEYS.forEach(k=>localStorage.removeItem(k))}catch(e){}
+const empty=()=>[];
+const passthrough=x=>x||null;
+window.HCHousingMarketExpansion={
+  version:2,
+  legacyDisabled:true,
+  discoverVisible:empty,
+  discoverCell:empty,
+  spatialListings:empty,
+  ensureGallery:passthrough,
+  homeGameplay:x=>x?.gameplay||null,
+  keys:{market:LEGACY_KEYS[0],galleries:LEGACY_KEYS[1]}
+};
+window.dispatchEvent(new CustomEvent('hc-housing-market-ready',{detail:{version:2,legacyDisabled:true}}));
 })();
