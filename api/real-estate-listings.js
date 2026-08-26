@@ -1,5 +1,6 @@
 const PROVIDER_URL='https://cherchertrouver.immo/api/v1/annonces';
-function json(res,status,body){res.status(status).setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=900');return res.end(JSON.stringify(body))}
+function cors(res){res.setHeader('Access-Control-Allow-Origin','https://vartcom38-collab.github.io');res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Methods','GET,OPTIONS');res.setHeader('Access-Control-Allow-Headers','Accept,Content-Type');}
+function json(res,status,body){cors(res);res.status(status).setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=900');return res.end(JSON.stringify(body))}
 const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null};
 const arr=v=>Array.isArray(v)?v:[];
 function apiKey(){let k=String(process.env.CHERCHERTROUVER_API_KEY||process.env.CHERCHER_TROUVER_API_KEY||'').trim();k=k.replace(/^X-Api-Key\s*:\s*/i,'').replace(/^Bearer\s+/i,'').trim();if((k.startsWith('"')&&k.endsWith('"'))||(k.startsWith("'")&&k.endsWith("'")))k=k.slice(1,-1).trim();return k}
@@ -13,6 +14,7 @@ function normalize(a){
  return {id,realPropertyId:stable,realAdvertId:String(a.reference||''),source:'cherchertrouver',sourcePublisher:a.seller_name||a.real_estate_network||a.source||null,sourceUrl:a.external_url||null,city:a.city||'',cityInsee:'',zipcode:a.postal_code||'',department:a.department||'',region:a.region||'',lat:n(a.latitude),lng:n(a.longitude),title:title||'Appartement à louer',surface,rooms:n(a.rooms)||1,bedrooms:n(a.bedrooms)||Math.max(0,(n(a.rooms)||1)-1),price:n(a.price),charges:0,deposit:n(a.price),floor:0,elevator:a.elevator===true,furnished:/meubl/i.test(text),dpe:a.dpe||null,balcony,attic,loft,old,openKitchen,storage,garden:a.garden===true,parking:a.parking===true,cellar:a.cellar===true,kitchen:a.kitchen||null,description,features:[a.kitchen,a.elevator===true?'ascenseur':null,a.garden===true?'jardin':null,a.parking===true?'parking':null,a.cellar===true?'cave':null].filter(Boolean),gallery:pics.map((url,i)=>({id:`${stable}-${i}`,url,order:i})),pictureCount:n(a.images_count)||pics.length,createdAt:a.published_at||null,updatedAt:a.updated_at||null,dedupKey:a.dedup_key||null,sources:arr(a.sources)};
 }
 export default async function handler(req,res){
+ cors(res);if(req.method==='OPTIONS')return res.status(204).end();
  if(req.method!=='GET')return json(res,405,{ok:false,error:'method_not_allowed'});
  const key=apiKey();if(!key)return json(res,503,{ok:false,configured:false,provider:'cherchertrouver',error:'CHERCHERTROUVER_API_KEY_missing'});
  const city=String(req.query?.city||'').trim(),cursor=String(req.query?.cursor||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));if(!city)return json(res,400,{ok:false,error:'city_required'});
