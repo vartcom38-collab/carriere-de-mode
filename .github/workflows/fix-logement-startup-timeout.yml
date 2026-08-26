@@ -1,34 +1,8 @@
-name: Fix logement startup timeout
-# retrigger 2026-08-26
+name: Disabled legacy logement startup fix
 on:
-  push:
-    paths:
-      - '.github/workflows/fix-logement-startup-timeout.yml'
   workflow_dispatch:
-permissions:
-  contents: write
 jobs:
-  fix:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Make logement render before geography loads
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('logement/index.html')
-          s=p.read_text()
-          old="el('back').onclick=()=>{if(st.level==='region'){location.href='../character/';return}if(st.level==='listing')st.level='district';else if(st.level==='district')st.level='city';else if(st.level==='city')st.level='department';else st.level='region';save();render()};el('next').onclick=openListingDetail;el('detailBack').onclick=closeDetail;el('detailVisit').onclick=rentSelected;el('detailContact').onclick=()=>alert('Le contact propriétaire sera relié au système de messages plus tard.');el('save').onclick=()=>{save();location.href='../'};el('topBudget').textContent=money(START_BUDGET);el('bookBudget').textContent=money(START_BUDGET);loadAll();"
-          new="el('back').onclick=()=>{if(st.level==='region'){location.href='../character/';return}if(st.level==='listing')st.level='district';else if(st.level==='district')st.level='city';else if(st.level==='city')st.level='department';else st.level='region';save();render()};el('next').onclick=openListingDetail;el('detailBack').onclick=closeDetail;el('detailVisit').onclick=rentSelected;el('detailContact').onclick=()=>alert('Le contact propriétaire sera relié au système de messages plus tard.');el('save').onclick=()=>{save();location.href='../'};el('topBudget').textContent=money(START_BUDGET);el('bookBudget').textContent=money(START_BUDGET);try{crumb();picker();side();stage();save()}catch(e){console.error('HC logement initial UI',e)};setTimeout(()=>{if(!GEO||!DEPT_GEO){const m=el('mapStage');if(m&&!m.querySelector('.live-map'))m.innerHTML='<div style=\"padding:22px;text-align:center;font:14px/1.5 Georgia,serif\"><b>LA CARTE MET TROP DE TEMPS À CHARGER</b><br><button style=\"margin-top:12px;padding:10px 14px;border:1px solid #111;border-radius:10px;background:#fff;cursor:pointer\" onclick=\"loadAll()\">RÉESSAYER LA CARTE</button></div>'}},5000);loadAll();"
-          if old not in s:
-              raise SystemExit('startup target not found')
-          p.write_text(s.replace(old,new,1))
-          PY
-      - name: Commit fix
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add logement/index.html
-          git diff --cached --quiet && exit 0
-          git commit -m 'fix logement startup without blocking on geography'
-          git push
+      - run: echo "Disabled: logement restored to stable legacy photo state."
