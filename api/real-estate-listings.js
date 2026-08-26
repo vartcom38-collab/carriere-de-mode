@@ -13,9 +13,10 @@ function normalize(item){
  const id=String(item?.id||p.id||a.id||'property');
  return{id:'real-'+id.replace(/[^a-zA-Z0-9_-]/g,'-'),realPropertyId:id,realAdvertId:String(a.id||''),source:'stream-estate-v2',sourcePublisher:item?.publishers?.[0]?.agencyName||null,sourceUrl:a.url||null,city:loc.city,cityInsee:loc.insee,zipcode:loc.zip,department:'',region:'',lat:loc.lat,lng:loc.lng,title:a.title||'Appartement à louer',surface,rooms:rooms||1,bedrooms:bedrooms||Math.max(0,(rooms||1)-1),price,charges,deposit:n(p.pricing?.deposit)??price,floor:n(a.floor)??0,elevator:Boolean(a.elevator),furnished:Boolean(a.furnished),dpe:a.energy?.category||p.energy?.category||null,balcony,attic,loft,old,openKitchen,storage,description,features:[],gallery:pics.map((url,i)=>({id:`${id}-${i}`,url,order:i})),pictureCount:pics.length,createdAt:p.createdAt||a.createdAt||null,updatedAt:p.updatedAt||a.updatedAt||null};
 }
+function apiKey(){let k=String(process.env.STREAM_ESTATE_API_KEY||process.env.STREAMESTATE_API_KEY||'').trim();k=k.replace(/^X-API-KEY\s*:\s*/i,'').replace(/^Bearer\s+/i,'').trim();if((k.startsWith('"')&&k.endsWith('"'))||(k.startsWith("'")&&k.endsWith("'")))k=k.slice(1,-1).trim();return k}
 export default async function handler(req,res){
  if(req.method!=='GET')return json(res,405,{ok:false,error:'method_not_allowed'});
- const key=process.env.STREAM_ESTATE_API_KEY||process.env.STREAMESTATE_API_KEY;if(!key)return json(res,503,{ok:false,configured:false,provider:'stream-estate-v2',error:'STREAM_ESTATE_API_KEY_missing'});
+ const key=apiKey();if(!key)return json(res,503,{ok:false,configured:false,provider:'stream-estate-v2',error:'STREAM_ESTATE_API_KEY_missing'});
  const insee=String(req.query?.insee||'').trim(),city=String(req.query?.city||'').trim(),limit=Math.max(4,Math.min(30,Number(req.query?.limit)||20));if(!insee&&!city)return json(res,400,{ok:false,error:'insee_or_city_required'});
  const property={type:{in:['FLAT','HOUSE']},transaction:{type:'RENT'},locations:{countryCode:'FR'}};if(insee)property.locations.in={uniqueCodes:[insee]};const minSurface=n(req.query?.surfaceMin),maxPrice=n(req.query?.budgetMax);if(minSurface)property.area={displayed:{gte:minSurface}};if(maxPrice)property.pricing={displayed:{lte:maxPrice}};
  const body={criteria:{property},paginationType:'PAGE',page:1,size:limit};
