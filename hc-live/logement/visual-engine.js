@@ -1,10 +1,10 @@
-/* Haute Couture Live — moteur visuel logement V2.5.
+/* Haute Couture Live — moteur visuel logement V2.6.
    Nîmes : les photos réelles curées sont le chemin principal et immédiat.
-   Magnific n'est plus requis pour afficher une annonce.
+   La fiche restaure le choix du logement et enchaîne vers Chez Moi.
 */
 (function(){
 'use strict';
-const BUILD='20260827-photo-v5-curated';
+const BUILD='20260827-photo-v6-home-flow';
 const ASSIGN_KEY='haute-couture-curated-housing-photo-assignments-v1';
 let wired=false;
 const p=id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1400&h=1050&fit=crop`;
@@ -41,12 +41,44 @@ function ensureCurated(x){
   return a;
 }
 function showMainImage(url,label='Photo du logement'){const m=document.getElementById('mainVisual');if(!m||!url)return;m.className='';m.style.position='absolute';m.style.inset='0';m.style.background='#efe4d9';m.innerHTML=`<img src="${url}" alt="${label}" style="width:100%;height:100%;object-fit:cover;display:block">`}
+function items(){try{return stock()}catch(e){return[]}}
+function activeListing(){
+  try{
+    if(window.__HC_ACTIVE_LISTING)return window.__HC_ACTIVE_LISTING;
+    return items().find(a=>String(a.id)===String(st.listing))||null;
+  }catch(e){return null}
+}
+function chooseHome(x){
+  x=x||activeListing();
+  if(!x)return false;
+  ensureCurated(x);
+  const budget=(typeof START_BUDGET!=='undefined')?START_BUDGET:2500;
+  const state=(typeof st!=='undefined'&&st)?st:{};
+  const payload={
+    ...state,
+    home:x,
+    rentedAt:new Date().toISOString(),
+    startingBudget:budget,
+    estimatedEntryCost:Number(x.price||0)+Number(x.charges||0)+Number(x.price||0)
+  };
+  localStorage.setItem('haute-couture-home',JSON.stringify(payload));
+  localStorage.setItem('haute-couture-current-screen','chez-moi');
+  location.href='../chez-moi/';
+  return true;
+}
+function bindChooseButton(x){
+  const btn=document.getElementById('detailVisit');
+  if(!btn)return;
+  btn.textContent='♡ CHOISIR CE LOGEMENT';
+  btn.disabled=false;
+  btn.onclick=()=>chooseHome(x||activeListing());
+}
 function paintDetail(x){
   if(!x)return;const a=ensureCurated(x);showMainImage(a.hero,'Pièce principale');
   const pics=[a.hero,a.kitchen,a.bathroom,a.window],names=['Pièce principale','Cuisine','Salle d’eau','Extérieur / vue'];
   document.querySelectorAll('#detailModal .thumb').forEach((t,i)=>{const url=pics[i]||a.hero,label=names[i]||'Photo';t.innerHTML=`<img src="${url}" alt="${label}" style="width:100%;height:100%;object-fit:cover;display:block"><span>${label}</span>`;t.style.cursor='pointer';t.onclick=()=>showMainImage(url,label)});
+  bindChooseButton(x);
 }
-function items(){try{return stock()}catch(e){return[]}}
 function fillVisible(){const list=items().slice(0,6);list.forEach(ensureCurated);return Promise.resolve(list)}
 function refreshMapPreviews(){try{if(st.level==='listing'&&typeof refreshListingsOnMap==='function')refreshListingsOnMap()}catch(e){}}
 async function wire(){
@@ -58,7 +90,8 @@ async function wire(){
   window.addEventListener('hc-housing-market-v2-ready',()=>fillVisible().then(()=>refreshMapPreviews()));
   window.addEventListener('hc-listing-opened',e=>{try{if(e.detail?.listing)paintDetail(e.detail.listing)}catch(err){}});
   try{if(typeof openListingDetail==='function'){const originalOpen=openListingDetail;openListingDetail=function(id){const r=originalOpen.apply(this,arguments);try{const x=items().find(a=>String(a.id)===String(id!=null?id:st.listing));if(x)paintDetail(x)}catch(e){}return r}}}catch(e){}
-  window.HCVisualEngine={build:BUILD,mode:'curated-default',paintDetail,ensureMain:async x=>ensureCurated(x)?.hero||null,fillVisible,ensureCurated,forceMapOnlyLayout};
+  try{if(document.getElementById('detailModal')?.classList.contains('open')){const x=activeListing();if(x)paintDetail(x)}}catch(e){}
+  window.HCVisualEngine={build:BUILD,mode:'curated-default',paintDetail,ensureMain:async x=>ensureCurated(x)?.hero||null,fillVisible,ensureCurated,forceMapOnlyLayout,activeListing,chooseHome,bindChooseButton};
 }
 forceMapOnlyLayout();
 if(document.readyState==='loading')window.addEventListener('load',wire,{once:true});else wire();
