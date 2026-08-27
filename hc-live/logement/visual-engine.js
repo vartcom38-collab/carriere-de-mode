@@ -204,6 +204,7 @@
     }catch(e){}
     schedulePaint(false);
     setTimeout(()=>schedulePaint(false),500);
+    loadScript('./spatial-discovery-v1.js',()=>!!window.HCSpatialHousingDiscovery).catch(e=>console.error('HC spatial discovery failed',e));
     window.HCVisualEngine={build:BUILD,paintCards,paintDetail,ensureMain};
   }
 
