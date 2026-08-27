@@ -1,11 +1,11 @@
-/* Haute Couture Live — marché immobilier V2.1.
+/* Haute Couture Live — marché immobilier V2.2.
    La carte est l'unique navigateur des annonces : un marqueur = un bien = une fiche.
-   Les biens restent persistants, uniques à l'échelle nationale et dotés d'un ADN stable. */
+   La fiche est maintenant remplie directement depuis l'objet exact cliqué. */
 (function(){
 'use strict';
 if(window.HCHousingMarketV2)return;
 
-const VERSION='2.1';
+const VERSION='2.2';
 const KEY='haute-couture-housing-market-v2';
 const COUNT=6;
 const SECTOR=.0065;
@@ -94,35 +94,53 @@ function installStyles(){
     @media(max-width:900px){.workspace{grid-template-columns:1fr!important}.picker{order:2}.mapbox{min-height:650px!important}}
   `;document.head.appendChild(s);
 }
-function openExact(id){
-  const x=getSector().find(v=>String(v.id)===String(id));if(!x)return false;
-  st.listing=String(x.id);save();
-  try{openListingDetail(String(x.id))}catch(e){try{openListingDetail()}catch(_){} }
+function setText(id,value){const n=document.getElementById(id);if(n)n.textContent=value}
+function setHtml(id,value){const n=document.getElementById(id);if(n)n.innerHTML=value}
+function renderExactDetail(x){
+  if(!x)return false;
+  const c=(()=>{try{return JSON.parse(localStorage.getItem('haute-couture-custom-character')||'{}')}catch(e){return{}}})(),
+        img=(()=>{const look=Number(c.look);if(!Number.isFinite(look))return'';const a=['look-01.jpg','look-02.jpg','look-03.jpg','look-04.jpg','look-05.jpg','look-06.jpg','look-07.jpg','look-08.jpg','look-09.jpg','look-10.jpg','look-11.jpg','look-12.jpg'];return '../character-assets/'+a[Math.max(0,Math.min(11,look))]})(),
+        total=Number(x.price||0)+Number(x.charges||0)+Number(x.price||0),
+        monthly=Number(x.price||0)+Number(x.charges||0),
+        ok=total<=START_BUDGET,
+        stars=Number(x.surface||0)>30?5:Number(x.surface||0)>22?4:3;
+  setHtml('profileArt',img?`<img src="${img}" alt="Personnage">`:'<div class="profile-fallback">HC</div>');
+  setText('profileName',c.name||'Ton profil');
+  setHtml('profileCopy',`<b>Passion :</b> ${esc(c.skill||'la mode')}<br><br><b>Objectif :</b> ${esc(c.goal||'faire grandir sa carrière créative')}`);
+  setText('detailBudget',money(START_BUDGET));
+  setText('detailTitle',x.title+(x.balcony?' avec balcon':''));
+  setText('detailAddress','📍 '+x.address);
+  setHtml('detailPrice',`${monthly} € <small>/ mois · charges comprises</small>`);
+  setHtml('factsCard',`<div class="fact-item"><b>${x.surface} m²</b><small>Surface</small></div><div class="fact-item"><b>${x.rooms}</b><small>Pièce${x.rooms>1?'s':''}</small></div><div class="fact-item"><b>${x.floor===0?'RDC':x.floor+'e étage'}</b><small>${x.elevator?'Avec ascenseur':'Sans ascenseur'}</small></div><div class="fact-item"><b>${x.balcony?'Balcon':'Sans balcon'}</b><small>${x.balcony?'Extérieur privé':'—'}</small></div><div class="fact-item"><b>${x.furnished?'Meublé':'Non meublé'}</b><small>${esc(x.tags?.[2]||'')}</small></div><div class="fact-item"><b>DPE ${x.dpe}</b><small>Énergie</small></div>`);
+  setHtml('aboutList',[x.tags?.[0],x.tags?.[1],x.tags?.[2],`Adresse située dans ${x.city||cityName()}`,'Proche des commerces et services'].filter(Boolean).map(t=>`<div>${esc(t)}</div>`).join(''));
+  setText('dRent',money(x.price));setText('dCharges',money(x.charges));setText('dDeposit',money(x.price));setText('dTotal',money(total));
+  setText('dBudgetStatus',ok?'✓ Dans ton budget de départ':'⚠ Dépasse ton budget de départ');
+  setHtml('environmentList',`<div>Commerces à proximité</div><div>Centre de ${esc(x.city||cityName())} accessible</div><div>Carte et rues visibles derrière l’annonce</div>`);
+  setText('detailStars','★'.repeat(stars)+'☆'.repeat(5-stars));setText('detailPotential',x.potential||'');
+  const main=document.getElementById('mainVisual');if(main)main.dataset.city=x.city||cityName();
+  const modal=document.getElementById('detailModal');if(modal)modal.classList.add('open');document.body.style.overflow='hidden';
+  window.__HC_ACTIVE_LISTING=x;
+  window.dispatchEvent(new CustomEvent('hc-listing-opened',{detail:{id:x.id,listing:x}}));
   return true;
 }
+function openExact(id){
+  const x=getSector().find(v=>String(v.id)===String(id));if(!x)return false;
+  st.listing=String(x.id);save();return renderExactDetail(x);
+}
 function install(){
-  try{if(typeof st==='undefined'||typeof drawListings!=='function'||typeof side!=='function'||typeof addListingMarkers!=='function'||typeof openListingDetail!=='function')return false}catch(e){return false}
+  try{if(typeof st==='undefined'||typeof drawListings!=='function'||typeof side!=='function'||typeof addListingMarkers!=='function')return false}catch(e){return false}
   installStyles();
   stock=function(){return getSector()};
   filteredStock=function(){return applyFilters(getSector())};
-
-  const originalOpen=openListingDetail;
-  openListingDetail=function(id){
-    if(id!=null){const x=getSector().find(v=>String(v.id)===String(id));if(!x)return;st.listing=String(x.id);save()}
-    return originalOpen.call(this);
-  };
-  selectListing=function(id,open=false){
-    const x=getSector().find(v=>String(v.id)===String(id));if(!x)return;
-    st.listing=String(x.id);save();
-    if(open)openListingDetail(String(x.id));
-  };
+  openListingDetail=function(id){const target=id!=null?id:st.listing;return openExact(target)};
+  selectListing=function(id,open=false){const x=getSector().find(v=>String(v.id)===String(id));if(!x)return;st.listing=String(x.id);save();if(open)renderExactDetail(x)};
   addListingMarkers=function(m,a){
     (Array.isArray(a)?a:[]).forEach(x=>{
       const ic=L.divIcon({className:'',html:`<div class="home-pin">${Number(x.price)||0} €</div>`,iconSize:[70,28],iconAnchor:[35,14]});
       const mk=L.marker([x.lat,x.lng],{icon:ic}).addTo(m);
       mk.bindTooltip(previewHtml(x),{className:'hc-listing-preview-tip',direction:'top',offset:[0,-12],opacity:1});
       mk.on('mouseover',()=>{try{mk.setTooltipContent(previewHtml(x))}catch(e){}});
-      mk.on('click',()=>openExact(x.id));
+      mk.on('click',()=>{st.listing=String(x.id);save();renderExactDetail(x)});
     });
   };
   drawListings=function(){
@@ -133,26 +151,15 @@ function install(){
   side=function(){
     const d=D();el('place').textContent=st.city||st.dep||st.region||'À toi de choisir';el('vibe').textContent=st.region?d.vibe:'Une nouvelle vie commence ici ♡';el('budget').textContent=st.region?d.budget:'—';el('pace').textContent=st.region?d.pace:'—';el('opp').textContent=st.region?d.opp:'—';el('creative').textContent=st.region?d.creative:'—';el('topBudget').textContent=money(START_BUDGET);el('bookBudget').textContent=money(START_BUDGET);el('listings').innerHTML='';el('next').disabled=true;updateFilterCount();
   };
-
   let bound=null,timer=null,rerendering=false;
   function bind(){
     try{
       if(!LIVE_MAP||st.level!=='listing'||LIVE_MAP===bound)return false;
-      bound=LIVE_MAP;
-      LIVE_MAP.on('moveend',()=>{
-        if(rerendering||st.level!=='listing')return;
-        clearTimeout(timer);timer=setTimeout(()=>{
-          try{
-            const c=LIVE_MAP.getCenter(),old=sectorId();st.searchLat=c.lat;st.searchLng=c.lng;
-            if(sectorId()===old)return;
-            rerendering=true;PENDING_VIEW={lat:c.lat,lng:c.lng,zoom:LIVE_MAP.getZoom()};save();render();setTimeout(()=>{rerendering=false;bound=null;bind()},120);
-          }catch(e){rerendering=false}
-        },260);
-      });return true;
+      bound=LIVE_MAP;LIVE_MAP.on('moveend',()=>{if(rerendering||st.level!=='listing')return;clearTimeout(timer);timer=setTimeout(()=>{try{const c=LIVE_MAP.getCenter(),old=sectorId();st.searchLat=c.lat;st.searchLng=c.lng;if(sectorId()===old)return;rerendering=true;PENDING_VIEW={lat:c.lat,lng:c.lng,zoom:LIVE_MAP.getZoom()};save();render();setTimeout(()=>{rerendering=false;bound=null;bind()},120)}catch(e){rerendering=false}},260)});return true;
     }catch(e){return false}
   }
   setInterval(bind,350);
-  window.HCHousingMarketV2={version:VERSION,getSector,sectorId,applyFilters,openExact,previewHtml,key:KEY};
+  window.HCHousingMarketV2={version:VERSION,getSector,sectorId,applyFilters,openExact,renderExactDetail,previewHtml,key:KEY};
   window.dispatchEvent(new CustomEvent('hc-housing-market-v2-ready',{detail:{version:VERSION}}));
   try{if(st.level==='listing'){side();refreshListingsOnMap()}}catch(e){}
   return true;
