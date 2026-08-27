@@ -26,6 +26,9 @@ function rentMultiplier(){try{return Number(D()?.rent||1)}catch(e){return 1}}
 function cellId(lat,lng){return `${Math.floor(Number(lat)/CELL)}:${Math.floor(Number(lng)/CELL)}`}
 function cellCenter(key){const [a,b]=String(key).split(':').map(Number);return{lat:(a+.5)*CELL,lng:(b+.5)*CELL}}
 function allowedLevel(){try{return ['city','district','listing'].includes(st.level)&&!!st.city}catch(e){return false}}
+function realMarketActive(){
+  try{return !!(window.HCRealListingsAdapter&&typeof window.HCRealListingsAdapter.hasVisibleReal==='function'&&window.HCRealListingsAdapter.hasVisibleReal())}catch(e){return false}
+}
 
 function bucket(db){
   const id=cityId();
@@ -72,12 +75,14 @@ function inBounds(x){
 }
 function addMarkers(list){
   try{
+    if(realMarketActive())return;
     if(!LIVE_MAP||typeof addListingMarkers!=='function')return;
     const visible=list.filter(inBounds);
     if(visible.length)addListingMarkers(LIVE_MAP,visible);
   }catch(e){console.error('HC spatial markers',e)}
 }
 function discoverVisible(){
+  if(realMarketActive())return[];
   if(!allowedLevel()||!LIVE_MAP)return[];
   const fresh=[];for(const key of visibleCells())fresh.push(...discoverCell(key));
   if(fresh.length){
@@ -105,12 +110,14 @@ function install(){
   let originalStock;
   try{if(typeof stock!=='function'||typeof st==='undefined'||typeof addListingMarkers!=='function')return false;originalStock=stock}catch(e){return false}
   stock=function(){
-    const base=originalStock.apply(this,arguments)||[],extra=discovered(),seen=new Set(),all=[];
+    const base=originalStock.apply(this,arguments)||[];
+    if(realMarketActive())return base;
+    const extra=discovered(),seen=new Set(),all=[];
     for(const x of [...base,...extra]){if(!x||seen.has(String(x.id)))continue;seen.add(String(x.id));all.push(x)}
     return all;
   };
   installMapWatch();
-  window.HCSpatialHousingDiscovery={version:1,discoverVisible,discoverCell,discovered,key:KEY};
+  window.HCSpatialHousingDiscovery={version:2,discoverVisible,discoverCell,discovered,key:KEY,realMarketActive};
   return true;
 }
 
@@ -121,7 +128,7 @@ let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInt
 (function(){
   if(window.HCRealListingsAdapter||document.querySelector('script[data-hc-real-listings]'))return;
   const s=document.createElement('script');
-  s.src='./real-listings-adapter-v1.js?v=20260827-real-safe1';
+  s.src='./real-listings-adapter-v1.js?v=20260827-real-safe4';
   s.async=true;s.dataset.hcRealListings='1';
   s.onerror=()=>console.warn('HC real listings adapter unavailable; spatial fallback kept');
   document.head.appendChild(s);
