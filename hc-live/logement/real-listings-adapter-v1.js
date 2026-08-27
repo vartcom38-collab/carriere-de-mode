@@ -1,4 +1,4 @@
-/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v3.
+/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v4.
    Fail-safe : le logement stable reste intact si l'API ne répond pas.
    Une annonce réelle = une galerie réelle du même bien, affichée selon la zone visible.
    Marché limité et tournant : peu d'annonces pertinentes, stock renouvelé dans le temps. */
@@ -6,7 +6,7 @@
 'use strict';
 if(window.HCRealListingsAdapter)return;
 
-const BUILD='20260827-real-safe3';
+const BUILD='20260827-real-safe4';
 const ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
 const CACHE_KEY='haute-couture-real-listings-safe-v3';
 const TTL=6*60*60*1000;
@@ -60,6 +60,7 @@ function visibleReal(){
   try{if(st.listing){const selected=candidates.find(x=>String(x.id)===String(st.listing));if(selected&&!chosen.some(x=>String(x.id)===String(selected.id)))chosen=[selected,...chosen.slice(0,MAX_VISIBLE-1)]}}catch(e){}
   return chosen;
 }
+function hasVisibleReal(){return visibleReal().length>0}
 function mergedStock(original){return function(){const base=original.apply(this,arguments)||[],active=visibleReal();if(active.length)return active;return base}}
 function ensureMarkerState(){try{if(LIVE_MAP&&LIVE_MAP!==boundMap){boundMap=LIVE_MAP;markerIds=new Set()}}catch(e){}}
 function addRealMarkers(){
@@ -83,7 +84,7 @@ function install(){
   let last='';setInterval(()=>{const city=cityName();if(city&&city!==last){last=city;refreshCity()}ensureMarkerState()},700);
   const obs=new MutationObserver(()=>setTimeout(cardHero,30));obs.observe(document.getElementById('listings')||document.body,{childList:true,subtree:true});
   setInterval(()=>{try{if(LIVE_MAP&&!LIVE_MAP.__hcRealBound){LIVE_MAP.__hcRealBound=true;LIVE_MAP.on('moveend',refreshViewport);LIVE_MAP.on('zoomend',refreshViewport)}}catch(e){}},400);
-  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,get listings(){return real.slice()},get visible(){return visibleReal().slice()},marketBucket};return true
+  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,hasVisibleReal,get listings(){return real.slice()},get visible(){return visibleReal().slice()},marketBucket};return true
 }
 let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInterval(poll)},60);
 })();
