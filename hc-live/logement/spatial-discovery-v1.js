@@ -1,11 +1,11 @@
 /* Haute Couture Live — compatibilité logement.
-   L'ancien moteur spatial + annonces réelles est retiré : la carte et la colonne
-   sont désormais alimentées par une seule source, housing-market-v2.js. */
+   L'ancien moteur spatial + annonces réelles est retiré : la carte est désormais
+   l'unique navigateur du marché housing-market-v2.js. */
 (function(){
 'use strict';
 if(window.HCSpatialHousingDiscovery)return;
 
-const BUILD='20260827-market-v2';
+const BUILD='20260827-map-only-v21';
 function loadMarket(){
   if(window.HCHousingMarketV2)return Promise.resolve(window.HCHousingMarketV2);
   if(document.querySelector('script[data-hc-housing-market-v2]'))return Promise.resolve(null);
@@ -18,6 +18,6 @@ function loadMarket(){
     document.head.appendChild(s);
   });
 }
-window.HCSpatialHousingDiscovery={version:3,mode:'synchronized-market-v2',loadMarket};
+window.HCSpatialHousingDiscovery={version:4,mode:'map-only-market-v2',loadMarket};
 loadMarket().catch(e=>console.error('HC housing market v2 failed',e));
 })();
