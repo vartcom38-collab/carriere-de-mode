@@ -1,15 +1,18 @@
-/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v2.
+/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v3.
    Fail-safe : le logement stable reste intact si l'API ne répond pas.
-   Une annonce réelle = une galerie réelle du même bien, affichée selon la zone visible. */
+   Une annonce réelle = une galerie réelle du même bien, affichée selon la zone visible.
+   Marché limité et tournant : peu d'annonces pertinentes, stock renouvelé dans le temps. */
 (function(){
 'use strict';
 if(window.HCRealListingsAdapter)return;
 
-const BUILD='20260827-real-safe2';
+const BUILD='20260827-real-safe3';
 const ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
-const CACHE_KEY='haute-couture-real-listings-safe-v2';
+const CACHE_KEY='haute-couture-real-listings-safe-v3';
 const TTL=6*60*60*1000;
 const TIMEOUT=5500;
+const ROTATE_MS=12*60*60*1000;
+const MAX_VISIBLE=6;
 let installed=false,loading=false,currentCity='',real=[],boundMap=null,markerIds=new Set();
 
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE_KEY)||'{"cities":{}}')}catch(e){return{cities:{}}}}
@@ -37,6 +40,9 @@ function dedupeListings(list){
   return out;
 }
 function validCoord(x){return Number.isFinite(x.lat)&&Number.isFinite(x.lng)}
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function marketBucket(){return Math.floor(Date.now()/ROTATE_MS)}
+function rank(x){return hash(`${cityName()}|${marketBucket()}|${x.realPropertyId||x.dedupKey||x.id}`)}
 function cached(city){const db=readCache(),b=db.cities&&db.cities[city];if(!b||Date.now()-Number(b.savedAt||0)>TTL)return null;return Array.isArray(b.listings)?dedupeListings(b.listings):null}
 function save(city,list){const db=readCache();db.cities=db.cities||{};db.cities[city]={savedAt:Date.now(),listings:list};writeCache(db)}
 async function fetchCity(city){
@@ -46,8 +52,13 @@ async function fetchCity(city){
 }
 function visibleReal(){
   if(cityName()!==currentCity||!real.length)return[];
-  try{if(LIVE_MAP&&['city','district','listing'].includes(st.level)){const b=LIVE_MAP.getBounds().pad(.35),v=real.filter(x=>validCoord(x)&&b.contains([x.lat,x.lng]));if(v.length)return v}}catch(e){}
-  return [];
+  let candidates=[];
+  try{if(LIVE_MAP&&['city','district','listing'].includes(st.level)){const b=LIVE_MAP.getBounds().pad(.35);candidates=real.filter(x=>validCoord(x)&&b.contains([x.lat,x.lng]))}}catch(e){}
+  if(!candidates.length)return[];
+  candidates.sort((a,b)=>rank(a)-rank(b));
+  let chosen=candidates.slice(0,MAX_VISIBLE);
+  try{if(st.listing){const selected=candidates.find(x=>String(x.id)===String(st.listing));if(selected&&!chosen.some(x=>String(x.id)===String(selected.id)))chosen=[selected,...chosen.slice(0,MAX_VISIBLE-1)]}}catch(e){}
+  return chosen;
 }
 function mergedStock(original){return function(){const base=original.apply(this,arguments)||[],active=visibleReal();if(active.length)return active;return base}}
 function ensureMarkerState(){try{if(LIVE_MAP&&LIVE_MAP!==boundMap){boundMap=LIVE_MAP;markerIds=new Set()}}catch(e){}}
@@ -72,7 +83,7 @@ function install(){
   let last='';setInterval(()=>{const city=cityName();if(city&&city!==last){last=city;refreshCity()}ensureMarkerState()},700);
   const obs=new MutationObserver(()=>setTimeout(cardHero,30));obs.observe(document.getElementById('listings')||document.body,{childList:true,subtree:true});
   setInterval(()=>{try{if(LIVE_MAP&&!LIVE_MAP.__hcRealBound){LIVE_MAP.__hcRealBound=true;LIVE_MAP.on('moveend',refreshViewport);LIVE_MAP.on('zoomend',refreshViewport)}}catch(e){}},400);
-  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,get listings(){return real.slice()}};return true
+  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,get listings(){return real.slice()},get visible(){return visibleReal().slice()},marketBucket};return true
 }
 let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInterval(poll)},60);
 })();
