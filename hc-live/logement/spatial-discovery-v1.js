@@ -116,3 +116,13 @@ function install(){
 
 let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInterval(poll)},50);
 })();
+
+/* Charge la source d'annonces réelles en couche séparée. Un échec ne touche pas au moteur spatial. */
+(function(){
+  if(window.HCRealListingsAdapter||document.querySelector('script[data-hc-real-listings]'))return;
+  const s=document.createElement('script');
+  s.src='./real-listings-adapter-v1.js?v=20260827-real-safe1';
+  s.async=true;s.dataset.hcRealListings='1';
+  s.onerror=()=>console.warn('HC real listings adapter unavailable; spatial fallback kept');
+  document.head.appendChild(s);
+})();
