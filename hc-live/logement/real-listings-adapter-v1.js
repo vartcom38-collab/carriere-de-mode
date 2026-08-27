@@ -1,4 +1,4 @@
-/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v4.
+/* Haute Couture Live — adaptateur annonces réelles ChercherTrouver v5.
    Fail-safe : le logement stable reste intact si l'API ne répond pas.
    Une annonce réelle = une galerie réelle du même bien, affichée selon la zone visible.
    Marché limité et tournant : peu d'annonces pertinentes, stock renouvelé dans le temps. */
@@ -6,14 +6,14 @@
 'use strict';
 if(window.HCRealListingsAdapter)return;
 
-const BUILD='20260827-real-safe4';
+const BUILD='20260827-real-safe5';
 const ENDPOINT='https://carriere-de-mode-visuals.vercel.app/api/real-estate-listings';
 const CACHE_KEY='haute-couture-real-listings-safe-v3';
 const TTL=6*60*60*1000;
 const TIMEOUT=5500;
 const ROTATE_MS=12*60*60*1000;
 const MAX_VISIBLE=6;
-let installed=false,loading=false,currentCity='',real=[],boundMap=null,markerIds=new Set();
+let installed=false,loading=false,currentCity='',real=[],boundMap=null,markerIds=new Set(),renderedMarketSignature='';
 
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE_KEY)||'{"cities":{}}')}catch(e){return{cities:{}}}}
 function writeCache(v){try{localStorage.setItem(CACHE_KEY,JSON.stringify(v))}catch(e){}}
@@ -63,6 +63,19 @@ function visibleReal(){
 function hasVisibleReal(){return visibleReal().length>0}
 function mergedStock(original){return function(){const base=original.apply(this,arguments)||[],active=visibleReal();if(active.length)return active;return base}}
 function ensureMarkerState(){try{if(LIVE_MAP&&LIVE_MAP!==boundMap){boundMap=LIVE_MAP;markerIds=new Set()}}catch(e){}}
+function marketSignature(){const active=visibleReal();return active.length?'real:'+active.map(x=>String(x.id)).sort().join('|'):'fallback'}
+function reconcileListingMap(force=false){
+  try{
+    if(!LIVE_MAP||typeof st==='undefined'||st.level!=='listing'||typeof refreshListingsOnMap!=='function')return false;
+    const sig=marketSignature();
+    if(!force&&sig===renderedMarketSignature)return false;
+    renderedMarketSignature=sig;
+    /* Important : refreshListingsOnMap reconstruit la carte Leaflet. Cela détruit les anciens
+       marqueurs synthétiques au lieu de simplement poser les annonces réelles par-dessus. */
+    refreshListingsOnMap();
+    return true;
+  }catch(e){console.warn('HC real map reconcile skipped',e);return false}
+}
 function addRealMarkers(){
   try{ensureMarkerState();if(!LIVE_MAP||typeof addListingMarkers!=='function')return;const list=visibleReal().filter(x=>!markerIds.has(String(x.id)));if(!list.length)return;addListingMarkers(LIVE_MAP,list);list.forEach(x=>markerIds.add(String(x.id)))}catch(e){console.warn('HC real marker add skipped',e)}
 }
@@ -75,16 +88,24 @@ function renderRealGallery(x){
   holder.style.gridTemplateColumns='repeat(auto-fit,minmax(92px,1fr))';holder.innerHTML=x.gallery.map((g,i)=>`<button type="button" class="thumb hc-real-thumb" data-i="${i}" style="padding:0;cursor:pointer"><img src="${g.url}" alt="Photo ${i+1}" style="width:100%;height:100%;object-fit:cover;display:block"><span>Photo ${i+1}</span></button>`).join('');holder.querySelectorAll('.hc-real-thumb').forEach(btn=>btn.onclick=()=>{const i=Number(btn.dataset.i)||0;show(x.gallery[i].url,i)});
   document.querySelectorAll('.hc-real-listing-badge').forEach(n=>n.remove());const badge=document.createElement('div');badge.className='hc-real-listing-badge';badge.textContent=`ANNONCE RÉELLE · ${x.gallery.length} PHOTOS DU MÊME BIEN`;badge.style.cssText='margin-top:9px;font:900 9px Arial,sans-serif;letter-spacing:.08em;color:#438f8a';holder.insertAdjacentElement('afterend',badge)
 }
-function refreshUi(){try{if(typeof side==='function')side()}catch(e){}setTimeout(()=>{cardHero();addRealMarkers()},80)}
-async function refreshCity(){const city=cityName();if(!city)return;const list=await fetchCity(city);if(list.length)refreshUi()}
-function refreshViewport(){try{if(typeof side==='function')side()}catch(e){}setTimeout(()=>{cardHero();addRealMarkers()},70)}
+function refreshUi(){
+  const rebuilt=reconcileListingMap();
+  if(!rebuilt){try{if(typeof side==='function')side()}catch(e){}}
+  setTimeout(()=>{cardHero();if(!rebuilt)addRealMarkers()},80)
+}
+async function refreshCity(){const city=cityName();if(!city)return;const list=await fetchCity(city);if(list.length){renderedMarketSignature='';refreshUi()}}
+function refreshViewport(){
+  const rebuilt=reconcileListingMap();
+  if(!rebuilt){try{if(typeof side==='function')side()}catch(e){}setTimeout(()=>{cardHero();addRealMarkers()},70)}
+  else setTimeout(cardHero,70)
+}
 function install(){
   let originalStock,originalOpen;try{if(typeof stock!=='function'||typeof openListingDetail!=='function'||typeof st==='undefined')return false;originalStock=stock;originalOpen=openListingDetail}catch(e){return false}
   stock=mergedStock(originalStock);openListingDetail=function(){const r=originalOpen.apply(this,arguments);try{const x=real.find(v=>String(v.id)===String(st.listing));if(x)setTimeout(()=>renderRealGallery(x),0)}catch(e){}return r};
-  let last='';setInterval(()=>{const city=cityName();if(city&&city!==last){last=city;refreshCity()}ensureMarkerState()},700);
+  let last='';setInterval(()=>{const city=cityName();if(city&&city!==last){last=city;renderedMarketSignature='';refreshCity()}ensureMarkerState()},700);
   const obs=new MutationObserver(()=>setTimeout(cardHero,30));obs.observe(document.getElementById('listings')||document.body,{childList:true,subtree:true});
   setInterval(()=>{try{if(LIVE_MAP&&!LIVE_MAP.__hcRealBound){LIVE_MAP.__hcRealBound=true;LIVE_MAP.on('moveend',refreshViewport);LIVE_MAP.on('zoomend',refreshViewport)}}catch(e){}},400);
-  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,hasVisibleReal,get listings(){return real.slice()},get visible(){return visibleReal().slice()},marketBucket};return true
+  refreshCity();installed=true;window.HCRealListingsAdapter={build:BUILD,refreshCity,renderRealGallery,hasVisibleReal,reconcileListingMap,get listings(){return real.slice()},get visible(){return visibleReal().slice()},marketBucket};return true
 }
 let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInterval(poll)},60);
 })();
