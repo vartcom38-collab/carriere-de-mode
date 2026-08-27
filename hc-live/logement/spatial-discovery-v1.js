@@ -18,7 +18,7 @@ const TYPES=[
 ];
 
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{"version":1,"cities":{}}')}catch(e){return{version:1,cities:{}}}};
-const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){};
 function hash(s){let x=2166136261;for(const c of String(s)){x^=c.charCodeAt(0);x=Math.imul(x,16777619)}return x>>>0}
 function rng(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
 function cityId(){try{return String(st.cityCode||st.city||'ville')}catch(e){return'ville'}}
@@ -128,7 +128,7 @@ let tries=0;const poll=setInterval(()=>{tries++;if(install()||tries>200)clearInt
 (function(){
   if(window.HCRealListingsAdapter||document.querySelector('script[data-hc-real-listings]'))return;
   const s=document.createElement('script');
-  s.src='./real-listings-adapter-v1.js?v=20260827-real-safe4';
+  s.src='./real-listings-adapter-v1.js?v=20260827-real-safe5';
   s.async=true;s.dataset.hcRealListings='1';
   s.onerror=()=>console.warn('HC real listings adapter unavailable; spatial fallback kept');
   document.head.appendChild(s);
