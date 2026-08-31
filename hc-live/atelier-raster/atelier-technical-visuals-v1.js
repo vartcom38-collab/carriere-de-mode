@@ -1,4 +1,4 @@
-/* Haute Couture Live — visuels techniques Atelier v1.
+/* Haute Couture Live — visuels techniques Atelier v1.1.
    Direction visuelle officielle: élément isolé, ivoire/blanc, trait fin, vue frontale, sans personne ni décor.
 */
 (function(){
@@ -26,5 +26,7 @@ const V={
  }
 };
 Object.values(V).forEach(v=>{v.note='Illustration technique interne — élément isolé, ivoire sur fond blanc.'});
-window.HCAtelierTechnicalVisuals={version:1,refs:V,get:id=>V[id]||null};
+window.HCAtelierTechnicalVisuals={version:1.1,refs:V,get:id=>V[id]||null};
+const host=document.getElementById('hcv2AccordionHost');if(host)host.dataset.finalSidebar='';
+window.dispatchEvent(new CustomEvent('hc-atelier-technical-visuals-ready',{detail:{version:1.1,count:Object.keys(V).length}}));
 })();
