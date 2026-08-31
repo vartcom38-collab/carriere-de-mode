@@ -1,5 +1,6 @@
-/* Haute Couture Live — références visuelles Atelier v1.2.
-   Bibliothèque technique : visuels neutres, élément seul, blanc/fond blanc lorsque possible.
+/* Haute Couture Live — références visuelles Atelier v1.3.
+   La bibliothèque technique privilégie les illustrations internes homogènes.
+   Les photos externes restent réservées aux références/archives plus avancées.
 */
 (function(){
 'use strict';
@@ -7,6 +8,7 @@ if(window.HCAtelierVisualReferences)return;
 const fileUrl=f=>'https://commons.wikimedia.org/wiki/Special:Redirect/file/'+encodeURIComponent(f);
 const pageUrl=f=>'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(f);
 const R=(id,file,note,extra={})=>({id,image:fileUrl(file),source:pageUrl(file),provider:'Wikimedia Commons',note,...extra});
+const T=id=>window.HCAtelierTechnicalVisuals?.get?.(id)||null;
 const refs={
  'top-corset':R('top-corset','Corset (2024-03-15) 01.jpg','Structure de corset réelle.'),
  'top-bustier':R('top-bustier','Bodice.jpg','Référence de corsage structuré.'),
@@ -22,11 +24,10 @@ const refs={
  'redcarpet-cape':R('redcarpet-cape','Cannes 2016 20.jpg','Référence d’allure événementielle.'),
  'pants-tailleur':R('pants-tailleur','Tuxedo details.jpg','Référence de détails tailoring.')
 };
+const tech=id=>T(id)||null;
 const variants={
- 'top-tshirt':[
-  R('tshirt-classic-white','White tshirt.png','T-shirt blanc isolé sur fond blanc.',{label:'T-shirt classique',tags:['blanc','basique','col rond','manches courtes','droit']}),
-  R('tshirt-v-neck-white','T-shirt v neck.jpg','T-shirt à col V, utilisé comme référence de coupe.',{label:'T-shirt col V',tags:['blanc','basique','col V','manches courtes']})
- ]
+ 'top-tshirt':['tshirt-classic-front','tshirt-v-neck','tshirt-oversized'].map(tech).filter(Boolean),
+ 'top-debardeur':['tank-basic'].map(tech).filter(Boolean)
 };
 const galleries={
  tops:'https://commons.wikimedia.org/wiki/Category:Bodices',
@@ -50,5 +51,5 @@ const galleries={
  ceremony:'https://commons.wikimedia.org/wiki/Category:Formal_wear',
  bridal:'https://commons.wikimedia.org/wiki/Category:Wedding_dresses'
 };
-window.HCAtelierVisualReferences={version:1.2,refs,variants,galleries,forItem:id=>refs[id]||null,variantsForItem:id=>variants[id]||[],forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variants[item.id]||[],visualGallery:galleries[item.category]||null})};
+window.HCAtelierVisualReferences={version:1.3,refs,variants,galleries,forItem:id=>refs[id]||null,variantsForItem:id=>variants[id]||[],forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variants[item.id]||[],visualGallery:galleries[item.category]||null})};
 })();
