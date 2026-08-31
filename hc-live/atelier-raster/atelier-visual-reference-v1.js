@@ -1,5 +1,5 @@
-/* Haute Couture Live — références visuelles Atelier v1.1.
-   Références réelles pour identifier les composants; les rendus finaux restent générés dans le flow Atelier.
+/* Haute Couture Live — références visuelles Atelier v1.2.
+   Bibliothèque technique : visuels neutres, élément seul, blanc/fond blanc lorsque possible.
 */
 (function(){
 'use strict';
@@ -24,9 +24,8 @@ const refs={
 };
 const variants={
  'top-tshirt':[
-  R('tshirt-classic-front','Wikipedia 25 Tshirt white (front).png','T-shirt classique vu de face.',{label:'T-shirt classique',tags:['classique','col rond','manches courtes','droit']}),
-  R('tshirt-v-neck','T-shirt v neck.jpg','Référence de T-shirt à encolure V.',{label:'T-shirt col V',tags:['col V','manches courtes','casual']}),
-  R('tshirt-oversized','Oversized t-shirt with slightly baggy pants.jpg','Référence portée de T-shirt oversize.',{label:'T-shirt oversize',tags:['oversize','ample','épaules tombantes','streetwear']})
+  R('tshirt-classic-white','White tshirt.png','T-shirt blanc isolé sur fond blanc.',{label:'T-shirt classique',tags:['blanc','basique','col rond','manches courtes','droit']}),
+  R('tshirt-v-neck-white','T-shirt v neck.jpg','T-shirt à col V, utilisé comme référence de coupe.',{label:'T-shirt col V',tags:['blanc','basique','col V','manches courtes']})
  ]
 };
 const galleries={
@@ -51,5 +50,5 @@ const galleries={
  ceremony:'https://commons.wikimedia.org/wiki/Category:Formal_wear',
  bridal:'https://commons.wikimedia.org/wiki/Category:Wedding_dresses'
 };
-window.HCAtelierVisualReferences={version:1.1,refs,variants,galleries,forItem:id=>refs[id]||null,variantsForItem:id=>variants[id]||[],forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variants[item.id]||[],visualGallery:galleries[item.category]||null})};
+window.HCAtelierVisualReferences={version:1.2,refs,variants,galleries,forItem:id=>refs[id]||null,variantsForItem:id=>variants[id]||[],forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variants[item.id]||[],visualGallery:galleries[item.category]||null})};
 })();
