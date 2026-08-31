@@ -1,4 +1,4 @@
-/* Haute Couture Live — références visuelles Atelier v1.4.
+/* Haute Couture Live — références visuelles Atelier v1.5.
    La bibliothèque technique privilégie les illustrations internes homogènes.
    Les variantes techniques sont résolues à la demande pour éviter les courses de chargement.
 */
@@ -25,7 +25,19 @@ const refs={
 };
 const TECH_KEYS={
  'top-tshirt':['tshirt-classic-front','tshirt-v-neck','tshirt-oversized'],
- 'top-debardeur':['tank-basic']
+ 'top-debardeur':['tank-basic'],
+ 'top-chemise':['shirt-basic'],
+ 'skirt-droite':['skirt-straight'],
+ 'skirt-trapeze':['skirt-a-line'],
+ 'pants-droit':['pants-straight'],
+ 'jean-droit':['jeans-straight'],
+ 'dress-droite':['dress-straight'],
+ 'sleeve-short':['sleeve-short-basic'],
+ 'sleeve-long':['sleeve-long-basic'],
+ 'neck-round':['neck-round-basic'],
+ 'neck-v':['neck-v-basic'],
+ 'neck-square':['neck-square-basic'],
+ 'collar-shirt':['collar-shirt-basic']
 };
 function variantsForItem(id){const keys=TECH_KEYS[id]||[];const get=window.HCAtelierTechnicalVisuals?.get;if(!get)return[];return keys.map(k=>get(k)).filter(Boolean)}
 const galleries={
@@ -50,6 +62,6 @@ const galleries={
  ceremony:'https://commons.wikimedia.org/wiki/Category:Formal_wear',
  bridal:'https://commons.wikimedia.org/wiki/Category:Wedding_dresses'
 };
-window.HCAtelierVisualReferences={version:1.4,refs,galleries,forItem:id=>refs[id]||null,variantsForItem,forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variantsForItem(item.id),visualGallery:galleries[item.category]||null})};
+window.HCAtelierVisualReferences={version:1.5,refs,galleries,forItem:id=>refs[id]||null,variantsForItem,forCategory:c=>galleries[c]||null,enrich:item=>({...item,visualReference:refs[item.id]||null,visualVariants:variantsForItem(item.id),visualGallery:galleries[item.category]||null})};
 window.addEventListener('hc-atelier-technical-visuals-ready',()=>window.dispatchEvent(new CustomEvent('hc-atelier-visual-references-updated')));
 })();
