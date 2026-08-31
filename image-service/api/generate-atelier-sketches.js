@@ -14,13 +14,25 @@ export default async function handler(req,res){
     const categories=[...new Set(components.map(x=>x?.category).filter(Boolean))];
     const fabric=board.fabric?.name||board.fabric?.label||refs?.material?.name||'',color=refs?.color?.name||'',pattern=refs?.pattern?.name||'',notes=String(board.notes||'').trim();
     if(!pieces.length&&!componentNames.length)return res.status(400).json({error:'board_requires_element'});
+    const layout=components.map((x,i)=>({
+      name:x?.name||`element ${i+1}`,
+      category:x?.category||'',
+      x:Number(x?.x||0),y:Number(x?.y||0),
+      scale:Number(x?.scale||1),rotate:Number(x?.rotate||0),order:Number(x?.order??i)
+    }));
+    const maxScale=Math.max(1,...layout.map(x=>x.scale||1));
+    const layoutText=layout.map(x=>{
+      const emphasis=x.scale>=maxScale*.9?'major visual emphasis':x.scale<=.75?'minor supporting reference':'normal emphasis';
+      const rotation=Math.abs(x.rotate)>=8?`rotated ${Math.round(x.rotate)} degrees`:'';
+      return `${x.name} (${x.category||'reference'}): position ${Math.round(x.x)},${Math.round(x.y)}, ${emphasis}${rotation?`, ${rotation}`:''}`;
+    }).join(' | ');
     const clientText=[client.name&&`Client: ${client.name}`,client.garment&&`Requested garment: ${client.garment}`,client.occasion&&`Occasion: ${client.occasion}`,client.style&&`Desired style: ${client.style}`,Array.isArray(client.paletteLiked)&&client.paletteLiked.length&&`Preferred palette: ${client.paletteLiked.join(', ')}`,Array.isArray(client.paletteAvoid)&&client.paletteAvoid.length&&`Avoid: ${client.paletteAvoid.join(', ')}`,Array.isArray(client.materialsPreferred)&&client.materialsPreferred.length&&`Preferred materials: ${client.materialsPreferred.join(', ')}`,client.notes&&`Client words: ${client.notes}`].filter(Boolean).join('. ');
-    const boardText=[pieces.length&&`Chosen notebook elements: ${pieces.join(', ')}`,componentNames.length&&`Known construction vocabulary actively selected: ${componentNames.join(', ')}`,categories.length&&`Selected families: ${categories.join(', ')}`,promptTokens.length&&`Technical design instructions from unlocked elements: ${[...new Set(promptTokens)].join(' | ')}`,fabric&&`Chosen fabric: ${fabric}`,color&&`Chosen color direction: ${color}`,pattern&&`Chosen pattern/treatment: ${pattern}`,notes&&`Designer notes: ${notes}`,designer.level&&`Designer technical level: ${designer.level}`].filter(Boolean).join('. ');
-    const styleLock=`Professional fashion designer croquis, genuine stylist sketchbook aesthetic, full-body fashion figure wearing ONE coherent finished outfit, hand-drawn graphite and ink linework with restrained marker or watercolor indications, elongated fashion proportions, visible garment construction lines and textile behavior, warm off-white paper, elegant French fashion-school presentation, no photography, no 3D render, no text, no labels, no collage, no moodboard, no duplicate figures, no UI. The garment must be physically plausible and clearly derive from the provided stylist notebook and client brief. The notebook is a creative vocabulary, not a paper-doll assembly: synthesize the selected collar, sleeve, top, bottom, detail, fabric, color, motif and construction references into one coherent design. Do not make an unselected or locked construction feature the dominant idea.`;
+    const boardText=[pieces.length&&`Chosen notebook elements: ${pieces.join(', ')}`,componentNames.length&&`Known construction vocabulary actively selected: ${componentNames.join(', ')}`,categories.length&&`Selected families: ${categories.join(', ')}`,layoutText&&`Moodboard composition and visual hierarchy: ${layoutText}`,promptTokens.length&&`Technical design instructions from unlocked elements: ${[...new Set(promptTokens)].join(' | ')}`,fabric&&`Chosen fabric: ${fabric}`,color&&`Chosen color direction: ${color}`,pattern&&`Chosen pattern/treatment: ${pattern}`,notes&&`Designer notes: ${notes}`,designer.level&&`Designer technical level: ${designer.level}`].filter(Boolean).join('. ');
+    const styleLock=`Professional fashion designer croquis, genuine stylist sketchbook aesthetic, full-body fashion figure wearing ONE coherent finished outfit, hand-drawn graphite and ink linework with restrained marker or watercolor indications, elongated fashion proportions, visible garment construction lines and textile behavior, warm off-white paper, elegant French fashion-school presentation, no photography, no 3D render, no text, no labels, no collage, no moodboard, no duplicate figures, no UI. The garment must be physically plausible and clearly derive from the provided stylist notebook and client brief. The notebook is a creative vocabulary, not a paper-doll assembly: synthesize the selected collar, sleeve, top, bottom, detail, fabric, color, motif and construction references into one coherent design. Respect the moodboard visual hierarchy: larger or more prominent references should influence the proposal more strongly, while small references act as supporting cues. Do not make an unselected or locked construction feature the dominant idea.`;
     const variants=[
-      {id:'A',name:'Interprétation fidèle',direction:'Stay very faithful to the selected notebook vocabulary and client constraints. Resolve it into the clearest, most wearable professional fashion proposal.'},
-      {id:'B',name:'Interprétation mode',direction:'Use exactly the same selected vocabulary and brief, but reinterpret proportions and relationships with a stronger contemporary fashion-editorial point of view. Do not replace the chosen ingredients.'},
-      {id:'C',name:'Interprétation couture',direction:'Use exactly the same selected vocabulary and brief, but push drape, construction and refined detail into a couture direction without becoming costume-like or inventing a new dominant ingredient.'}
+      {id:'A',name:'Interprétation fidèle',direction:'Stay very faithful to the selected notebook vocabulary, visual hierarchy and client constraints. Resolve it into the clearest, most wearable professional fashion proposal.'},
+      {id:'B',name:'Interprétation mode',direction:'Use exactly the same selected vocabulary, hierarchy and brief, but reinterpret proportions and relationships with a stronger contemporary fashion-editorial point of view. Do not replace the chosen ingredients.'},
+      {id:'C',name:'Interprétation couture',direction:'Use exactly the same selected vocabulary, hierarchy and brief, but push drape, construction and refined detail into a couture direction without becoming costume-like or inventing a new dominant ingredient.'}
     ];
     async function generate(v,index){
       const prompt=`${styleLock}\n\nCLIENT BRIEF: ${clientText||'No client brief: personal creation.'}\nSTYLIST NOTEBOOK: ${boardText}.\nVARIATION ${v.id}: ${v.direction}\nCreate exactly one complete fashion croquis proposal. Respect the client request and the designer's selected creative vocabulary. Preserve selected material and color direction when specified.`;
@@ -33,6 +45,6 @@ export default async function handler(req,res){
       return{id:v.id,name:v.name,direction:v.direction,url:url||`data:image/png;base64,${b64}`,provider:'magnific',prompt};
     }
     const results=await Promise.all(variants.map((v,i)=>generate(v,i)));
-    return res.status(200).json({ok:true,provider:'magnific',count:results.length,proposals:results,meta:{pieces,components:componentNames,fabric,color,pattern}});
+    return res.status(200).json({ok:true,provider:'magnific',count:results.length,proposals:results,meta:{pieces,components:componentNames,layout,fabric,color,pattern}});
   }catch(err){return res.status(500).json({error:'atelier_sketch_generation_failed',detail:String(err?.message||err)})}
 }
