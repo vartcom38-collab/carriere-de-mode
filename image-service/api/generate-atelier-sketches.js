@@ -13,8 +13,9 @@ export default async function handler(req,res){
   if(req.method!=='POST')return res.status(405).json({error:'method_not_allowed'});
 
   try{
-    const magnificKey=process.env.MAGNIFIC_API_KEY||process.env.MAGNIFIC_KEY;
-    if(!magnificKey)return res.status(503).json({error:'MAGNIFIC_API_KEY_or_MAGNIFIC_KEY_missing'});
+    const magnificKey=process.env.MAGNIFIC_API_KEY||process.env.MAGNIFIC_KEY||'';
+    const openaiKey=process.env.OPENAI_API_KEY||'';
+    if(!magnificKey&&!openaiKey)return res.status(503).json({error:'image_provider_missing'});
 
     const body=req.body||{},board=body.board||{},client=body.client||{},designer=body.designer||{};
     const components=Array.isArray(board.components)?board.components:[];
@@ -46,43 +47,35 @@ export default async function handler(req,res){
       notes.length&&`notes créatives ${notes.join(' | ')}`
     ].filter(Boolean).join('. '),620);
 
-    const base='Croquis de styliste professionnel, silhouette entière élancée, dessin main graphite et encre avec touches aquarelle ou feutre, papier ivoire. La photo JPEG du moodboard est la direction visuelle principale. Conserver les silhouettes, volumes, encolures, longueurs et associations visibles puis les résoudre en une tenue cohérente portée. Respecter strictement matières, couleurs, motifs et demande cliente. Pas de photo, pas de 3D, pas de collage, pas de texte dans image.';
+    const base='Professional fashion designer croquis. Full-body elongated fashion figure, hand-drawn graphite and ink with restrained watercolor or marker indications on ivory sketchbook paper. Resolve the selected garments into one coherent wearable look. Respect the selected silhouettes, necklines, lengths, proportions, fabrics, colors, patterns and client request. Fashion illustration only: no photograph, no photorealism, no 3D render, no collage, no typography, no watermark.';
     const variants=[
-      'Solution 1 : proportions équilibrées, construction claire, lecture frontale nette.',
-      'Solution 2 : mêmes choix obligatoires, mais lignes, drapé et proportions sensiblement différents.',
-      'Solution 3 : mêmes choix obligatoires, avec détails de construction et finitions plus couture.'
+      'Croquis 1: balanced proportions, clear construction, strong front-view readability.',
+      'Croquis 2: same mandatory ingredients but noticeably different drape, lines and proportions.',
+      'Croquis 3: same mandatory ingredients with more couture construction details and refined finishing.'
     ];
-    const prompts=variants.map(v=>clip(`${base} ${generatedPrompt?`Direction Atelier: ${generatedPrompt}. `:''}Commande: ${clientText||'création personnelle'}. Planche détectée: ${boardText}. ${v} Créer exactement un croquis de mode complet.`,2500));
-    const headers={'Content-Type':'application/json','Accept':'application/json','x-magnific-api-key':magnificKey};
-    const baseSeed=Number.isFinite(Number(body.seed))?Number(body.seed):Date.now()%1000000;
+    const prompts=variants.map(v=>clip(`${base} ${generatedPrompt?`Atelier direction: ${generatedPrompt}. `:''}Client order: ${clientText||'personal creation'}. Moodboard selections: ${boardText}. ${v}`,2400));
 
-    async function jsonFetch(url,options,retries=1){
-      let last;
-      for(let i=0;i<=retries;i++){
-        const r=await fetch(url,options);
-        const text=await r.text();
-        let j={};try{j=JSON.parse(text)}catch(_){j={raw:text.slice(0,600)}}
-        if(r.ok)return j;
-        last=new Error(`magnific_${r.status}:${JSON.stringify(j).slice(0,500)}`);
-        if(r.status!==429||i===retries)throw last;
-        await sleep(1400*(i+1));
-      }
-      throw last;
+    async function magnificJson(url,options){
+      const r=await fetch(url,options);
+      const text=await r.text();
+      let j={};try{j=JSON.parse(text)}catch(_){j={raw:text.slice(0,600)}}
+      if(!r.ok)throw new Error(`magnific_${r.status}:${JSON.stringify(j).slice(0,500)}`);
+      return j;
     }
 
-    async function referenceImage(prompt){
+    async function magnificReference(prompt){
+      if(!magnificKey||!capture)throw new Error('magnific_reference_unavailable');
       const path='https://api.magnific.com/v1/ai/gemini-2-5-flash-image-preview';
-      const j=await jsonFetch(path,{method:'POST',headers,body:JSON.stringify({prompt,reference_images:[capture]})},1);
-      let d=j?.data||{};
-      let generated=Array.isArray(d.generated)?d.generated:[];
+      const headers={'Content-Type':'application/json','Accept':'application/json','x-magnific-api-key':magnificKey};
+      const j=await magnificJson(path,{method:'POST',headers,body:JSON.stringify({prompt,reference_images:[capture]})});
+      let d=j?.data||{},generated=Array.isArray(d.generated)?d.generated:[];
       if(generated[0])return generated[0];
       const taskId=d.task_id;
       if(!taskId)throw new Error('magnific_reference_task_missing');
-      for(let i=0;i<24;i++){
-        await sleep(900);
-        const k=await jsonFetch(`${path}/${taskId}`,{headers:{Accept:'application/json','x-magnific-api-key':magnificKey}},1);
-        d=k?.data||{};
-        generated=Array.isArray(d.generated)?d.generated:[];
+      for(let i=0;i<10;i++){
+        await sleep(800);
+        const k=await magnificJson(`${path}/${taskId}`,{headers:{Accept:'application/json','x-magnific-api-key':magnificKey}});
+        d=k?.data||{};generated=Array.isArray(d.generated)?d.generated:[];
         if(generated[0])return generated[0];
         const st=String(d.status||'').toUpperCase();
         if(['FAILED','ERROR','CANCELLED'].includes(st))throw new Error(`magnific_reference_${st.toLowerCase()}`);
@@ -90,53 +83,76 @@ export default async function handler(req,res){
       throw new Error('magnific_reference_timeout');
     }
 
-    async function classicFast(prompt,seed){
-      const payload={
-        prompt,
-        negative_prompt:'photograph, photorealistic, 3d render, mannequin photo, runway photo, collage, text, watermark, logo, UI, distorted anatomy, extra limbs, unrelated dominant garment, unselected dominant color, unselected dominant pattern',
-        guidance_scale:2,
-        seed,
-        num_images:1,
-        image:{size:'square_1_1'},
-        filter_nsfw:true
-      };
-      const j=await jsonFetch('https://api.magnific.com/v1/ai/text-to-image',{method:'POST',headers,body:JSON.stringify(payload)},1);
+    async function magnificText(prompt,seed){
+      if(!magnificKey)throw new Error('magnific_key_missing');
+      const headers={'Content-Type':'application/json','Accept':'application/json','x-magnific-api-key':magnificKey};
+      const j=await magnificJson('https://api.magnific.com/v1/ai/text-to-image',{method:'POST',headers,body:JSON.stringify({prompt,seed,num_images:1,filter_nsfw:true})});
       const item=Array.isArray(j?.data)?j.data[0]:null;
       if(item?.url)return item.url;
       if(item?.base64)return `data:image/png;base64,${item.base64}`;
-      throw new Error(`magnific_classic_image_missing:${JSON.stringify(j).slice(0,350)}`);
+      throw new Error(`magnific_text_image_missing:${JSON.stringify(j).slice(0,350)}`);
     }
 
-    const out=new Array(3).fill(null);
-    const refErrors=new Array(3).fill(null);
-
-    if(capture){
-      const refsAttempt=await Promise.allSettled(prompts.map(referenceImage));
-      refsAttempt.forEach((r,i)=>{
-        if(r.status==='fulfilled')out[i]={url:r.value,mode:'reference-image'};
-        else refErrors[i]=String(r.reason?.message||r.reason);
+    async function openaiText(prompt){
+      if(!openaiKey)throw new Error('openai_key_missing');
+      const r=await fetch('https://api.openai.com/v1/images/generations',{
+        method:'POST',
+        headers:{'Authorization':`Bearer ${openaiKey}`,'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:process.env.OPENAI_IMAGE_MODEL||'gpt-image-2',
+          prompt,
+          size:'1024x1536',
+          quality:process.env.OPENAI_IMAGE_QUALITY||'medium',
+          n:1
+        })
       });
+      const text=await r.text();
+      let j={};try{j=JSON.parse(text)}catch(_){j={raw:text.slice(0,600)}}
+      if(!r.ok)throw new Error(`openai_${r.status}:${JSON.stringify(j).slice(0,500)}`);
+      const item=Array.isArray(j?.data)?j.data[0]:null;
+      if(item?.b64_json)return `data:image/png;base64,${item.b64_json}`;
+      if(item?.url)return item.url;
+      throw new Error(`openai_image_missing:${JSON.stringify(j).slice(0,350)}`);
     }
 
-    for(let i=0;i<3;i++){
-      if(out[i])continue;
-      const seed=(baseSeed+i*7919)%1000001;
-      try{out[i]={url:await classicFast(prompts[i],seed),mode:'text-fallback'}}
-      catch(err){throw new Error(`croquis_${i+1}_failed:${String(err?.message||err)};reference=${refErrors[i]||'none'}`)}
+    const baseSeed=Number.isFinite(Number(body.seed))?Number(body.seed):Date.now()%1000000;
+    const providerErrors=[];
+
+    async function generateOne(i){
+      const prompt=prompts[i],seed=(baseSeed+i*7919)%1000001;
+      if(magnificKey&&capture){
+        try{return{url:await magnificReference(prompt),provider:'magnific',mode:'reference-image'}}
+        catch(err){providerErrors.push({croquis:i+1,provider:'magnific-reference',error:String(err?.message||err)})}
+      }
+      if(magnificKey){
+        try{return{url:await magnificText(prompt,seed),provider:'magnific',mode:'text-fallback'}}
+        catch(err){providerErrors.push({croquis:i+1,provider:'magnific-text',error:String(err?.message||err)})}
+      }
+      if(openaiKey){
+        try{return{url:await openaiText(prompt),provider:'openai',mode:'text-fallback'}}
+        catch(err){providerErrors.push({croquis:i+1,provider:'openai',error:String(err?.message||err)})}
+      }
+      throw new Error(`croquis_${i+1}_all_providers_failed`);
     }
 
-    const proposals=out.map((x,i)=>({id:String(i+1),name:`Croquis ${i+1}`,direction:variants[i],url:x.url,provider:'magnific',mode:x.mode,referenceError:refErrors[i],prompt:prompts[i]}));
+    const settled=await Promise.allSettled([0,1,2].map(generateOne));
+    const failed=settled.findIndex(x=>x.status==='rejected');
+    if(failed>=0)throw new Error(`croquis_${failed+1}_failed:${String(settled[failed].reason?.message||settled[failed].reason)};providers=${JSON.stringify(providerErrors).slice(0,1200)}`);
+    const out=settled.map(x=>x.value);
+
+    const proposals=out.map((x,i)=>({
+      id:String(i+1),name:`Croquis ${i+1}`,direction:variants[i],url:x.url,
+      provider:x.provider,mode:x.mode,prompt:prompts[i]
+    }));
+
     return res.status(200).json({
-      ok:true,
-      count:3,
-      provider:'magnific',
-      proposals,
+      ok:true,count:3,proposals,
       meta:{
-        keySource:process.env.MAGNIFIC_API_KEY?'MAGNIFIC_API_KEY':'MAGNIFIC_KEY',
         garments,materials,colors,patterns,notes,
         captureReceived:!!capture,
         moodboardReferenceUsed:proposals.some(x=>x.mode==='reference-image'),
-        fallbacks:proposals.filter(x=>x.referenceError).map(x=>({croquis:x.id,error:x.referenceError})),
+        providers:proposals.map(x=>x.provider),
+        providerErrors,
         designerLevel:designer.level||null
       }
     });
