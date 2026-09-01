@@ -24,7 +24,7 @@ export default async function handler(req,res){
     const colors=uniq([...names(refs.colors),...components.filter(x=>x?.moodKind==='color'||x?.category==='color').map(x=>x?.name)]);
     const patterns=uniq([...names(refs.patterns),...components.filter(x=>x?.moodKind==='pattern'||x?.category==='pattern').map(x=>x?.name)]);
     const notes=uniq([...(Array.isArray(board.notes)?board.notes:[]).map(x=>typeof x==='string'?x:x?.noteText||x?.text),...components.map(x=>x?.noteText)]);
-    const generatedPrompt=clip(body.generatedPrompt||board.generatedPrompt||'',1250);
+    const generatedPrompt=clip(body.generatedPrompt||board.generatedPrompt||'',1200);
     const clientText=clip([
       client.garment&&`demande ${client.garment}`,
       client.occasion&&`occasion ${client.occasion}`,
@@ -42,51 +42,71 @@ export default async function handler(req,res){
       notes.length&&`notes créatives ${notes.join(' | ')}`
     ].filter(Boolean).join('. '),650);
 
-    const base=`Croquis de styliste professionnel français, silhouette entière élancée, dessin main graphite et encre avec touches aquarelle/feutre, papier ivoire. La photo JPEG du moodboard est la direction visuelle principale : conserver les silhouettes, volumes, encolures, longueurs et associations de vêtements qui y sont visibles, puis les résoudre en UNE tenue cohérente portée. Respecter strictement matières, couleurs, motifs et demande cliente. Pas de photo, pas de 3D, pas de collage, pas de texte dans l'image.`;
+    const base=`Croquis de styliste professionnel, silhouette entière élancée, dessin main graphite et encre avec touches aquarelle/feutre, papier ivoire. La photo JPEG du moodboard est la direction visuelle principale. Conserver les silhouettes, volumes, encolures, longueurs et associations de vêtements visibles sur cette planche puis les résoudre en UNE tenue cohérente portée. Respecter strictement matières, couleurs, motifs et demande cliente. Pas de photo, pas de 3D, pas de collage, pas de texte dans l'image.`;
     const variants=[
-      `Proposition 1 : première solution de stylisme, construction claire et proportions équilibrées.`,
-      `Proposition 2 : autre solution de stylisme, mêmes choix obligatoires mais proportions, lignes et drapé sensiblement différents.`,
-      `Proposition 3 : troisième solution de stylisme, mêmes choix obligatoires mais détails de construction et finitions différents.`
+      `Première solution de stylisme : proportions équilibrées, construction claire, lecture frontale nette.`,
+      `Deuxième solution de stylisme : mêmes choix obligatoires, mais lignes, drapé et proportions sensiblement différents.`,
+      `Troisième solution de stylisme : mêmes choix obligatoires, mais détails de construction et finitions plus couture.`
     ];
     const headers={'Content-Type':'application/json','Accept':'application/json','x-magnific-api-key':process.env.MAGNIFIC_API_KEY};
 
-    async function api(path,options,retries=1){
+    async function jsonFetch(url,options,retries=1){
       let last;
       for(let i=0;i<=retries;i++){
-        const r=await fetch(`https://api.magnific.com${path}`,options),j=await r.json().catch(()=>({}));
+        const r=await fetch(url,options),j=await r.json().catch(()=>({}));
         if(r.ok)return j;
-        last=new Error(`magnific_${r.status}:${JSON.stringify(j).slice(0,360)}`);
+        last=new Error(`magnific_${r.status}:${JSON.stringify(j).slice(0,420)}`);
         if(r.status!==429||i===retries)throw last;
-        await sleep(1200*(i+1));
+        await sleep(1400*(i+1));
       }
       throw last;
     }
-    async function task(path,payload){
-      const j=await api(path,{method:'POST',headers,body:JSON.stringify(payload)},1);
+
+    async function referenceImage(prompt){
+      const path='https://api.magnific.com/v1/ai/gemini-2-5-flash-image-preview';
+      const j=await jsonFetch(path,{method:'POST',headers,body:JSON.stringify({prompt,reference_images:[capture]})},1);
       let d=j?.data||{},generated=Array.isArray(d.generated)?d.generated:[];
       if(generated[0])return generated[0];
-      const id=d.task_id;if(!id)throw new Error('magnific_task_missing');
-      for(let i=0;i<42;i++){
-        await sleep(850);
-        const k=await api(`${path}/${id}`,{headers:{Accept:'application/json','x-magnific-api-key':process.env.MAGNIFIC_API_KEY}},1);
+      const taskId=d.task_id;
+      if(!taskId)throw new Error('magnific_reference_task_missing');
+      for(let i=0;i<36;i++){
+        await sleep(1000);
+        const k=await jsonFetch(`${path}/${taskId}`,{headers:{Accept:'application/json','x-magnific-api-key':process.env.MAGNIFIC_API_KEY}},1);
         d=k?.data||{};generated=Array.isArray(d.generated)?d.generated:[];
         if(generated[0])return generated[0];
         const st=String(d.status||'').toUpperCase();
-        if(['FAILED','ERROR','CANCELLED'].includes(st))throw new Error(`magnific_task_${st.toLowerCase()}`);
+        if(['FAILED','ERROR','CANCELLED'].includes(st))throw new Error(`magnific_reference_${st.toLowerCase()}`);
       }
-      throw new Error('magnific_task_timeout');
+      throw new Error('magnific_reference_timeout');
     }
+
+    async function classicFast(prompt,seed){
+      const j=await jsonFetch('https://api.magnific.com/v1/ai/text-to-image',{method:'POST',headers,body:JSON.stringify({
+        prompt,
+        negative_prompt:'photograph, photorealistic, 3d render, mannequin photo, runway photo, collage, text, watermark, logo, UI, distorted anatomy, extra limbs, unrelated dominant garment, unselected dominant color, unselected dominant pattern',
+        guidance_scale:2,
+        seed,
+        num_images:1,
+        styling:{effects:{framing:'portrait'}},
+        filter_nsfw:true
+      })},1);
+      const item=Array.isArray(j?.data)?j.data[0]:null;
+      const b64=item?.base64||null,url=item?.url||null;
+      if(url)return url;
+      if(b64)return `data:image/png;base64,${b64}`;
+      throw new Error('magnific_classic_image_missing');
+    }
+
     async function generateOne(index){
       const prompt=clip(`${base} ${generatedPrompt?`Direction Atelier: ${generatedPrompt}. `:''}Commande: ${clientText||'création personnelle'}. Planche détectée: ${boardText}. ${variants[index]} Créer exactement un croquis de mode complet.`,2800);
-      let url=null,mode='reference-image',referenceError=null;
+      const baseSeed=Number.isFinite(Number(body.seed))?Number(body.seed):Date.now()%1000000;
+      const seed=(baseSeed+index*7919)%1000001;
+      let url=null,mode='text-fallback',referenceError=null;
       if(capture){
-        try{url=await task('/v1/ai/gemini-2-5-flash-image-preview',{prompt,reference_images:[capture]})}
+        try{url=await referenceImage(prompt);mode='reference-image'}
         catch(err){referenceError=String(err?.message||err);console.warn(`[Atelier] reference sketch ${index+1} failed`,referenceError)}
       }
-      if(!url){
-        mode='text-fallback';
-        url=await task('/v1/ai/text-to-image/nano-banana-pro-flash',{prompt,aspect_ratio:'2:3',resolution:'1K',use_google_search_tool:false});
-      }
+      if(!url)url=await classicFast(prompt,seed);
       return{id:String(index+1),name:`Croquis ${index+1}`,direction:variants[index],url,provider:'magnific',mode,referenceError,prompt};
     }
 
@@ -96,6 +116,7 @@ export default async function handler(req,res){
       const failures=settled.map((x,i)=>x.status==='rejected'?{croquis:i+1,error:String(x.reason?.message||x.reason)}:null).filter(Boolean);
       throw new Error(`three_sketches_required:${JSON.stringify(failures)}`);
     }
+
     return res.status(200).json({ok:true,count:3,provider:'magnific',proposals,meta:{garments,materials,colors,patterns,notes,captureReceived:!!capture,moodboardReferenceUsed:proposals.some(x=>x.mode==='reference-image'),fallbacks:proposals.filter(x=>x.referenceError).map(x=>({croquis:x.id,error:x.referenceError})),designerLevel:designer.level||null}});
   }catch(err){
     console.error('[Atelier sketch generation failed]',err);
