@@ -35,7 +35,15 @@ function css(){
   `;
   document.head.appendChild(s);
 }
-function boot(){css();clean();requestAnimationFrame(clean);setTimeout(clean,500);setTimeout(clean,1500)}
+function loadSplitGeneration(){
+  if(document.querySelector('script[data-hc-split-generation-v1]'))return;
+  const s=document.createElement('script');
+  s.src='./atelier-generation-split-v1.js?v=20260901-split1';
+  s.defer=true;
+  s.setAttribute('data-hc-split-generation-v1','1');
+  document.head.appendChild(s);
+}
+function boot(){css();clean();loadSplitGeneration();requestAnimationFrame(clean);setTimeout(clean,500);setTimeout(clean,1500)}
 // Exécution immédiate : la silhouette ne doit pas flasher à l'ouverture.
 css();clean();
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
