@@ -1,0 +1,19 @@
+/* Haute Couture Live — prompt final lié au Projet actif v1 */
+(function(){
+'use strict';
+if(window.__HC_PROJECT_PROMPT_OVERRIDE_V1__)return;window.__HC_PROJECT_PROMPT_OVERRIDE_V1__=true;
+const AK='haute-couture-atelier-active-project-v1',PK='haute-couture-creative-projects-v1';
+const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v??f}catch(_){return f}};
+const norm=s=>String(s||'').replace(/\s+/g,' ').trim();
+function active(){return read(AK,null)}
+function project(){const p=active();if(!p)return null;let idea=norm(p.idea);if(!idea){const saved=read(PK,[]).find(x=>String(x.id)===String(p.id));idea=norm(saved?.idea)}return{...p,idea}}
+function names(xs){return Array.isArray(xs)&&xs.length?xs.map(x=>x?.name).filter(Boolean).join(', '):'aucun'}
+function personalPrompt(p,m){const notes=(m?.notes||[]).map(x=>x?.noteText).filter(Boolean).join(' | ')||'aucune';return `Tu es styliste de mode. Crée TROIS croquis de styliste distincts à partir de MA direction créative actuelle.\n\nRÉFÉRENCE VISUELLE PRIORITAIRE\nUne image JPEG de MA PLANCHE ACTUELLE est jointe. C'est la source visuelle principale. Respecte les silhouettes, proportions, associations, couleurs, matières et archétypes réellement visibles sur cette planche. Les éléments rapprochés ou superposés expriment des associations voulues. Ne reproduis pas la planche comme un collage : transforme-la en une tenue cohérente portée sur une silhouette de croquis de mode.\n\nPROJET ACTIF\n- Type : ${p.type||'création personnelle'}\n- Projet : ${p.name||'Création personnelle'}\n- Contexte : ${p.subtitle||'Projet libre'}\n- MON INTENTION CRÉATIVE : ${p.idea||'aucune intention écrite ; interprète uniquement la planche actuelle'}\n\nÉLÉMENTS DE MA PLANCHE ACTUELLE\n- Vêtements / formes : ${names(m?.garments)}\n- Matières : ${names(m?.materials)}\n- Couleurs : ${names(m?.colors)}\n- Motifs : ${names(m?.patterns)}\n- Notes créatives : ${notes}\n\nRÈGLE ABSOLUE\nIgnore toute ancienne commande cliente, ancien brief, ancien projet, ancien croquis ou ancien statut de production. Pour cette génération, la seule source de vérité est : 1) ma planche JPEG actuelle, 2) les éléments actuels listés ci-dessus, 3) mon intention créative actuelle.\n\nCONTRAINTE DE STYLISME\nChaque image doit montrer UNE seule silhouette principale entière et élancée, sous forme de vrai croquis professionnel de styliste, dessin main graphite/encre avec indications légères de couleur et matière sur papier ivoire. Pas de photo, pas de rendu 3D, pas de collage, pas de lineup de plusieurs mannequins, pas de texte dans l'image. N'invente pas de blazer, tailleur, trench ou tenue de bureau si ce n'est pas demandé par la planche ou mon intention. Les trois propositions doivent être différentes mais rester fidèles à ma planche et à mon idée.`}
+let lastBase=null,installed=null;
+function install(){const ctl=window.HCAtelierGenerationController;if(!ctl?.buildPrompt)return false;const current=ctl.buildPrompt;if(current===installed)return true;if(!current.__hcProjectOverride){lastBase=current.bind(ctl)}
+ const fn=function(b,m){const p=project();if(p&&p.type!=='client')return personalPrompt(p,m||{});return lastBase?lastBase(b,m):''};
+ fn.__hcProjectOverride=true;installed=fn;ctl.buildPrompt=fn;ctl.projectPromptVersion='active-project-v1';return true}
+let n=0;const t=setInterval(()=>{n++;install();if(n>80)clearInterval(t)},125);
+['hc-atelier-project-changed','hc-atelier-project-idea','hc-atelier-workspace-cleared'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(install,0)));
+window.HCAtelierProjectPromptOverride={version:1,install,personalPrompt,project};
+})();
