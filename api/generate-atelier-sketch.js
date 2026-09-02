@@ -25,14 +25,23 @@ export default async function handler(req,res){
     const headers={'Content-Type':'application/json','Accept':'application/json','x-magnific-api-key':key};
     let last=null;
     for(let attempt=0;attempt<2;attempt++){
-      const r=await fetch('https://api.magnific.com/v1/ai/text-to-image',{method:'POST',headers,body:JSON.stringify({prompt,seed,num_images:1,filter_nsfw:true})});
+      const magnificPayload={
+        prompt,
+        negative_prompt:'photo, photorealistic, 3d, text, typography, watermark',
+        guidance_scale:2,
+        seed,
+        num_images:1,
+        image:{size:'square_1_1'},
+        filter_nsfw:true
+      };
+      const r=await fetch('https://api.magnific.com/v1/ai/text-to-image',{method:'POST',headers,body:JSON.stringify(magnificPayload)});
       const text=await r.text();
       let j={};try{j=JSON.parse(text)}catch(_){j={raw:text.slice(0,700)}}
       if(r.ok){
         const item=Array.isArray(j?.data)?j.data[0]:null;
         const url=item?.url||(item?.base64?`data:image/png;base64,${item.base64}`:null);
         if(!url)return res.status(502).json({error:'magnific_image_missing',detail:JSON.stringify(j).slice(0,500)});
-        return res.status(200).json({ok:true,proposal:{id:String(variant),name:`Croquis ${variant}`,direction:variants[variant],url,provider:'magnific',mode:'classic-fast',prompt}});
+        return res.status(200).json({ok:true,proposal:{id:String(variant),name:`Croquis ${variant}`,direction:variants[variant],url,provider:'magnific',mode:'classic-fast-verified',prompt},meta:{upstreamStatus:r.status,hasBase64:!!item?.base64,base64Chars:item?.base64?.length||0}});
       }
       last={status:r.status,body:j};
       if(r.status!==429)break;
