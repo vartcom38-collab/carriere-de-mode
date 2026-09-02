@@ -33,7 +33,7 @@ document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closes
 const addScript=(src,tag,onload)=>{if(document.querySelector(`script[${tag}]`)){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(tag,'1');s.onload=()=>onload&&onload();s.onerror=()=>console.warn('[HCGame] failed to load '+src);document.head.appendChild(s)};
 if(location.pathname.includes('/chez-moi/')){
   addScript('./real-home-visual-v1.js?v=20260825-realhome1','data-hc-real-home-visual');
-  addScript('./creations-access-v1.js?v=20260902-creations1','data-hc-home-creations-access');
+  addScript('./creations-access-v1.js?v=20260902-publicimage1','data-hc-home-creations-access');
 }
 if(location.pathname.includes('/telephone/')){
   const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');
