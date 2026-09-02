@@ -1,0 +1,7 @@
+/* Haute Couture Live — hotfix clic réalisation -> planning v1 */
+(function(){
+'use strict';
+if(window.__HC_REALISE_SCHEDULER_HOTFIX_V1__)return;window.__HC_REALISE_SCHEDULER_HOTFIX_V1__=true;
+function feedback(msg,ok=false){const h=document.getElementById('hcClientWorkflowV2');if(!h)return;let box=h.querySelector('#hcRealiseFeedback');if(!box){box=document.createElement('div');box.id='hcRealiseFeedback';box.style.marginTop='10px';h.appendChild(box)}box.innerHTML=`<div style="border:1px solid ${ok?'#cbdcc8':'#e0b9aa'};background:${ok?'#f1f6ef':'#fff0e9'};border-radius:12px;padding:10px;font:11px/1.5 Georgia,serif">${msg}</div>`}
+document.addEventListener('click',e=>{const b=e.target.closest?.('#hcCw2Realise');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();b.disabled=true;const old=b.textContent;b.textContent='PRÉPARATION DU PLANNING…';setTimeout(()=>{try{const scheduler=window.HCAtelierProductionScheduler;if(!scheduler?.plan){feedback('Le moteur de planning n’est pas encore prêt. Réessaie dans quelques secondes.');return}const r=scheduler.plan();if(r?.ok){feedback('✓ Production planifiée dans ton agenda.',true);scheduler.render?.()}else{feedback('Impossible de planifier : '+(r?.error||'raison inconnue'))}}catch(err){console.error('[Atelier realise hotfix]',err);feedback('Erreur technique : '+String(err?.message||err))}finally{b.disabled=false;b.textContent=old}},60)},true);
+})();
