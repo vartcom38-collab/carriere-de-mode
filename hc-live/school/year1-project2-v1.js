@@ -1,0 +1,11 @@
+/* Haute Couture Live — Projet 02 différencié selon l'école. */
+(function(){
+'use strict';
+if(window.HCSchoolProject2)return;
+const L=window.HCSchoolLife;if(!L)return;
+const id=L.school()?.id||'esmod-lyon',C=L.courses,has=x=>C.some(c=>c.id===x),add=c=>{if(!has(c.id))C.push(c)};
+const existing=C.find(c=>c.id==='y1-w5-garment');if(existing)existing.practiceRoute='../school-first-garment/';
+if(id==='ifm-paris')add({id:'y1-w5-ifm-project2',day:25,time:'09:00',duration:300,teacher:'Claire Delmas',title:'Projet 02 — volume porté sous contrainte',category:'Projet',prereq:['y1-w5-ifm-translate'],skills:{creative:5,draping:5,drawing:3,research:3},intro:'Premier projet transversal : transformer une recherche de volume en proposition portée cohérente.',lesson:[['Contrainte','Choisir une règle simple qui organise le projet.'],['Développement','Explorer plusieurs volumes avant de sélectionner.'],['Traduction','Relier volume, dessin, matière déjà connue et construction possible.'],['Critique','Documenter les essais abandonnés et les corrections.']],exercise:'Ouvre le dossier Projet 02 et mène le projet du brief à la critique finale.',quiz:{q:'Le projet doit-il employer toutes les techniques vues ?',a:['Oui','Non, seulement celles qui servent l’intention'],correct:1},practiceRoute:'../school-first-garment/'});
+if(id==='duperre-paris')add({id:'y1-w5-duperre-project2',day:25,time:'09:00',duration:300,teacher:'Claire Delmas',title:'Projet 02 — surface portée, motif et volume',category:'Projet',prereq:['y1-w5-duperre-volume'],skills:{creative:6,draping:3,observation:3,research:3},intro:'Premier projet transversal : faire interagir surface, motif, coupe et corps sans réduire le projet à un décor posé.',lesson:[['Surface','Le motif ou la trace doit répondre au support.'],['Corps','Le pli, la coupe et le mouvement modifient la lecture.'],['Sélection','Une proposition forte n’a pas besoin de montrer tout ce que tu sais faire.'],['Critique','Le projet évolue après essais et retours.']],exercise:'Ouvre le dossier Projet 02 et mène le projet du brief à la critique finale.',quiz:{q:'Le motif doit-il rester identique une fois porté ?',a:['Oui','Non, le corps et le volume peuvent transformer sa lecture'],correct:1},practiceRoute:'../school-first-garment/'});
+window.HCSchoolProject2={version:1};
+})();
