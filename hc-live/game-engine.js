@@ -31,9 +31,11 @@ function unreadCount(s){return(s||load()).messages.filter(m=>!m.read).length}
 window.HCGame={get,save,mutate,advanceTime,endDay,transact,addReputation,completeObjective,markMessageRead,addMessage,schedule,registerVisit,offerFirstMission,acceptMission,completeMission,nextEvent,unreadCount,formatDateTime,formatTime,storageKey:STORAGE_KEY};
 document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-action="atelier"],[data-action="telephone"],[data-action="agenda"],[data-action="sortir"]');if(!el||!location.pathname.includes('/chez-moi/'))return;const action=el.getAttribute('data-action');if(!['atelier','telephone','agenda','sortir'].includes(action))return;e.preventDefault();e.stopImmediatePropagation();location.href=action==='atelier'?'../atelier/':action==='telephone'?'../telephone/':action==='agenda'?'../agenda/':'../ville/'},true);
 const addScript=(src,tag,onload)=>{if(document.querySelector(`script[${tag}]`)){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(tag,'1');s.onload=()=>onload&&onload();s.onerror=()=>console.warn('[HCGame] failed to load '+src);document.head.appendChild(s)};
+const hcLiveBase=location.pathname.includes('/hc-live/')?location.pathname.split('/hc-live/')[0]+'/hc-live/':'./';
+addScript(hcLiveBase+'career-opportunities-v1.js?v=20260903-career2','data-hc-career-opportunities');
 if(location.pathname.includes('/chez-moi/')){
   addScript('./real-home-visual-v1.js?v=20260825-realhome1','data-hc-real-home-visual');
-  addScript('./creations-access-v1.js?v=20260902-publicimage1','data-hc-home-creations-access');
+  addScript('./creations-access-v1.js?v=20260903-career2','data-hc-home-creations-access');
 }
 if(location.pathname.includes('/telephone/')){
   const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');
