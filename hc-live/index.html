@@ -36,10 +36,10 @@
     </div>
 
     <div class="confirm" id="confirmBox">
-      <p>Commencer une nouvelle partie effacera la progression enregistrée sur cet appareil.</p>
+      <p>Commencer une nouvelle partie effacera la progression enregistrée. Une confirmation supplémentaire sera ajoutée avant l’effacement serveur définitif.</p>
       <div class="confirm-actions"><button class="btn primary small" id="confirmNew">OUI, NOUVELLE PARTIE</button><button class="btn ghost small" id="cancelNew">ANNULER</button></div>
     </div>
-    <div class="note">La partie est sauvegardée automatiquement dans ce navigateur au fil de tes actions.</div>
+    <div class="note">Sauvegarde automatique locale + copie de sécurité sur ton serveur Infomaniak. Le menu ⚙ permet aussi de sauvegarder manuellement.</div>
   </section>
 </main>
 <div class="footer">HAUTE COUTURE ✦ LIVE ✦</div>
@@ -49,6 +49,7 @@
   const HOME='haute-couture-home';
   const RESIDENCE='haute-couture-residence';
   const CURRENT='haute-couture-current-screen';
+  const RESET_FLAG='haute-couture-new-game-requested-v1';
   const $=id=>document.getElementById(id);
   const safe=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}};
   const game=safe(GAME),homeSave=safe(HOME),residence=safe(RESIDENCE);
@@ -77,9 +78,10 @@
   }
 
   function resetGame(){
-    const keep=[];
-    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('haute-couture-'))keep.push(k)}
-    keep.forEach(k=>localStorage.removeItem(k));
+    const remove=[];
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('haute-couture-'))remove.push(k)}
+    remove.forEach(k=>localStorage.removeItem(k));
+    localStorage.setItem(RESET_FLAG,'1');
     localStorage.setItem(CURRENT,'character');
     localStorage.setItem('haute-couture-screen','character');
     location.href='./character/';
@@ -92,5 +94,7 @@
   render();
 })();
 </script>
+<script src="./server-save-bridge-v1.js?v=20260903-server2" defer></script>
+<script src="./global-menu-v1.js?v=20260903-menu1" defer></script>
 </body>
 </html>
