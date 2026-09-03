@@ -29,4 +29,15 @@ function accept(id){const d=defs.find(x=>x.id===id);if(!d||rep()<d.rep)return{ok
 function list(){scan();const s=state(),r=rep();return defs.map(d=>({...d,unlocked:r>=d.rep,state:s[d.id]||{status:r>=d.rep?'available':'locked'}}))}
 window.addEventListener('hc-game-state',()=>setTimeout(scan,30));setTimeout(scan,150);
 window.HCCareerOpportunities={version:1,list,accept,scan,rep,activeOrder};
+
+// Charge le pont de sauvegarde serveur sur toutes les pages qui utilisent le moteur central.
+if(!window.HCServerSave&&!document.querySelector('script[data-hc-server-save]')){
+  const script=document.createElement('script');
+  const here=document.currentScript&&document.currentScript.src?new URL(document.currentScript.src,location.href):null;
+  script.src=here?new URL('server-save-bridge-v1.js?v=20260903-server1',here).href:'server-save-bridge-v1.js?v=20260903-server1';
+  script.defer=true;
+  script.setAttribute('data-hc-server-save','1');
+  script.onerror=()=>console.warn('[HCCareer] pont de sauvegarde serveur non chargé');
+  document.head.appendChild(script);
+}
 })();
