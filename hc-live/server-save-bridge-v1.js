@@ -6,6 +6,7 @@
 
 const PREFIX='haute-couture-';
 const META_KEY='haute-couture-server-sync-v1';
+const RESET_KEY='haute-couture-new-game-requested-v1';
 const SNAPSHOT_SCHEMA='hc-localstorage-snapshot-v1';
 const SLOT='main';
 const SAVE_URL='/api/save-game.php';
@@ -34,7 +35,7 @@ function capture(){
   const skipped={};
   for(let i=0;i<localStorage.length;i++){
     const key=localStorage.key(i);
-    if(!key||!key.startsWith(PREFIX)||key===META_KEY)continue;
+    if(!key||!key.startsWith(PREFIX)||key===META_KEY||key===RESET_KEY)continue;
     const value=localStorage.getItem(key);
     if(value==null)continue;
     if(value.length>MAX_VALUE_CHARS){
@@ -58,7 +59,7 @@ function validServerSnapshot(data){
 function restore(snapshot){
   if(!validServerSnapshot(snapshot))return false;
   Object.keys(snapshot.storage).forEach(key=>{
-    if(!key.startsWith(PREFIX)||key===META_KEY)return;
+    if(!key.startsWith(PREFIX)||key===META_KEY||key===RESET_KEY)return;
     const value=snapshot.storage[key];
     if(typeof value==='string')localStorage.setItem(key,value);
   });
@@ -113,6 +114,14 @@ async function boot(){
 
     const serverSnapshot=result.found?result.data:null;
     const localGame=localStorage.getItem('haute-couture-game-state-v1');
+    const resetRequested=localStorage.getItem(RESET_KEY)==='1';
+
+    // Nouvelle partie explicitement demandée : l'ancienne sauvegarde serveur ne doit jamais revenir.
+    if(resetRequested){
+      localStorage.removeItem(RESET_KEY);
+      schedule('new-game-replace-server',350);
+      return;
+    }
 
     // Migration prudente : une ancienne sauvegarde de test/non reconnue n'est jamais restaurée.
     // Si ce navigateur n'a pas encore de partie locale et qu'un vrai snapshot existe, on le restaure.
@@ -135,17 +144,17 @@ const originalSetItem=Storage.prototype.setItem;
 const originalRemoveItem=Storage.prototype.removeItem;
 Storage.prototype.setItem=function(key,value){
   const out=originalSetItem.apply(this,arguments);
-  if(this===localStorage&&typeof key==='string'&&key.startsWith(PREFIX)&&key!==META_KEY)schedule('localStorage:setItem');
+  if(this===localStorage&&typeof key==='string'&&key.startsWith(PREFIX)&&key!==META_KEY&&key!==RESET_KEY)schedule('localStorage:setItem');
   return out;
 };
 Storage.prototype.removeItem=function(key){
   const out=originalRemoveItem.apply(this,arguments);
-  if(this===localStorage&&typeof key==='string'&&key.startsWith(PREFIX)&&key!==META_KEY)schedule('localStorage:removeItem');
+  if(this===localStorage&&typeof key==='string'&&key.startsWith(PREFIX)&&key!==META_KEY&&key!==RESET_KEY)schedule('localStorage:removeItem');
   return out;
 };
 
 window.addEventListener('hc-game-state',()=>schedule('game-state'));
-window.addEventListener('storage',e=>{if(e.key&&e.key.startsWith(PREFIX)&&e.key!==META_KEY)schedule('other-tab')});
+window.addEventListener('storage',e=>{if(e.key&&e.key.startsWith(PREFIX)&&e.key!==META_KEY&&e.key!==RESET_KEY)schedule('other-tab')});
 window.addEventListener('pagehide',()=>{if(navigator.sendBeacon){
   try{
     const payload=JSON.stringify({slot:SLOT,playerName:playerName(),gameVersion:'hc-live-server-bridge-v1',data:capture()});
