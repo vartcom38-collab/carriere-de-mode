@@ -30,14 +30,14 @@ function list(){scan();const s=state(),r=rep();return defs.map(d=>({...d,unlocke
 window.addEventListener('hc-game-state',()=>setTimeout(scan,30));setTimeout(scan,150);
 window.HCCareerOpportunities={version:1,list,accept,scan,rep,activeOrder};
 
-// Charge le pont de sauvegarde serveur sur toutes les pages qui utilisent le moteur central.
-if(!window.HCServerSave&&!document.querySelector('script[data-hc-server-save]')){
+const loadGlobal=(name,tag)=>{
+  if(document.querySelector(`script[${tag}]`))return;
   const script=document.createElement('script');
   const here=document.currentScript&&document.currentScript.src?new URL(document.currentScript.src,location.href):null;
-  script.src=here?new URL('server-save-bridge-v1.js?v=20260903-server1',here).href:'server-save-bridge-v1.js?v=20260903-server1';
-  script.defer=true;
-  script.setAttribute('data-hc-server-save','1');
-  script.onerror=()=>console.warn('[HCCareer] pont de sauvegarde serveur non chargé');
+  script.src=here?new URL(name,here).href:name;
+  script.defer=true;script.setAttribute(tag,'1');
   document.head.appendChild(script);
-}
+};
+if(!window.HCServerSave)loadGlobal('server-save-bridge-v1.js?v=20260903-server1','data-hc-server-save');
+if(!window.HCGlobalMenu)loadGlobal('global-menu-v1.js?v=20260903-menu1','data-hc-global-menu');
 })();
