@@ -1,0 +1,11 @@
+<?php
+return [
+  'db' => [
+    'host' => 'ng43h.myd.infomaniak.com',
+    'port' => 3306,
+    'name' => 'ng43h_hautecouture',
+    'user' => 'ng43h_marion',
+    'password' => 'REMPLACER_ICI_SUR_INFOMANIAK_UNIQUEMENT',
+    'charset' => 'utf8mb4',
+  ],
+];
