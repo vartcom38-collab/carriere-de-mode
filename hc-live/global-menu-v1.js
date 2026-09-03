@@ -12,6 +12,7 @@ const rootBase=()=>{
 };
 const href=part=>rootBase()+String(part||'').replace(/^\/+/, '');
 const readMeta=()=>{try{return JSON.parse(localStorage.getItem(META_KEY)||'{}')||{}}catch(_){return {}}};
+const readJSON=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
 const fmt=iso=>{
   if(!iso)return 'Pas encore synchronisée';
   const d=new Date(iso);
@@ -54,7 +55,12 @@ backdrop.querySelector('.hcgm-close').addEventListener('click',close);
 backdrop.addEventListener('click',e=>{if(e.target===backdrop)close()});
 panel.addEventListener('click',e=>e.stopPropagation());
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-backdrop.querySelector('#hcgm-home').addEventListener('click',()=>location.href=href('chez-moi/'));
+backdrop.querySelector('#hcgm-home').addEventListener('click',()=>{
+  const path=readJSON('haute-couture-start-path-v1');
+  const housing=readJSON('haute-couture-school-housing-v1');
+  const studentHome=path?.type==='school'&&housing&&housing.type!=='studio';
+  location.href=studentHome?href('school-home/'):href('chez-moi/');
+});
 backdrop.querySelector('#hcgm-start').addEventListener('click',()=>location.href=rootBase());
 
 async function manualSave(){
