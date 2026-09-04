@@ -12,6 +12,7 @@ const SLOT='main';
 const SAVE_URL='/api/save-game.php';
 const LOAD_URL='/api/load-game.php?slot='+encodeURIComponent(SLOT);
 const MAX_VALUE_CHARS=2_000_000;
+const RESTORE_GUARD='hc-server-restore-reload-v1';
 let timer=null;
 let saving=false;
 let pending=false;
@@ -28,7 +29,7 @@ function setMeta(patch){
 function playerName(){
   const character=parseJSON(localStorage.getItem('haute-couture-custom-character')||'',{})||{};
   const state=parseJSON(localStorage.getItem('haute-couture-game-state-v1')||'',{})||{};
-  return character.name||character.prenom||character.firstName||state?.player?.name||'Clara';
+  return character.name||character.prenom||character.firstName||state?.player?.name||'Moi';
 }
 function capture(){
   const storage={};
@@ -55,6 +56,26 @@ function capture(){
 }
 function validServerSnapshot(data){
   return !!(data&&data.schema===SNAPSHOT_SCHEMA&&data.storage&&typeof data.storage==='object');
+}
+function snapshotHasPlayableState(snapshot){
+  if(!validServerSnapshot(snapshot))return false;
+  const s=snapshot.storage||{};
+  return !!(
+    s['haute-couture-game-state-v1']||
+    s['haute-couture-start-path-v1']||
+    s['haute-couture-home']||
+    s['haute-couture-residence']||
+    s['haute-couture-school-choice-v1']
+  );
+}
+function hasLocalPlayableState(){
+  return !!(
+    localStorage.getItem('haute-couture-game-state-v1')||
+    localStorage.getItem('haute-couture-start-path-v1')||
+    localStorage.getItem('haute-couture-home')||
+    localStorage.getItem('haute-couture-residence')||
+    localStorage.getItem('haute-couture-school-choice-v1')
+  );
 }
 function restore(snapshot){
   if(!validServerSnapshot(snapshot))return false;
@@ -113,25 +134,34 @@ async function boot(){
     if(!response.ok||!result||!result.ok)throw new Error(result?.error||('HTTP '+response.status));
 
     const serverSnapshot=result.found?result.data:null;
-    const localGame=localStorage.getItem('haute-couture-game-state-v1');
+    const localPlayable=hasLocalPlayableState();
     const resetRequested=localStorage.getItem(RESET_KEY)==='1';
 
     // Nouvelle partie explicitement demandée : l'ancienne sauvegarde serveur ne doit jamais revenir.
     if(resetRequested){
       localStorage.removeItem(RESET_KEY);
+      try{sessionStorage.removeItem(RESTORE_GUARD)}catch(e){}
       schedule('new-game-replace-server',350);
       return;
     }
 
-    // Migration prudente : une ancienne sauvegarde de test/non reconnue n'est jamais restaurée.
-    // Si ce navigateur n'a pas encore de partie locale et qu'un vrai snapshot existe, on le restaure.
-    if(!localGame&&validServerSnapshot(serverSnapshot)){
-      restore(serverSnapshot);
-      location.reload();
-      return;
+    // On ne restaure/recharge que si le snapshot serveur contient réellement une partie exploitable.
+    // Le garde session empêche toute boucle même si une ancienne sauvegarde serveur est incohérente.
+    if(!localPlayable&&snapshotHasPlayableState(serverSnapshot)){
+      let alreadyReloaded=false;
+      try{alreadyReloaded=sessionStorage.getItem(RESTORE_GUARD)==='1'}catch(e){}
+      if(!alreadyReloaded){
+        restore(serverSnapshot);
+        if(hasLocalPlayableState()){
+          try{sessionStorage.setItem(RESTORE_GUARD,'1')}catch(e){}
+          location.reload();
+          return;
+        }
+      }
     }
 
-    // Le navigateur courant gagne pendant la phase de migration.
+    try{sessionStorage.removeItem(RESTORE_GUARD)}catch(e){}
+    // Un snapshot vide/incomplet n'est jamais une raison de recharger la page.
     schedule(validServerSnapshot(serverSnapshot)?'startup-sync':'replace-test-save',350);
   }catch(error){
     setMeta({status:'local-only',lastError:String(error&&error.message||error)});
