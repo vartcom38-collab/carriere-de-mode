@@ -1,0 +1,77 @@
+name: Deploy Haute Couture to Infomaniak
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'hc-live/**'
+      - '.github/workflows/deploy-infomaniak.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infomaniak-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      INFOMANIAK_HOST: ${{ secrets.INFOMANIAK_HOST }}
+      INFOMANIAK_USER: ${{ secrets.INFOMANIAK_USER }}
+      INFOMANIAK_SSH_KEY: ${{ secrets.INFOMANIAK_SSH_KEY }}
+      INFOMANIAK_PATH: ${{ secrets.INFOMANIAK_PATH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check deployment connection
+        id: connection
+        shell: bash
+        run: |
+          if [ -n "$INFOMANIAK_HOST" ] && [ -n "$INFOMANIAK_USER" ] && [ -n "$INFOMANIAK_SSH_KEY" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Infomaniak deployment is prepared but SSH connection secrets are not configured yet."
+          fi
+
+      - name: Prepare SSH
+        if: steps.connection.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$INFOMANIAK_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$INFOMANIAK_HOST" >> ~/.ssh/known_hosts
+
+      - name: Verify game bundle
+        if: steps.connection.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          test -s hc-live/index.html
+          test -s hc-live/server-save-bridge-v1.js
+          test -s hc-live/game-engine.js
+
+      - name: Deploy hc-live to production root
+        if: steps.connection.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          TARGET="${INFOMANIAK_PATH:-/home/clients/450b954f197ae37266bb9c521c419d50/sites/hautecouture.marionbolomey.fr}"
+          rsync -az --itemize-changes \
+            --exclude='api/' \
+            --exclude='config/' \
+            --exclude='sql/' \
+            --exclude='uploads/' \
+            -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes' \
+            hc-live/ "$INFOMANIAK_USER@$INFOMANIAK_HOST:$TARGET/"
+
+      - name: Verify production files over SSH
+        if: steps.connection.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          TARGET="${INFOMANIAK_PATH:-/home/clients/450b954f197ae37266bb9c521c419d50/sites/hautecouture.marionbolomey.fr}"
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes "$INFOMANIAK_USER@$INFOMANIAK_HOST" \
+            "test -s '$TARGET/index.html' && test -s '$TARGET/server-save-bridge-v1.js' && echo 'Infomaniak production files updated.'"
