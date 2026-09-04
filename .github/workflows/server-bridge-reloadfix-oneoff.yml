@@ -1,0 +1,35 @@
+name: Server bridge reloadfix cache bust
+on:
+  push:
+    paths:
+      - '.github/workflows/server-bridge-reloadfix-oneoff.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Force fresh server save bridge on accueil
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('hc-live/index.html')
+          s=p.read_text(encoding='utf-8')
+          s,n=re.subn(r'(<script src="\./server-save-bridge-v1\.js\?v=)[^"]+(" defer></script>)', r'\g<1>20260904-reloadfix1\g<2>', s, count=1)
+          if n!=1:
+              raise SystemExit('server-save bridge loader not found')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit cache bust
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add hc-live/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "force fresh server save bridge after reload loop fix"
+          git push origin HEAD:main
+# trigger 20260904-reloadfix1
