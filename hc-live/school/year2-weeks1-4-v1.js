@@ -19,4 +19,5 @@ if(esmod.includes(id)){
 }
 add({id:'y2-w4-review',day:16,time:'14:00',duration:180,teacher:'Claire Delmas',title:'Critique VI — défendre une méthode de travail',category:'Critique',prereq:['y2-w3-project9'],skills:{research:4,creative:3,culture:2},intro:'En Année 2, la critique porte aussi sur la méthode : comment tu as cherché, testé, sélectionné et corrigé.',lesson:[['Méthode','Expliquer pourquoi un essai a été fait.'],['Décision','Montrer ce qui a été rejeté et pourquoi.'],['Suite','Identifier la prochaine question plutôt qu’une conclusion définitive.']],exercise:'Prépare une présentation courte : question, méthode, trois essais, décision principale, erreur utile et prochaine étape.',quiz:{q:'La critique juge-t-elle seulement le résultat final ?',a:['Oui','Non'],correct:1},practiceRoute:'../school-year2-project9/'});
 window.HCSchoolYear2Weeks14={version:1};
+if(!window.HCSchoolYear2Weeks58&&document.readyState==='loading')document.write('<script src="../school/year2-weeks5-8-v1.js"><\/script>');
 })();
