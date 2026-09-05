@@ -90,6 +90,7 @@ function loadSchoolEnhancements(){
   if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
   if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
   if(!window.HCSchoolJurySync)addSchoolScript('school/school-jury-sync-v1.js?v=20260905-jurysync1','data-hc-jury-sync');
+  if(!window.HCSchoolTeacherProgression)addSchoolScript('school/school-teacher-progression-v1.js?v=20260905-teacherprogress1','data-hc-teacher-progression');
 }
 loadSchoolEnhancements();
 window.HCGlobalMenu={open,close,manualSave,rootBase};
