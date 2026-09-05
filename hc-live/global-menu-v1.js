@@ -78,5 +78,15 @@ async function manualSave(){
 }
 saveBtn.addEventListener('click',manualSave);
 window.addEventListener('hc-server-save',e=>{if(e.detail?.ok)status.textContent=fmt(readMeta().lastSaveAt)});
+
+function loadSchoolEnhancements(){
+  if(!/\/school-year\d+-project\d+\//i.test(location.pathname))return;
+  if(document.querySelector('script[data-hc-open-brief]')||window.HCSchoolOpenBrief)return;
+  const s=document.createElement('script');
+  s.src=href('school/school-open-brief-v1.js?v=20260905-openbrief1');
+  s.defer=true;s.setAttribute('data-hc-open-brief','1');
+  document.head.appendChild(s);
+}
+loadSchoolEnhancements();
 window.HCGlobalMenu={open,close,manualSave,rootBase};
 })();
