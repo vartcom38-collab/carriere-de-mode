@@ -89,6 +89,7 @@ function loadSchoolEnhancements(){
   if(!/\/school-year\d+-project\d+\//i.test(location.pathname))return;
   if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
   if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
+  if(!window.HCSchoolJurySync)addSchoolScript('school/school-jury-sync-v1.js?v=20260905-jurysync1','data-hc-jury-sync');
 }
 loadSchoolEnhancements();
 window.HCGlobalMenu={open,close,manualSave,rootBase};
