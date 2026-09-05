@@ -86,11 +86,19 @@ function addSchoolScript(src,attr){
   document.head.appendChild(s);
 }
 function loadSchoolEnhancements(){
-  if(!/\/school-year\d+-project\d+\//i.test(location.pathname))return;
-  if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
-  if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
-  if(!window.HCSchoolJurySync)addSchoolScript('school/school-jury-sync-v1.js?v=20260905-jurysync1','data-hc-jury-sync');
-  if(!window.HCSchoolTeacherProgression)addSchoolScript('school/school-teacher-progression-v1.js?v=20260905-teacherprogress1','data-hc-teacher-progression');
+  const path=location.pathname;
+  const project=/\/school-year\d+-project\d+\//i.test(path);
+  const schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path);
+  if(project){
+    if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
+    if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
+    if(!window.HCSchoolJurySync)addSchoolScript('school/school-jury-sync-v1.js?v=20260905-jurysync1','data-hc-jury-sync');
+    if(!window.HCSchoolTeacherProgression)addSchoolScript('school/school-teacher-progression-v1.js?v=20260905-teacherprogress1','data-hc-teacher-progression');
+  }
+  if(schoolScreen&&!project){
+    if(!window.HCSchoolCommunity)addSchoolScript('school/school-community-v1.js?v=20260905-community2','data-hc-school-community');
+    setTimeout(()=>{if(!window.HCSchoolLifeDepth)addSchoolScript('school/school-life-depth-v1.js?v=20260905-lifedepth1','data-hc-school-life-depth')},80);
+  }
 }
 loadSchoolEnhancements();
 window.HCGlobalMenu={open,close,manualSave,rootBase};
