@@ -97,7 +97,10 @@ function loadSchoolEnhancements(){
   }
   if(schoolScreen&&!project){
     if(!window.HCSchoolCommunity)addSchoolScript('school/school-community-v1.js?v=20260905-community2','data-hc-school-community');
-    setTimeout(()=>{if(!window.HCSchoolLifeDepth)addSchoolScript('school/school-life-depth-v1.js?v=20260905-lifedepth1','data-hc-school-life-depth')},80);
+    setTimeout(()=>{
+      if(!window.HCSchoolLifeDepth)addSchoolScript('school/school-life-depth-v1.js?v=20260905-lifedepth1','data-hc-school-life-depth');
+      if(!window.HCSchoolEventScenes)addSchoolScript('school/school-event-scenes-v1.js?v=20260905-eventscenes1','data-hc-school-event-scenes');
+    },80);
   }
 }
 loadSchoolEnhancements();
