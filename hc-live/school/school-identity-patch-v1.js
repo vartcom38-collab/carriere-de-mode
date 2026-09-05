@@ -7,5 +7,5 @@ function patchMemory(){const key='haute-couture-school-learning-memory-v1';try{c
 function patchAcademic(){const key='haute-couture-school-academic-v1';try{const s=JSON.parse(localStorage.getItem(key)||'null');if(!s)return;(s.grades||[]).forEach(g=>{if(g.teacher===OLD)g.teacher=NEW});Object.values(s.assignments||{}).forEach(a=>{if(a.teacher===OLD)a.teacher=NEW});localStorage.setItem(key,JSON.stringify(s))}catch(_){}}
 patchLife();patchMemory();patchAcademic();
 window.HCSchoolIdentity={playerName:'Marion',materialTeacher:NEW,version:1};
-if(location.pathname.includes('/school-course/')&&!window.HCSchoolTeacherCoaching&&document.readyState==='loading')document.write('<script src="../school/school-teacher-coaching-v1.js"><\\/script>');
+if(location.pathname.includes('/school-course/')&&!window.HCSchoolTeacherCoaching&&document.readyState==='loading')document.write('<script src="../school/school-teacher-coaching-v1.js"></script>');
 })();
