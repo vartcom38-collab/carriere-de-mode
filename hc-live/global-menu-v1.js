@@ -101,6 +101,7 @@ function loadSchoolEnhancements(){
       if(!window.HCSchoolLifeDepth)addSchoolScript('school/school-life-depth-v1.js?v=20260905-lifedepth1','data-hc-school-life-depth');
       if(!window.HCSchoolEventScenes)addSchoolScript('school/school-event-scenes-v1.js?v=20260905-eventscenes1','data-hc-school-event-scenes');
       if(!window.HCSchoolInternship)addSchoolScript('school/school-internship-v1.js?v=20260905-internship1','data-hc-school-internship');
+      if(!window.HCSchoolCareerBridge)addSchoolScript('school/school-career-bridge-v1.js?v=20260905-careerbridge1','data-hc-school-career-bridge');
     },80);
   }
 }
