@@ -88,7 +88,9 @@ function addSchoolScript(src,attr){
 function loadSchoolEnhancements(){
   const path=location.pathname;
   const project=/\/school-year\d+-project\d+\//i.test(path);
+  const anySchool=/\/school(?:-|\/|$)/i.test(path);
   const schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path);
+  if(anySchool&&!window.HCSchoolPolish)addSchoolScript('school/school-polish-v1.js?v=20260905-polish1','data-hc-school-polish');
   if(project){
     if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
     if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
