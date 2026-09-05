@@ -79,13 +79,16 @@ async function manualSave(){
 saveBtn.addEventListener('click',manualSave);
 window.addEventListener('hc-server-save',e=>{if(e.detail?.ok)status.textContent=fmt(readMeta().lastSaveAt)});
 
+function addSchoolScript(src,attr){
+  if(document.querySelector(`script[${attr}]`))return;
+  const s=document.createElement('script');
+  s.src=href(src);s.defer=true;s.setAttribute(attr,'1');
+  document.head.appendChild(s);
+}
 function loadSchoolEnhancements(){
   if(!/\/school-year\d+-project\d+\//i.test(location.pathname))return;
-  if(document.querySelector('script[data-hc-open-brief]')||window.HCSchoolOpenBrief)return;
-  const s=document.createElement('script');
-  s.src=href('school/school-open-brief-v1.js?v=20260905-openbrief1');
-  s.defer=true;s.setAttribute('data-hc-open-brief','1');
-  document.head.appendChild(s);
+  if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
+  if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
 }
 loadSchoolEnhancements();
 window.HCGlobalMenu={open,close,manualSave,rootBase};
