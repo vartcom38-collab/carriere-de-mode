@@ -6,108 +6,130 @@
   <title>Haute Couture Live — Choisir son départ</title>
   <style>
     :root{
-      --ink:#1f1a17;
-      --cream:#f7f0e8;
+      --ink:#241d19;
+      --muted:#77685f;
       --paper:#fffaf5;
-      --rose:#b97872;
-      --line:rgba(74,57,47,.18);
-      --shadow:0 30px 80px rgba(64,45,34,.18);
+      --cream:#f4eadf;
+      --rose:#b97772;
+      --rose-soft:#d9aaa4;
+      --line:rgba(67,48,38,.14);
+      --shadow:0 24px 70px rgba(77,55,42,.14);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:#efe5d9;color:var(--ink)}
+    html,body{margin:0;min-height:100%;background:#f5ede5;color:var(--ink)}
     body{
       min-height:100vh;
+      overflow-x:hidden;
       font-family:Georgia,"Times New Roman",serif;
       background:
-        linear-gradient(90deg,rgba(247,240,232,.97) 0%,rgba(247,240,232,.91) 38%,rgba(247,240,232,.68) 63%,rgba(247,240,232,.88) 100%),
-        url('../accueil.png') center/cover fixed;
-      overflow-x:hidden;
+        radial-gradient(circle at 13% 17%,rgba(255,255,255,.98),transparent 30%),
+        radial-gradient(circle at 88% 12%,rgba(230,202,187,.38),transparent 27%),
+        linear-gradient(135deg,#fbf7f2 0%,#f3e8de 54%,#eee0d3 100%);
     }
+    body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:0}
     body:before{
-      content:"";
-      position:fixed;inset:0;pointer-events:none;
-      background:
-        radial-gradient(circle at 11% 86%,rgba(255,255,255,.88),transparent 24%),
-        radial-gradient(circle at 74% 7%,rgba(255,255,255,.56),transparent 28%);
-      z-index:0;
+      width:420px;height:420px;left:-160px;bottom:-170px;border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);
     }
-    .scene{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-columns:minmax(170px,260px) 1fr;align-items:stretch}
-    .atelier-side{position:relative;min-height:100vh;border-right:1px solid rgba(83,63,51,.13);background:linear-gradient(180deg,rgba(255,250,245,.72),rgba(238,223,208,.52));overflow:hidden}
-    .atelier-side:before{
-      content:"";position:absolute;left:24px;top:14vh;width:118px;height:250px;border-radius:58px 58px 24px 24px;
-      background:linear-gradient(90deg,#ece2d7,#fffaf4 48%,#ddcdbd);box-shadow:0 25px 50px rgba(66,46,35,.16);
-      clip-path:polygon(22% 0,78% 0,88% 18%,74% 45%,79% 100%,21% 100%,26% 45%,12% 18%);
-      opacity:.9;
+    body:after{
+      width:320px;height:520px;right:-110px;top:18%;border-radius:50%;filter:blur(2px);
+      background:linear-gradient(155deg,rgba(255,255,255,.6),rgba(205,166,146,.14),rgba(255,255,255,0));
+      transform:rotate(-10deg);
     }
-    .atelier-side:after{
-      content:"";position:absolute;left:80px;top:calc(14vh + 246px);width:6px;height:190px;background:#6f5646;box-shadow:-48px 182px 0 -1px #6f5646,48px 182px 0 -1px #6f5646;opacity:.65
-    }
-    .side-note{position:absolute;left:28px;bottom:56px;max-width:180px;font:italic 24px/1.25 "Segoe Script","Brush Script MT",cursive;transform:rotate(-4deg);color:#69564a}
-    .side-note span{display:block;font-size:18px;margin-top:10px}
-    .content{display:flex;align-items:center;justify-content:center;padding:54px 5vw 64px}
-    .panel{width:min(950px,100%)}
-    .brand{text-align:center;margin-bottom:12px;font:italic 42px/1 "Segoe Script","Brush Script MT",cursive;letter-spacing:-.04em}
-    .kicker{text-align:center;font:11px/1.4 Arial,sans-serif;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#5f5148;margin-bottom:8px}
-    h1{text-align:center;margin:0;font:38px/1.1 Georgia,serif;font-weight:400;letter-spacing:-.025em}
-    .lead{text-align:center;margin:9px auto 28px;color:#7c6d63;font:15px/1.5 Georgia,serif}
-    .choices{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .page{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:42px 28px 48px}
+    .shell{width:min(1180px,100%)}
+    .brand{text-align:center;font:italic 44px/1 "Segoe Script","Brush Script MT",cursive;letter-spacing:-.045em;margin-bottom:22px}
+    .intro{text-align:center;margin:0 auto 32px}
+    .intro h1{margin:0;font:42px/1.08 Georgia,serif;font-weight:400;letter-spacing:-.032em}
+    .intro p{margin:10px 0 0;color:var(--muted);font:16px/1.5 Georgia,serif}
+    .choices{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:980px;margin:0 auto}
     .choice{
-      position:relative;min-height:390px;border:1px solid rgba(255,255,255,.7);border-radius:22px;overflow:hidden;cursor:pointer;
-      box-shadow:var(--shadow);isolation:isolate;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;background:#cab8a8;
+      appearance:none;border:1px solid rgba(84,61,48,.13);padding:0;background:rgba(255,250,245,.9);border-radius:24px;overflow:hidden;
+      text-align:left;color:inherit;cursor:pointer;box-shadow:var(--shadow);transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;
+      min-width:0;
     }
-    .choice:hover,.choice:focus-visible{transform:translateY(-5px);box-shadow:0 38px 95px rgba(60,41,31,.28);border-color:rgba(185,120,114,.7);outline:none}
-    .choice:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;transform:scale(1.02);transition:transform .4s ease,filter .4s ease}
-    .choice:hover:before{transform:scale(1.055);filter:saturate(1.04)}
-    .choice:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(20,17,15,.02) 18%,rgba(20,17,15,.22) 49%,rgba(20,17,15,.84) 100%)}
-    .career:before{background-image:linear-gradient(135deg,rgba(211,182,158,.06),rgba(30,25,21,.06)),url('../a_high_resolution_illustrated_game_visual_novel_st.png')}
-    .school:before{background-image:linear-gradient(135deg,rgba(229,205,183,.06),rgba(30,25,21,.08)),url('../accueil.png');background-position:65% center}
-    .choice-content{position:absolute;left:0;right:0;bottom:0;padding:30px 30px 28px;color:white;text-shadow:0 2px 12px rgba(0,0,0,.35)}
-    .label{font:10px/1.3 Arial,sans-serif;font-weight:800;letter-spacing:.2em;text-transform:uppercase;opacity:.88;margin-bottom:8px}
-    .choice h2{margin:0 0 10px;font:36px/1.02 Georgia,serif;font-weight:400;letter-spacing:-.025em}
-    .choice p{margin:0;max-width:410px;font:14px/1.5 Georgia,serif;color:rgba(255,255,255,.92)}
-    .arrow{position:absolute;right:24px;bottom:24px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,.55);background:rgba(185,120,114,.92);font:25px/1 Arial,sans-serif;box-shadow:0 10px 25px rgba(0,0,0,.16);transition:transform .25s ease}
-    .choice:hover .arrow{transform:translateX(4px)}
-    .foot{text-align:center;margin-top:22px;font:italic 18px/1.35 "Segoe Script","Brush Script MT",cursive;color:#66544a}
-    @media(max-width:900px){.scene{grid-template-columns:1fr}.atelier-side{display:none}.content{padding:36px 20px 50px}.brand{font-size:36px}.choices{gap:16px}.choice{min-height:360px}}
-    @media(max-width:680px){h1{font-size:32px}.choices{grid-template-columns:1fr}.choice{min-height:300px}.choice h2{font-size:31px}.choice-content{padding:24px}.arrow{right:20px;bottom:20px}.foot{margin-bottom:10px}}
+    .choice:hover,.choice:focus-visible{transform:translateY(-5px);box-shadow:0 34px 88px rgba(70,49,38,.19);border-color:rgba(185,119,114,.52);outline:none}
+    .art{height:235px;position:relative;overflow:hidden;background:#eadfd3}
+    .art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(55,38,28,.07))}
+    .art-school{
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.56) 0 8%,transparent 8% 92%,rgba(255,255,255,.34) 92%),
+        linear-gradient(180deg,#f5ece3 0 62%,#d9c4b2 62% 64%,#c7aa91 64% 100%);
+    }
+    .art-school .window{position:absolute;left:45px;top:27px;width:180px;height:125px;border:7px solid rgba(116,91,73,.28);background:linear-gradient(135deg,#fffdf8,#e9ddd0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+    .art-school .window:before,.art-school .window:after{content:"";position:absolute;background:rgba(116,91,73,.2)}
+    .art-school .window:before{width:5px;top:0;bottom:0;left:50%}
+    .art-school .window:after{height:5px;left:0;right:0;top:50%}
+    .dressform{position:absolute;bottom:25px;width:54px;height:135px}
+    .dressform:before{content:"";position:absolute;left:8px;top:0;width:38px;height:78px;background:linear-gradient(90deg,#d5b9a3,#f3dfce 50%,#c9aa91);clip-path:polygon(28% 0,72% 0,91% 21%,77% 55%,84% 100%,16% 100%,23% 55%,9% 21%);border-radius:10px}
+    .dressform:after{content:"";position:absolute;left:25px;top:75px;width:4px;height:57px;background:#70584a;box-shadow:-17px 54px 0 -1px #70584a,17px 54px 0 -1px #70584a}
+    .dressform.one{right:93px}.dressform.two{right:35px;transform:scale(.88);transform-origin:bottom}
+    .school-desk{position:absolute;left:265px;right:170px;bottom:28px;height:53px;border-radius:5px;background:#9c755d;box-shadow:0 10px 0 #735442}
+    .school-paper{position:absolute;left:300px;bottom:88px;width:112px;height:70px;background:#fffaf3;transform:rotate(-5deg);box-shadow:0 7px 16px rgba(60,40,28,.12)}
+    .school-paper:before,.school-paper:after{content:"";position:absolute;left:18px;right:18px;height:1px;background:#c6aca0}.school-paper:before{top:22px}.school-paper:after{top:42px}
+    .art-career{
+      background:
+        linear-gradient(180deg,#f2ddca 0%,#e9cbb2 40%,#e0b99c 41%,#d5a482 63%,#b97f5f 64%,#9f6a52 100%);
+    }
+    .sun{position:absolute;width:78px;height:78px;border-radius:50%;right:64px;top:32px;background:rgba(255,244,213,.8);box-shadow:0 0 44px rgba(255,236,184,.65)}
+    .city{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,#bb8b6f,#8f614f);clip-path:polygon(0 43%,8% 43%,8% 31%,14% 31%,14% 55%,19% 55%,19% 25%,25% 25%,25% 50%,30% 50%,30% 40%,35% 40%,35% 58%,42% 58%,42% 20%,47% 20%,47% 46%,52% 46%,52% 34%,58% 34%,58% 56%,64% 56%,64% 29%,70% 29%,70% 49%,77% 49%,77% 37%,84% 37%,84% 54%,91% 54%,91% 32%,96% 32%,96% 46%,100% 46%,100% 100%,0 100%)}
+    .arch{position:absolute;left:48px;bottom:35px;width:192px;height:68px;border:11px solid rgba(245,225,207,.82);border-bottom:0;border-radius:95px 95px 0 0;box-shadow:45px 0 0 -11px rgba(245,225,207,.78),90px 0 0 -11px rgba(245,225,207,.72)}
+    .atelier-sign{position:absolute;right:42px;bottom:30px;background:rgba(53,43,36,.86);color:#fff8f2;padding:16px 20px;border-radius:5px;font:11px/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 9px 24px rgba(55,35,25,.18)}
+    .copy{padding:25px 27px 28px;position:relative;min-height:185px}
+    .label{font:700 10px/1.4 Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--rose);margin-bottom:9px}
+    .choice h2{margin:0 48px 9px 0;font:30px/1.08 Georgia,serif;font-weight:400;letter-spacing:-.025em}
+    .choice p{margin:0 48px 0 0;color:var(--muted);font:14px/1.52 Georgia,serif;max-width:410px}
+    .arrow{position:absolute;right:25px;bottom:27px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--rose);color:#fff;font:22px/1 Arial,sans-serif;transition:transform .22s ease,background .22s ease}
+    .choice:hover .arrow{transform:translateX(3px);background:#a96864}
+    .note{text-align:center;margin-top:24px;color:#725e52;font:italic 18px/1.35 "Segoe Script","Brush Script MT",cursive}
+    @media(max-width:850px){.page{align-items:flex-start;padding:30px 18px 40px}.brand{font-size:38px}.intro h1{font-size:36px}.choices{gap:18px}.art{height:205px}.choice h2{font-size:27px}}
+    @media(max-width:650px){.choices{grid-template-columns:1fr}.intro{margin-bottom:24px}.intro h1{font-size:31px}.choice{max-width:520px;width:100%;margin:auto}.art{height:190px}.brand{font-size:34px}.note{font-size:16px}}
   </style>
 </head>
 <body>
-  <main class="scene">
-    <aside class="atelier-side" aria-hidden="true">
-      <div class="side-note">C’est le début<br>de ton histoire.<span>À toi de choisir comment elle commence.</span></div>
-    </aside>
-
-    <section class="content">
-      <div class="panel">
-        <div class="brand">Haute Couture Live</div>
-        <div class="kicker">Nouvelle partie</div>
+  <main class="page">
+    <div class="shell">
+      <div class="brand">Haute Couture Live</div>
+      <header class="intro">
         <h1>Comment souhaites-tu commencer ?</h1>
-        <p class="lead">Deux chemins, une même passion : la mode.</p>
+        <p>Deux chemins, une même passion.</p>
+      </header>
 
-        <div class="choices">
-          <article class="choice school" id="school" tabindex="0" role="button" aria-label="Passer par une école de mode">
-            <div class="choice-content">
-              <div class="label">Apprendre · expérimenter · créer</div>
-              <h2>Passer par une école de mode</h2>
-              <p>Choisis ton école, apprends réellement le métier et construis ton parcours à travers les cours, projets, rencontres et découvertes.</p>
-            </div>
-            <div class="arrow">›</div>
-          </article>
+      <section class="choices" aria-label="Choix du parcours">
+        <button class="choice" id="school" type="button">
+          <div class="art art-school" aria-hidden="true">
+            <div class="window"></div>
+            <div class="school-desk"></div>
+            <div class="school-paper"></div>
+            <div class="dressform one"></div>
+            <div class="dressform two"></div>
+          </div>
+          <div class="copy">
+            <div class="label">Apprendre · expérimenter · créer</div>
+            <h2>Passer par une école de mode</h2>
+            <p>Choisis ton école, apprends le métier et construis tes bases à travers les cours, les projets et les rencontres.</p>
+            <span class="arrow" aria-hidden="true">›</span>
+          </div>
+        </button>
 
-          <article class="choice career" id="career" tabindex="0" role="button" aria-label="Commencer ma carrière">
-            <div class="choice-content">
-              <div class="label">Créer · explorer · se lancer</div>
-              <h2>Commencer ma carrière</h2>
-              <p>Entre directement dans la vie professionnelle, installe-toi, rencontre tes premières clientes et construis ton chemin à ton rythme.</p>
-            </div>
-            <div class="arrow">›</div>
-          </article>
-        </div>
+        <button class="choice" id="career" type="button">
+          <div class="art art-career" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="city"></div>
+            <div class="arch"></div>
+            <div class="atelier-sign">Atelier</div>
+          </div>
+          <div class="copy">
+            <div class="label">Créer · explorer · se lancer</div>
+            <h2>Commencer ma carrière</h2>
+            <p>Installe-toi, découvre la ville, rencontre tes premières clientes et construis ton parcours professionnel à ton rythme.</p>
+            <span class="arrow" aria-hidden="true">›</span>
+          </div>
+        </button>
+      </section>
 
-        <div class="foot">Même passion. Deux chemins différents.</div>
-      </div>
-    </section>
+      <div class="note">C’est le début de ton histoire.</div>
+    </div>
   </main>
 
   <script>
@@ -118,25 +140,19 @@
       localStorage.setItem(K,'start-choice');
       localStorage.setItem('haute-couture-screen','start-choice');
 
-      function choose(type){
-        localStorage.setItem(P,JSON.stringify({type,chosenAt:new Date().toISOString()}));
+      document.getElementById('career').addEventListener('click',()=>{
+        localStorage.setItem(P,JSON.stringify({type:'career',chosenAt:new Date().toISOString()}));
         localStorage.removeItem(RESET);
-        if(type==='career'){
-          localStorage.setItem(K,'logement');
-          location.replace('../logement/');
-        }else{
-          localStorage.setItem(K,'school-choice');
-          location.replace('../school-choice/');
-        }
-      }
+        localStorage.setItem(K,'logement');
+        location.replace('../logement/');
+      });
 
-      function wire(id,type){
-        const el=document.getElementById(id);
-        el.addEventListener('click',()=>choose(type));
-        el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(type)}});
-      }
-      wire('career','career');
-      wire('school','school');
+      document.getElementById('school').addEventListener('click',()=>{
+        localStorage.setItem(P,JSON.stringify({type:'school',chosenAt:new Date().toISOString()}));
+        localStorage.removeItem(RESET);
+        localStorage.setItem(K,'school-choice');
+        location.replace('../school-choice/');
+      });
     })();
   </script>
 </body>
