@@ -32,6 +32,7 @@ if(K==='course'){
  const base=(path.includes('/hc-live/')?path.slice(0,path.indexOf('/hc-live/')+9):'/');
  if(!window.HCSchoolCourseSignature&&!document.querySelector('script[data-hc-course-signature]')){const s=document.createElement('script');s.src=base+'school/school-course-signature-v1.js?v=20260906-signature4';s.defer=true;s.setAttribute('data-hc-course-signature','1');document.head.appendChild(s)}
  if(!window.HCCourseInteractiveVisualsV2&&!document.querySelector('script[data-hc-course-interactive-visuals]')){const s=document.createElement('script');s.src=base+'school/course-interactive-visuals-v1.js?v=20260906-interactive4';s.defer=true;s.setAttribute('data-hc-course-interactive-visuals','1');document.head.appendChild(s)}
+ if(!window.HCRealClassSessionV2&&!document.querySelector('script[data-hc-real-class-session]')){const s=document.createElement('script');s.src=base+'school/real-class-session-v2.js?v=20260906-realclass1';s.defer=true;s.setAttribute('data-hc-real-class-session','1');document.head.appendChild(s)}
 }
 window.HCPremiumGameVisualV2={kind:K,scene:scenes[K],school:school?.name||null};
 })();
