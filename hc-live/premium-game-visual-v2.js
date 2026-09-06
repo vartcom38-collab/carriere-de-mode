@@ -35,6 +35,7 @@ if(K==='course'){
  if(!window.HCRealClassSessionV2&&!document.querySelector('script[data-hc-real-class-session]')){const s=document.createElement('script');s.src=base+'school/real-class-session-v2.js?v=20260906-realclass1';s.defer=true;s.setAttribute('data-hc-real-class-session','1');document.head.appendChild(s)}
  if(!window.HCRealClassroomFlowV1&&!document.querySelector('script[data-hc-real-classroom-flow]')){const s=document.createElement('script');s.src=base+'school/real-classroom-flow-v1.js?v=20260906-realflow1';s.defer=true;s.setAttribute('data-hc-real-classroom-flow','1');document.head.appendChild(s)}
  if(!window.HCCoursePracticalWorkshopV1&&!document.querySelector('script[data-hc-course-practical]')){const s=document.createElement('script');s.src=base+'school/course-practical-workshop-v1.js?v=20260906-practical1';s.defer=true;s.setAttribute('data-hc-course-practical','1');document.head.appendChild(s)}
+ if(!window.HCCoursePracticalGateV1&&!document.querySelector('script[data-hc-course-practical-gate]')){const s=document.createElement('script');s.src=base+'school/course-practical-gate-v1.js?v=20260906-practicalgate1';s.defer=true;s.setAttribute('data-hc-course-practical-gate','1');document.head.appendChild(s)}
 }
 window.HCPremiumGameVisualV2={kind:K,scene:scenes[K],school:school?.name||null};
 })();
