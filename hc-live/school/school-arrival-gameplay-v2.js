@@ -5,10 +5,12 @@ if(window.HCSchoolArrivalGameplayV2)return;
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
 const school=read('haute-couture-school-choice-v1');
 const housing=read('haute-couture-school-housing-v1');
+const pathChoice=read('haute-couture-start-path-v1');
 const flow=read('haute-couture-school-day1-flow-v1');
 const route=location.pathname;
 const arrival=!!flow&&flow.phase!=='done';
 const type=housing?.type||'residence';
+const schoolPath=pathChoice?.type==='school'||/\/school(?:-|\/|$)/i.test(route);
 const homePhotos={
  residence:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=86&w=2200',
  colocation:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&fm=jpg&q=86&w=2200',
@@ -19,6 +21,7 @@ const dayPhotos={
  tour:'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&fm=jpg&q=86&w=2200',
  course:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=86&w=2200',
  finish:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&fm=jpg&q=86&w=2200',
+ recap:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&fm=jpg&q=86&w=2200',
  done:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&fm=jpg&q=86&w=2200'
 };
 const style=document.createElement('style');
@@ -41,14 +44,16 @@ body.hc-arrival-mode #hc-global-menu-launch{display:none!important}
 `;
 document.head.appendChild(style);
 function context(parent,items){if(!parent||parent.querySelector('.hc-contextbar'))return;const d=document.createElement('div');d.className='hc-contextbar';d.innerHTML=items.map(x=>`<span class="hc-contextpill">${x}</span>`).join('');parent.appendChild(d)}
+function repairGlobalHome(){if(!schoolPath||!housing)return;const b=document.getElementById('hcgm-home');if(!b||b.dataset.schoolFixed==='1')return;const clone=b.cloneNode(true);clone.dataset.schoolFixed='1';clone.onclick=()=>{location.href=(location.pathname.includes('/hc-live/')?'../school-home/':'school-home/')};b.replaceWith(clone)}
 if(arrival)document.body.classList.add('hc-arrival-mode');
 if(/\/school-home\/?$/i.test(route)){
  const hero=document.querySelector('.hero');if(hero){hero.style.backgroundImage=`linear-gradient(90deg,rgba(25,18,15,.58),rgba(25,18,15,.08) 58%,rgba(25,18,15,.18)),url('${homePhotos[type]}')`;context(hero,[type==='colocation'?'Colocation':type==='studio'?'Studio':'Résidence',school?.city||'Vie étudiante',arrival?'Rentrée':'Chez moi']);}
- const p=document.getElementById('homeText');if(p&&!p.querySelector?.('.hc-scene-note')){const note=document.createElement('div');note.className='hc-scene-note';note.textContent=arrival?'Ton seul objectif pour l’instant : vivre ta rentrée. Le reste du jeu se débloquera une fois tes premiers repères pris.':'Ton logement reste un vrai lieu de vie : départs, retours, messages, travail personnel et temps libre peuvent venir s’y greffer.';p.insertAdjacentElement('afterend',note)}
+ const p=document.getElementById('homeText');if(p&&!document.querySelector('.hc-scene-note')){const note=document.createElement('div');note.className='hc-scene-note';note.textContent=arrival?'Ton seul objectif pour l’instant : vivre ta rentrée. Le reste du jeu se débloquera une fois tes premiers repères pris.':'Ton logement reste un vrai lieu de vie : départs, retours, messages, travail personnel et temps libre peuvent venir s’y greffer.';p.insertAdjacentElement('afterend',note)}
 }
 if(/\/school-day\/?$/i.test(route)){
  const hero=document.querySelector('.hero');const phase=flow?.phase||'done';if(hero){hero.style.backgroundImage=`linear-gradient(90deg,rgba(25,18,15,.65),rgba(25,18,15,.18)),url('${dayPhotos[phase]||dayPhotos.done}')`;context(hero,[school?.name||'Mon école',school?.city||'',arrival?'Jour 1':'Vie scolaire'].filter(Boolean));}
  const meta=document.getElementById('nextMeta');if(meta&&!document.querySelector('.hc-why')){const why=document.createElement('div');why.className='hc-why';why.textContent=arrival?'Pourquoi maintenant ? Parce que cette étape te donne le prochain repère utile, sans t’obliger à explorer tout le jeu d’un coup.':'Tu peux suivre cette proposition ou organiser ta journée autrement.';meta.insertAdjacentElement('afterend',why)}
 }
+setTimeout(repairGlobalHome,250);setTimeout(repairGlobalHome,900);
 window.HCSchoolArrivalGameplayV2={arrival,type,school,housing};
 })();
