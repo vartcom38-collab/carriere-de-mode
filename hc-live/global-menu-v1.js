@@ -105,6 +105,7 @@ async function loadSchoolEnhancements(){
   if(anySchool){
     await Promise.all([
       window.HCSchoolPolish?Promise.resolve():addSchoolScript('school/school-polish-v1.js?v=20260906-polish2','data-hc-school-polish'),
+      window.HCSchoolPremiumVisuals?Promise.resolve():addSchoolScript('school/school-premium-visuals-v1.js?v=20260906-premium1','data-hc-school-premium-visuals'),
       ensureAcademic()
     ]);
     if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition');
