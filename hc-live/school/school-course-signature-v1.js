@@ -36,6 +36,12 @@ function labelObjects(){
  });
 }
 function clean(){document.getElementById('hc-premium-mark')?.remove();document.querySelectorAll('[data-hc-course-mood],.hcsp-brand').forEach(n=>n.remove());labelObjects()}
-setTimeout(clean,0);setTimeout(clean,250);setTimeout(clean,900);new MutationObserver(clean).observe(document.documentElement,{childList:true,subtree:true});
+function loadSubjectVisuals(){
+ const id=new URLSearchParams(location.search).get('id')||'';
+ if(!['w1-textile','w1-pattern','w1-drape'].includes(id)||window.HCSubjectVisualsV1||document.querySelector('script[data-hc-subject-visuals]'))return;
+ const marker='/hc-live/';const p=location.pathname;const i=p.indexOf(marker);const base=i>=0?p.slice(0,i)+marker:'../';
+ const s=document.createElement('script');s.src=base+'school/subject-visuals-v1.js?v=20260906-subjectvisual1';s.defer=true;s.setAttribute('data-hc-subject-visuals','1');document.head.appendChild(s);
+}
+setTimeout(clean,0);setTimeout(clean,250);setTimeout(clean,900);loadSubjectVisuals();new MutationObserver(clean).observe(document.documentElement,{childList:true,subtree:true});
 window.HCSchoolCourseSignatureV3={loaded:true,clean};window.HCSchoolCourseSignature=window.HCSchoolCourseSignatureV3;
 })();
