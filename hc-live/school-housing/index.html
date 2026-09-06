@@ -22,116 +22,14 @@ h1{font:clamp(44px,5vw,76px)/.98 Georgia,serif;font-weight:400;letter-spacing:-.
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .choice{position:relative;display:flex;flex-direction:column;min-height:560px;border-radius:26px;overflow:hidden;background:var(--paper);border:1px solid rgba(255,255,255,.72);box-shadow:var(--shadow);cursor:pointer;transition:transform .22s ease,box-shadow .22s ease}
 .choice:hover{transform:translateY(-5px);box-shadow:0 34px 88px rgba(54,36,28,.2)}
-.photo{height:285px;position:relative;background-size:cover;background-position:center}
-.photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(25,18,15,.5))}
-.residence .photo{background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=82&w=1400')}
-.colocation .photo{background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&fm=jpg&q=82&w=1400')}
-.studio .photo{background-image:url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&fm=jpg&q=82&w=1400')}
+.photo{height:285px;position:relative;background-size:cover;background-position:center}.photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(25,18,15,.5))}
+.residence .photo{background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=82&w=1400')}.colocation .photo{background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&fm=jpg&q=82&w=1400')}.studio .photo{background-image:url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&fm=jpg&q=82&w=1400')}
 .badge{position:absolute;top:18px;left:18px;z-index:2;padding:9px 12px;border-radius:999px;background:rgba(255,250,245,.9);backdrop-filter:blur(12px);font:800 9px/1 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#4b3930}
-.body{display:flex;flex-direction:column;flex:1;padding:24px 25px 25px}
-.kicker{font:800 9px/1 Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--rose);margin-bottom:10px}
-.choice h3{font:32px/1.02 Georgia,serif;font-weight:400;margin:0 0 10px;letter-spacing:-.02em}
-.choice p{font:14px/1.55 Georgia,serif;color:var(--muted);margin:0 0 18px}
-.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 22px}
-.meta div{padding:11px 12px;border-radius:13px;background:#f4ece6;border:1px solid rgba(89,64,51,.07)}
-.meta b{display:block;font:800 9px/1 Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#554238;margin-bottom:5px}
-.meta span{font:12px/1.35 Georgia,serif;color:#75645b}
-.choose{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;border-top:1px solid var(--line);background:transparent;padding:17px 0 0;color:var(--ink);font:800 11px/1 Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
-.arrow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#251d19;color:#fff;font-size:18px;transition:.2s ease}
-.choice:hover .arrow{transform:translateX(3px);background:var(--rose)}
-.note{margin:22px auto 0;max-width:1000px;text-align:center;font:12px/1.6 Georgia,serif;color:#8a776d}
-@media(max-width:1050px){.grid{grid-template-columns:1fr}.choice{min-height:0;display:grid;grid-template-columns:42% 58%}.photo{height:100%;min-height:310px}.intro{align-items:start}.intro p{text-align:left}.body{min-height:310px}}
-@media(max-width:700px){.hero{min-height:280px}.hero-inner{padding:46px 0 54px}.intro{display:block}.intro p{margin-top:10px}.choice{display:block}.photo{height:235px;min-height:0}.meta{grid-template-columns:1fr 1fr}.content{width:min(94vw,700px)}}
-</style>
-</head>
-<body>
-<div class="page">
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="eyebrow">Parcours école · Logement</div>
-      <h1>Choisis ton chez-toi pour cette nouvelle vie.</h1>
-      <div class="school" id="school"></div>
-    </div>
-  </header>
-
-  <main class="content">
-    <div class="intro">
-      <h2>Trois façons de vivre tes années d’école.</h2>
-      <p>Ton logement change ton quotidien : les personnes que tu croises, ton rythme, ton intimité et la manière dont tu vis la ville autour de l’école.</p>
-    </div>
-
-    <section class="grid" aria-label="Choix du logement étudiant">
-      <article class="choice residence" data-type="residence" tabindex="0" role="button">
-        <div class="photo"><span class="badge">Vie étudiante</span></div>
-        <div class="body">
-          <div class="kicker">Simple · proche · vivant</div>
-          <h3>Résidence étudiante</h3>
-          <p>Une petite chambre meublée, pensée pour démarrer sans te compliquer la vie. Les couloirs, cuisines communes et voisins donnent naturellement plus de place aux rencontres.</p>
-          <div class="meta">
-            <div><b>Budget</b><span>Le plus léger</span></div>
-            <div><b>Ambiance</b><span>Très étudiante</span></div>
-            <div><b>Intimité</b><span>Chambre à toi</span></div>
-            <div><b>Quotidien</b><span>Plus de rencontres</span></div>
-          </div>
-          <button class="choose" type="button" data-type="residence"><span>Choisir la résidence</span><span class="arrow">›</span></button>
-        </div>
-      </article>
-
-      <article class="choice colocation" data-type="colocation" tabindex="0" role="button">
-        <div class="photo"><span class="badge">Vie partagée</span></div>
-        <div class="body">
-          <div class="kicker">Social · spontané · vivant</div>
-          <h3>Colocation</h3>
-          <p>Un appartement partagé avec d’autres étudiants. Il y a davantage de vie autour de toi, des habitudes communes, des imprévus et parfois moins de calme.</p>
-          <div class="meta">
-            <div><b>Budget</b><span>Partagé</span></div>
-            <div><b>Ambiance</b><span>Très sociale</span></div>
-            <div><b>Intimité</b><span>Variable</span></div>
-            <div><b>Quotidien</b><span>Relations régulières</span></div>
-          </div>
-          <button class="choose" type="button" data-type="colocation"><span>Choisir la colocation</span><span class="arrow">›</span></button>
-        </div>
-      </article>
-
-      <article class="choice studio" data-type="studio" tabindex="0" role="button">
-        <div class="photo"><span class="badge">Indépendance</span></div>
-        <div class="body">
-          <div class="kicker">Libre · calme · personnel</div>
-          <h3>Studio en ville</h3>
-          <p>Ton propre appartement dans la ville de l’école. Plus indépendant, plus personnalisable et plus calme, mais aussi plus coûteux et moins centré sur la vie du campus.</p>
-          <div class="meta">
-            <div><b>Budget</b><span>Plus élevé</span></div>
-            <div><b>Ambiance</b><span>Plus personnelle</span></div>
-            <div><b>Intimité</b><span>Totale</span></div>
-            <div><b>Quotidien</b><span>Plus autonome</span></div>
-          </div>
-          <button class="choose" type="button" data-type="studio"><span>Explorer les studios</span><span class="arrow">›</span></button>
-        </div>
-      </article>
-    </section>
-
-    <div class="note">Les logements liés officiellement aux écoles ne seront affichés comme tels que lorsqu’ils sont documentés. Ici, tu choisis surtout une façon de vivre tes études.</div>
-  </main>
-</div>
-
-<script>
-(function(){
-const K='haute-couture-current-screen',H='haute-couture-school-housing-v1',S='haute-couture-school-choice-v1';
-const school=(()=>{try{return JSON.parse(localStorage.getItem(S)||'null')}catch(_){return null}})();
-document.getElementById('school').textContent=school?`${school.name} · ${school.city}`:'Ton école';
-localStorage.setItem(K,'school-housing');
-function choose(type){
- const choice={type,city:school?.city||'France',schoolId:school?.id||null,chosenAt:new Date().toISOString()};
- localStorage.setItem(H,JSON.stringify(choice));
- if(choice.type==='studio'){localStorage.setItem(K,'logement');location.href='../logement/';return}
- localStorage.setItem('haute-couture-residence',JSON.stringify({id:'student-'+choice.type,type:choice.type,title:choice.type==='residence'?'Chambre en résidence étudiante':'Colocation étudiante',city:choice.city,address:choice.city,price:choice.type==='residence'?280:390,charges:choice.type==='residence'?40:55,student:true,schoolId:choice.schoolId}));
- localStorage.setItem(K,'school-home');location.href='../school-home/';
-}
-document.addEventListener('click',e=>{const el=e.target.closest('[data-type]');if(!el)return;choose(el.dataset.type)});
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.choice[data-type]')){e.preventDefault();choose(e.target.dataset.type)}});
-})();
-</script>
-<script src="../server-save-bridge-v1.js?v=20260903-school2" defer></script>
-<script src="../global-menu-v1.js?v=20260903-school2" defer></script>
-</body>
-</html>
+.body{display:flex;flex-direction:column;flex:1;padding:24px 25px 25px}.kicker{font:800 9px/1 Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--rose);margin-bottom:10px}.choice h3{font:32px/1.02 Georgia,serif;font-weight:400;margin:0 0 10px;letter-spacing:-.02em}.choice p{font:14px/1.55 Georgia,serif;color:var(--muted);margin:0 0 18px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 22px}.meta div{padding:11px 12px;border-radius:13px;background:#f4ece6;border:1px solid rgba(89,64,51,.07)}.meta b{display:block;font:800 9px/1 Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#554238;margin-bottom:5px}.meta span{font:12px/1.35 Georgia,serif;color:#75645b}.choose{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;border-top:1px solid var(--line);background:transparent;padding:17px 0 0;color:var(--ink);font:800 11px/1 Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.arrow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#251d19;color:#fff;font-size:18px}.note{margin:22px auto 0;max-width:1000px;text-align:center;font:12px/1.6 Georgia,serif;color:#8a776d}@media(max-width:1050px){.grid{grid-template-columns:1fr}.choice{min-height:0;display:grid;grid-template-columns:42% 58%}.photo{height:100%;min-height:310px}.intro{align-items:start}.intro p{text-align:left}.body{min-height:310px}}@media(max-width:700px){.hero{min-height:280px}.hero-inner{padding:46px 0 54px}.intro{display:block}.intro p{margin-top:10px}.choice{display:block}.photo{height:235px;min-height:0}.content{width:min(94vw,700px)}}
+</style></head>
+<body><div class="page"><header class="hero"><div class="hero-inner"><div class="eyebrow">Parcours école · Mon logement</div><h1>Choisis simplement où tu vas vivre.</h1><div class="school" id="school"></div></div></header><main class="content"><div class="intro"><h2>Après ce choix, tu arrives directement chez toi.</h2><p>Résidence, coloc ou studio : dans les trois cas, ton logement devient le point de départ de tes journées. Tu n’auras rien d’autre à chercher avant la rentrée.</p></div><section class="grid">
+<article class="choice residence" data-type="residence" tabindex="0"><div class="photo"><span class="badge">Vie étudiante</span></div><div class="body"><div class="kicker">Simple · proche · vivant</div><h3>Résidence étudiante</h3><p>Une chambre à toi, avec la vie étudiante juste autour.</p><div class="meta"><div><b>Budget</b><span>Le plus léger</span></div><div><b>Ambiance</b><span>Très étudiante</span></div></div><button class="choose" data-type="residence"><span>Choisir ma chambre</span><span class="arrow">›</span></button></div></article>
+<article class="choice colocation" data-type="colocation" tabindex="0"><div class="photo"><span class="badge">Vie partagée</span></div><div class="body"><div class="kicker">Social · spontané · vivant</div><h3>Colocation</h3><p>Un appartement partagé avec d’autres étudiants et une vraie vie commune.</p><div class="meta"><div><b>Budget</b><span>Partagé</span></div><div><b>Ambiance</b><span>Très sociale</span></div></div><button class="choose" data-type="colocation"><span>Choisir ma coloc</span><span class="arrow">›</span></button></div></article>
+<article class="choice studio" data-type="studio" tabindex="0"><div class="photo"><span class="badge">Indépendance</span></div><div class="body"><div class="kicker">Libre · calme · personnel</div><h3>Studio étudiant</h3><p>Ton propre espace, plus calme et plus indépendant.</p><div class="meta"><div><b>Budget</b><span>Plus élevé</span></div><div><b>Ambiance</b><span>Plus personnelle</span></div></div><button class="choose" data-type="studio"><span>Choisir mon studio</span><span class="arrow">›</span></button></div></article>
+</section><div class="note">Tu pourras enrichir ton logement plus tard. Pour la rentrée, ce choix sert surtout à définir ton point de départ.</div></main></div>
+<script>(function(){const H='haute-couture-school-housing-v1',S='haute-couture-school-choice-v1',F='haute-couture-school-day1-flow-v1',T='haute-couture-school-first-tour-v1',K='haute-couture-current-screen';let school=null;try{school=JSON.parse(localStorage.getItem(S)||'null')}catch(_){}document.getElementById('school').textContent=school?`${school.name} · ${school.city}`:'Ton école';localStorage.setItem(K,'school-housing');function choose(type){const choice={type,city:school?.city||'France',schoolId:school?.id||null,chosenAt:new Date().toISOString()};localStorage.setItem(H,JSON.stringify(choice));localStorage.removeItem(T);localStorage.setItem(F,JSON.stringify({phase:'arrival',startedAt:new Date().toISOString()}));localStorage.setItem('haute-couture-residence',JSON.stringify({id:'student-'+type,type,title:type==='colocation'?'Colocation étudiante':type==='studio'?'Studio étudiant':'Chambre en résidence étudiante',city:choice.city,address:choice.city,student:true,schoolId:choice.schoolId}));localStorage.setItem(K,'school-home');location.href='../school-home/'}document.addEventListener('click',e=>{const el=e.target.closest('[data-type]');if(el)choose(el.dataset.type)});document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.choice[data-type]')){e.preventDefault();choose(e.target.dataset.type)}})})();</script><script src="../server-save-bridge-v1.js" defer></script><script src="../global-menu-v1.js" defer></script></body></html>
