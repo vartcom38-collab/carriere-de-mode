@@ -2,11 +2,11 @@
 (function(){
 'use strict';
 if(window.HCAfterCourseReview)return;
-const STORE='haute-couture-school-review-v1',SEQ='haute-couture-school-review-seq-v1';
+const STORE='haute-couture-school-review-v1',SEQ='haute-couture-school-review-seq-v1',EVAL='haute-couture-school-qualitative-evaluation-v1';
 const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'[]')||[]}catch(_){return []}};
 const save=v=>localStorage.setItem(STORE,JSON.stringify(v));
 const seq=()=>Number(localStorage.getItem(SEQ)||0);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const readEval=id=>{try{return (JSON.parse(localStorage.getItem(EVAL)||'{}')||{})[id]||null}catch(_){return null}};
 const packs={
  'w1-welcome':{remember:['Observation = fait vérifiable','Interprétation = sens ou impression','Intention = action recherchée'],examples:['« Trois plis verticaux partent du même point » = observation exploitable','« C’est élégant » = jugement trop vague'],errors:['Sauter directement de l’image à la solution','Confondre description et opinion'],review:{q:'Laquelle est une observation ?',a:['Cette forme est élégante','Trois lignes parallèles descendent depuis le même point','Je veux allonger la silhouette'],ok:1}},
  'w1-drawing':{remember:['Ligne d’action avant détail','Appui et poids du corps','Masses avant contour'],examples:['Une pose lisible peut fonctionner avec très peu de traits'],errors:['Dessiner les détails avant l’équilibre','Allonger les proportions sans repères'],review:{q:'Que vérifies-tu d’abord si une pose semble tomber ?',a:['Le motif','La projection du poids par rapport à l’appui','Les doigts'],ok:1}},
@@ -20,10 +20,13 @@ function inferPack(id,cat){return packs[id]||{remember:[`Retenir les notions ess
 function capture(){
  const id=new URLSearchParams(location.search).get('id'); if(!id)return;
  const sheet=document.getElementById('sheet'); if(!sheet||!/Fin de séance/i.test(sheet.textContent))return;
- const list=read(); if(list.some(x=>x.id===id&&x.completedMarker===seq()+1))return;
- const c=window.HCSchoolLife?.courses?.find(x=>x.id===id)||{}; const p=inferPack(id,c.category);
- const n=seq()+1; localStorage.setItem(SEQ,String(n));
- list.push({id,title:c.title||id,category:c.category||'Cours',teacher:c.teacher||'',completedMarker:n,dueMarker:n+2,status:'fresh',remember:p.remember,examples:p.examples,errors:p.errors,review:p.review,lastResult:null}); save(list);
+ const list=read(),currentSeq=seq();
+ if(list.some(x=>x.id===id&&x.completedMarker===currentSeq))return;
+ const c=window.HCSchoolLife?.courses?.find(x=>x.id===id)||{},p=inferPack(id,c.category),ev=readEval(id);
+ const n=currentSeq+1; localStorage.setItem(SEQ,String(n));
+ const personalizedErrors=[...(ev?.focus||[]),...(p.errors||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,5);
+ const personalizedRemember=[...(p.remember||[]),...(ev?.strengths||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,6);
+ list.push({id,title:c.title||id,category:c.category||'Cours',teacher:c.teacher||'',completedMarker:n,dueMarker:n+2,status:'fresh',remember:personalizedRemember,examples:p.examples,errors:personalizedErrors,review:p.review,lastResult:null,evaluation:ev?{summary:ev.summary,criteria:ev.criteria,strengths:ev.strengths,focus:ev.focus}:null}); save(list);
 }
 function due(){const n=seq();return read().filter(x=>x.status!=='mastered'&&x.dueMarker<=n)}
 function injectEntry(){
@@ -31,10 +34,10 @@ function injectEntry(){
  if(document.querySelector('[data-hc-review-entry]'))return;
  const list=read(),d=due(); if(!list.length)return;
  const box=document.createElement('section');box.dataset.hcReviewEntry='1';box.style.cssText='margin:18px auto;max-width:1180px;padding:18px 20px;border:1px solid #e0d2c7;border-radius:20px;background:#fffaf5;color:#2a211c;font-family:Georgia,serif;box-shadow:0 14px 35px rgba(45,31,24,.07)';
- box.innerHTML=`<div style="font:800 9px Arial;letter-spacing:.14em;color:#b96f68;text-transform:uppercase">Révisions</div><div style="display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:7px"><div><div style="font-size:24px">${d.length?`${d.length} notion${d.length>1?'s':''} à revoir`:'Mes fiches de cours'}</div><div style="font-size:13px;color:#77655d;margin-top:4px">${d.length?'Une notion vue plus tôt revient maintenant.':'Tes exemples et erreurs restent disponibles.'}</div></div><button style="border:0;border-radius:999px;background:#2a211c;color:white;padding:12px 16px;cursor:pointer" onclick="location.href='../school-review/'">Ouvrir mes révisions</button></div>`;
+ box.innerHTML=`<div style="font:800 9px Arial;letter-spacing:.14em;color:#b96f68;text-transform:uppercase">Révisions</div><div style="display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:7px"><div><div style="font-size:24px">${d.length?`${d.length} notion${d.length>1?'s':''} à revoir`:'Mes fiches de cours'}</div><div style="font-size:13px;color:#77655d;margin-top:4px">${d.length?'Une notion vue plus tôt revient maintenant, avec les points que ton professeur t’a demandé de retravailler.':'Tes exemples, corrections et erreurs restent disponibles.'}</div></div><button style="border:0;border-radius:999px;background:#2a211c;color:white;padding:12px 16px;cursor:pointer" onclick="location.href='../school-review/'">Ouvrir mes révisions</button></div>`;
  const main=document.querySelector('main')||document.body; main.appendChild(box);
 }
 const obs=new MutationObserver(()=>{capture();injectEntry()});obs.observe(document.body,{subtree:true,childList:true});
 setTimeout(injectEntry,500);
-window.HCAfterCourseReview={read,due,capture};
+window.HCAfterCourseReview={read,due,capture,readEval};
 })();
