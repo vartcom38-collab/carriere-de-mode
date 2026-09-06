@@ -111,8 +111,8 @@ async function loadSchoolEnhancements(){
     ]);
     if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition');
   }
-  if(schoolCourse&&!window.HCSubjectInteractions){
-    await addSchoolScript('school/subject-interactions-v1.js?v=20260906-subject1','data-hc-subject-interactions');
+  if(schoolCourse&&!window.HCSubjectInteractionsV2){
+    await addSchoolScript('school/subject-interactions-v2.js?v=20260906-subject2','data-hc-subject-interactions-v2');
   }
   if(project){
     await Promise.all([
