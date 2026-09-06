@@ -8,101 +8,26 @@ const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){r
 const school=read('haute-couture-school-choice-v1');
 const flow=read('haute-couture-school-day1-flow-v1');
 const isArrival=!!flow&&flow.phase!=='done';
-
-function kind(){
- if(/school-course/.test(path))return 'course';
- if(/school-city/.test(path))return 'student-city';
- if(/school-campus/.test(path))return 'school';
- if(/school-review/.test(path))return 'review';
- if(/school-planning/.test(path))return 'planning';
- if(/school-life/.test(path))return 'school-life';
- if(/school-year\d+-project|school-project/.test(path))return 'project';
- if(/school-home/.test(path))return 'student-home';
- if(/school-day/.test(path))return 'student-day';
- if(/school-welcome|school-tour/.test(path))return 'arrival';
- if(/school/.test(path))return 'school';
- if(/atelier/.test(path))return 'atelier';
- if(/book|studio-photo|ateliergram/.test(path))return 'portfolio';
- if(/ville|map/.test(path))return 'city';
- if(/chez-moi|logement|immobilier/.test(path))return 'home';
- if(/agenda|planning/.test(path))return 'planning';
- if(/mission|cliente|career|carriere/.test(path))return 'career';
- return 'fashion';
-}
+function kind(){if(/school-course/.test(path))return 'course';if(/school-city/.test(path))return 'student-city';if(/school-campus/.test(path))return 'school';if(/school-review/.test(path))return 'review';if(/school-planning/.test(path))return 'planning';if(/school-life/.test(path))return 'school-life';if(/school-year\d+-project|school-project/.test(path))return 'project';if(/school-home/.test(path))return 'student-home';if(/school-day/.test(path))return 'student-day';if(/school-welcome|school-tour/.test(path))return 'arrival';if(/school/.test(path))return 'school';if(/atelier/.test(path))return 'atelier';if(/book|studio-photo|ateliergram/.test(path))return 'portfolio';if(/ville|map/.test(path))return 'city';if(/chez-moi|logement|immobilier/.test(path))return 'home';if(/agenda|planning/.test(path))return 'planning';if(/mission|cliente|career|carriere/.test(path))return 'career';return 'fashion'}
 const K=kind();body.classList.add('hc-premium-v2','hc-kind-'+K);
-const scenes={
- course:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- 'student-city':'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- school:'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- review:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- planning:'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- 'school-life':'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- project:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- 'student-home':'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- 'student-day':'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- arrival:'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- atelier:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- portfolio:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- city:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- home:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- career:'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&fm=jpg&q=88&w=2400',
- fashion:'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&fm=jpg&q=88&w=2400'
-};
+const scenes={course:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=88&w=2400','student-city':'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&fm=jpg&q=88&w=2400',school:'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&fm=jpg&q=88&w=2400',review:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&fm=jpg&q=88&w=2400',planning:'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&fm=jpg&q=88&w=2400','school-life':'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&fm=jpg&q=88&w=2400',project:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&fm=jpg&q=88&w=2400','student-home':'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=88&w=2400','student-day':'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&fm=jpg&q=88&w=2400',arrival:'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&fm=jpg&q=88&w=2400',atelier:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=88&w=2400',portfolio:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&fm=jpg&q=88&w=2400',city:'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&fm=jpg&q=88&w=2400',home:'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&fm=jpg&q=88&w=2400',career:'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&fm=jpg&q=88&w=2400',fashion:'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&fm=jpg&q=88&w=2400'};
 body.style.setProperty('--hc-scene',`url("${scenes[K]||scenes.fashion}")`);
-
 const css=document.createElement('style');css.id='hc-premium-v2-css';css.textContent=`
 :root{--hc-ink:#2b1c19;--hc-wine:#7e313b;--hc-rose:#b26370;--hc-paper:rgba(255,248,240,.92);--hc-paper-strong:rgba(255,250,244,.97);--hc-line:rgba(104,71,59,.18);--hc-shadow:0 24px 70px rgba(48,27,22,.20);--hc-soft-shadow:0 14px 38px rgba(48,27,22,.13)}
 body.hc-premium-v2{background:#d9c9bd var(--hc-scene) center/cover fixed no-repeat!important;color:var(--hc-ink);font-family:Georgia,'Times New Roman',serif!important;position:relative;min-height:100vh}
 body.hc-premium-v2:before{content:'';position:fixed;z-index:-2;inset:0;background:linear-gradient(105deg,rgba(38,23,19,.38),rgba(244,231,218,.12) 48%,rgba(36,21,18,.22)),var(--hc-scene) center/cover no-repeat}
 body.hc-premium-v2:after{content:'';position:fixed;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(255,245,235,.04),rgba(61,38,30,.14));pointer-events:none}
-#hc-premium-mark{position:fixed;z-index:2147482000;left:24px;top:18px;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.35);font:22px/1 Georgia,serif;letter-spacing:.08em;pointer-events:none}
-#hc-premium-mark small{display:block;margin-top:4px;text-align:center;font:800 8px/1 Arial,sans-serif;letter-spacing:.32em;color:rgba(255,255,255,.78)}
+#hc-premium-mark{position:fixed;z-index:2147482000;left:24px;top:18px;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.35);font:22px/1 Georgia,serif;letter-spacing:.08em;pointer-events:none}#hc-premium-mark small{display:block;margin-top:4px;text-align:center;font:800 8px/1 Arial,sans-serif;letter-spacing:.32em;color:rgba(255,255,255,.78)}
 body.hc-premium-v2 :is(.panel,.card,.box,.sheet,.modal-content,.day-card,.next,.timeline,.guide,.recap,.home-life,.person,.place:not(.locked),.course,.section-card,.content-card,.review-card,.project-card){backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-body.hc-premium-v2 :is(.panel,.box,.sheet,.day-card,.next,.timeline,.guide,.recap,.home-life,.section-card,.content-card,.review-card,.project-card){background:var(--hc-paper)!important;border-color:var(--hc-line)!important;box-shadow:var(--hc-shadow)!important}
-body.hc-premium-v2 :is(.card,.person,.course){box-shadow:var(--hc-soft-shadow)}
-body.hc-premium-v2 :is(button,.btn,.go,.soft,[role="button"]){transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
-body.hc-premium-v2 :is(button,.btn,.go,.soft,[role="button"]):not(:disabled):hover{transform:translateY(-2px)}
-body.hc-premium-v2 :is(.go,.btn.primary,.primary,.cta){background:linear-gradient(135deg,#914653,#6f2f39)!important;color:white!important;border-color:transparent!important;box-shadow:0 12px 28px rgba(111,47,57,.24)!important}
-body.hc-premium-v2 h1,body.hc-premium-v2 h2,body.hc-premium-v2 h3{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.025em}
-body.hc-premium-v2 .label,body.hc-premium-v2 .eyebrow,body.hc-premium-v2 .tag{font-family:Arial,sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase}
-body.hc-premium-v2 .hero{box-shadow:inset 0 -90px 100px rgba(36,22,18,.18)}
-body.hc-premium-v2 .wrap,body.hc-premium-v2 main{position:relative}
-body.hc-premium-v2 input,body.hc-premium-v2 textarea,body.hc-premium-v2 select{background:rgba(255,252,247,.92)!important;border:1px solid var(--hc-line)!important;border-radius:14px!important;color:var(--hc-ink)!important}
-body.hc-premium-v2 table{background:rgba(255,250,244,.92);border-radius:18px;overflow:hidden;box-shadow:var(--hc-soft-shadow)}
-body.hc-premium-v2 .leaflet-container{filter:saturate(.82) sepia(.08);border-radius:22px}
-/* pages that used to feel like flat dashboards */
-body.hc-kind-review main,body.hc-kind-planning main,body.hc-kind-school-life main,body.hc-kind-project main{width:min(1280px,92vw)!important;margin:120px auto 70px!important}
-body.hc-kind-review .wrap,body.hc-kind-planning .wrap,body.hc-kind-school-life .wrap,body.hc-kind-project .wrap{background:rgba(255,248,240,.72);padding:24px;border:1px solid rgba(255,255,255,.55);border-radius:28px;box-shadow:var(--hc-shadow);backdrop-filter:blur(18px)}
-body.hc-kind-school .place,body.hc-kind-school .person{border-radius:22px!important;overflow:hidden}
-body.hc-kind-course{background-attachment:fixed!important}
-body.hc-kind-course #sheet,body.hc-kind-course .sheet{background:rgba(255,248,240,.96)!important;box-shadow:0 -20px 65px rgba(38,22,18,.24)!important}
-body.hc-kind-student-city .panel{background:rgba(255,248,240,.94)!important}
-body.hc-kind-student-city .mapbox{box-shadow:var(--hc-shadow)!important;border-color:rgba(255,255,255,.55)!important}
-body.hc-kind-career :is(.card,.panel,.mission,.client,.job){border-radius:20px!important}
+body.hc-premium-v2 :is(.panel,.box,.sheet,.day-card,.next,.timeline,.guide,.recap,.home-life,.section-card,.content-card,.review-card,.project-card){background:var(--hc-paper)!important;border-color:var(--hc-line)!important;box-shadow:var(--hc-shadow)!important}body.hc-premium-v2 :is(.card,.person,.course){box-shadow:var(--hc-soft-shadow)}
+body.hc-premium-v2 :is(button,.btn,.go,.soft,[role="button"]){transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}body.hc-premium-v2 :is(button,.btn,.go,.soft,[role="button"]):not(:disabled):hover{transform:translateY(-2px)}body.hc-premium-v2 :is(.go,.btn.primary,.primary,.cta){background:linear-gradient(135deg,#914653,#6f2f39)!important;color:white!important;border-color:transparent!important;box-shadow:0 12px 28px rgba(111,47,57,.24)!important}
+body.hc-premium-v2 h1,body.hc-premium-v2 h2,body.hc-premium-v2 h3{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.025em}body.hc-premium-v2 .label,body.hc-premium-v2 .eyebrow,body.hc-premium-v2 .tag{font-family:Arial,sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase}body.hc-premium-v2 .hero{box-shadow:inset 0 -90px 100px rgba(36,22,18,.18)}body.hc-premium-v2 .wrap,body.hc-premium-v2 main{position:relative}body.hc-premium-v2 input,body.hc-premium-v2 textarea,body.hc-premium-v2 select{background:rgba(255,252,247,.92)!important;border:1px solid var(--hc-line)!important;border-radius:14px!important;color:var(--hc-ink)!important}body.hc-premium-v2 table{background:rgba(255,250,244,.92);border-radius:18px;overflow:hidden;box-shadow:var(--hc-soft-shadow)}body.hc-premium-v2 .leaflet-container{filter:saturate(.82) sepia(.08);border-radius:22px}
+body.hc-kind-review main,body.hc-kind-planning main,body.hc-kind-school-life main,body.hc-kind-project main{width:min(1280px,92vw)!important;margin:120px auto 70px!important}body.hc-kind-review .wrap,body.hc-kind-planning .wrap,body.hc-kind-school-life .wrap,body.hc-kind-project .wrap{background:rgba(255,248,240,.72);padding:24px;border:1px solid rgba(255,255,255,.55);border-radius:28px;box-shadow:var(--hc-shadow);backdrop-filter:blur(18px)}body.hc-kind-school .place,body.hc-kind-school .person{border-radius:22px!important;overflow:hidden}body.hc-kind-course{background-attachment:fixed!important}body.hc-kind-course #sheet,body.hc-kind-course .sheet{background:rgba(255,248,240,.96)!important;box-shadow:0 -20px 65px rgba(38,22,18,.24)!important}body.hc-kind-student-city .panel{background:rgba(255,248,240,.94)!important}body.hc-kind-student-city .mapbox{box-shadow:var(--hc-shadow)!important;border-color:rgba(255,255,255,.55)!important}body.hc-kind-career :is(.card,.panel,.mission,.client,.job){border-radius:20px!important}
 @media(max-width:800px){#hc-premium-mark{left:14px;top:14px;font-size:17px}body.hc-kind-review main,body.hc-kind-planning main,body.hc-kind-school-life main,body.hc-kind-project main{margin-top:84px!important}}
-`;
-document.head.appendChild(css);
-
-if(!document.getElementById('hc-premium-mark')&&!/start-choice|school-choice|accueil|^\/$/.test(path)){
- const mark=document.createElement('div');mark.id='hc-premium-mark';mark.innerHTML='HAUTE COUTURE<small>LIVE</small>';document.body.appendChild(mark);
-}
-
-/* Give repeated generic cards a richer editorial rhythm without touching gameplay. */
-function polishCards(){
- const candidates=[...document.querySelectorAll('.card,.person,.course,.review-card,.project-card')].slice(0,60);
- candidates.forEach((el,i)=>{
-   if(el.dataset.hcPremiumDone)return;el.dataset.hcPremiumDone='1';
-   el.style.borderColor='rgba(104,71,59,.16)';
-   if(!el.style.borderRadius)el.style.borderRadius='20px';
-   if(i%3===1)el.style.transform='translateY(2px)';
- });
-}
-polishCards();new MutationObserver(()=>polishCards()).observe(document.body,{childList:true,subtree:true});
-
-/* Keep the guided school arrival visually focused. */
-if(isArrival&&/school-(home|day|welcome|tour)/.test(path)){
- body.classList.add('hc-arrival-focus');
- const s=document.createElement('style');s.textContent=`body.hc-arrival-focus #hc-premium-mark{opacity:.9}body.hc-arrival-focus .footer,body.hc-arrival-focus .normal:not(.active){opacity:.94}`;document.head.appendChild(s);
-}
+`;document.head.appendChild(css);
+if(!document.getElementById('hc-premium-mark')&&!/start-choice|school-choice|accueil|^\/$/.test(path)){const mark=document.createElement('div');mark.id='hc-premium-mark';mark.innerHTML='HAUTE COUTURE<small>LIVE</small>';document.body.appendChild(mark)}
+function polishCards(){const candidates=[...document.querySelectorAll('.card,.person,.course,.review-card,.project-card')].slice(0,60);candidates.forEach((el,i)=>{if(el.dataset.hcPremiumDone)return;el.dataset.hcPremiumDone='1';el.style.borderColor='rgba(104,71,59,.16)';if(!el.style.borderRadius)el.style.borderRadius='20px';if(i%3===1)el.style.transform='translateY(2px)'})}polishCards();new MutationObserver(()=>polishCards()).observe(document.body,{childList:true,subtree:true});
+if(isArrival&&/school-(home|day|welcome|tour)/.test(path)){body.classList.add('hc-arrival-focus');const s=document.createElement('style');s.textContent=`body.hc-arrival-focus #hc-premium-mark{opacity:.9}body.hc-arrival-focus .footer,body.hc-arrival-focus .normal:not(.active){opacity:.94}`;document.head.appendChild(s)}
+if(K==='course'&&!window.HCSchoolCourseSignature&&!document.querySelector('script[data-hc-course-signature]')){const s=document.createElement('script');s.src=(path.includes('/hc-live/')?path.slice(0,path.indexOf('/hc-live/')+9):'/')+'school/school-course-signature-v1.js?v=20260906-signature1';s.defer=true;s.setAttribute('data-hc-course-signature','1');document.head.appendChild(s)}
 window.HCPremiumGameVisualV2={kind:K,scene:scenes[K],school:school?.name||null};
 })();
