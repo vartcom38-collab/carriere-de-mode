@@ -10,15 +10,9 @@
 <script>
 (function(){
   const KEY='haute-couture-current-screen';
-  const raw=localStorage.getItem(KEY)||'character';
-  const screen=(raw==='location'?'logement':raw);
-  if(screen==='logement'){
-    localStorage.setItem(KEY,'logement');
-    location.replace('./logement/');
-  }else{
-    localStorage.setItem(KEY,'character');
-    location.replace('./character/');
-  }
+  const raw=localStorage.getItem(KEY);
+  if(raw==='character'||raw==='location') localStorage.setItem(KEY,'start-choice');
+  location.replace('./hc-live/');
 })();
 </script>
 </body>
