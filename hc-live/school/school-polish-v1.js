@@ -4,6 +4,11 @@
 if(window.HCSchoolPolish)return;
 const ACADEMIC='haute-couture-school-academic-v1';
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}};
+const rootBase=()=>{const p=location.pathname,m='/hc-live/',i=p.indexOf(m);return i>=0?p.slice(0,i)+m:'/'};
+function loadScript(src,attr,done){
+ const old=document.querySelector(`script[${attr}]`);if(old){if(done)done();return old}
+ const s=document.createElement('script');s.src=rootBase()+String(src||'').replace(/^\/+/, '');s.defer=true;s.setAttribute(attr,'1');if(done)s.addEventListener('load',done,{once:true});document.head.appendChild(s);return s;
+}
 function screenKind(){const p=location.pathname;if(/school-year\d+-project\d+/i.test(p))return'projet';if(/school-course/i.test(p))return'cours';if(/school-day/i.test(p))return'journée';if(/school-planning/i.test(p))return'planning';if(/school-campus/i.test(p))return'campus';if(/school-drawing/i.test(p))return'dessin';return'école'}
 function academic(){return window.HCSchoolAcademic?.state?.()||read(ACADEMIC,{year:1,week:1,day:1})||{year:1,week:1,day:1}}
 function normalizeTeacherName(){
@@ -18,7 +23,7 @@ body{background:linear-gradient(180deg,#faf6f1 0%,#f0e6dd 100%)!important}
 .card,.panel,#hc-open-brief,#hc-live-jury,#hc-school-life-depth,#hc-school-event-scenes,#hc-school-internship,#hc-school-career-bridge{box-shadow:0 8px 28px rgba(65,47,38,.055);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
 .card:hover,.panel:hover{border-color:#d7c4b7}
 button,a.button{transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease}button:not(:disabled):hover,a.button:hover{transform:translateY(-1px)}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(77,141,134,.25);outline-offset:2px}
-.hc-school-context{position:sticky;top:10px;z-index:1200;max-width:1180px;margin:10px auto 0;padding:0 22px;pointer-events:none}.hc-school-context-inner{display:flex;align-items:center;gap:9px;flex-wrap:wrap;width:max-content;max-width:100%;padding:9px 12px;border:1px solid rgba(70,52,43,.12);border-radius:999px;background:rgba(255,250,244,.91);backdrop-filter:blur(12px);box-shadow:0 8px 25px rgba(54,40,33,.09);font:800 9px Arial,sans-serif;letter-spacing:.075em;color:#66564e}.hc-school-context b{color:#2f2926}.hc-school-context span+span:before{content:'·';margin-right:9px;color:#b39d90}
+.hc-school-context{position:sticky;top:10px;z-index:1200;max-width:1480px;margin:10px auto 0;padding:0 22px;pointer-events:none}.hc-school-context-inner{display:flex;align-items:center;gap:9px;flex-wrap:wrap;width:max-content;max-width:100%;padding:9px 12px;border:1px solid rgba(70,52,43,.12);border-radius:999px;background:rgba(255,250,244,.91);backdrop-filter:blur(12px);box-shadow:0 8px 25px rgba(54,40,33,.09);font:800 9px Arial,sans-serif;letter-spacing:.075em;color:#66564e}.hc-school-context b{color:#2f2926}.hc-school-context span+span:before{content:'·';margin-right:9px;color:#b39d90}
 .hc-school-primary{border-color:#bdd7d1!important;box-shadow:0 14px 34px rgba(77,141,134,.11)!important;position:relative}.hc-school-primary:before{content:'À FAIRE MAINTENANT';position:absolute;right:16px;top:13px;font:900 8px Arial,sans-serif;letter-spacing:.12em;color:#4d8d86}
 .hc-school-secondary{background:rgba(255,250,244,.76)!important;box-shadow:none!important}
 .hc-school-toggle{margin:12px 0 4px;border:1px solid var(--hc-school-line);background:var(--hc-school-paper);color:var(--hc-school-ink);border-radius:12px;padding:10px 13px;font:900 9px Arial,sans-serif;letter-spacing:.07em;cursor:pointer}
@@ -44,8 +49,17 @@ function prioritize(){
  }
  ['hc-school-life-depth','hc-school-event-scenes','hc-school-internship','hc-school-career-bridge'].forEach(id=>document.getElementById(id)?.classList.add('hc-school-secondary'));
 }
+function immersiveLayers(){
+ const kind=screenKind();
+ if(kind==='cours'&&!window.HCSchoolImmersiveCourse){loadScript('school-course/immersive-course-v1.js?v=20260906-immersive2','data-hc-immersive-course')}
+ if(kind==='campus'&&!window.HCSchoolSpatialCampus){
+   const spatial=()=>loadScript('school/school-spatial-campus-v1.js?v=20260906-spatial2','data-hc-spatial-campus');
+   if(window.HCSchoolCommunity)spatial();else loadScript('school/school-community-v1.js?v=20260906-community3','data-hc-spatial-community',spatial);
+ }
+ if(kind==='école'&&/\/school\/?$/i.test(location.pathname)&&!window.HCSchoolDesktopHome){loadScript('school/school-desktop-home-v1.js?v=20260906-desktop1','data-hc-school-desktop-home')}
+}
 function observe(){let t;const mo=new MutationObserver(()=>{clearTimeout(t);t=setTimeout(()=>{normalizeTeacherName();prioritize()},40)});mo.observe(document.body,{subtree:true,childList:true});setTimeout(()=>mo.disconnect(),12000)}
-function mount(){css();context();normalizeTeacherName();prioritize();observe()}
+function mount(){css();context();normalizeTeacherName();prioritize();immersiveLayers();observe()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
-window.HCSchoolPolish={version:1,mount,normalizeTeacherName,prioritize};
+window.HCSchoolPolish={version:2,mount,normalizeTeacherName,prioritize,immersiveLayers};
 })();
