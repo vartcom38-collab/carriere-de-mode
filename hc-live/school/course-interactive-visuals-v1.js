@@ -5,6 +5,22 @@ if(window.HCCourseInteractiveVisualsV2)return;
 if(!/\/school-course\/?$/i.test(location.pathname))return;
 const id=new URLSearchParams(location.search).get('id')||'';
 
+/* Load the source-backed "real class" layer for every existing course. */
+if(!window.HCCourseRealClassLayerV1&&!document.querySelector('script[data-hc-real-class]')){
+ const s=document.createElement('script');
+ s.src='../school/course-real-class-layer-v1.js?v=20260906-realclass1';
+ s.defer=true;
+ s.setAttribute('data-hc-real-class','1');
+ document.head.appendChild(s);
+}
+if(!window.HCCourseProfessionalReferenceV1&&!document.querySelector('script[data-hc-course-prof-ref]')){
+ const s=document.createElement('script');
+ s.src='../school/course-professional-reference-v1.js?v=20260906-proref1';
+ s.defer=true;
+ s.setAttribute('data-hc-course-prof-ref','1');
+ document.head.appendChild(s);
+}
+
 /* The first Method course already has a bespoke seven-step progression.
    Generic course variation cards can conflict with the selected object and
    jump ahead pedagogically, so they are intentionally hidden here. */
