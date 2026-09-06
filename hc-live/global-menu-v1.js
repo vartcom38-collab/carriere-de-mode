@@ -102,6 +102,7 @@ async function loadSchoolEnhancements(){
   const project=/\/school-year\d+-project\d+\//i.test(path);
   const anySchool=/\/school(?:-|\/|$)/i.test(path);
   const schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path);
+  const schoolCourse=/\/school-course(?:\/|$)/i.test(path);
   if(anySchool){
     await Promise.all([
       window.HCSchoolPolish?Promise.resolve():addSchoolScript('school/school-polish-v1.js?v=20260906-polish2','data-hc-school-polish'),
@@ -109,6 +110,9 @@ async function loadSchoolEnhancements(){
       ensureAcademic()
     ]);
     if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition');
+  }
+  if(schoolCourse&&!window.HCSubjectInteractions){
+    await addSchoolScript('school/subject-interactions-v1.js?v=20260906-subject1','data-hc-subject-interactions');
   }
   if(project){
     await Promise.all([
