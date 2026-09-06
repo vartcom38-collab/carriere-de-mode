@@ -80,37 +80,53 @@ saveBtn.addEventListener('click',manualSave);
 window.addEventListener('hc-server-save',e=>{if(e.detail?.ok)status.textContent=fmt(readMeta().lastSaveAt)});
 
 function addSchoolScript(src,attr){
-  if(document.querySelector(`script[${attr}]`))return;
-  const s=document.createElement('script');
-  s.src=href(src);s.defer=true;s.setAttribute(attr,'1');
-  document.head.appendChild(s);
+  return new Promise(resolve=>{
+    const existing=document.querySelector(`script[${attr}]`);
+    if(existing){
+      if(existing.dataset.hcLoaded==='1'||existing.readyState==='complete')return resolve(existing);
+      existing.addEventListener('load',()=>resolve(existing),{once:true});
+      setTimeout(()=>resolve(existing),1200);
+      return;
+    }
+    const s=document.createElement('script');
+    s.src=href(src);s.defer=true;s.setAttribute(attr,'1');
+    s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});
+    s.addEventListener('error',()=>resolve(s),{once:true});
+    document.head.appendChild(s);
+  });
 }
-function loadSchoolEnhancements(){
+async function ensureAcademic(){if(window.HCSchoolAcademic)return;await addSchoolScript('school/school-academic-v1.js?v=20260906-academic3','data-hc-school-academic')}
+async function ensureCommunity(){if(window.HCSchoolCommunity)return;await addSchoolScript('school/school-community-v1.js?v=20260906-community3','data-hc-school-community')}
+async function loadSchoolEnhancements(){
   const path=location.pathname;
   const project=/\/school-year\d+-project\d+\//i.test(path);
   const anySchool=/\/school(?:-|\/|$)/i.test(path);
   const schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path);
   if(anySchool){
-    if(!window.HCSchoolPolish)addSchoolScript('school/school-polish-v1.js?v=20260905-polish1','data-hc-school-polish');
-    if(!window.HCSchoolAcademic)addSchoolScript('school/school-academic-v1.js?v=20260905-academic2','data-hc-school-academic');
-    setTimeout(()=>{if(!window.HCSchoolYearTransition)addSchoolScript('school/school-year-transition-v1.js?v=20260905-yeartransition1','data-hc-school-year-transition')},90);
+    await Promise.all([
+      window.HCSchoolPolish?Promise.resolve():addSchoolScript('school/school-polish-v1.js?v=20260906-polish2','data-hc-school-polish'),
+      ensureAcademic()
+    ]);
+    if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition');
   }
   if(project){
-    if(!window.HCSchoolOpenBrief)addSchoolScript('school/school-open-brief-v1.js?v=20260905-openbrief2','data-hc-open-brief');
-    if(!window.HCSchoolLiveJury)addSchoolScript('school/school-live-jury-v1.js?v=20260905-jury1','data-hc-live-jury');
-    if(!window.HCSchoolJurySync)addSchoolScript('school/school-jury-sync-v1.js?v=20260905-jurysync1','data-hc-jury-sync');
-    if(!window.HCSchoolTeacherProgression)addSchoolScript('school/school-teacher-progression-v1.js?v=20260905-teacherprogress1','data-hc-teacher-progression');
+    await Promise.all([
+      window.HCSchoolOpenBrief?Promise.resolve():addSchoolScript('school/school-open-brief-v1.js?v=20260906-openbrief3','data-hc-open-brief'),
+      window.HCSchoolLiveJury?Promise.resolve():addSchoolScript('school/school-live-jury-v1.js?v=20260906-jury2','data-hc-live-jury'),
+      window.HCSchoolJurySync?Promise.resolve():addSchoolScript('school/school-jury-sync-v1.js?v=20260906-jurysync2','data-hc-jury-sync'),
+      window.HCSchoolTeacherProgression?Promise.resolve():addSchoolScript('school/school-teacher-progression-v1.js?v=20260906-teacherprogress2','data-hc-teacher-progression')
+    ]);
   }
   if(schoolScreen&&!project){
-    if(!window.HCSchoolCommunity)addSchoolScript('school/school-community-v1.js?v=20260905-community2','data-hc-school-community');
-    setTimeout(()=>{
-      if(!window.HCSchoolLifeDepth)addSchoolScript('school/school-life-depth-v1.js?v=20260905-lifedepth1','data-hc-school-life-depth');
-      if(!window.HCSchoolEventScenes)addSchoolScript('school/school-event-scenes-v1.js?v=20260905-eventscenes1','data-hc-school-event-scenes');
-      if(!window.HCSchoolInternship)addSchoolScript('school/school-internship-v1.js?v=20260905-internship1','data-hc-school-internship');
-      if(!window.HCSchoolCareerBridge)addSchoolScript('school/school-career-bridge-v1.js?v=20260905-careerbridge1','data-hc-school-career-bridge');
-    },80);
+    await ensureCommunity();
+    await Promise.all([
+      window.HCSchoolLifeDepth?Promise.resolve():addSchoolScript('school/school-life-depth-v1.js?v=20260906-lifedepth2','data-hc-school-life-depth'),
+      window.HCSchoolEventScenes?Promise.resolve():addSchoolScript('school/school-event-scenes-v1.js?v=20260906-eventscenes2','data-hc-school-event-scenes'),
+      window.HCSchoolInternship?Promise.resolve():addSchoolScript('school/school-internship-v1.js?v=20260906-internship2','data-hc-school-internship'),
+      window.HCSchoolCareerBridge?Promise.resolve():addSchoolScript('school/school-career-bridge-v1.js?v=20260906-careerbridge2','data-hc-school-career-bridge')
+    ]);
   }
 }
 loadSchoolEnhancements();
-window.HCGlobalMenu={open,close,manualSave,rootBase};
+window.HCGlobalMenu={open,close,manualSave,rootBase,loadSchoolEnhancements};
 })();
