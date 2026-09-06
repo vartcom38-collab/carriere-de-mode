@@ -15,6 +15,10 @@ function ensureArrivalScope(){
  if(!/\/school(?:-|\/|$)/i.test(location.pathname)||window.HCSchoolArrivalScope||document.querySelector('[data-hc-school-arrival-scope]'))return;
  const s=document.createElement('script');s.src='../school/school-arrival-scope-v1.js?v=20260906-arrivalscope2';s.defer=true;s.dataset.hcSchoolArrivalScope='1';document.head.appendChild(s);
 }
+function ensureArrivalGameplay(){
+ if(!/\/school(?:-|\/|$)/i.test(location.pathname)||window.HCSchoolArrivalGameplayV2||document.querySelector('[data-hc-school-arrival-gameplay]'))return;
+ const s=document.createElement('script');s.src='../school/school-arrival-gameplay-v2.js?v=20260906-arrivalgame2';s.defer=true;s.dataset.hcSchoolArrivalGameplay='1';document.head.appendChild(s);
+}
 const packs={
  'w1-welcome':{remember:['Observation = fait vérifiable','Interprétation = sens ou impression','Intention = action recherchée'],examples:['« Trois plis verticaux partent du même point » = observation exploitable','« C’est élégant » = jugement trop vague'],errors:['Sauter directement de l’image à la solution','Confondre description et opinion'],review:{q:'Laquelle est une observation ?',a:['Cette forme est élégante','Trois lignes parallèles descendent depuis le même point','Je veux allonger la silhouette'],ok:1}},
  'w1-drawing':{remember:['Ligne d’action avant détail','Appui et poids du corps','Masses avant contour'],examples:['Une pose lisible peut fonctionner avec très peu de traits'],errors:['Dessiner les détails avant l’équilibre','Allonger les proportions sans repères'],review:{q:'Que vérifies-tu d’abord si une pose semble tomber ?',a:['Le motif','La projection du poids par rapport à l’appui','Les doigts'],ok:1}},
@@ -54,10 +58,10 @@ function injectEntry(){
  box.innerHTML=`<div style="font:800 9px Arial;letter-spacing:.14em;color:#b96f68;text-transform:uppercase">Révisions</div><div style="display:flex;justify-content:space-between;gap:18px;align-items:center;margin-top:7px"><div><div style="font-size:24px">${d.length?`${d.length} notion${d.length>1?'s':''} à revoir`:'Mes fiches de cours'}</div><div style="font-size:13px;color:#77655d;margin-top:4px">${d.length?'Une notion vue plus tôt revient maintenant, avec les points que ton professeur t’a demandé de retravailler.':'Tes exemples, corrections et erreurs restent disponibles.'}</div></div><button style="border:0;border-radius:999px;background:#2a211c;color:white;padding:12px 16px;cursor:pointer" onclick="location.href='../school-review/'">Ouvrir mes révisions</button></div>`;
  const main=document.querySelector('main')||document.body; main.appendChild(box);
 }
-ensureEvaluator();ensureArrivalScope();
+ensureEvaluator();ensureArrivalScope();ensureArrivalGameplay();
 let captureTimer=null;
 const scheduleCapture=()=>{clearTimeout(captureTimer);captureTimer=setTimeout(capture,90)};
 const obs=new MutationObserver(()=>{scheduleCapture();injectEntry()});obs.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{ensureEvaluator();ensureArrivalScope();scheduleCapture();injectEntry()},500);
+setTimeout(()=>{ensureEvaluator();ensureArrivalScope();ensureArrivalGameplay();scheduleCapture();injectEntry()},500);
 window.HCAfterCourseReview={read,due,capture,readEval};
 })();
