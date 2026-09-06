@@ -12,8 +12,8 @@ function ensureEvaluator(){
  const s=document.createElement('script');s.src='../school/qualitative-evaluation-v1.js?v=20260906-eval1';s.defer=true;s.dataset.hcQualitativeEvaluation='1';document.head.appendChild(s);
 }
 function ensureArrivalScope(){
- if(!/\/school-(?:home|day)\/?$/i.test(location.pathname)||window.HCSchoolArrivalScope||document.querySelector('[data-hc-school-arrival-scope]'))return;
- const s=document.createElement('script');s.src='../school/school-arrival-scope-v1.js?v=20260906-arrivalscope1';s.defer=true;s.dataset.hcSchoolArrivalScope='1';document.head.appendChild(s);
+ if(!/\/school(?:-|\/|$)/i.test(location.pathname)||window.HCSchoolArrivalScope||document.querySelector('[data-hc-school-arrival-scope]'))return;
+ const s=document.createElement('script');s.src='../school/school-arrival-scope-v1.js?v=20260906-arrivalscope2';s.defer=true;s.dataset.hcSchoolArrivalScope='1';document.head.appendChild(s);
 }
 const packs={
  'w1-welcome':{remember:['Observation = fait vérifiable','Interprétation = sens ou impression','Intention = action recherchée'],examples:['« Trois plis verticaux partent du même point » = observation exploitable','« C’est élégant » = jugement trop vague'],errors:['Sauter directement de l’image à la solution','Confondre description et opinion'],review:{q:'Laquelle est une observation ?',a:['Cette forme est élégante','Trois lignes parallèles descendent depuis le même point','Je veux allonger la silhouette'],ok:1}},
