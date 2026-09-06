@@ -4,6 +4,22 @@
 if(window.HCCourseInteractiveVisualsV2)return;
 if(!/\/school-course\/?$/i.test(location.pathname))return;
 const id=new URLSearchParams(location.search).get('id')||'';
+
+/* The first Method course already has a bespoke seven-step progression.
+   Generic course variation cards can conflict with the selected object and
+   jump ahead pedagogically, so they are intentionally hidden here. */
+if(id==='w1-welcome'){
+ const style=document.createElement('style');
+ style.id='hc-welcome-method-cleanup';
+ style.textContent='.hccv{display:none!important}';
+ document.head.appendChild(style);
+ const clean=()=>document.querySelectorAll('.hccv').forEach(n=>n.setAttribute('aria-hidden','true'));
+ clean();setTimeout(clean,120);setTimeout(clean,500);new MutationObserver(clean).observe(document.body,{childList:true,subtree:true});
+ window.HCCourseInteractiveVisualsV2={active:false,methodClean:true};
+ window.HCCourseInteractiveVisualsV1=window.HCCourseInteractiveVisualsV2;
+ return;
+}
+
 const supported=['w1-drawing','w1-assembly','w1-pattern','w1-drape'];
 if(!supported.includes(id)){window.HCCourseInteractiveVisualsV2={active:false};return}
 
