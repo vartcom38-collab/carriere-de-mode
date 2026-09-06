@@ -88,5 +88,13 @@ if(core.includes(screen)){
   }
 }
 
+/* During the guided first day, a dedicated focus layer prevents global school
+   systems from visually piling up on the arrival/home/day screens. */
+let arrival=null;try{arrival=JSON.parse(localStorage.getItem('haute-couture-school-day1-flow-v1')||'null')}catch(_){}
+if(arrival&&arrival.phase!=='done'&&/\/school-(home|day|welcome|tour)\/?$/.test(path)&&!window.HCSchoolArrivalFocusV1&&!document.querySelector('script[data-hc-arrival-focus]')){
+  const marker='/hc-live/';const i=location.pathname.indexOf(marker);const base=i>=0?location.pathname.slice(0,i)+marker:'../';
+  const s=document.createElement('script');s.src=base+'school/school-arrival-focus-v1.js?v=20260906-focus1';s.defer=true;s.setAttribute('data-hc-arrival-focus','1');document.head.appendChild(s);
+}
+
 window.HCSchoolPremiumVisuals={screen,PHOTO};
 })();
