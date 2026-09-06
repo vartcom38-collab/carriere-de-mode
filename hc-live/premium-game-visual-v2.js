@@ -43,6 +43,7 @@ if(K==='student-day')loadScript('HCSchoolDayAcademicFocusV1','data-hc-school-day
 if(K==='project'){
  loadScript('HCSchoolProjectPipelineV1','data-hc-project-pipeline','school-project-pipeline-v1.js','20260906-projectpipe1');
  loadScript('HCSchoolJuryDisagreementV1','data-hc-jury-disagreement','school-jury-disagreement-v1.js','20260906-jurydisagree1');
+ loadScript('HCSchoolPeerCritiqueV1','data-hc-peer-critique','school-peer-critique-v1.js','20260906-peercrit1');
 }
 window.HCPremiumGameVisualV2={kind:K,scene:scenes[K],school:school?.name||null};
 })();
