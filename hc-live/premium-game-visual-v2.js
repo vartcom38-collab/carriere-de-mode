@@ -40,6 +40,7 @@ if(K==='course'){
  loadScript('HCCourseHomeworkBridgeV1','data-hc-course-homework','course-homework-bridge-v1.js','20260906-homework1');
 }
 if(K==='student-day')loadScript('HCSchoolDayAcademicFocusV1','data-hc-school-day-academic','school-day-academic-focus-v1.js','20260906-dayfocus1');
+if(K==='review')loadScript('HCSchoolReviewLearningHistoryV1','data-hc-review-learning-history','school-review-learning-history-v1.js','20260906-reviewmemory1');
 if(K==='project'){
  loadScript('HCSchoolProjectPipelineV1','data-hc-project-pipeline','school-project-pipeline-v1.js','20260906-projectpipe1');
  loadScript('HCSchoolJuryDisagreementV1','data-hc-jury-disagreement','school-jury-disagreement-v1.js','20260906-jurydisagree1');
