@@ -44,7 +44,12 @@ function protectCareer(){
  // Le tunnel de rentrée appartient uniquement au parcours école.
  localStorage.removeItem(FLOW);
 }
+function fixSchoolHomeShortcut(){
+ if(!isSchoolPath)return;
+ const btn=document.getElementById('hcgm-home');if(!btn)return;
+ btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.href=(route.includes('/hc-live/')?'../school-home/':'school-home/')},{capture:true});
+}
 protectCareer();
-setTimeout(()=>{freeSchoolHome();freeSchoolDay()},0);
+setTimeout(()=>{freeSchoolHome();freeSchoolDay();fixSchoolHomeShortcut()},0);
 window.HCSchoolArrivalScope={arrivalActive,isSchoolPath};
 })();
