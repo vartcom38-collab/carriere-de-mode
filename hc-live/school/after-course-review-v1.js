@@ -24,9 +24,18 @@ function inferPack(id,cat){return packs[id]||{remember:[`Retenir les notions ess
 function capture(){
  const id=new URLSearchParams(location.search).get('id'); if(!id)return;
  const sheet=document.getElementById('sheet'); if(!sheet||!/Fin de séance/i.test(sheet.textContent))return;
- const list=read(),currentSeq=seq();
- if(list.some(x=>x.id===id&&x.completedMarker===currentSeq))return;
- const c=window.HCSchoolLife?.courses?.find(x=>x.id===id)||{},p=inferPack(id,c.category),ev=readEval(id);
+ const list=read(),currentSeq=seq(),ev=readEval(id);
+ const existing=list.find(x=>x.id===id&&x.completedMarker===currentSeq);
+ if(existing){
+   if(ev&&!existing.evaluation){
+     existing.evaluation={summary:ev.summary,criteria:ev.criteria,strengths:ev.strengths,focus:ev.focus};
+     existing.errors=[...(ev.focus||[]),...(existing.errors||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,5);
+     existing.remember=[...(existing.remember||[]),...(ev.strengths||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,6);
+     save(list);
+   }
+   return;
+ }
+ const c=window.HCSchoolLife?.courses?.find(x=>x.id===id)||{},p=inferPack(id,c.category);
  const n=currentSeq+1; localStorage.setItem(SEQ,String(n));
  const personalizedErrors=[...(ev?.focus||[]),...(p.errors||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,5);
  const personalizedRemember=[...(p.remember||[]),...(ev?.strengths||[])].filter((v,i,a)=>v&&a.indexOf(v)===i).slice(0,6);
@@ -42,7 +51,9 @@ function injectEntry(){
  const main=document.querySelector('main')||document.body; main.appendChild(box);
 }
 ensureEvaluator();
-const obs=new MutationObserver(()=>{capture();injectEntry()});obs.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{ensureEvaluator();injectEntry()},500);
+let captureTimer=null;
+const scheduleCapture=()=>{clearTimeout(captureTimer);captureTimer=setTimeout(capture,90)};
+const obs=new MutationObserver(()=>{scheduleCapture();injectEntry()});obs.observe(document.body,{subtree:true,childList:true});
+setTimeout(()=>{ensureEvaluator();scheduleCapture();injectEntry()},500);
 window.HCAfterCourseReview={read,due,capture,readEval};
 })();
