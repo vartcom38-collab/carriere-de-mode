@@ -114,7 +114,8 @@ async function loadSchoolEnhancements(){
   if(schoolCourse){
     await Promise.all([
       window.HCSubjectInteractionsV2?Promise.resolve():addSchoolScript('school/subject-interactions-v2.js?v=20260906-subject2','data-hc-subject-interactions-v2'),
-      window.HCVisualDemonstrations?Promise.resolve():addSchoolScript('school/visual-demonstrations-v1.js?v=20260906-visualdemo1','data-hc-visual-demonstrations')
+      window.HCVisualDemonstrations?Promise.resolve():addSchoolScript('school/visual-demonstrations-v1.js?v=20260906-visualdemo1','data-hc-visual-demonstrations'),
+      window.HCCourseVariation?Promise.resolve():addSchoolScript('school/course-variation-v1.js?v=20260906-variation1','data-hc-course-variation')
     ]);
   }
   if(project){
