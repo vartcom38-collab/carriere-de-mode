@@ -51,7 +51,10 @@ function prioritize(){
 }
 function immersiveLayers(){
  const kind=screenKind();
- if(kind==='cours'&&!window.HCSchoolImmersiveCourse){loadScript('school-course/immersive-course-v1.js?v=20260906-immersive2','data-hc-immersive-course')}
+ if(kind==='cours'){
+   if(!window.HCSchoolImmersiveCourse)loadScript('school-course/immersive-course-v1.js?v=20260906-immersive2','data-hc-immersive-course');
+   if(!window.HCSchoolQualitativeFeedback)loadScript('school-course/qualitative-feedback-v1.js?v=20260906-feedback1','data-hc-qualitative-feedback');
+ }
  if(kind==='campus'&&!window.HCSchoolSpatialCampus){
    const spatial=()=>loadScript('school/school-spatial-campus-v1.js?v=20260906-spatial2','data-hc-spatial-campus');
    if(window.HCSchoolCommunity)spatial();else loadScript('school/school-community-v1.js?v=20260906-community3','data-hc-spatial-community',spatial);
@@ -61,5 +64,5 @@ function immersiveLayers(){
 function observe(){let t;const mo=new MutationObserver(()=>{clearTimeout(t);t=setTimeout(()=>{normalizeTeacherName();prioritize()},40)});mo.observe(document.body,{subtree:true,childList:true});setTimeout(()=>mo.disconnect(),12000)}
 function mount(){css();context();normalizeTeacherName();prioritize();immersiveLayers();observe()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
-window.HCSchoolPolish={version:2,mount,normalizeTeacherName,prioritize,immersiveLayers};
+window.HCSchoolPolish={version:3,mount,normalizeTeacherName,prioritize,immersiveLayers};
 })();
