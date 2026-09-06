@@ -18,6 +18,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     env:
       INFOMANIAK_FTP_HOST: ng43h.ftp.infomaniak.com
       INFOMANIAK_FTP_USER: ng43h_hautecouture
@@ -51,17 +52,36 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
 
+      - name: Test Infomaniak FTPS connection
+        shell: bash
+        run: |
+          timeout 60s lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "ftp://$INFOMANIAK_FTP_HOST" <<LFTP
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ftp:passive-mode true
+          set ssl:verify-certificate no
+          set net:max-retries 1
+          set net:timeout 15
+          cd "$INFOMANIAK_FTP_PATH"
+          pwd
+          cls -1
+          bye
+          LFTP
+
       - name: Deploy hc-live to Infomaniak via explicit FTPS
         shell: bash
         run: |
-          lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "$INFOMANIAK_FTP_HOST" <<LFTP
+          timeout 480s lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "ftp://$INFOMANIAK_FTP_HOST" <<LFTP
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
+          set ftp:passive-mode true
           set ssl:verify-certificate no
           set net:max-retries 2
           set net:timeout 20
+          set net:reconnect-interval-base 3
           cd "$INFOMANIAK_FTP_PATH"
-          mirror --reverse --verbose --only-newer \
+          mirror --reverse --verbose --parallel=3 \
+            --no-perms \
             --exclude-glob api/ \
             --exclude-glob config/ \
             --exclude-glob sql/ \
@@ -73,12 +93,15 @@ jobs:
       - name: Verify production files over FTPS
         shell: bash
         run: |
-          lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "$INFOMANIAK_FTP_HOST" <<LFTP
+          timeout 60s lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "ftp://$INFOMANIAK_FTP_HOST" <<LFTP
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
+          set ftp:passive-mode true
           set ssl:verify-certificate no
+          set net:max-retries 1
+          set net:timeout 15
           cd "$INFOMANIAK_FTP_PATH"
-          cls -1 index.html
-          cls -1 start-choice/index.html
+          cls -l index.html
+          cls -l start-choice/index.html
           bye
           LFTP
