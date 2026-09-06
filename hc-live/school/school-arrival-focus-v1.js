@@ -12,14 +12,22 @@ function clean(){
  document.documentElement.classList.add('hc-school-arrival-strict-html');
  document.getElementById('hc-premium-mark')?.remove();
  document.getElementById('hc-school-event-scenes')?.remove();
- document.querySelectorAll('[data-hc-city-bridge],.hc-school-life-depth,.hc-school-event-scenes,.hcsp-brand').forEach(n=>n.remove());
+ document.querySelectorAll('[data-hc-city-bridge],.hc-school-life-depth,.hc-school-event-scenes,.hcsp-brand,#hc-school-internship,#hc-school-career-bridge,#hc-school-life-depth').forEach(n=>n.remove());
 }
 const style=document.createElement('style');style.id='hc-school-arrival-focus-css';style.textContent=`
 html.hc-school-arrival-strict-html,body.hc-school-arrival-strict{min-height:100%;overflow-x:hidden!important}
 body.hc-school-arrival-strict #hc-premium-mark,
 body.hc-school-arrival-strict #hc-school-event-scenes,
 body.hc-school-arrival-strict [data-hc-city-bridge],
-body.hc-school-arrival-strict .hcsp-brand{display:none!important}
+body.hc-school-arrival-strict .hcsp-brand,
+body.hc-school-arrival-strict #hc-school-internship,
+body.hc-school-arrival-strict #hc-school-career-bridge,
+body.hc-school-arrival-strict #hc-school-life-depth{display:none!important}
+
+/* During day 1 these two pages are a single playable scene. Any enhancement
+   injected as a sibling after that scene stays out until onboarding is over. */
+body.hc-school-arrival-strict.hc-school-home > *:not(.scene):not(#toast):not(#hc-global-menu-launch):not(#hc-global-menu-backdrop):not(script):not(style),
+body.hc-school-arrival-strict.hc-school-day > *:not(.scene):not(#hc-global-menu-launch):not(#hc-global-menu-backdrop):not(script):not(style){display:none!important}
 body.hc-school-arrival-strict .bottom,
 body.hc-school-arrival-strict #normalNav{display:none!important}
 body.hc-school-arrival-strict .topbar .nav{visibility:hidden!important;pointer-events:none!important}
@@ -61,7 +69,6 @@ body.hc-school-arrival-strict.hc-school-day .focus h3{font-size:29px!important}
 body.hc-school-arrival-strict.hc-school-day .go{padding:13px 16px!important;font-size:16px!important}
 body.hc-school-arrival-strict.hc-school-day .normal{display:none!important}
 
-/* Welcome / tour — never let generic injected cards leak below the scene. */
 body.hc-school-arrival-strict.hc-school-welcome #hc-school-event-scenes,
 body.hc-school-arrival-strict.hc-school-tour #hc-school-event-scenes{display:none!important}
 
