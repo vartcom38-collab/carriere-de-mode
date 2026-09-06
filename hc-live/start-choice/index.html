@@ -6,129 +6,82 @@
   <title>Haute Couture Live — Choisir son départ</title>
   <style>
     :root{
-      --ink:#241d19;
-      --muted:#77685f;
-      --paper:#fffaf5;
-      --cream:#f4eadf;
-      --rose:#b97772;
-      --rose-soft:#d9aaa4;
-      --line:rgba(67,48,38,.14);
-      --shadow:0 24px 70px rgba(77,55,42,.14);
+      --ink:#211915;
+      --muted:#77665b;
+      --paper:#fffaf4;
+      --rose:#bf766f;
+      --line:rgba(79,56,44,.12);
+      --shadow:0 28px 80px rgba(56,39,30,.20);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:#f5ede5;color:var(--ink)}
-    body{
-      min-height:100vh;
-      overflow-x:hidden;
-      font-family:Georgia,"Times New Roman",serif;
+    html,body{margin:0;min-height:100%;background:#efe3d8;color:var(--ink)}
+    body{font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}
+    .page{position:relative;min-height:100vh;isolation:isolate;background:#f4e9df;overflow:hidden}
+    .page::before{
+      content:"";position:absolute;inset:-24px;z-index:-3;
+      background-image:url('https://images.unsplash.com/photo-1753164597544-a2736833357e?auto=format&fit=crop&fm=jpg&q=76&w=2400');
+      background-size:cover;background-position:center 48%;filter:blur(5px) saturate(.82);transform:scale(1.04);
+    }
+    .page::after{
+      content:"";position:absolute;inset:0;z-index:-2;
       background:
-        radial-gradient(circle at 13% 17%,rgba(255,255,255,.98),transparent 30%),
-        radial-gradient(circle at 88% 12%,rgba(230,202,187,.38),transparent 27%),
-        linear-gradient(135deg,#fbf7f2 0%,#f3e8de 54%,#eee0d3 100%);
+        linear-gradient(90deg,rgba(255,250,246,.92) 0%,rgba(248,237,227,.78) 26%,rgba(249,236,223,.62) 64%,rgba(255,249,244,.88) 100%),
+        linear-gradient(180deg,rgba(255,255,255,.38),rgba(238,218,201,.22));
     }
-    body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:0}
-    body:before{
-      width:420px;height:420px;left:-160px;bottom:-170px;border-radius:50%;
-      background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);
-    }
-    body:after{
-      width:320px;height:520px;right:-110px;top:18%;border-radius:50%;filter:blur(2px);
-      background:linear-gradient(155deg,rgba(255,255,255,.6),rgba(205,166,146,.14),rgba(255,255,255,0));
-      transform:rotate(-10deg);
-    }
-    .page{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:42px 28px 48px}
-    .shell{width:min(1180px,100%)}
-    .brand{text-align:center;font:italic 44px/1 "Segoe Script","Brush Script MT",cursive;letter-spacing:-.045em;margin-bottom:22px}
-    .intro{text-align:center;margin:0 auto 32px}
-    .intro h1{margin:0;font:42px/1.08 Georgia,serif;font-weight:400;letter-spacing:-.032em}
-    .intro p{margin:10px 0 0;color:var(--muted);font:16px/1.5 Georgia,serif}
-    .choices{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:980px;margin:0 auto}
-    .choice{
-      appearance:none;border:1px solid rgba(84,61,48,.13);padding:0;background:rgba(255,250,245,.9);border-radius:24px;overflow:hidden;
-      text-align:left;color:inherit;cursor:pointer;box-shadow:var(--shadow);transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease;
-      min-width:0;
-    }
-    .choice:hover,.choice:focus-visible{transform:translateY(-5px);box-shadow:0 34px 88px rgba(70,49,38,.19);border-color:rgba(185,119,114,.52);outline:none}
-    .art{height:235px;position:relative;overflow:hidden;background:#eadfd3}
-    .art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(55,38,28,.07))}
-    .art-school{
-      background:
-        linear-gradient(90deg,rgba(255,255,255,.56) 0 8%,transparent 8% 92%,rgba(255,255,255,.34) 92%),
-        linear-gradient(180deg,#f5ece3 0 62%,#d9c4b2 62% 64%,#c7aa91 64% 100%);
-    }
-    .art-school .window{position:absolute;left:45px;top:27px;width:180px;height:125px;border:7px solid rgba(116,91,73,.28);background:linear-gradient(135deg,#fffdf8,#e9ddd0);box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
-    .art-school .window:before,.art-school .window:after{content:"";position:absolute;background:rgba(116,91,73,.2)}
-    .art-school .window:before{width:5px;top:0;bottom:0;left:50%}
-    .art-school .window:after{height:5px;left:0;right:0;top:50%}
-    .dressform{position:absolute;bottom:25px;width:54px;height:135px}
-    .dressform:before{content:"";position:absolute;left:8px;top:0;width:38px;height:78px;background:linear-gradient(90deg,#d5b9a3,#f3dfce 50%,#c9aa91);clip-path:polygon(28% 0,72% 0,91% 21%,77% 55%,84% 100%,16% 100%,23% 55%,9% 21%);border-radius:10px}
-    .dressform:after{content:"";position:absolute;left:25px;top:75px;width:4px;height:57px;background:#70584a;box-shadow:-17px 54px 0 -1px #70584a,17px 54px 0 -1px #70584a}
-    .dressform.one{right:93px}.dressform.two{right:35px;transform:scale(.88);transform-origin:bottom}
-    .school-desk{position:absolute;left:265px;right:170px;bottom:28px;height:53px;border-radius:5px;background:#9c755d;box-shadow:0 10px 0 #735442}
-    .school-paper{position:absolute;left:300px;bottom:88px;width:112px;height:70px;background:#fffaf3;transform:rotate(-5deg);box-shadow:0 7px 16px rgba(60,40,28,.12)}
-    .school-paper:before,.school-paper:after{content:"";position:absolute;left:18px;right:18px;height:1px;background:#c6aca0}.school-paper:before{top:22px}.school-paper:after{top:42px}
-    .art-career{
-      background:
-        linear-gradient(180deg,#f2ddca 0%,#e9cbb2 40%,#e0b99c 41%,#d5a482 63%,#b97f5f 64%,#9f6a52 100%);
-    }
-    .sun{position:absolute;width:78px;height:78px;border-radius:50%;right:64px;top:32px;background:rgba(255,244,213,.8);box-shadow:0 0 44px rgba(255,236,184,.65)}
-    .city{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,#bb8b6f,#8f614f);clip-path:polygon(0 43%,8% 43%,8% 31%,14% 31%,14% 55%,19% 55%,19% 25%,25% 25%,25% 50%,30% 50%,30% 40%,35% 40%,35% 58%,42% 58%,42% 20%,47% 20%,47% 46%,52% 46%,52% 34%,58% 34%,58% 56%,64% 56%,64% 29%,70% 29%,70% 49%,77% 49%,77% 37%,84% 37%,84% 54%,91% 54%,91% 32%,96% 32%,96% 46%,100% 46%,100% 100%,0 100%)}
-    .arch{position:absolute;left:48px;bottom:35px;width:192px;height:68px;border:11px solid rgba(245,225,207,.82);border-bottom:0;border-radius:95px 95px 0 0;box-shadow:45px 0 0 -11px rgba(245,225,207,.78),90px 0 0 -11px rgba(245,225,207,.72)}
-    .atelier-sign{position:absolute;right:42px;bottom:30px;background:rgba(53,43,36,.86);color:#fff8f2;padding:16px 20px;border-radius:5px;font:11px/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;box-shadow:0 9px 24px rgba(55,35,25,.18)}
-    .copy{padding:25px 27px 28px;position:relative;min-height:185px}
-    .label{font:700 10px/1.4 Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--rose);margin-bottom:9px}
-    .choice h2{margin:0 48px 9px 0;font:30px/1.08 Georgia,serif;font-weight:400;letter-spacing:-.025em}
-    .choice p{margin:0 48px 0 0;color:var(--muted);font:14px/1.52 Georgia,serif;max-width:410px}
-    .arrow{position:absolute;right:25px;bottom:27px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--rose);color:#fff;font:22px/1 Arial,sans-serif;transition:transform .22s ease,background .22s ease}
-    .choice:hover .arrow{transform:translateX(3px);background:#a96864}
-    .note{text-align:center;margin-top:24px;color:#725e52;font:italic 18px/1.35 "Segoe Script","Brush Script MT",cursive}
-    @media(max-width:850px){.page{align-items:flex-start;padding:30px 18px 40px}.brand{font-size:38px}.intro h1{font-size:36px}.choices{gap:18px}.art{height:205px}.choice h2{font-size:27px}}
-    @media(max-width:650px){.choices{grid-template-columns:1fr}.intro{margin-bottom:24px}.intro h1{font-size:31px}.choice{max-width:520px;width:100%;margin:auto}.art{height:190px}.brand{font-size:34px}.note{font-size:16px}}
+    .shell{width:min(1460px,calc(100% - 48px));margin:0 auto;padding:26px 0 42px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+    .brand{text-align:center;font:italic 50px/1 "Segoe Script","Brush Script MT",cursive;letter-spacing:-.045em;margin-bottom:14px;text-shadow:0 1px 0 rgba(255,255,255,.7)}
+    h1{text-align:center;margin:0;font:48px/1.05 Georgia,serif;font-weight:400;letter-spacing:-.025em}
+    .lead{text-align:center;margin:10px 0 28px;color:var(--muted);font-size:17px}
+    .choices{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:min(1160px,100%);margin:0 auto}
+    .choice{position:relative;background:rgba(255,250,246,.97);border:1px solid rgba(255,255,255,.76);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;outline:none}
+    .choice:hover,.choice:focus-visible{transform:translateY(-7px);box-shadow:0 38px 94px rgba(49,31,24,.27);border-color:rgba(191,118,111,.58)}
+    .photo{height:330px;background-size:cover;background-position:center;transition:transform .5s ease,filter .5s ease}
+    .choice:hover .photo{transform:scale(1.025);filter:saturate(1.06)}
+    .school .photo{background-image:url('https://images.unsplash.com/photo-1753164597544-a2736833357e?auto=format&fit=crop&fm=jpg&q=82&w=1800');background-position:center 48%}
+    .career .photo{background-image:url('https://images.unsplash.com/photo-1771587734529-a170a03a8419?auto=format&fit=crop&fm=jpg&q=82&w=1800');background-position:center 42%}
+    .info{position:relative;padding:26px 78px 28px 30px;min-height:196px;background:rgba(255,250,246,.98)}
+    .eyebrow{font:800 11px/1.3 Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--rose);margin-bottom:10px}
+    .choice h2{margin:0 0 10px;font:38px/1.03 Georgia,serif;font-weight:400;letter-spacing:-.025em}
+    .choice p{margin:0;max-width:500px;color:#6d5c52;font:16px/1.52 Georgia,serif}
+    .arrow{position:absolute;right:26px;bottom:28px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--rose);color:white;font:30px/1 Arial,sans-serif;box-shadow:0 12px 24px rgba(109,59,54,.22);transition:transform .25s ease,background .25s ease}
+    .choice:hover .arrow{transform:translateX(4px);background:#aa625c}
+    .note{text-align:center;margin:24px 0 0;font:italic 22px/1.3 "Segoe Script","Brush Script MT",cursive;color:#6b5549;transform:rotate(-1deg)}
+    .credit{position:absolute;right:18px;bottom:12px;font:10px/1.2 Arial,sans-serif;color:rgba(56,42,34,.48);background:rgba(255,250,246,.55);padding:4px 7px;border-radius:7px;backdrop-filter:blur(4px)}
+    @media(max-width:980px){.shell{width:min(100% - 28px,900px);padding:28px 0 42px}.brand{font-size:42px}h1{font-size:40px}.choices{gap:16px}.photo{height:285px}.choice h2{font-size:32px}.info{padding-left:24px}}
+    @media(max-width:760px){.choices{grid-template-columns:1fr}.shell{justify-content:flex-start}.brand{margin-top:14px;font-size:37px}h1{font-size:34px}.lead{font-size:15px;margin-bottom:20px}.photo{height:250px}.info{min-height:0;padding:22px 72px 24px 22px}.choice h2{font-size:30px}.choice p{font-size:15px}.note{font-size:19px}.credit{display:none}}
   </style>
 </head>
 <body>
   <main class="page">
     <div class="shell">
       <div class="brand">Haute Couture Live</div>
-      <header class="intro">
-        <h1>Comment souhaites-tu commencer ?</h1>
-        <p>Deux chemins, une même passion.</p>
-      </header>
+      <h1>Comment souhaites-tu commencer ?</h1>
+      <p class="lead">Deux chemins, une même passion.</p>
 
-      <section class="choices" aria-label="Choix du parcours">
-        <button class="choice" id="school" type="button">
-          <div class="art art-school" aria-hidden="true">
-            <div class="window"></div>
-            <div class="school-desk"></div>
-            <div class="school-paper"></div>
-            <div class="dressform one"></div>
-            <div class="dressform two"></div>
-          </div>
-          <div class="copy">
-            <div class="label">Apprendre · expérimenter · créer</div>
+      <section class="choices">
+        <article class="choice school" id="school" tabindex="0" role="button" aria-label="Passer par une école de mode">
+          <div class="photo" aria-hidden="true"></div>
+          <div class="info">
+            <div class="eyebrow">Apprendre · expérimenter · créer</div>
             <h2>Passer par une école de mode</h2>
             <p>Choisis ton école, apprends le métier et construis tes bases à travers les cours, les projets et les rencontres.</p>
-            <span class="arrow" aria-hidden="true">›</span>
+            <div class="arrow">›</div>
           </div>
-        </button>
+        </article>
 
-        <button class="choice" id="career" type="button">
-          <div class="art art-career" aria-hidden="true">
-            <div class="sun"></div>
-            <div class="city"></div>
-            <div class="arch"></div>
-            <div class="atelier-sign">Atelier</div>
-          </div>
-          <div class="copy">
-            <div class="label">Créer · explorer · se lancer</div>
+        <article class="choice career" id="career" tabindex="0" role="button" aria-label="Commencer ma carrière">
+          <div class="photo" aria-hidden="true"></div>
+          <div class="info">
+            <div class="eyebrow">Créer · explorer · se lancer</div>
             <h2>Commencer ma carrière</h2>
             <p>Installe-toi, découvre la ville, rencontre tes premières clientes et construis ton parcours professionnel à ton rythme.</p>
-            <span class="arrow" aria-hidden="true">›</span>
+            <div class="arrow">›</div>
           </div>
-        </button>
+        </article>
       </section>
 
       <div class="note">C’est le début de ton histoire.</div>
+      <div class="credit">Photos : Unsplash · Vitaly Gariev / Metin Ozer</div>
     </div>
   </main>
 
@@ -139,20 +92,24 @@
       const RESET='haute-couture-new-game-requested-v1';
       localStorage.setItem(K,'start-choice');
       localStorage.setItem('haute-couture-screen','start-choice');
-
-      document.getElementById('career').addEventListener('click',()=>{
-        localStorage.setItem(P,JSON.stringify({type:'career',chosenAt:new Date().toISOString()}));
+      function choose(type){
+        localStorage.setItem(P,JSON.stringify({type,chosenAt:new Date().toISOString()}));
         localStorage.removeItem(RESET);
-        localStorage.setItem(K,'logement');
-        location.replace('../logement/');
-      });
-
-      document.getElementById('school').addEventListener('click',()=>{
-        localStorage.setItem(P,JSON.stringify({type:'school',chosenAt:new Date().toISOString()}));
-        localStorage.removeItem(RESET);
-        localStorage.setItem(K,'school-choice');
-        location.replace('../school-choice/');
-      });
+        if(type==='career'){
+          localStorage.setItem(K,'logement');
+          location.replace('../logement/');
+        }else{
+          localStorage.setItem(K,'school-choice');
+          location.replace('../school-choice/');
+        }
+      }
+      function wire(id,type){
+        const el=document.getElementById(id);
+        el.addEventListener('click',()=>choose(type));
+        el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(type)}});
+      }
+      wire('school','school');
+      wire('career','career');
     })();
   </script>
 </body>
