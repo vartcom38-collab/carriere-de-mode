@@ -9,7 +9,7 @@ document.documentElement.classList.add('hc-school-premium');
 document.body.classList.add('hc-school-premium-body','hc-'+screen);
 
 const PHOTO={
-  atelier:'https://images.unsplash.com/photo-1753164597544-a2736833357e?auto=format&fit=crop&fm=jpg&q=82&w=2200',
+  atelier:'https://images.unsplash.com/photo-1753164597544-a2736833357e?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=72&w=2400',
   study:'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&fm=jpg&q=82&w=2200',
   textile:'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&fm=jpg&q=82&w=2200',
   drawing:'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?auto=format&fit=crop&fm=jpg&q=82&w=2200',
@@ -32,8 +32,7 @@ body.hc-school-premium-body .card,body.hc-school-premium-body .panel,body.hc-sch
 body.hc-school-premium-body button,body.hc-school-premium-body .btn{font-family:Arial,sans-serif!important;letter-spacing:.04em}
 body.hc-school-premium-body button:hover,body.hc-school-premium-body .btn:hover{transform:translateY(-2px)}
 
-/* enrollment — dossier on a real creative studio */
-body.hc-school-enrollment::before{background:linear-gradient(90deg,rgba(28,20,17,.58) 0 43%,rgba(251,246,241,.95) 64%),url('${PHOTO.atelier}') 16% center/cover no-repeat;opacity:1}
+body.hc-school-enrollment::before{background:linear-gradient(90deg,rgba(28,20,17,.46) 0 45%,rgba(251,246,241,.97) 64%),url('${PHOTO.atelier}') 18% center/cover no-repeat;opacity:1}
 body.hc-school-enrollment .wrap{max-width:1440px!important;min-height:100vh;padding:70px 5vw 70px 53%!important}
 body.hc-school-enrollment .wrap::before{content:'TON PARCOURS COMMENCE ICI';position:fixed;left:6vw;bottom:9vh;color:white;font:500 14px/1.4 Arial,sans-serif;letter-spacing:.22em;max-width:320px}
 body.hc-school-enrollment .wrap::after{content:'Apprendre. Essayer. Recommencer. Trouver ta manière de créer.';position:fixed;left:6vw;bottom:13vh;color:white;font:italic 29px/1.2 Georgia,serif;max-width:500px;text-shadow:0 2px 12px rgba(0,0,0,.3)}
@@ -44,7 +43,6 @@ body.hc-school-enrollment .card{padding:30px!important}
 body.hc-school-enrollment textarea,body.hc-school-enrollment input{background:rgba(255,255,255,.72)!important}
 body.hc-school-enrollment .btn{background:var(--hcsp-ink)!important;border-radius:999px!important;padding:14px 24px!important}
 
-/* student home — replace CSS vector room with a photographic student/creative studio */
 body.hc-school-home::before{background:linear-gradient(180deg,rgba(251,247,242,.84),rgba(240,226,215,.92)),url('${PHOTO.study}') center/cover no-repeat;opacity:1}
 body.hc-school-home .wrap{max-width:1440px!important;padding:64px 4vw 80px!important}
 body.hc-school-home .room{min-height:560px!important;background:linear-gradient(180deg,rgba(24,17,14,.04),rgba(24,17,14,.42)),url('${PHOTO.atelier}') center/cover no-repeat!important;border:0!important;border-radius:28px!important;box-shadow:0 34px 90px rgba(46,30,23,.23)!important}
@@ -54,22 +52,18 @@ body.hc-school-home .actions{grid-template-columns:repeat(4,minmax(0,1fr))!impor
 body.hc-school-home .actions .btn{background:rgba(255,250,245,.9)!important;border:1px solid rgba(255,255,255,.8)!important;box-shadow:0 15px 42px rgba(56,39,30,.09)!important;padding:18px!important;min-height:100px;transition:.22s ease}
 body.hc-school-home .actions .btn:hover{box-shadow:0 22px 50px rgba(56,39,30,.16)!important}
 
-/* campus */
 body.hc-school-campus::before{background:linear-gradient(90deg,rgba(247,238,230,.88),rgba(252,248,244,.92)),url('${PHOTO.atelier}') center/cover no-repeat;opacity:1}
 body.hc-school-campus .wrap,body.hc-school-campus main{max-width:1500px!important;margin:auto!important;padding-left:4vw!important;padding-right:4vw!important}
 body.hc-school-campus [class*='room'],body.hc-school-campus [class*='zone']{border-radius:20px!important;transition:.24s ease}
 body.hc-school-campus [class*='room']:hover,body.hc-school-campus [class*='zone']:hover{transform:translateY(-3px);box-shadow:0 22px 60px rgba(50,32,24,.13)!important}
 
-/* school day/planning */
 body.hc-school-day::before,body.hc-school-planning::before{background:linear-gradient(90deg,rgba(255,251,247,.94),rgba(242,230,220,.85)),url('${PHOTO.study}') center/cover no-repeat;opacity:1}
 body.hc-school-day .wrap,body.hc-school-planning .wrap{max-width:1380px!important;padding:64px 4vw 80px!important}
 
-/* courses and technical labs */
 body.hc-school-course::before,body[class*='hc-school-drawing']::before{background:linear-gradient(90deg,rgba(249,241,233,.94),rgba(255,251,247,.88)),url('${PHOTO.drawing}') center/cover no-repeat;opacity:1}
 body.hc-school-textile-lab::before{background:linear-gradient(90deg,rgba(249,241,233,.94),rgba(255,251,247,.9)),url('${PHOTO.textile}') center/cover no-repeat;opacity:1}
 body.hc-school-course .wrap,body.hc-school-course main,body[class*='hc-school-drawing'] .wrap,body.hc-school-textile-lab .wrap{max-width:1480px!important;margin:auto!important}
 
-/* project/review/jury family */
 body[class*='hc-school-year']::before,body[class*='hc-school-project']::before,body[class*='hc-school-midyear']::before,body[class*='hc-school-term']::before{background:linear-gradient(90deg,rgba(252,247,242,.94),rgba(240,227,217,.9)),url('${PHOTO.atelier}') center/cover no-repeat;opacity:1}
 
 @media(max-width:950px){
@@ -82,7 +76,6 @@ body[class*='hc-school-year']::before,body[class*='hc-school-project']::before,b
 `;
 document.head.appendChild(css);
 
-// Add a discreet visual identity marker to core school screens without altering gameplay.
 const core=['school','school-campus','school-day','school-course','school-home'];
 if(core.includes(screen)){
   const host=document.querySelector('main,.wrap');
