@@ -30,7 +30,7 @@ if(!window.HCPremiumGameVisualV2&&!document.querySelector('script[data-hc-premiu
 /* Universal router for scripted immersive scenes. */
 if(!window.HCImmersiveSceneRouterV1&&!document.querySelector('script[data-hc-immersive-scene-router]')){
   const scenes=document.createElement('script');
-  scenes.src=href('immersive-scene-router-v1.js?v=20260907-router1');scenes.defer=true;scenes.setAttribute('data-hc-immersive-scene-router','1');
+  scenes.src=href('immersive-scene-router-v1.js?v=20260907-router17');scenes.defer=true;scenes.setAttribute('data-hc-immersive-scene-router','1');
   document.head.appendChild(scenes);
 }
 
