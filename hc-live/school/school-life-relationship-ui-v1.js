@@ -1,0 +1,9 @@
+/* Haute Couture Live — UI relationnelle qualitative pour Ma vie d’école v1 */
+(function(){
+'use strict';
+if(window.HCSchoolLifeRelationshipUIV1)return;
+function apply(){if(!/school-life/.test(location.pathname.toLowerCase()))return;const R=window.HCSchoolRelationshipEvolutionV1,C=window.HCSchoolCommunity;if(!R||!C)return;const grid=document.getElementById('studentGrid');if(!grid)return;const cards=[...grid.querySelectorAll('.card')];cards.forEach(card=>{const h=card.querySelector('h3');if(!h)return;const stu=C.students.find(x=>x.name===h.textContent.trim());if(!stu)return;const v=R.view(stu.id),meta=card.querySelector('.meta');if(meta){meta.textContent=v.stage;meta.dataset.relationshipTone=v.tone;}let badge=card.querySelector('.hc-rel-badge');if(!badge){badge=document.createElement('div');badge.className='hc-rel-badge';h.insertAdjacentElement('afterend',badge)}const notes=v.profile?.notes||[];badge.innerHTML=`<b>${v.stage}</b>${notes[0]?`<span>${notes[0]}</span>`:''}`;});}
+const style=document.createElement('style');style.textContent=`#studentGrid .meta[data-relationship-tone]{letter-spacing:.12em}#studentGrid .hc-rel-badge{margin:4px 0 10px;padding:9px 11px;border-radius:12px;background:#f3e9e1;border:1px solid rgba(104,71,59,.12)}#studentGrid .hc-rel-badge b{display:block;font:800 9px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#7d343d}#studentGrid .hc-rel-badge span{display:block;margin-top:5px;font:12px/1.4 Georgia,serif;color:#756159}`;document.head.appendChild(style);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(apply,300));else setTimeout(apply,300);new MutationObserver(()=>setTimeout(apply,20)).observe(document.documentElement,{childList:true,subtree:true});
+window.HCSchoolLifeRelationshipUIV1={version:1,apply};
+})();
