@@ -31,8 +31,11 @@ async function boot(){
    await load('ville/nimes-arenes-immersive-guide-v1.js?v=20260907-arenesguide1','data-hc-nimes-arenes-guide');
    await load('ville/nimes-major-immersive-guides-v1.js?v=20260907-nimesguides1','data-hc-nimes-major-guides');
    await load('ville/territorial-immersive-guide-ui-v1.js?v=20260907-travelguideui2','data-hc-territorial-guide-ui');
+   await load('ville/territorial-circuit-engine-v1.js?v=20260907-circuitengine1','data-hc-territorial-circuit-engine');
+   await load('ville/camargue-territorial-circuit-v1.js?v=20260907-camarguecircuit1','data-hc-camargue-circuit');
+   await load('ville/territorial-circuit-ui-v1.js?v=20260907-circuitui1','data-hc-territorial-circuit-ui');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:5,boot};
+window.HCImmersiveSceneRouterV1={version:6,boot};
 })();
