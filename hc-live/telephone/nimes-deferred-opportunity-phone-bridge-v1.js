@@ -1,0 +1,17 @@
+/* Haute Couture Live — téléphone : opportunités différées Nîmes actionnables v1 */
+(function(){
+'use strict';
+if(window.HCNimesDeferredOpportunityPhoneBridgeV1)return;
+const KEY='haute-couture-nimes-deferred-phone-v1';
+const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}},write=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));return v};
+function state(){const s=read(KEY,{version:1,seen:{}});s.seen=s.seen||{};return s}
+function game(){return window.HCGame?.get?.()||{} }
+function candidate(){const s=state();return (game().messages||[]).find(m=>m?.action?.type==='nimes_deferred_social'&&!m.read&&!s.seen[m.id])||null}
+function scene(m){const a=m.action||{},detail=window.HCNimesSocialOpportunityScenesV1?.details?.(a.opportunityId),p=detail?.target,src=detail?.source,place=detail?.place||'Nîmes';const intro=src?`${src.firstName} a parlé de toi à ${p?.firstName||'ce contact'}. `:'';return{id:'nimes-deferred-phone-'+m.id,speaker:{name:m.from||p?.name||'Un contact local',role:m.subject||p?.role||'Réseau local',photo:p?.photo||'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&fm=jpg&q=84&w=1100'},eyebrow:'Téléphone · Nîmes',start:'hello',nodes:{hello:{text:`${intro}${m.text||'Une proposition arrive par ton réseau local.'}`,choices:[{label:'Demander ce qui est prévu concrètement.',next:'details'},{label:'Accepter un rendez-vous.',next:'accept'},{label:'Refuser pour l’instant.',next:'decline'}]},details:{text:`Le contact propose un échange à ${place}. Tu peux prendre le rendez-vous sans accepter ensuite une commande ou une collaboration.`,choices:[{label:'D’accord, je prends le rendez-vous.',next:'accept'},{label:'Non, pas cette fois.',next:'decline'}]},accept:{text:`Le rendez-vous est ajouté à ton agenda. Le lieu prévu est ${place}. Tu décideras sur place de la suite.`,effects:{event:'hc-nimes-deferred-phone-choice',detail:{id:a.opportunityId,choice:'accept',messageId:m.id}},endLabel:'Fermer le téléphone'},decline:{text:'Tu refuses cette proposition. La relation n’est pas automatiquement détruite pour autant.',effects:{event:'hc-nimes-deferred-phone-choice',detail:{id:a.opportunityId,choice:'decline',messageId:m.id}},endLabel:'Fermer le téléphone'}}}}
+function mark(m){const s=state();s.seen[m.id]={at:new Date().toISOString()};write(KEY,s)}
+function maybeOpen(){if(!/telephone/.test(location.pathname.toLowerCase())||!window.HCImmersiveDialogueV1||!window.HCNimesSocialOpportunityScenesV1)return;const m=candidate();if(!m)return;mark(m);setTimeout(()=>window.HCImmersiveDialogueV1.open(scene(m)),650)}
+window.addEventListener('hc-nimes-deferred-phone-choice',e=>{const {id,choice,messageId}=e.detail||{};if(choice==='accept')window.HCNimesSocialOpportunityScenesV1?.accept?.(id);else if(choice==='decline')window.HCNimesSocialOpportunityScenesV1?.decline?.(id);window.HCGame?.mutate?.(g=>{const m=(g.messages||[]).find(x=>x.id===messageId);if(m)m.read=true})});
+window.addEventListener('hc-game-state',()=>setTimeout(maybeOpen,300));
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(maybeOpen,900));else setTimeout(maybeOpen,900);
+window.HCNimesDeferredOpportunityPhoneBridgeV1={version:1,state,candidate,scene,maybeOpen};
+})();
