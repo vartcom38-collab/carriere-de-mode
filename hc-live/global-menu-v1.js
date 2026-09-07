@@ -20,27 +20,21 @@ const fmt=iso=>{
   return 'Dernière sauvegarde · '+new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(d);
 };
 
-/* Load the global premium visual language on every screen using the menu. */
 if(!window.HCPremiumGameVisualV2&&!document.querySelector('script[data-hc-premium-game-v2]')){
   const visual=document.createElement('script');
   visual.src=href('premium-game-visual-v2.js?v=20260906-visual2');visual.defer=true;visual.setAttribute('data-hc-premium-game-v2','1');
   document.head.appendChild(visual);
 }
-
-/* Universal router for scripted immersive scenes. */
 if(!window.HCImmersiveSceneRouterV1&&!document.querySelector('script[data-hc-immersive-scene-router]')){
   const scenes=document.createElement('script');
-  scenes.src=href('immersive-scene-router-v1.js?v=20260907-router17');scenes.defer=true;scenes.setAttribute('data-hc-immersive-scene-router','1');
+  scenes.src=href('immersive-scene-router-v1.js?v=20260907-router20');scenes.defer=true;scenes.setAttribute('data-hc-immersive-scene-router','1');
   document.head.appendChild(scenes);
 }
-
-/* Progressive encounters beyond the school cohort on student day/life/city. */
 if(/\/school-(?:day|life|city)(?:\/|$)/i.test(location.pathname)&&!window.HCSchoolExpandedSocialWorldV1&&!document.querySelector('script[data-hc-expanded-social-world]')){
   const social=document.createElement('script');
   social.src=href('school/school-expanded-social-world-v1.js?v=20260907-expandedworld1');social.defer=true;social.setAttribute('data-hc-expanded-social-world','1');
   document.head.appendChild(social);
 }
-
 const css=document.createElement('style');
 css.textContent=`
 #hc-global-menu-launch{position:fixed;z-index:2147483000;right:max(16px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));width:46px;height:46px;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(68,43,35,.62);box-shadow:0 10px 28px rgba(55,38,29,.24);color:white;font:700 19px/1 Arial,sans-serif;cursor:pointer;backdrop-filter:blur(12px)}
@@ -52,112 +46,20 @@ css.textContent=`
 @media(max-width:620px){#hc-global-menu-launch{width:42px;height:42px;right:12px;top:12px}#hc-global-menu-panel{right:12px;top:64px;width:calc(100vw - 24px);border-radius:20px}}
 `;
 document.head.appendChild(css);
-
-const launch=document.createElement('button');
-launch.id='hc-global-menu-launch';launch.type='button';launch.setAttribute('aria-label','Menu du jeu');launch.textContent='⚙';
+const launch=document.createElement('button');launch.id='hc-global-menu-launch';launch.type='button';launch.setAttribute('aria-label','Menu du jeu');launch.textContent='⚙';
 const backdrop=document.createElement('div');backdrop.id='hc-global-menu-backdrop';
-backdrop.innerHTML=`<div id="hc-global-menu-panel" role="dialog" aria-modal="true" aria-label="Menu du jeu">
-  <div class="hcgm-head"><div><div class="hcgm-eyebrow">HAUTE COUTURE LIVE</div><div class="hcgm-title">Menu</div></div><button class="hcgm-close" type="button" aria-label="Fermer">×</button></div>
-  <div class="hcgm-status" id="hcgm-status">${fmt(readMeta().lastSaveAt)}</div>
-  <div class="hcgm-actions">
-    <button class="hcgm-btn hc-primary" id="hcgm-save" type="button">SAUVEGARDER MAINTENANT<small>Enregistre la partie dans le navigateur et sur ton serveur.</small></button>
-    <button class="hcgm-btn" id="hcgm-home" type="button">CHEZ MOI<small>Retourne directement à ton logement.</small></button>
-    <button class="hcgm-btn" id="hcgm-start" type="button">RETOUR À L’ACCUEIL<small>Quitte l’écran actuel sans effacer ta progression.</small></button>
-  </div>
-</div>`;
+backdrop.innerHTML=`<div id="hc-global-menu-panel" role="dialog" aria-modal="true" aria-label="Menu du jeu"><div class="hcgm-head"><div><div class="hcgm-eyebrow">HAUTE COUTURE LIVE</div><div class="hcgm-title">Menu</div></div><button class="hcgm-close" type="button" aria-label="Fermer">×</button></div><div class="hcgm-status" id="hcgm-status">${fmt(readMeta().lastSaveAt)}</div><div class="hcgm-actions"><button class="hcgm-btn hc-primary" id="hcgm-save" type="button">SAUVEGARDER MAINTENANT<small>Enregistre la partie dans le navigateur et sur ton serveur.</small></button><button class="hcgm-btn" id="hcgm-home" type="button">CHEZ MOI<small>Retourne directement à ton logement.</small></button><button class="hcgm-btn" id="hcgm-start" type="button">RETOUR À L’ACCUEIL<small>Quitte l’écran actuel sans effacer ta progression.</small></button></div></div>`;
 document.body.append(launch,backdrop);
-const panel=backdrop.querySelector('#hc-global-menu-panel');
-const status=backdrop.querySelector('#hcgm-status');
-const saveBtn=backdrop.querySelector('#hcgm-save');
-const open=()=>{status.textContent=fmt(readMeta().lastSaveAt);backdrop.classList.add('hc-open')};
-const close=()=>backdrop.classList.remove('hc-open');
-launch.addEventListener('click',open);
-backdrop.querySelector('.hcgm-close').addEventListener('click',close);
-backdrop.addEventListener('click',e=>{if(e.target===backdrop)close()});
-panel.addEventListener('click',e=>e.stopPropagation());
-document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-backdrop.querySelector('#hcgm-home').addEventListener('click',()=>{
-  const path=readJSON('haute-couture-start-path-v1');
-  const housing=readJSON('haute-couture-school-housing-v1');
-  const studentHome=path?.type==='school'&&!!housing;
-  location.href=studentHome?href('school-home/'):href('chez-moi/');
-});
+const panel=backdrop.querySelector('#hc-global-menu-panel'),status=backdrop.querySelector('#hcgm-status'),saveBtn=backdrop.querySelector('#hcgm-save');
+const open=()=>{status.textContent=fmt(readMeta().lastSaveAt);backdrop.classList.add('hc-open')},close=()=>backdrop.classList.remove('hc-open');
+launch.addEventListener('click',open);backdrop.querySelector('.hcgm-close').addEventListener('click',close);backdrop.addEventListener('click',e=>{if(e.target===backdrop)close()});panel.addEventListener('click',e=>e.stopPropagation());document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+backdrop.querySelector('#hcgm-home').addEventListener('click',()=>{const path=readJSON('haute-couture-start-path-v1'),housing=readJSON('haute-couture-school-housing-v1'),studentHome=path?.type==='school'&&!!housing;location.href=studentHome?href('school-home/'):href('chez-moi/')});
 backdrop.querySelector('#hcgm-start').addEventListener('click',()=>location.href=rootBase());
-
-async function manualSave(){
-  saveBtn.classList.add('hcgm-saving');status.textContent='Sauvegarde en cours…';
-  try{
-    if(window.HCGame?.get){
-      const state=window.HCGame.get();
-      if(state&&window.HCGame.save)window.HCGame.save(state);
-    }
-    if(!window.HCServerSave?.saveNow)throw new Error('server_bridge_unavailable');
-    const ok=await window.HCServerSave.saveNow('manual-menu');
-    status.textContent=ok?'Sauvegardé ✓ · '+new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date()):'Sauvegardé localement · serveur indisponible';
-  }catch(_){status.textContent='Sauvegardé localement · serveur indisponible'}
-  finally{saveBtn.classList.remove('hcgm-saving')}
-}
-saveBtn.addEventListener('click',manualSave);
-window.addEventListener('hc-server-save',e=>{if(e.detail?.ok)status.textContent=fmt(readMeta().lastSaveAt)});
-
-function addSchoolScript(src,attr){
-  return new Promise(resolve=>{
-    const existing=document.querySelector(`script[${attr}]`);
-    if(existing){
-      if(existing.dataset.hcLoaded==='1'||existing.readyState==='complete')return resolve(existing);
-      existing.addEventListener('load',()=>resolve(existing),{once:true});
-      setTimeout(()=>resolve(existing),1200);
-      return;
-    }
-    const s=document.createElement('script');
-    s.src=href(src);s.defer=true;s.setAttribute(attr,'1');
-    s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});
-    s.addEventListener('error',()=>resolve(s),{once:true});
-    document.head.appendChild(s);
-  });
-}
+async function manualSave(){saveBtn.classList.add('hcgm-saving');status.textContent='Sauvegarde en cours…';try{if(window.HCGame?.get){const state=window.HCGame.get();if(state&&window.HCGame.save)window.HCGame.save(state)}if(!window.HCServerSave?.saveNow)throw new Error('server_bridge_unavailable');const ok=await window.HCServerSave.saveNow('manual-menu');status.textContent=ok?'Sauvegardé ✓ · '+new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date()):'Sauvegardé localement · serveur indisponible'}catch(_){status.textContent='Sauvegardé localement · serveur indisponible'}finally{saveBtn.classList.remove('hcgm-saving')}}
+saveBtn.addEventListener('click',manualSave);window.addEventListener('hc-server-save',e=>{if(e.detail?.ok)status.textContent=fmt(readMeta().lastSaveAt)});
+function addSchoolScript(src,attr){return new Promise(resolve=>{const existing=document.querySelector(`script[${attr}]`);if(existing){if(existing.dataset.hcLoaded==='1'||existing.readyState==='complete')return resolve(existing);existing.addEventListener('load',()=>resolve(existing),{once:true});setTimeout(()=>resolve(existing),1200);return}const s=document.createElement('script');s.src=href(src);s.defer=true;s.setAttribute(attr,'1');s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',()=>resolve(s),{once:true});document.head.appendChild(s)})}
 async function ensureAcademic(){if(window.HCSchoolAcademic)return;await addSchoolScript('school/school-academic-v1.js?v=20260906-academic3','data-hc-school-academic')}
 async function ensureCommunity(){if(window.HCSchoolCommunity)return;await addSchoolScript('school/school-community-v1.js?v=20260906-community3','data-hc-school-community')}
-async function loadSchoolEnhancements(){
-  const path=location.pathname;
-  const project=/\/school-year\d+-project\d+\//i.test(path);
-  const anySchool=/\/school(?:-|\/|$)/i.test(path);
-  const schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path);
-  const schoolCourse=/\/school-course(?:\/|$)/i.test(path);
-  if(anySchool){
-    await Promise.all([
-      window.HCSchoolPolish?Promise.resolve():addSchoolScript('school/school-polish-v1.js?v=20260906-polish2','data-hc-school-polish'),
-      window.HCSchoolPremiumVisuals?Promise.resolve():addSchoolScript('school/school-premium-visuals-v1.js?v=20260906-premium1','data-hc-school-premium-visuals'),
-      window.HCAfterCourseReview?Promise.resolve():addSchoolScript('school/after-course-review-v1.js?v=20260906-review1','data-hc-after-course-review'),
-      ensureAcademic()
-    ]);
-    if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition');
-  }
-  if(schoolCourse){
-    await Promise.all([
-      window.HCSubjectInteractionsV2?Promise.resolve():addSchoolScript('school/subject-interactions-v2.js?v=20260906-subject2','data-hc-subject-interactions-v2'),
-      window.HCVisualDemonstrations?Promise.resolve():addSchoolScript('school/visual-demonstrations-v1.js?v=20260906-visualdemo1','data-hc-visual-demonstrations'),
-      window.HCCourseVariation?Promise.resolve():addSchoolScript('school/course-variation-v1.js?v=20260906-variation1','data-hc-course-variation')
-    ]);
-  }
-  if(project){
-    await Promise.all([
-      window.HCSchoolOpenBrief?Promise.resolve():addSchoolScript('school/school-open-brief-v1.js?v=20260906-openbrief3','data-hc-open-brief'),
-      window.HCSchoolLiveJury?Promise.resolve():addSchoolScript('school/school-live-jury-v1.js?v=20260906-jury2','data-hc-live-jury'),
-      window.HCSchoolJurySync?Promise.resolve():addSchoolScript('school/school-jury-sync-v1.js?v=20260906-jurysync2','data-hc-jury-sync'),
-      window.HCSchoolTeacherProgression?Promise.resolve():addSchoolScript('school/school-teacher-progression-v1.js?v=20260906-teacherprogress2','data-hc-teacher-progression')
-    ]);
-  }
-  if(schoolScreen&&!project){
-    await ensureCommunity();
-    await Promise.all([
-      window.HCSchoolLifeDepth?Promise.resolve():addSchoolScript('school/school-life-depth-v1.js?v=20260906-lifedepth2','data-hc-school-life-depth'),
-      window.HCSchoolEventScenes?Promise.resolve():addSchoolScript('school/school-event-scenes-v1.js?v=20260906-eventscenes2','data-hc-school-event-scenes'),
-      window.HCSchoolInternship?Promise.resolve():addSchoolScript('school/school-internship-v1.js?v=20260906-internship2','data-hc-school-internship'),
-      window.HCSchoolCareerBridge?Promise.resolve():addSchoolScript('school/school-career-bridge-v1.js?v=20260906-careerbridge2','data-hc-school-career-bridge')
-    ]);
-  }
-}
-loadSchoolEnhancements();
-window.HCGlobalMenu={open,close,manualSave,rootBase,loadSchoolEnhancements};
+async function loadSchoolEnhancements(){const path=location.pathname,project=/\/school-year\d+-project\d+\//i.test(path),anySchool=/\/school(?:-|\/|$)/i.test(path),schoolScreen=/\/school(?:\/|$)|\/school-home(?:\/|$)|\/school-year\d+(?:\/|$)/i.test(path),schoolCourse=/\/school-course(?:\/|$)/i.test(path);if(anySchool){await Promise.all([window.HCSchoolPolish?Promise.resolve():addSchoolScript('school/school-polish-v1.js?v=20260906-polish2','data-hc-school-polish'),window.HCSchoolPremiumVisuals?Promise.resolve():addSchoolScript('school/school-premium-visuals-v1.js?v=20260906-premium1','data-hc-school-premium-visuals'),window.HCAfterCourseReview?Promise.resolve():addSchoolScript('school/after-course-review-v1.js?v=20260906-review1','data-hc-after-course-review'),ensureAcademic()]);if(!window.HCSchoolYearTransition)await addSchoolScript('school/school-year-transition-v1.js?v=20260906-yeartransition2','data-hc-school-year-transition')}if(schoolCourse){await Promise.all([window.HCSubjectInteractionsV2?Promise.resolve():addSchoolScript('school/subject-interactions-v2.js?v=20260906-subject2','data-hc-subject-interactions-v2'),window.HCVisualDemonstrations?Promise.resolve():addSchoolScript('school/visual-demonstrations-v1.js?v=20260906-visualdemo1','data-hc-visual-demonstrations'),window.HCCourseVariation?Promise.resolve():addSchoolScript('school/course-variation-v1.js?v=20260906-variation1','data-hc-course-variation')])}if(project){await Promise.all([window.HCSchoolOpenBrief?Promise.resolve():addSchoolScript('school/school-open-brief-v1.js?v=20260906-openbrief3','data-hc-open-brief'),window.HCSchoolLiveJury?Promise.resolve():addSchoolScript('school/school-live-jury-v1.js?v=20260906-jury2','data-hc-live-jury'),window.HCSchoolJurySync?Promise.resolve():addSchoolScript('school/school-jury-sync-v1.js?v=20260906-jurysync2','data-hc-jury-sync'),window.HCSchoolTeacherProgression?Promise.resolve():addSchoolScript('school/school-teacher-progression-v1.js?v=20260906-teacherprogress2','data-hc-teacher-progression')])}if(schoolScreen&&!project){await ensureCommunity();await Promise.all([window.HCSchoolLifeDepth?Promise.resolve():addSchoolScript('school/school-life-depth-v1.js?v=20260906-lifedepth2','data-hc-school-life-depth'),window.HCSchoolEventScenes?Promise.resolve():addSchoolScript('school/school-event-scenes-v1.js?v=20260906-eventscenes2','data-hc-school-event-scenes'),window.HCSchoolInternship?Promise.resolve():addSchoolScript('school/school-internship-v1.js?v=20260906-internship2','data-hc-school-internship'),window.HCSchoolCareerBridge?Promise.resolve():addSchoolScript('school/school-career-bridge-v1.js?v=20260906-careerbridge2','data-hc-school-career-bridge')])}}
+loadSchoolEnhancements();window.HCGlobalMenu={open,close,manualSave,rootBase,loadSchoolEnhancements};
 })();
