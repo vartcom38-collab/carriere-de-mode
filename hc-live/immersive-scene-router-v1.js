@@ -7,6 +7,7 @@ function load(file,attr){return new Promise(resolve=>{const found=document.query
 async function boot(){
  const p=location.pathname.toLowerCase();
  await load('immersive-transitions-v1.js?v=20260907-transitions1','data-hc-immersive-transitions');
+ await load('world-time-atmosphere-v1.js?v=20260907-time1','data-hc-world-time-atmosphere');
  await load('book/book-engine.js?v=20260907-bookcrosslinks1','data-hc-book-engine-crosslinks');
  await load('world-crosslinks-v1.js?v=20260907-crosslinks1','data-hc-world-crosslinks');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
@@ -55,9 +56,10 @@ async function boot(){
    await load('ville/camargue-circuit-city-bridge-v1.js?v=20260907-camarguebridge1','data-hc-camargue-circuit-bridge');
    await load('ville/camargue-population-v1.js?v=20260907-camarguepeople1','data-hc-camargue-population');
    await load('ville/camargue-encounter-bridge-v1.js?v=20260907-camargueencounters1','data-hc-camargue-encounters');
+   await load('ville/nimes-place-arrival-memory-v1.js?v=20260907-placearrival1','data-hc-nimes-place-arrival-memory');
    await load('ville/nimes-encounter-bridge-v1.js?v=20260907-nimesencounters3','data-hc-nimes-encounters');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:16,boot};
+window.HCImmersiveSceneRouterV1={version:17,boot};
 })();
