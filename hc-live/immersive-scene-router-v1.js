@@ -7,6 +7,8 @@ function load(file,attr){return new Promise(resolve=>{const found=document.query
 async function boot(){
  const p=location.pathname.toLowerCase();
  await load('immersive-transitions-v1.js?v=20260907-transitions1','data-hc-immersive-transitions');
+ await load('book/book-engine.js?v=20260907-bookcrosslinks1','data-hc-book-engine-crosslinks');
+ await load('world-crosslinks-v1.js?v=20260907-crosslinks1','data-hc-world-crosslinks');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion2','data-hc-home-immersion-v2');
  if(/school-(day|life)/.test(p)){
@@ -40,6 +42,7 @@ async function boot(){
    await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
  }
  if(/ville/.test(p)){
+   await load('ville/nimes-immersion-cleanup-v1.js?v=20260907-nimescleanup1','data-hc-nimes-immersion-cleanup');
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
    await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260907-fittingdialogue1','data-hc-nimes-fitting-dialogues');
    await load('ville/territorial-immersive-guide-engine-v1.js?v=20260907-travelguide1','data-hc-territorial-guide-engine');
@@ -56,5 +59,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:15,boot};
+window.HCImmersiveSceneRouterV1={version:16,boot};
 })();
