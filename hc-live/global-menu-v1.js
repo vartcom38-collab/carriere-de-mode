@@ -27,6 +27,13 @@ if(!window.HCPremiumGameVisualV2&&!document.querySelector('script[data-hc-premiu
   document.head.appendChild(visual);
 }
 
+/* Progressive encounters beyond the school cohort on student day/life/city. */
+if(/\/school-(?:day|life|city)(?:\/|$)/i.test(location.pathname)&&!window.HCSchoolExpandedSocialWorldV1&&!document.querySelector('script[data-hc-expanded-social-world]')){
+  const social=document.createElement('script');
+  social.src=href('school/school-expanded-social-world-v1.js?v=20260907-expandedworld1');social.defer=true;social.setAttribute('data-hc-expanded-social-world','1');
+  document.head.appendChild(social);
+}
+
 const css=document.createElement('style');
 css.textContent=`
 #hc-global-menu-launch{position:fixed;z-index:2147483000;right:max(16px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));width:46px;height:46px;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(68,43,35,.62);box-shadow:0 10px 28px rgba(55,38,29,.24);color:white;font:700 19px/1 Arial,sans-serif;cursor:pointer;backdrop-filter:blur(12px)}
