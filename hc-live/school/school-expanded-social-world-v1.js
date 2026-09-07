@@ -43,4 +43,5 @@ function render(){const e=encounter();if(!e)return;css();let host=document.getEl
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(render,220));else setTimeout(render,220);
 window.HCSchoolExpandedSocialWorldV1={version:1,state,people,encounter,resolve,render,storageKey:KEY};
 if(!window.HCSchoolExpandedSocialFollowupV1&&!document.querySelector('script[data-hc-expanded-social-followup]')){const s=document.createElement('script');s.src='./school-expanded-social-followup-v1.js?v=20260907-followup1';s.defer=true;s.setAttribute('data-hc-expanded-social-followup','1');document.head.appendChild(s)}
+if(!window.HCSchoolCareerContinuityV2&&!document.querySelector('script[data-hc-school-career-continuity-v2]')){const s=document.createElement('script');s.src='./school-career-continuity-v2.js?v=20260907-continuity1';s.defer=true;s.setAttribute('data-hc-school-career-continuity-v2','1');document.head.appendChild(s)}
 })();
