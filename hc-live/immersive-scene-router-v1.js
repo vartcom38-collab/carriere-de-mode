@@ -31,8 +31,12 @@ async function boot(){
    await load('ville/nimes-introduction-memory-v1.js?v=20260907-nimesintro1','data-hc-nimes-intro-memory');
    await load('ville/nimes-social-consequences-v1.js?v=20260907-nimesconsequences1','data-hc-nimes-social-consequences');
    await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260907-nimesdeferred1','data-hc-nimes-deferred-opportunities');
+   await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260907-nimessocialscenes1','data-hc-nimes-social-opportunity-scenes');
  }
- if(/telephone/.test(p))await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
+ if(/telephone/.test(p)){
+   await load('telephone/nimes-deferred-opportunity-phone-bridge-v1.js?v=20260907-nimesdeferredphone1','data-hc-nimes-deferred-phone');
+   await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
+ }
  if(/ville/.test(p)){
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
    await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260907-fittingdialogue1','data-hc-nimes-fitting-dialogues');
@@ -50,5 +54,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:13,boot};
+window.HCImmersiveSceneRouterV1={version:14,boot};
 })();
