@@ -27,8 +27,11 @@ async function boot(){
  if(/ville/.test(p)){
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
    await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260907-fittingdialogue1','data-hc-nimes-fitting-dialogues');
+   await load('ville/territorial-immersive-guide-engine-v1.js?v=20260907-travelguide1','data-hc-territorial-guide-engine');
+   await load('ville/nimes-arenes-immersive-guide-v1.js?v=20260907-arenesguide1','data-hc-nimes-arenes-guide');
+   await load('ville/territorial-immersive-guide-ui-v1.js?v=20260907-travelguideui1','data-hc-territorial-guide-ui');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:3,boot};
+window.HCImmersiveSceneRouterV1={version:4,boot};
 })();
