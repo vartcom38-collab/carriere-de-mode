@@ -23,6 +23,15 @@ async function boot(){
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
  }
+ if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
+   await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
+   await load('ville/nimes-population-v1.js?v=20260907-nimespeople1','data-hc-nimes-population');
+   await load('ville/nimes-population-migration-v1.js?v=20260907-nimesmigration1','data-hc-nimes-population-migration');
+   await load('ville/nimes-social-graph-v1.js?v=20260907-nimessocial1','data-hc-nimes-social-graph');
+   await load('ville/nimes-introduction-memory-v1.js?v=20260907-nimesintro1','data-hc-nimes-intro-memory');
+   await load('ville/nimes-social-consequences-v1.js?v=20260907-nimesconsequences1','data-hc-nimes-social-consequences');
+   await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260907-nimesdeferred1','data-hc-nimes-deferred-opportunities');
+ }
  if(/telephone/.test(p))await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
  if(/ville/.test(p)){
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
@@ -35,18 +44,11 @@ async function boot(){
    await load('ville/camargue-territorial-circuit-v1.js?v=20260907-camarguecircuit1','data-hc-camargue-circuit');
    await load('ville/territorial-circuit-ui-v1.js?v=20260907-circuitui1','data-hc-territorial-circuit-ui');
    await load('ville/camargue-circuit-city-bridge-v1.js?v=20260907-camarguebridge1','data-hc-camargue-circuit-bridge');
-   await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
    await load('ville/camargue-population-v1.js?v=20260907-camarguepeople1','data-hc-camargue-population');
    await load('ville/camargue-encounter-bridge-v1.js?v=20260907-camargueencounters1','data-hc-camargue-encounters');
-   await load('ville/nimes-population-v1.js?v=20260907-nimespeople1','data-hc-nimes-population');
-   await load('ville/nimes-population-migration-v1.js?v=20260907-nimesmigration1','data-hc-nimes-population-migration');
-   await load('ville/nimes-social-graph-v1.js?v=20260907-nimessocial1','data-hc-nimes-social-graph');
-   await load('ville/nimes-introduction-memory-v1.js?v=20260907-nimesintro1','data-hc-nimes-intro-memory');
-   await load('ville/nimes-social-consequences-v1.js?v=20260907-nimesconsequences1','data-hc-nimes-social-consequences');
-   await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260907-nimesdeferred1','data-hc-nimes-deferred-opportunities');
    await load('ville/nimes-encounter-bridge-v1.js?v=20260907-nimesencounters3','data-hc-nimes-encounters');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:12,boot};
+window.HCImmersiveSceneRouterV1={version:13,boot};
 })();
