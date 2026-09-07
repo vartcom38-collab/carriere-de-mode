@@ -35,8 +35,11 @@ async function boot(){
    await load('ville/camargue-territorial-circuit-v1.js?v=20260907-camarguecircuit1','data-hc-camargue-circuit');
    await load('ville/territorial-circuit-ui-v1.js?v=20260907-circuitui1','data-hc-territorial-circuit-ui');
    await load('ville/camargue-circuit-city-bridge-v1.js?v=20260907-camarguebridge1','data-hc-camargue-circuit-bridge');
+   await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
+   await load('ville/camargue-population-v1.js?v=20260907-camarguepeople1','data-hc-camargue-population');
+   await load('ville/camargue-encounter-bridge-v1.js?v=20260907-camargueencounters1','data-hc-camargue-encounters');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:7,boot};
+window.HCImmersiveSceneRouterV1={version:8,boot};
 })();
