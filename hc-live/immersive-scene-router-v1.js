@@ -34,8 +34,9 @@ async function boot(){
    await load('ville/territorial-circuit-engine-v1.js?v=20260907-circuitengine1','data-hc-territorial-circuit-engine');
    await load('ville/camargue-territorial-circuit-v1.js?v=20260907-camarguecircuit1','data-hc-camargue-circuit');
    await load('ville/territorial-circuit-ui-v1.js?v=20260907-circuitui1','data-hc-territorial-circuit-ui');
+   await load('ville/camargue-circuit-city-bridge-v1.js?v=20260907-camarguebridge1','data-hc-camargue-circuit-bridge');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:6,boot};
+window.HCImmersiveSceneRouterV1={version:7,boot};
 })();
