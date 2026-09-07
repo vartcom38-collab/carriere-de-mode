@@ -24,8 +24,11 @@ async function boot(){
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
  }
  if(/telephone/.test(p))await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
- if(/ville/.test(p))await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
+ if(/ville/.test(p)){
+   await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
+   await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260907-fittingdialogue1','data-hc-nimes-fitting-dialogues');
+ }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:2,boot};
+window.HCImmersiveSceneRouterV1={version:3,boot};
 })();
