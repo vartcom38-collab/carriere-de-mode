@@ -13,6 +13,7 @@ async function boot(){
  await load('world-crosslinks-v1.js?v=20260907-crosslinks1','data-hc-world-crosslinks');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
+ if(/agenda/.test(p))await load('agenda/agenda-lived-day-v1.js?v=20260907-agendalived1','data-hc-agenda-lived-day');
  if(/school-(day|life)/.test(p)){
    await load('school/school-daily-life-v1.js?v=20260907-dailylife4','data-hc-school-daily-life-router');
    await load('school/school-daily-life-dialogue-bridge-v1.js?v=20260907-daily-dialogue1','data-hc-school-daily-dialogue');
@@ -40,6 +41,7 @@ async function boot(){
    await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260907-nimessocialscenes1','data-hc-nimes-social-opportunity-scenes');
  }
  if(/telephone/.test(p)){
+   await load('telephone/phone-lived-conversations-v1.js?v=20260907-phonelived1','data-hc-phone-lived-conversations');
    await load('telephone/nimes-deferred-opportunity-phone-bridge-v1.js?v=20260907-nimesdeferredphone1','data-hc-nimes-deferred-phone');
    await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
  }
@@ -66,5 +68,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:21,boot};
+window.HCImmersiveSceneRouterV1={version:22,boot};
 })();
