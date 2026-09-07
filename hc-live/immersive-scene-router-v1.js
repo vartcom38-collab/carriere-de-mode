@@ -38,8 +38,11 @@ async function boot(){
    await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
    await load('ville/camargue-population-v1.js?v=20260907-camarguepeople1','data-hc-camargue-population');
    await load('ville/camargue-encounter-bridge-v1.js?v=20260907-camargueencounters1','data-hc-camargue-encounters');
+   await load('ville/nimes-population-v1.js?v=20260907-nimespeople1','data-hc-nimes-population');
+   await load('ville/nimes-population-migration-v1.js?v=20260907-nimesmigration1','data-hc-nimes-population-migration');
+   await load('ville/nimes-encounter-bridge-v1.js?v=20260907-nimesencounters1','data-hc-nimes-encounters');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:8,boot};
+window.HCImmersiveSceneRouterV1={version:9,boot};
 })();
