@@ -6,7 +6,7 @@ const base=(()=>{const p=location.pathname,i=p.indexOf('/hc-live/');return i>=0?
 function load(file,attr){return new Promise(resolve=>{const found=document.querySelector(`script[${attr}]`);if(found){if(found.dataset.hcLoaded==='1')return resolve(found);found.addEventListener('load',()=>resolve(found),{once:true});setTimeout(()=>resolve(found),900);return}const s=document.createElement('script');s.src=base+file;s.defer=true;s.setAttribute(attr,'1');s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',()=>resolve(s),{once:true});document.head.appendChild(s)})}
 async function boot(){
  const p=location.pathname.toLowerCase();
- if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue2','data-hc-immersive-dialogue');
+ if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/school-(day|life)/.test(p)){
    await load('school/school-daily-life-v1.js?v=20260907-dailylife4','data-hc-school-daily-life-router');
    await load('school/school-daily-life-dialogue-bridge-v1.js?v=20260907-daily-dialogue1','data-hc-school-daily-dialogue');
