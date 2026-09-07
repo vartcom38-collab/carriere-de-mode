@@ -44,6 +44,8 @@ async function boot(){
    await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
  }
  if(/ville/.test(p)){
+   await load('ville/nimes-city-intents-v1.js?v=20260907-cityintents1','data-hc-nimes-city-intents');
+   await load('ville/nimes-contextual-place-suggestions-v1.js?v=20260907-citysuggestions1','data-hc-nimes-city-suggestions');
    await load('ville/nimes-city-rhythm-v1.js?v=20260907-cityrhythm1','data-hc-nimes-city-rhythm');
    await load('ville/nimes-immersion-cleanup-v1.js?v=20260907-nimescleanup1','data-hc-nimes-immersion-cleanup');
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
@@ -64,5 +66,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:20,boot};
+window.HCImmersiveSceneRouterV1={version:21,boot};
 })();
