@@ -50,7 +50,8 @@ if(K==='project'){
  loadScript('HCSchoolPeerCritiqueV1','data-hc-peer-critique','school-peer-critique-v1.js','20260906-peercrit1');
 }
 if(K==='student-day'||K==='school-life'||K==='project')loadScript('HCSchoolMultiYearProgressionV1','data-hc-multiyear-progression','school-multiyear-progression-v1.js','20260907-multiyear1');
-if(K==='student-day'||K==='school-life')loadScript('HCSchoolDailyLifeV1','data-hc-school-daily-life','school-daily-life-v1.js','20260907-dailylife1');
+if(K==='student-day'||K==='school-life')loadScript('HCSchoolDailyLifeV1','data-hc-school-daily-life','school-daily-life-v1.js','20260907-dailylife2');
+if(K==='student-day'||K==='school-life'||K==='project')loadScript('HCSchoolRelationshipEvolutionV1','data-hc-school-relations','school-relationship-evolution-v1.js','20260907-relations1');
 if(K==='student-day'||K==='school-life'||K==='project'||K==='review'||K==='school')loadScript('HCSchoolSelfLanguageV1','data-hc-school-self-language','school-self-language-v1.js','20260907-selflang1');
 window.HCPremiumGameVisualV2={kind:K,scene:scenes[K],school:school?.name||null};
 })();
