@@ -21,7 +21,7 @@ async function boot(){
  }
  if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p)){
    await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
-   await load('ville/client-referral-network-v1.js?v=20260908-referral2','data-hc-client-referral-network');
+   await load('ville/client-referral-network-v1.js?v=20260908-referral3','data-hc-client-referral-network');
  }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
@@ -37,7 +37,7 @@ async function boot(){
    await load('school/school-expanded-social-dialogue-bridge-v1.js?v=20260907-expandeddialogue1','data-hc-expanded-social-dialogue');
  }
  if(/school-life/.test(p))await load('school/school-immersive-dialogues-v1.js?v=20260907-teacherdialogue2','data-hc-school-teacher-dialogues');
- if(/school-city/.test(p))await load('school/school-city-immersive-scenes-v1.js?v=20260907-cityscene2','data-hc-school-city-scenes');
+ if(/school-city/.test(p))await load('school/school-immersive-scenes-v1.js?v=20260907-cityscene2','data-hc-school-city-scenes');
  if(/(chez-moi|carriere|career|telephone|ville|image-publique|studio-photo|ateliergram)/.test(p)){
    await load('career/career-origin-v1.js?v=20260907-careerorigin2','data-hc-career-origin-router');
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
@@ -93,5 +93,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:40,boot};
+window.HCImmersiveSceneRouterV1={version:41,boot};
 })();
