@@ -12,9 +12,10 @@ function syncMission(o){const api=window.HCMissionEngineV1;if(!api||!o||o.source
 function referralOrders(){return orders().filter(o=>o.source==='client-referral')}
 function reconcile(){for(const raw of referralOrders()){const o=normalize(raw);ensureMission(o)}return referralOrders()}
 function fittingReady(){return referralOrders().find(o=>['ready_for_fitting','alterations_needed','fitting_ok'].includes(o.status))||null}
+function settlePayment(o){if(!o||o.source!=='client-referral'||o.paymentSettled)return o;const amount=Number(o.proposal?.price||o.payment||o.reward||0);if(amount>0){try{window.HCGame?.transact?.(amount,'Paiement cliente — '+(o.clientName||'cliente'),'career')}catch(_){}}o.payment=amount;o.paymentSettled=true;o.paidAt=iso();o.history=o.history||[];if(!o.history.some(x=>x.type==='client-payment-settled'))o.history.push({type:'client-payment-settled',amount,at:iso()});return save(o,true)}
 window.addEventListener('hc-client-referral-order-created',e=>{const o=normalize(e.detail||{});ensureMission(o)});
 window.addEventListener('hc-client-order',e=>{const raw=e.detail||{};if(raw.source!=='client-referral')return;const o=normalize(raw);ensureMission(o);syncMission(o)});
 window.addEventListener('hc-fitting-lived-state',e=>{const o=orders().find(x=>x.id===e.detail?.orderId);if(o?.source==='client-referral')syncMission(o)});
-window.addEventListener('hc-fitting-delivered',e=>{const o=orders().find(x=>x.id===e.detail?.orderId);if(o?.source==='client-referral')syncMission(o)});
+window.addEventListener('hc-fitting-delivered',e=>{const o=orders().find(x=>x.id===e.detail?.orderId);if(o?.source==='client-referral'){const paid=settlePayment(o);syncMission(paid)}});
 setTimeout(reconcile,300);
-window.HCClientReferralOrderLifecycleV1={version:1,normalize,reconcile,ensureMission,syncMission,fittingReady,storageKey:O};})();
+window.HCClientReferralOrderLifecycleV1={version:2,normalize,reconcile,ensureMission,syncMission,fittingReady,settlePayment,storageKey:O};})();
