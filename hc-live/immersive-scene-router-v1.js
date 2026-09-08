@@ -11,6 +11,7 @@ async function boot(){
  const p=location.pathname.toLowerCase();
  await load('player-residence-v1.js?v=20260908-residence2','data-hc-player-residence');
  await load('career/career-residence-impact-v1.js?v=20260908-residenceimpact1','data-hc-residence-impact');
+ await load('ville/territorial-daily-rhythm-v1.js?v=20260908-territorialrhythm1','data-hc-territorial-daily-rhythm');
  await load('immersive-transitions-v1.js?v=20260907-transitions1','data-hc-immersive-transitions');
  await load('world-time-atmosphere-v1.js?v=20260907-time1','data-hc-world-time-atmosphere');
  await load('daily-life-rhythm-v1.js?v=20260907-dailyrhythm1','data-hc-daily-life-rhythm');
@@ -60,7 +61,7 @@ async function boot(){
    await load('career/career-origin-v1.js?v=20260907-careerorigin2','data-hc-career-origin-router');
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
    await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
-   await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive2','data-hc-career-adaptive-opportunities');
+   await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive3','data-hc-career-adaptive-opportunities');
    await load('career/career-institution-memory-v1.js?v=20260908-institutions1','data-hc-career-institution-memory');
    await load('career/career-collaboration-lifecycle-v1.js?v=20260908-collaboration1','data-hc-career-collaboration-lifecycle');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
@@ -76,7 +77,7 @@ async function boot(){
    }
  }
  if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
-   await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
+   await load('ville/territorial-population-engine-v1.js?v=20260908-population2','data-hc-territorial-population');
    if(isNimesContext()){
      await load('ville/nimes-population-v1.js?v=20260907-nimespeople1','data-hc-nimes-population');
      await load('ville/nimes-population-migration-v1.js?v=20260907-nimesmigration1','data-hc-nimes-population-migration');
@@ -126,5 +127,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:51,boot,currentCity,isNimesContext};
+window.HCImmersiveSceneRouterV1={version:52,boot,currentCity,isNimesContext};
 })();
