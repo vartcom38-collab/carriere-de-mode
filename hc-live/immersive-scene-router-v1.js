@@ -41,8 +41,9 @@ async function boot(){
    await load('ville/nimes-social-graph-v1.js?v=20260907-nimessocial1','data-hc-nimes-social-graph');
    await load('ville/nimes-introduction-memory-v1.js?v=20260907-nimesintro1','data-hc-nimes-intro-memory');
    await load('ville/nimes-social-consequences-v1.js?v=20260907-nimesconsequences1','data-hc-nimes-social-consequences');
-   await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260907-nimesdeferred1','data-hc-nimes-deferred-opportunities');
-   await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260907-nimessocialscenes1','data-hc-nimes-social-opportunity-scenes');
+   await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260908-nimesdeferred2','data-hc-nimes-deferred-opportunities');
+   await load('ville/nimes-identity-shaped-social-opportunities-v1.js?v=20260908-shaped1','data-hc-nimes-identity-shaped-social');
+   await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260908-nimessocialscenes2','data-hc-nimes-social-opportunity-scenes');
  }
  if(/telephone/.test(p)){
    await load('telephone/phone-lived-conversations-v1.js?v=20260907-phonelived1','data-hc-phone-lived-conversations');
@@ -72,5 +73,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:25,boot};
+window.HCImmersiveSceneRouterV1={version:26,boot};
 })();
