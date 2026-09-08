@@ -29,6 +29,9 @@ if(!document.getElementById('hc-premium-mark')&&!/start-choice|school-choice|acc
 function polishCards(){const candidates=[...document.querySelectorAll('.card,.person,.course,.review-card,.project-card')].slice(0,60);candidates.forEach((el,i)=>{if(el.dataset.hcPremiumDone)return;el.dataset.hcPremiumDone='1';el.style.borderColor='rgba(104,71,59,.16)';if(!el.style.borderRadius)el.style.borderRadius='20px';if(i%3===1)el.style.transform='translateY(2px)'})}polishCards();new MutationObserver(()=>polishCards()).observe(document.body,{childList:true,subtree:true});
 if(isArrival&&/school-(home|day|welcome|tour)/.test(path)){body.classList.add('hc-arrival-focus');const s=document.createElement('style');s.textContent=`body.hc-arrival-focus #hc-premium-mark{opacity:.9}body.hc-arrival-focus .footer,body.hc-arrival-focus .normal:not(.active){opacity:.94}`;document.head.appendChild(s)}
 const base=(path.includes('/hc-live/')?path.slice(0,path.indexOf('/hc-live/')+9):'/');
+function loadRoot(flag,marker,file,version){if(window[flag]||document.querySelector(`script[${marker}]`))return;const s=document.createElement('script');s.src=base+file+'?v='+version;s.defer=true;s.setAttribute(marker,'1');document.head.appendChild(s)}
+loadRoot('HCPlayerResidenceV1','data-hc-player-residence','player-residence-v1.js','20260908-residence2');
+loadRoot('HCCareerResidenceImpactV1','data-hc-residence-impact','career/career-residence-impact-v1.js','20260908-residenceimpact1');
 function loadScript(flag,marker,file,version){if(window[flag]||document.querySelector(`script[${marker}]`))return;const s=document.createElement('script');s.src=base+'school/'+file+'?v='+version;s.defer=true;s.setAttribute(marker,'1');document.head.appendChild(s)}
 if(K==='course'){
  loadScript('HCSchoolCourseSignature','data-hc-course-signature','school-course-signature-v1.js','20260906-signature4');
