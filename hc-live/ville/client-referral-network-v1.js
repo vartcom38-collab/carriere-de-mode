@@ -24,9 +24,9 @@ function reconcileAftercare(){const a=read(AFTER,{items:{}});for(const item of O
 function restoreRuntime(){const s=state();for(const p of Object.values(s.people)){registerRuntime(p);markKnown(p);addRelationship(p);addMessage(p)}}
 function base(){const p=location.pathname,i=p.indexOf('/hc-live/');return i>=0?p.slice(0,i+9):'/'}
 function loadExtension(file,attr){return new Promise(resolve=>{const old=document.querySelector(`script[${attr}]`);if(old)return resolve(old);const s=document.createElement('script');s.src=base()+file;s.defer=true;s.setAttribute(attr,'1');s.onload=()=>resolve(s);s.onerror=()=>resolve(s);document.head.appendChild(s)})}
-async function loadExtensions(){await loadExtension('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle1','data-hc-referral-order-lifecycle');if(/ville/i.test(location.pathname))await loadExtension('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit1','data-hc-client-fitting-generic')}
+async function loadExtensions(){await loadExtension('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle3','data-hc-referral-order-lifecycle');if(/telephone/i.test(location.pathname))await loadExtension('telephone/client-returning-dialogue-v1.js?v=20260908-returning1','data-hc-client-returning-dialogue');if(/(ville|atelier)/i.test(location.pathname))await loadExtension('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit2','data-hc-client-fitting-generic')}
 function boot(){restoreRuntime();reconcileAftercare();loadExtensions()}
 window.addEventListener('hc-client-aftercare-event',e=>{const d=e.detail||{};if(d.type==='referral')create(d);if(d.type==='return')returnRequest(d)});
 window.addEventListener('hc-territorial-population-register',e=>{if(e.detail?.territory==='Nîmes'&&!e.detail?.dynamic)setTimeout(restoreRuntime,0)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-window.HCClientReferralNetworkV1={version:2,create,returnRequest,state,reconcileAftercare,restoreRuntime,loadExtensions,storageKey:K};})();
+window.HCClientReferralNetworkV1={version:3,create,returnRequest,state,reconcileAftercare,restoreRuntime,loadExtensions,storageKey:K};})();
