@@ -23,6 +23,10 @@ async function boot(){
    await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
    await load('ville/client-referral-network-v1.js?v=20260908-referral3','data-hc-client-referral-network');
  }
+ if(/atelier/.test(p)){
+   await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle2','data-hc-referral-order-lifecycle');
+   await load('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit1','data-hc-client-fitting-generic');
+ }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
@@ -93,5 +97,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:41,boot};
+window.HCImmersiveSceneRouterV1={version:42,boot};
 })();
