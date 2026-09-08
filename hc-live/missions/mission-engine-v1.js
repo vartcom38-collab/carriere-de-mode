@@ -1,0 +1,19 @@
+/* Haute Couture Live — moteur universel Missions / Quêtes v1 */
+(function(){'use strict';if(window.HCMissionEngineV1)return;
+const K='haute-couture-missions-v1';
+const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}},write=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));return v};
+const now=()=>window.HCGame?.get?.()?.clock?.iso||new Date().toISOString();
+function state(){const s=read(K,{version:1,missions:{},order:[]});s.missions=s.missions||{};s.order=s.order||[];return s}
+function register(m){if(!m?.id)return null;const s=state(),old=s.missions[m.id]||{};s.missions[m.id]={status:'active',kind:'secondary',title:'Mission',summary:'',steps:[],hints:[],hintLevel:0,createdAt:now(),...old,...m,id:m.id};if(!s.order.includes(m.id))s.order.unshift(m.id);write(K,s);emit('register',s.missions[m.id]);return s.missions[m.id]}
+function patch(id,p){const s=state();if(!s.missions[id])return null;s.missions[id]={...s.missions[id],...p,updatedAt:now()};write(K,s);emit('update',s.missions[id]);return s.missions[id]}
+function step(id,stepId,done=true){const s=state(),m=s.missions[id];if(!m)return null;m.steps=(m.steps||[]).map(x=>x.id===stepId?{...x,done}:x);if(m.steps.length&&m.steps.every(x=>x.done))m.status='ready';write(K,s);emit('step',m);return m}
+function complete(id,result=''){return patch(id,{status:'completed',completedAt:now(),result})}
+function abandon(id){return patch(id,{status:'left',leftAt:now()})}
+function hint(id){const s=state(),m=s.missions[id];if(!m)return null;const max=(m.hints||[]).length;m.hintLevel=Math.min(max,(m.hintLevel||0)+1);write(K,s);emit('hint',m);return(m.hints||[])[m.hintLevel-1]||null}
+function visible(){const s=state();return s.order.map(id=>s.missions[id]).filter(Boolean)}
+function active(){return visible().filter(m=>['active','ready','waiting'].includes(m.status))}
+function emit(type,m){window.dispatchEvent(new CustomEvent('hc-mission-state',{detail:{type,mission:m}}))}
+function seed(){const route=read('haute-couture-start-path-v1',{});if(route?.type==='school')register({id:'school-find-your-rhythm',kind:'main',title:'Trouver ton rythme à l’école',summary:'Prends tes repères, suis les premiers cours et commence à construire ta manière d’apprendre.',hints:['Commence par regarder ce qui est prévu aujourd’hui.','Ton emploi du temps et Ma journée te donnent les prochaines étapes.','Après le premier jour guidé, la ville et la vie d’école s’ouvrent progressivement.']});else register({id:'career-first-direction',kind:'main',title:'Donner une première direction à ta carrière',summary:'Tu es libre. Trouve une première piste réelle : une matière, une cliente, une rencontre ou un projet.',hints:['Regarde ton téléphone, ton Atelier et la ville.','Une mercerie, un artisan ou un contact local peut suffire à faire naître une première piste.','À Nîmes, commence par un lieu préparé lié au textile, à la culture ou aux rencontres.']});
+ const g=window.HCGame?.get?.()||{};for(const x of(g.careerLeads||[]).filter(x=>x.status==='active'))register({id:'lead:'+x.id,kind:'career',title:x.title||'Piste professionnelle',summary:x.note||'Une piste active mérite une vraie action avant de produire une conséquence.',sourceId:x.id,hints:['Regarde où cette piste peut être travaillée : Atelier, Téléphone, Ville ou Image publique.','Le contexte de la piste indique normalement la personne ou le lieu d’origine.','Si tu bloques, consulte Collections / Archives pour voir ce que tu connais déjà.']});}
+['hc-nimes-social-followup-activated','hc-career-active-lead','hc-client-order','hc-skill-unlock','hc-guide-complete'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(seed,30)));
+setTimeout(seed,250);window.HCMissionEngineV1={version:1,state,register,patch,step,complete,abandon,hint,visible,active,seed,storageKey:K};})();
