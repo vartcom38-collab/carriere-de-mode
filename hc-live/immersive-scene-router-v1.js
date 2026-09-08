@@ -21,7 +21,7 @@ async function boot(){
  }
  if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p)){
    await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
-   await load('ville/client-referral-network-v1.js?v=20260908-referral4','data-hc-client-referral-network');
+   await load('ville/client-referral-network-v1.js?v=20260908-referral5','data-hc-client-referral-network');
  }
  if(/atelier/.test(p)){
    await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle3','data-hc-referral-order-lifecycle');
@@ -52,7 +52,7 @@ async function boot(){
    await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive1','data-hc-career-adaptive-opportunities');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
-   if(/(carriere|career)/.test(p))await load('career/career-lived-profile-v1.js?v=20260907-careerlived1','data-hc-career-lived-profile');
+   if(/(carriere|career)/.test(p))await load('career/career-lived-profile-v1.js?v=20260908-careerlived3','data-hc-career-lived-profile');
    if(/(carriere|career|telephone|ville|image-publique|studio-photo|ateliergram)/.test(p)){
      await load('career/career-worked-lead-outcomes-v1.js?v=20260908-workedoutcomes1','data-hc-career-worked-lead-outcomes');
      await load('career/career-active-lead-gameplay-v1.js?v=20260908-activelead1','data-hc-career-active-lead-gameplay');
@@ -101,5 +101,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:44,boot};
+window.HCImmersiveSceneRouterV1={version:45,boot};
 })();
