@@ -12,13 +12,14 @@ async function boot(){
  await load('book/book-engine.js?v=20260907-bookcrosslinks1','data-hc-book-engine-crosslinks');
  await load('world-crosslinks-v1.js?v=20260907-crosslinks1','data-hc-world-crosslinks');
  await load('missions/mission-engine-v1.js?v=20260908-missions1','data-hc-mission-engine');
- await load('missions/mission-world-bridge-v1.js?v=20260908-missionbridge8','data-hc-mission-world-bridge');
+ await load('missions/mission-world-bridge-v1.js?v=20260908-missionbridge9','data-hc-mission-world-bridge');
  if(!/(missions|archives)/.test(p))await load('missions/mission-hud-v1.js?v=20260908-missionhud1','data-hc-mission-hud');
  await load('archives/collection-engine-v1.js?v=20260908-archives2','data-hc-collection-engine');
  if(/(book|ville|client|fitting|essayage|carriere|career|image-publique|studio-photo|ateliergram|photo)/.test(p)){
    await load('atelier-raster/garment-visual-pipeline-v1.js?v=20260908-garment5','data-hc-global-garment-pipeline');
    await load('garment-world-presence-v1.js?v=20260908-garmentworld3','data-hc-garment-world-presence');
  }
+ if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
  if(/agenda/.test(p))await load('agenda/agenda-lived-day-v1.js?v=20260907-agendalived1','data-hc-agenda-lived-day');
@@ -70,7 +71,8 @@ async function boot(){
    await load('ville/nimes-city-rhythm-v1.js?v=20260907-cityrhythm1','data-hc-nimes-city-rhythm');
    await load('ville/nimes-immersion-cleanup-v1.js?v=20260907-nimescleanup1','data-hc-nimes-immersion-cleanup');
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
-   await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260907-fittingdialogue1','data-hc-nimes-fitting-dialogues');
+   await load('ville/client-fitting-lived-v1.js?v=20260908-fittinglived1','data-hc-client-fitting-lived');
+   await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260908-fittingdialogue2','data-hc-nimes-fitting-dialogues');
    await load('ville/territorial-immersive-guide-engine-v1.js?v=20260907-travelguide1','data-hc-territorial-guide-engine');
    await load('ville/nimes-arenes-immersive-guide-v1.js?v=20260907-arenesguide1','data-hc-nimes-arenes-guide');
    await load('ville/nimes-major-immersive-guides-v1.js?v=20260907-nimesguides1','data-hc-nimes-major-guides');
@@ -87,5 +89,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:36,boot};
+window.HCImmersiveSceneRouterV1={version:37,boot};
 })();
