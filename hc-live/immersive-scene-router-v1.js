@@ -28,7 +28,7 @@ async function boot(){
  if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
    await load('career/career-origin-v1.js?v=20260907-careerorigin2','data-hc-career-origin-router');
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
-   await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity2','data-hc-career-emergent-identity');
+   await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
    await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive1','data-hc-career-adaptive-opportunities');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
@@ -44,6 +44,7 @@ async function boot(){
    await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260908-nimesdeferred2','data-hc-nimes-deferred-opportunities');
    await load('ville/nimes-identity-shaped-social-opportunities-v1.js?v=20260908-shaped1','data-hc-nimes-identity-shaped-social');
    await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260908-nimessocialscenes2','data-hc-nimes-social-opportunity-scenes');
+   await load('ville/nimes-social-outcome-crosslinks-v1.js?v=20260908-socialoutcomes1','data-hc-nimes-social-outcome-crosslinks');
  }
  if(/telephone/.test(p)){
    await load('telephone/phone-lived-conversations-v1.js?v=20260907-phonelived1','data-hc-phone-lived-conversations');
@@ -73,5 +74,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:26,boot};
+window.HCImmersiveSceneRouterV1={version:27,boot};
 })();
