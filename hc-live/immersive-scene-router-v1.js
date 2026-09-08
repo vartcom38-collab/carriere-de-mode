@@ -21,7 +21,7 @@ async function boot(){
  }
  if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p)){
    await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
-   await load('ville/client-referral-network-v1.js?v=20260908-referral1','data-hc-client-referral-network');
+   await load('ville/client-referral-network-v1.js?v=20260908-referral2','data-hc-client-referral-network');
  }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
@@ -88,10 +88,10 @@ async function boot(){
    await load('ville/camargue-population-v1.js?v=20260907-camarguepeople1','data-hc-camargue-population');
    await load('ville/camargue-encounter-bridge-v1.js?v=20260907-camargueencounters1','data-hc-camargue-encounters');
    await load('ville/nimes-place-arrival-memory-v1.js?v=20260907-placearrival2','data-hc-nimes-place-arrival-memory');
-   await load('ville/nimes-place-action-staging-v1.js?v=20260907-placestaging1','data-hc-nimes-place-staging');
+   await load('ville/nimes-place-action-staging-v1.js?v=20260907-placestaging1','data-hc-nimes-place-action-staging');
    await load('ville/nimes-encounter-bridge-v1.js?v=20260907-nimesencounters3','data-hc-nimes-encounters');
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:39,boot};
+window.HCImmersiveSceneRouterV1={version:40,boot};
 })();
