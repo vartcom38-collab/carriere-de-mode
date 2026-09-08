@@ -4,11 +4,13 @@
 if(window.HCImmersiveSceneRouterV1)return;
 const base=(()=>{const p=location.pathname,i=p.indexOf('/hc-live/');return i>=0?p.slice(0,i+9):'/'})();
 const read=(k,f=null)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}};
-function currentCity(){const school=read('haute-couture-school-choice-v1',{}),schoolHousing=read('haute-couture-school-housing-v1',{}),home=read('haute-couture-home',{}),territory=read('haute-couture-current-territory-v1',{});return String(territory.city||home.city||home.home?.city||school.city||schoolHousing.city||'').trim()}
-function isNimesContext(){const c=currentCity().toLowerCase();return !c||c==='nîmes'||c==='nimes'}
+function currentCity(){const residence=read('haute-couture-player-residence-v1',{}),presence=residence.currentTravel?.territory||residence.currentResidence||{},school=read('haute-couture-school-choice-v1',{}),schoolHousing=read('haute-couture-school-housing-v1',{}),home=read('haute-couture-home',{}),territory=read('haute-couture-current-territory-v1',{});return String(presence.city||presence.label||territory.city||home.city||home.home?.city||school.city||schoolHousing.city||'').trim()}
+function isNimesContext(){const c=currentCity().toLowerCase();return c==='nîmes'||c==='nimes'}
 function load(file,attr){return new Promise(resolve=>{const found=document.querySelector(`script[${attr}]`);if(found){if(found.dataset.hcLoaded==='1')return resolve(found);found.addEventListener('load',()=>resolve(found),{once:true});setTimeout(()=>resolve(found),900);return}const s=document.createElement('script');s.src=base+file;s.defer=true;s.setAttribute(attr,'1');s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',()=>resolve(s),{once:true});document.head.appendChild(s)})}
 async function boot(){
  const p=location.pathname.toLowerCase();
+ await load('player-residence-v1.js?v=20260908-residence2','data-hc-player-residence');
+ await load('career/career-residence-impact-v1.js?v=20260908-residenceimpact1','data-hc-residence-impact');
  await load('immersive-transitions-v1.js?v=20260907-transitions1','data-hc-immersive-transitions');
  await load('world-time-atmosphere-v1.js?v=20260907-time1','data-hc-world-time-atmosphere');
  await load('daily-life-rhythm-v1.js?v=20260907-dailyrhythm1','data-hc-daily-life-rhythm');
@@ -27,16 +29,16 @@ async function boot(){
    await load('ville/client-referral-network-v1.js?v=20260908-referral5','data-hc-client-referral-network');
  }
  if(/atelier/.test(p)){
-   await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle3','data-hc-referral-order-lifecycle');
+   await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle4','data-hc-referral-order-lifecycle');
    await load('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit2','data-hc-client-fitting-generic');
  }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
- if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
+ if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260908-dialogue4','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
  if(/agenda/.test(p))await load('agenda/agenda-lived-day-v1.js?v=20260907-agendalived1','data-hc-agenda-lived-day');
  if(/\/book(?:\/|$)/.test(p)){
    await load('book/book-life-story-v1.js?v=20260907-booklife1','data-hc-book-life-story');
-   await load('book/book-client-history-v1.js?v=20260908-clienthistory1','data-hc-book-client-history');
+   await load('book/book-client-history-v1.js?v=20260908-clienthistory2','data-hc-book-client-history');
  }
  if(/school-(home|day|life|city)/.test(p)){
    await load('school/school-housing-social-consequences-v1.js?v=20260908-housingsocial1','data-hc-school-housing-social');
@@ -60,15 +62,17 @@ async function boot(){
    await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
    await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive2','data-hc-career-adaptive-opportunities');
    await load('career/career-institution-memory-v1.js?v=20260908-institutions1','data-hc-career-institution-memory');
+   await load('career/career-collaboration-lifecycle-v1.js?v=20260908-collaboration1','data-hc-career-collaboration-lifecycle');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
    if(/(carriere|career)/.test(p)){
      await load('career/career-lived-profile-v1.js?v=20260908-careerlived3','data-hc-career-lived-profile');
      await load('career/career-institution-history-ui-v1.js?v=20260908-institutionui1','data-hc-career-institution-history-ui');
+     await load('career/career-collaboration-exit-ui-v1.js?v=20260908-collaborationexit1','data-hc-career-collaboration-exit-ui');
    }
    if(/(carriere|career|telephone|ville|image-publique|studio-photo|ateliergram)/.test(p)){
      await load('career/career-worked-lead-outcomes-v1.js?v=20260908-workedoutcomes1','data-hc-career-worked-lead-outcomes');
-     await load('career/career-active-lead-gameplay-v1.js?v=20260908-activelead1','data-hc-career-active-lead-gameplay');
+     await load('career/career-active-lead-gameplay-v1.js?v=20260908-activelead2','data-hc-career-active-lead-gameplay');
    }
  }
  if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
@@ -122,5 +126,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:50,boot,currentCity,isNimesContext};
+window.HCImmersiveSceneRouterV1={version:51,boot,currentCity,isNimesContext};
 })();
