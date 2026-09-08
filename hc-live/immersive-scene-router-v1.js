@@ -38,6 +38,10 @@ async function boot(){
    await load('book/book-life-story-v1.js?v=20260907-booklife1','data-hc-book-life-story');
    await load('book/book-client-history-v1.js?v=20260908-clienthistory1','data-hc-book-client-history');
  }
+ if(/school-(home|day|life|city)/.test(p)){
+   await load('school/school-housing-social-consequences-v1.js?v=20260908-housingsocial1','data-hc-school-housing-social');
+   await load('school/school-relationship-evolution-v1.js?v=20260908-relevolution2','data-hc-school-relationship-evolution');
+ }
  if(/school-(day|life)/.test(p)){
    await load('school/school-daily-life-v1.js?v=20260907-dailylife4','data-hc-school-daily-life-router');
    await load('school/school-daily-life-dialogue-bridge-v1.js?v=20260907-daily-dialogue1','data-hc-school-daily-dialogue');
@@ -53,7 +57,7 @@ async function boot(){
    await load('career/career-origin-v1.js?v=20260907-careerorigin2','data-hc-career-origin-router');
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
    await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
-   await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive1','data-hc-career-adaptive-opportunities');
+   await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive2','data-hc-career-adaptive-opportunities');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
    if(/(carriere|career)/.test(p))await load('career/career-lived-profile-v1.js?v=20260908-careerlived3','data-hc-career-lived-profile');
@@ -113,5 +117,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:46,boot,currentCity,isNimesContext};
+window.HCImmersiveSceneRouterV1={version:47,boot,currentCity,isNimesContext};
 })();
