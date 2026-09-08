@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'hc-live/**'
+      - 'infomaniak/api/**'
       - '.github/workflows/deploy-infomaniak.yml'
   workflow_dispatch:
 
@@ -25,6 +26,7 @@ jobs:
       INFOMANIAK_FTP_PORT: '21'
       INFOMANIAK_FTP_PASSWORD: ${{ secrets.INFOMANIAK_FTP_PASSWORD || secrets.FTP_PASSWORD || secrets.INFOMANIAK_PASSWORD }}
       INFOMANIAK_FTP_PATH: ${{ secrets.INFOMANIAK_FTP_PATH || '/' }}
+      MAGNIFIC_API_KEY: ${{ secrets.MAGNIFIC_API_KEY || secrets.MAGNIFIC_KEY }}
 
     steps:
       - name: Checkout
@@ -34,7 +36,7 @@ jobs:
         shell: bash
         run: |
           if [ -z "$INFOMANIAK_FTP_PASSWORD" ]; then
-            echo "::error::Mot de passe FTP Infomaniak manquant. Ajoute un secret nommé INFOMANIAK_FTP_PASSWORD (ou FTP_PASSWORD / INFOMANIAK_PASSWORD)."
+            echo "::error::Mot de passe FTP Infomaniak manquant."
             exit 1
           fi
 
@@ -45,6 +47,28 @@ jobs:
           test -s hc-live/start-choice/index.html
           test -s hc-live/server-save-bridge-v1.js
           test -s hc-live/game-engine.js
+          test -s infomaniak/api/generate-garment-visual.php
+
+      - name: Prepare optional server secret file
+        shell: bash
+        run: |
+          if [ -n "$MAGNIFIC_API_KEY" ]; then
+            umask 077
+            cat > infomaniak/api/.env.php <<'PHP'
+          <?php
+          return ['MAGNIFIC_API_KEY' => getenv('HC_DEPLOY_MAGNIFIC_KEY') ?: ''];
+          PHP
+            python - <<'PY'
+          from pathlib import Path
+          import os
+          p=Path('infomaniak/api/.env.php')
+          s=p.read_text()
+          s=s.replace("getenv('HC_DEPLOY_MAGNIFIC_KEY') ?: ''", repr(os.environ['MAGNIFIC_API_KEY']))
+          p.write_text(s)
+          PY
+          else
+            echo "MAGNIFIC_API_KEY absent des secrets GitHub : le fichier secret serveur existant, s'il existe, ne sera pas écrasé."
+          fi
 
       - name: Install lftp
         shell: bash
@@ -90,6 +114,22 @@ jobs:
           bye
           LFTP
 
+      - name: Deploy PHP API without deleting server data
+        shell: bash
+        run: |
+          timeout 180s lftp -u "$INFOMANIAK_FTP_USER","$INFOMANIAK_FTP_PASSWORD" -p "$INFOMANIAK_FTP_PORT" "ftp://$INFOMANIAK_FTP_HOST" <<LFTP
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ftp:passive-mode true
+          set ssl:verify-certificate no
+          set net:max-retries 2
+          set net:timeout 20
+          cd "$INFOMANIAK_FTP_PATH"
+          mkdir -p api
+          mirror --reverse --verbose --parallel=2 --no-perms infomaniak/api/ api/
+          bye
+          LFTP
+
       - name: Verify production files over FTPS
         shell: bash
         run: |
@@ -103,5 +143,6 @@ jobs:
           cd "$INFOMANIAK_FTP_PATH"
           cls -l index.html
           cls -l start-choice/index.html
+          cls -l api/generate-garment-visual.php
           bye
           LFTP
