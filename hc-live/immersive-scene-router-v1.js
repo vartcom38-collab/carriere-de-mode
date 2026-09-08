@@ -25,7 +25,7 @@ async function boot(){
  }
  if(/school-life/.test(p))await load('school/school-immersive-dialogues-v1.js?v=20260907-teacherdialogue2','data-hc-school-teacher-dialogues');
  if(/school-city/.test(p))await load('school/school-city-immersive-scenes-v1.js?v=20260907-cityscene2','data-hc-school-city-scenes');
- if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
+ if(/(chez-moi|carriere|career|telephone|ville|image-publique|studio-photo|ateliergram)/.test(p)){
    await load('career/career-origin-v1.js?v=20260907-careerorigin2','data-hc-career-origin-router');
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
    await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
@@ -33,6 +33,7 @@ async function boot(){
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
    if(/(carriere|career)/.test(p))await load('career/career-lived-profile-v1.js?v=20260907-careerlived1','data-hc-career-lived-profile');
+   if(/(carriere|career|telephone|ville|image-publique|studio-photo|ateliergram)/.test(p))await load('career/career-active-lead-gameplay-v1.js?v=20260908-activelead1','data-hc-career-active-lead-gameplay');
  }
  if(/(chez-moi|carriere|career|telephone|ville)/.test(p)){
    await load('ville/territorial-population-engine-v1.js?v=20260907-population1','data-hc-territorial-population');
@@ -75,5 +76,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:28,boot};
+window.HCImmersiveSceneRouterV1={version:29,boot};
 })();
