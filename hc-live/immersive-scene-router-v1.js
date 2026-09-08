@@ -42,6 +42,7 @@ async function boot(){
    await load('school/school-housing-social-consequences-v1.js?v=20260908-housingsocial1','data-hc-school-housing-social');
    await load('school/school-relationship-evolution-v1.js?v=20260908-relevolution2','data-hc-school-relationship-evolution');
  }
+ if(/(school-home|school-life|carriere|career)/.test(p))await load('school/school-career-continuity-v2.js?v=20260908-careercontinuity3','data-hc-school-career-continuity');
  if(/school-(day|life)/.test(p)){
    await load('school/school-daily-life-v1.js?v=20260907-dailylife4','data-hc-school-daily-life-router');
    await load('school/school-daily-life-dialogue-bridge-v1.js?v=20260907-daily-dialogue1','data-hc-school-daily-dialogue');
@@ -117,5 +118,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:47,boot,currentCity,isNimesContext};
+window.HCImmersiveSceneRouterV1={version:48,boot,currentCity,isNimesContext};
 })();
