@@ -59,6 +59,7 @@ async function boot(){
    await load('career/career-route-context-v1.js?v=20260907-careerroute2','data-hc-career-route-router');
    await load('career/career-emergent-identity-v1.js?v=20260908-careeridentity3','data-hc-career-emergent-identity');
    await load('career/career-adaptive-opportunities-v1.js?v=20260908-adaptive2','data-hc-career-adaptive-opportunities');
+   await load('career/career-institution-memory-v1.js?v=20260908-institutions1','data-hc-career-institution-memory');
    await load('career/career-immersive-dialogues-v1.js?v=20260907-careerdialogue2','data-hc-career-dialogues');
    await load('career/career-client-immersive-bridge-v1.js?v=20260907-clientdialogue1','data-hc-career-client-dialogues');
    if(/(carriere|career)/.test(p))await load('career/career-lived-profile-v1.js?v=20260908-careerlived3','data-hc-career-lived-profile');
@@ -118,5 +119,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:48,boot,currentCity,isNimesContext};
+window.HCImmersiveSceneRouterV1={version:49,boot,currentCity,isNimesContext};
 })();
