@@ -1,0 +1,58 @@
+/* Haute Couture Live — contexte vécu école/logement v1 */
+(function(){
+'use strict';
+if(window.HCSchoolLivedContextV1)return;
+const SCHOOL='haute-couture-school-choice-v1',HOUSING='haute-couture-school-housing-v1',MEM='haute-couture-school-lived-context-v1';
+const read=(k,f=null)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}};
+const write=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));return v};
+const school=read(SCHOOL,{}),housing=read(HOUSING,{});
+const family=String(school.id||'').startsWith('ifm-')?'ifm':String(school.id||'').startsWith('duperre-')?'duperre':'esmod';
+const schoolTone={
+ ifm:{rhythm:'dense, analytique et très ouvert sur l’industrie',first:'Ici, on te demande vite de relier culture, recherche, création et monde professionnel.',cue:'Tu remarques une circulation rapide entre discussions conceptuelles, références et décisions de projet.'},
+ duperre:{rhythm:'atelier, expérimental et très attentif aux partis pris personnels',first:'Ici, on attend que tu testes, que tu défendes tes choix et que tu construises une pensée visuelle personnelle.',cue:'Tu sens qu’une proposition singulière vaut davantage qu’une réponse trop propre mais sans point de vue.'},
+ esmod:{rhythm:'très atelier, progressif et orienté vers le métier',first:'Ici, la création est constamment ramenée au vêtement, à sa construction et à sa faisabilité.',cue:'Tu comprends vite que dessin, coupe, volume et technique vont avancer ensemble.'}
+}[family];
+const homeTone={
+ residence:{arrival:'Tu pars d’une résidence étudiante : du monde dans les couloirs, des visages qui reviennent, peu de distance avant de tomber sur quelqu’un.',effect:'La résidence augmente naturellement les occasions de connaître des étudiants hors de ta promo.',morning:'Le matin commence avec des portes qui claquent, des sacs, des cafés avalés vite et plusieurs étudiants qui partent en même temps.'},
+ colocation:{arrival:'Tu pars de ta coloc : la journée commence rarement dans le silence et quelqu’un peut très bien commenter ton rendu avant même ton premier cours.',effect:'La coloc crée plus de conversations spontanées et de liens indirects avec d’autres étudiants.',morning:'Avant de partir, la cuisine est déjà occupée. Une remarque banale peut devenir conseil, blague ou début d’une habitude commune.'},
+ studio:{arrival:'Tu pars de ton studio : tu contrôles davantage ton rythme et ton calme, mais personne ne vient remplir les blancs à ta place.',effect:'Le studio protège ton intimité et ton temps de travail, mais les rencontres passent davantage par l’école et la ville.',morning:'Le départ est plus silencieux. Tu choisis toi-même quand tu sors de ta bulle et à quel moment la journée devient sociale.'}
+}[housing.type]||{arrival:'Tu pars de chez toi.',effect:'Ton logement influence doucement ta vie quotidienne.',morning:'La journée commence chez toi.'};
+const state=read(MEM,{version:1,days:{},socialExposure:0,homePrivacy:0,schoolIdentity:family});
+state.schoolIdentity=family;
+state.city=school.city||housing.city||state.city||null;
+state.housingType=housing.type||state.housingType||null;
+state.socialExposure=Number(housing.effects?.socialExposure ?? (housing.type==='residence'?3:housing.type==='colocation'?4:1));
+state.homePrivacy=Number(housing.effects?.privacy ?? (housing.type==='studio'?4:housing.type==='residence'?2:1));
+write(MEM,state);
+function patch(){
+ const flow=read('haute-couture-school-day1-flow-v1',{});
+ const first=flow.phase && flow.phase!=='done';
+ const subtitle=document.getElementById('boardSubtitle');
+ const dayTitle=document.getElementById('dayTitle');
+ const hand=document.getElementById('sceneHand');
+ const reason=document.getElementById('reason');
+ const place=document.getElementById('placePill');
+ const schoolPill=document.getElementById('schoolPill');
+ if(schoolPill&&school.name)schoolPill.textContent=school.name;
+ if(place)place.textContent=school.city||housing.city||'Mon école';
+ if(first){
+   if(subtitle)subtitle.textContent=`${schoolTone.rhythm}. ${homeTone.arrival}`;
+   if(dayTitle)dayTitle.textContent=schoolTone.first;
+   if(hand)hand.textContent=homeTone.morning;
+   if(reason)reason.textContent=`Ce que ton choix change déjà : ${homeTone.effect} ${schoolTone.cue}`;
+ }
+ const profile=document.getElementById('profileMeta');
+ if(profile)profile.textContent=`${school.city||'École'} · Année 1`;
+}
+function rememberDay(){
+ const academic=window.HCSchoolAcademic?.state?.();
+ const day=Number(academic?.day||1);
+ if(!state.days[day]){
+  state.days[day]={schoolFamily:family,housing:housing.type||null,city:school.city||null,schoolCue:schoolTone.cue,homeCue:homeTone.effect,seenAt:new Date().toISOString()};
+  write(MEM,state);
+ }
+}
+function boot(){rememberDay();if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(patch,0),{once:true});else setTimeout(patch,0);setTimeout(patch,250)}
+boot();
+window.HCSchoolLivedContextV1={version:1,state:()=>read(MEM,{}),schoolTone,homeTone,patch};
+})();
