@@ -12,12 +12,12 @@ async function boot(){
  await load('book/book-engine.js?v=20260907-bookcrosslinks1','data-hc-book-engine-crosslinks');
  await load('world-crosslinks-v1.js?v=20260907-crosslinks1','data-hc-world-crosslinks');
  await load('missions/mission-engine-v1.js?v=20260908-missions1','data-hc-mission-engine');
- await load('missions/mission-world-bridge-v1.js?v=20260908-missionbridge6','data-hc-mission-world-bridge');
+ await load('missions/mission-world-bridge-v1.js?v=20260908-missionbridge8','data-hc-mission-world-bridge');
  if(!/(missions|archives)/.test(p))await load('missions/mission-hud-v1.js?v=20260908-missionhud1','data-hc-mission-hud');
  await load('archives/collection-engine-v1.js?v=20260908-archives2','data-hc-collection-engine');
  if(/(book|ville|client|fitting|essayage|carriere|career|image-publique|studio-photo|ateliergram|photo)/.test(p)){
    await load('atelier-raster/garment-visual-pipeline-v1.js?v=20260908-garment5','data-hc-global-garment-pipeline');
-   await load('garment-world-presence-v1.js?v=20260908-garmentworld1','data-hc-garment-world-presence');
+   await load('garment-world-presence-v1.js?v=20260908-garmentworld3','data-hc-garment-world-presence');
  }
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
@@ -87,5 +87,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:35,boot};
+window.HCImmersiveSceneRouterV1={version:36,boot};
 })();
