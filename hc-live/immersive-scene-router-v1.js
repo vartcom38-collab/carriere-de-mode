@@ -19,7 +19,10 @@ async function boot(){
    await load('atelier-raster/garment-visual-pipeline-v1.js?v=20260908-garment5','data-hc-global-garment-pipeline');
    await load('garment-world-presence-v1.js?v=20260908-garmentworld3','data-hc-garment-world-presence');
  }
- if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p))await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
+ if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p)){
+   await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
+   await load('ville/client-referral-network-v1.js?v=20260908-referral1','data-hc-client-referral-network');
+ }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
  if(/chez-moi/.test(p))await load('chez-moi/home-immersion-v2.js?v=20260907-homeimmersion3','data-hc-home-immersion-v2');
@@ -90,5 +93,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:38,boot};
+window.HCImmersiveSceneRouterV1={version:39,boot};
 })();
