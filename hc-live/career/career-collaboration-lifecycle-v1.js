@@ -23,7 +23,8 @@ function end(id,reason='natural',extra={}){const s=state(),rec=s.collaborations[
 function active(){return Object.values(state().collaborations).filter(x=>x.status==='active')}
 function all(){return Object.values(state().collaborations).sort((a,b)=>String(b.startedAt||'').localeCompare(String(a.startedAt||'')))}
 function choices(){return Object.entries(EXIT).map(([id,x])=>({id,label:x.label,text:x.text}))}
-function boot(){window.addEventListener('hc-career-collaboration-request-start',e=>start(e.detail||{}));window.addEventListener('hc-career-collaboration-request-end',e=>end(e.detail?.id,e.detail?.reason,e.detail||{}))}
+function maybeStartFromLead(detail={}){const lead=detail.lead||{},name=lead.organization||lead.company||lead.studio||lead.atelier||lead.hostName||lead.sourceOrganization||'';if(!name)return null;const axis=detail.axis||lead.axis||'contact',kind=String(lead.type||'').toLowerCase();if(axis==='contact'||/client|cultural|referral/.test(kind))return null;const institutionId='career-org-'+slug(name),existing=active().find(c=>c.institutionId===institutionId&&c.sourceId===(lead.id||lead.followupId||null));if(existing)return existing;return start({institutionId,name,kind:lead.collaborationType||(/shoot|image/.test(kind)||axis==='image'?'studio collaboration':'professional collaboration'),territory:lead.territory||lead.city||null,sourceId:lead.id||lead.followupId||null,role:lead.role||null,renewable:lead.renewable!==false})}
+function boot(){window.addEventListener('hc-career-collaboration-request-start',e=>start(e.detail||{}));window.addEventListener('hc-career-collaboration-request-end',e=>end(e.detail?.id,e.detail?.reason,e.detail||{}));window.addEventListener('hc-career-lead-worked',e=>maybeStartFromLead(e.detail||{}))}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-window.HCCareerCollaborationLifecycleV1={version:1,state,start,end,active,all,choices,exitTypes:EXIT,storageKey:KEY};
+window.HCCareerCollaborationLifecycleV1={version:2,state,start,end,active,all,choices,maybeStartFromLead,exitTypes:EXIT,storageKey:KEY};
 })();
