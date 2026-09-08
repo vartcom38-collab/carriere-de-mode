@@ -21,11 +21,11 @@ async function boot(){
  }
  if(/(chez-moi|telephone|ville|book|carriere|career|client|fitting|essayage)/.test(p)){
    await load('ville/client-aftercare-v1.js?v=20260908-aftercare1','data-hc-client-aftercare');
-   await load('ville/client-referral-network-v1.js?v=20260908-referral3','data-hc-client-referral-network');
+   await load('ville/client-referral-network-v1.js?v=20260908-referral4','data-hc-client-referral-network');
  }
  if(/atelier/.test(p)){
-   await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle2','data-hc-referral-order-lifecycle');
-   await load('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit1','data-hc-client-fitting-generic');
+   await load('ville/client-referral-order-lifecycle-v1.js?v=20260908-refcycle3','data-hc-referral-order-lifecycle');
+   await load('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit2','data-hc-client-fitting-generic');
  }
  if(/(ville|client|fitting|essayage)/.test(p))await load('atelier-raster/garment-visual-generation-bridge-v1.js?v=20260908-generation5','data-hc-global-garment-generation');
  if(!window.HCImmersiveDialogueV1)await load('immersive-dialogue-v1.js?v=20260907-dialogue3','data-hc-immersive-dialogue');
@@ -80,6 +80,7 @@ async function boot(){
    await load('ville/nimes-immersion-cleanup-v1.js?v=20260907-nimescleanup1','data-hc-nimes-immersion-cleanup');
    await load('ville/nimes-artisan-dialogue-bridge-v1.js?v=20260907-artisandialogue1','data-hc-nimes-artisan-dialogues');
    await load('ville/client-fitting-lived-v1.js?v=20260908-fittinglived1','data-hc-client-fitting-lived');
+   await load('ville/client-fitting-generic-bridge-v1.js?v=20260908-genericfit2','data-hc-client-fitting-generic');
    await load('ville/nimes-client-fitting-dialogue-bridge-v1.js?v=20260908-fittingdialogue2','data-hc-nimes-fitting-dialogues');
    await load('ville/territorial-immersive-guide-engine-v1.js?v=20260907-travelguide1','data-hc-territorial-guide-engine');
    await load('ville/nimes-arenes-immersive-guide-v1.js?v=20260907-arenesguide1','data-hc-nimes-arenes-guide');
@@ -97,5 +98,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:42,boot};
+window.HCImmersiveSceneRouterV1={version:43,boot};
 })();
