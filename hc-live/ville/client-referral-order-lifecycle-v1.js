@@ -14,9 +14,10 @@ function networkOrders(){return orders().filter(supported)}
 function reconcile(){for(const raw of networkOrders()){const o=normalize(raw);ensureMission(o)}return networkOrders()}
 function fittingReady(){return networkOrders().find(o=>['ready_for_fitting','alterations_needed','fitting_ok'].includes(o.status))||null}
 function settlePayment(o){if(!supported(o)||o.paymentSettled)return o;const amount=Number(o.proposal?.price||o.payment||o.reward||0);if(amount>0){try{window.HCGame?.transact?.(amount,'Paiement cliente — '+(o.clientName||'cliente'),'career')}catch(_){}}o.payment=amount;o.paymentSettled=true;o.paidAt=iso();o.history=o.history||[];if(!o.history.some(x=>x.type==='client-payment-settled'))o.history.push({type:'client-payment-settled',amount,at:iso()});return save(o,true)}
-['hc-client-referral-order-created','hc-client-returning-order-created'].forEach(ev=>window.addEventListener(ev,e=>{const o=normalize(e.detail||{});ensureMission(o)}));
-window.addEventListener('hc-client-order',e=>{const raw=e.detail||{};if(!supported(raw))return;const o=normalize(raw);ensureMission(o);syncMission(o)});
+function loadLineage(){if(window.HCClientGarmentLineageV1||document.querySelector('script[data-hc-client-garment-lineage]'))return;const p=location.pathname,i=p.indexOf('/hc-live/'),base=i>=0?p.slice(0,i+9):'/';const s=document.createElement('script');s.src=base+'ville/client-garment-lineage-v1.js?v=20260908-lineage1';s.defer=true;s.setAttribute('data-hc-client-garment-lineage','1');document.head.appendChild(s)}
+['hc-client-referral-order-created','hc-client-returning-order-created'].forEach(ev=>window.addEventListener(ev,e=>{const o=normalize(e.detail||{});ensureMission(o);if(o?.returnKind==='transform_old')loadLineage()}));
+window.addEventListener('hc-client-order',e=>{const raw=e.detail||{};if(!supported(raw))return;const o=normalize(raw);ensureMission(o);syncMission(o);if(o.returnKind==='transform_old')loadLineage()});
 window.addEventListener('hc-fitting-lived-state',e=>{const o=orders().find(x=>x.id===e.detail?.orderId);if(supported(o))syncMission(o)});
 window.addEventListener('hc-fitting-delivered',e=>{const o=orders().find(x=>x.id===e.detail?.orderId);if(supported(o)){const paid=settlePayment(o);syncMission(paid)}});
-setTimeout(reconcile,300);
-window.HCClientReferralOrderLifecycleV1={version:3,supported,normalize,reconcile,ensureMission,syncMission,fittingReady,settlePayment,storageKey:O};})();
+setTimeout(()=>{reconcile();if(networkOrders().some(o=>o.returnKind==='transform_old'))loadLineage()},300);
+window.HCClientReferralOrderLifecycleV1={version:4,supported,normalize,reconcile,ensureMission,syncMission,fittingReady,settlePayment,loadLineage,storageKey:O};})();
