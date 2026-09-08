@@ -44,12 +44,13 @@ async function boot(){
    await load('ville/nimes-deferred-social-opportunities-v1.js?v=20260908-nimesdeferred2','data-hc-nimes-deferred-opportunities');
    await load('ville/nimes-identity-shaped-social-opportunities-v1.js?v=20260908-shaped1','data-hc-nimes-identity-shaped-social');
    await load('ville/nimes-social-opportunity-scenes-v1.js?v=20260908-nimessocialscenes2','data-hc-nimes-social-opportunity-scenes');
-   await load('ville/nimes-social-outcome-crosslinks-v1.js?v=20260908-socialoutcomes1','data-hc-nimes-social-outcome-crosslinks');
+   await load('ville/nimes-social-outcome-crosslinks-v1.js?v=20260908-socialoutcomes2','data-hc-nimes-social-outcome-crosslinks');
  }
  if(/telephone/.test(p)){
    await load('telephone/phone-lived-conversations-v1.js?v=20260907-phonelived1','data-hc-phone-lived-conversations');
    await load('telephone/nimes-deferred-opportunity-phone-bridge-v1.js?v=20260907-nimesdeferredphone1','data-hc-nimes-deferred-phone');
-   await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260907-phonedialogue1','data-hc-phone-important-dialogues');
+   await load('ville/nimes-social-followup-resolution-v1.js?v=20260908-socialfollowup1','data-hc-nimes-social-followup-resolution');
+   await load('telephone/phone-important-dialogue-bridge-v1.js?v=20260908-phonedialogue2','data-hc-phone-important-dialogues');
  }
  if(/ville/.test(p)){
    await load('ville/nimes-city-intents-v1.js?v=20260907-cityintents1','data-hc-nimes-city-intents');
@@ -74,5 +75,5 @@ async function boot(){
  }
 }
 boot();
-window.HCImmersiveSceneRouterV1={version:27,boot};
+window.HCImmersiveSceneRouterV1={version:28,boot};
 })();
