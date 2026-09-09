@@ -13,7 +13,8 @@ Légende :
 
 ✅ Bassins internes structurés.
 ✅ Grande identité créative différenciée.
-✅ Bourg, Oyonnax, Jujurieux/Cerdon, Dombes, Pays de Gex/Monts Jura, Pérouges/Ambronay/Nantua, Revermont/Trévoux et Belley/Bugey Sud disposent maintenant d’une fiche dédiée.
+✅ Bourg, Oyonnax, Jujurieux/Cerdon, Dombes, Pays de Gex/Monts Jura, Pérouges/Ambronay/Nantua, Revermont/Trévoux et Belley/Bugey Sud disposent d’une fiche dédiée.
+✅ Ambérieu, Châtillon-sur-Chalaronne, Vonnas, Saint-Rambert-en-Bugey et Valserhône ont maintenant un traitement spécifique de rôle territorial.
 🟡 Histoire générale du département à approfondir au-delà des axes textile/industriel/patrimonial.
 🟡 Architecture vernaculaire à documenter plus finement bassin par bassin.
 
@@ -25,7 +26,7 @@ Légende :
 ✅ Coiffes / dentelle / tablier / parures identifiés.
 ✅ Émaux bressans identifiés.
 ✅ Peigne / ornement / lunetterie Oyonnax identifiés.
-✅ Recherche historique sur habillement 1930–1950 intégrée à Nantua comme contenu documentaire, sans esthétisation superficielle.
+✅ Recherche historique sur habillement 1930–1950 intégrée à Nantua comme contenu documentaire.
 🟡 Vêtements professionnels, ruraux, industriels et de montagne à approfondir historiquement.
 
 ---
@@ -33,14 +34,15 @@ Légende :
 # 3 — TEXTILE / MATIÈRES
 
 ✅ Jujurieux / soie.
+✅ Saint-Rambert / schappe et déchets de soie désormais approfondi.
 ✅ Oyonnax / plastiques / acétate / accessoire.
 ✅ Cerdon / cuivre et métal.
 ✅ Meillonnas / faïence comme source visuelle.
 ✅ Mijoux / pierre et lapidaire.
-✅ Trévoux / fil d’or et d’argent comme axe historique de recherche.
-🟡 Schappe / vallée de l’Albarine à approfondir.
-🔴 Fournisseurs textiles réels départementaux encore incomplets.
-🔴 Recyclage / upcycling / innovations matières locales à rechercher plus systématiquement.
+✅ Trévoux / fil d’or et d’argent comme axe historique.
+✅ acteurs contemporains textile / couture / accessoires supplémentaires recensés.
+🟡 Fournisseurs textiles réels hors grands pôles encore incomplets.
+🟡 Recyclage / upcycling / innovations matières locales désormais amorcés mais à densifier.
 
 ---
 
@@ -54,13 +56,14 @@ Légende :
 # 5 — SAVOIR-FAIRE / ARTISANAT
 
 ✅ Soierie.
+✅ Schappe / filature de déchets de soie.
 ✅ Plasturgie / peigne / accessoire / lunetterie.
 ✅ Dinanderie.
 ✅ Lapidaire.
 ✅ Faïence / poterie.
-✅ Trévoux : filières, métal précieux, artisanat d’art documentés comme axes historiques.
-🟡 Bijouterie / émail à approfondir acteur par acteur.
-🔴 Chaussure / cuir / maroquinerie / chapellerie : vérifier avant ajout.
+✅ Trévoux : filières, métal précieux, artisanat d’art.
+✅ inventaire complémentaire des métiers d’art de l’Ain : stylisme, couture, tissage traditionnel, dentelle aux fuseaux, tailleur sur mesure, maroquinerie, bijouterie, joaillerie, photographie, lunetterie, émaux.
+🟡 vérifier acteur par acteur localisation, continuité d’activité et conditions d’accès avant intégration finale.
 
 ---
 
@@ -74,7 +77,8 @@ Légende :
 ✅ Pérouges / Ambronay / Nantua possèdent une checklist pôles.
 ✅ Revermont / Trévoux possèdent une checklist pôles.
 ✅ Belley / Bugey Sud possède une checklist pôle.
-🟡 Ambérieu-en-Bugey, Châtillon-sur-Chalaronne, Vonnas, Saint-Rambert-en-Bugey, Ferney-Voltaire, Divonne-les-Bains, Mijoux, Valserhône et quelques petites communes stratégiques restent à isoler plus finement si nécessaire.
+✅ Ambérieu-en-Bugey, Châtillon-sur-Chalaronne, Vonnas, Saint-Rambert-en-Bugey et Valserhône ont été ajoutés comme pôles secondaires à fonction claire.
+🟡 Ferney-Voltaire, Divonne-les-Bains, Mijoux et quelques petites communes stratégiques peuvent encore être isolés plus finement si nécessaire.
 
 ---
 
@@ -97,6 +101,8 @@ Légende :
 ✅ Nantua / MRDA.
 ✅ Revermont / Meillonnas.
 ✅ Trévoux.
+✅ Saint-Rambert / paysage industriel de la Schappe.
+✅ Châtillon : musées municipaux / ancien hôpital / patrimoine urbain.
 🟡 petits musées / collections locales à compléter.
 
 ---
@@ -109,23 +115,29 @@ Légende :
 ✅ Pérouges / Plaine.
 ✅ Revermont.
 ✅ Nantua / lac.
+✅ Saint-Rambert / paysage industriel textile.
 🟡 lieux exacts de shooting et contraintes d’accès à préciser.
 
 ---
 
 # 10 — COMMERCES MODE / MERCERIES / TISSUS
 
-✅ quelques acteurs réels vérifiés.
+✅ acteurs réels vérifiés plus nombreux.
 ✅ Bourg amorcé.
 ✅ Oyonnax fort sur accessoire / lunetterie / composants.
-🔴 merceries / tissus / fournitures à compléter dans les autres bassins.
+✅ métiers d’art textile / couture supplémentaires recensés à l’échelle départementale.
+🟡 merceries / tissus / fournitures à compléter dans les bassins moins couverts.
 
 ---
 
 # 11 — BROCANTES / FRIPERIES / VINTAGE
 
-🟡 familles de gameplay définies dans plusieurs villes.
-🔴 inventaire réel et calendrier annuel encore incomplets.
+✅ couche réelle désormais construite dans le Pays de Gex.
+✅ friperie solidaire à Gex documentée.
+✅ friperie haut de gamme / retouches à Ornex documentées en 2026.
+✅ calendrier 2026 de vide-greniers / bourses / braderies commencé : Gex, Sergy, Ferney-Voltaire, Prévessin-Moëns, Thoiry, Oyonnax, Belley.
+✅ saisonnalité seconde main posée.
+🟡 Bourg, Bugey et Dombes encore à compléter par sources locales fiables.
 
 ---
 
@@ -136,27 +148,30 @@ Légende :
 ✅ Soieries Bonnet.
 ✅ Nantua / documents, photographies et témoignages.
 ✅ Trévoux / fonds patrimonial.
+✅ Châtillon / médiathèque et contenus patrimoniaux.
 🟡 fonds locaux dans les autres villes à compléter.
 
 ---
 
 # 13 — STUDIOS / PHOTOGRAPHES / PROFESSIONNELS
 
-🟡 besoins par bassin définis.
-🔴 inventaire réel départemental encore incomplet.
+✅ photographie désormais présente dans l’inventaire des métiers d’art.
+🟡 inventaire réel encore incomplet pour studios et spécialisation mode.
+🟡 utiliser de préférence des studios FICTION GAMEPLAY pour les arcs mode complexes quand aucune spécialisation réelle n’est documentée.
 
 ---
 
 # 14 — CAFÉS / RESTAURANTS / LIEUX SOCIAUX
 
 🟡 fonction sociale définie partout.
+🟡 Vonnas apporte désormais un rôle clair d’hospitalité / réception.
 🔴 sélection réelle encore insuffisante hors Bourg.
 
 ---
 
 # 15 — HÔTELS / PRESTIGE / SHOWROOMS
 
-🟡 mariage/réception bien amorcé à Bourg, Dombes et Pays de Gex.
+🟡 mariage/réception bien amorcé à Bourg, Dombes, Vonnas et Pays de Gex.
 🔴 hôtels réellement significatifs à hiérarchiser bassin par bassin.
 
 ---
@@ -164,6 +179,7 @@ Légende :
 # 16 — TRANSPORTS
 
 ✅ grandes connexions départementales et externes structurées.
+✅ Ambérieu et Valserhône ont désormais un rôle spécifique de carrefour / liaison.
 ✅ aucun voyage ne change automatiquement la résidence.
 🟡 fréquences / accessibilité locale à préciser quand utile au gameplay.
 
@@ -171,9 +187,12 @@ Légende :
 
 # 17 — ÉVÉNEMENTS / CALENDRIER
 
-✅ événements majeurs intégrés : Glorieuses, Printemps de Pérouges, Ambronay, événements du Pays de Gex, Bugey Sud, Parc des Oiseaux, musées, etc.
+✅ événements majeurs intégrés.
 ✅ saisonnalité par bassin.
-🟡 calendrier JANVIER → DÉCEMBRE à densifier encore avec brocantes, marchés, expos et petits rendez-vous.
+✅ Châtillon possède désormais un calendrier 2026 dense.
+✅ Valserhône : Tous en Scène et Fête de la Musique 2026 intégrés comme contexte culturel réel.
+✅ brocantes / braderies / bourses commencent à enrichir le calendrier.
+🟡 calendrier JANVIER → DÉCEMBRE à densifier encore avec petits rendez-vous et expositions.
 
 ---
 
@@ -184,7 +203,8 @@ Légende :
 ✅ personnalités de passage.
 ✅ rencontres libres et mémoire.
 ✅ Bourg dispose d’une banque concrète de personnages, briefs, rumeurs et secrets.
-🟡 autres pôles doivent encore atteindre la même densité que Bourg.
+✅ pôles secondaires disposent maintenant de profils fiction gameplay spécifiques.
+🟡 autres grands pôles doivent encore atteindre la même densité que Bourg.
 
 ---
 
@@ -199,7 +219,7 @@ Légende :
 
 ✅ familles par bassin structurées.
 ✅ saisonnalité différenciée.
-✅ Oyonnax, Dombes, Gex/Jura, Belley/Bugey Sud et Bourg ont désormais des profils spécifiques.
+✅ profils spécifiques Bourg, Oyonnax, Dombes, Gex/Jura, Belley/Bugey Sud, Vonnas, Valserhône et Châtillon.
 🟡 budgets/délais à articuler avec moteur global.
 
 ---
@@ -209,7 +229,8 @@ Légende :
 ✅ familles territoriales.
 ✅ progression début / développement / confirmée / avancée présente dans la majorité des fiches.
 ✅ Bourg dispose d’une banque de 40 briefs.
-🟡 banques de briefs aussi denses à écrire pour les autres grands pôles.
+✅ pôles secondaires ont maintenant des briefs dédiés.
+🟡 banques de briefs aussi denses à écrire pour Oyonnax, Gex/Jura, Dombes, Jujurieux/Cerdon et Belley.
 
 ---
 
@@ -217,7 +238,8 @@ Légende :
 
 ✅ défilés locaux / culturels / collectifs envisagés sans Paris-centrisme.
 ✅ exemple réel 2026 au Domaine des Saveurs.
-✅ spectacle/festival désormais bien relié à Ambronay, Pérouges, Pays de Gex et Bugey Sud.
+✅ spectacle/festival relié à Ambronay, Pérouges, Pays de Gex, Bugey Sud et Valserhône.
+✅ métiers connexes réels renforcés : accessoires, lunetterie, cintres lingerie, couture, tissage, dentelle, joaillerie.
 🟡 concours / écoles / présentations créateurs à rechercher davantage.
 
 ---
@@ -228,6 +250,7 @@ Légende :
 ✅ Dombes.
 ✅ Pérouges/Plaine.
 ✅ Pays de Gex / réception.
+✅ Vonnas identifié comme pôle hospitalité / réception.
 🟡 prestataires et lieux précis hors Bourg à approfondir.
 
 ---
@@ -239,6 +262,7 @@ Légende :
 ✅ Pays de Gex : jazz, arts de rue, cinéma, festivals.
 ✅ Bugey Sud : jazz, musique classique, événements.
 ✅ Bourg : Scène nationale.
+✅ Valserhône : programmation culturelle événementielle 2026.
 🟡 cinéma/audiovisuel local à ne développer que si bassin réel pertinent.
 
 ---
@@ -254,14 +278,15 @@ Légende :
 
 ✅ familles de lieux par bassin.
 ✅ saisons idéales.
-✅ Bourg, Dombes, Pays de Gex, Pérouges, Nantua, Revermont, Belley possèdent des directions visuelles distinctes.
-🔴 professionnels photo réels encore incomplets.
+✅ Bourg, Dombes, Pays de Gex, Pérouges, Nantua, Revermont, Belley, Châtillon et Saint-Rambert possèdent des directions visuelles distinctes.
+🟡 professionnels photo réels encore incomplets.
 
 ---
 
 # 27 — BOOK
 
 ✅ catégories et sources principales structurées dans tous les grands bassins.
+✅ Saint-Rambert ajoute un axe mémoire ouvrière / récupération textile.
 ✅ patrimoine sensible à Nantua traité comme recherche/mémoire et non comme récompense esthétique.
 
 ---
@@ -270,6 +295,7 @@ Légende :
 
 ✅ matières, motifs, palettes, accessoires, silhouettes, références.
 ✅ distinction entre inspiration et technique réellement apprise explicitement posée.
+✅ seconde main ajoute démontage raisonné, réparation, transformation et étude d’usure.
 🟡 catalogue final des techniques réellement apprenables encore à fermer.
 
 ---
@@ -280,6 +306,7 @@ Légende :
 ✅ modes de découverte.
 ✅ Bourg possède une banque spécifique.
 ✅ autres pôles possèdent des familles de secrets.
+✅ seconde main ouvre des secrets liés à lots, successions, stocks temporaires et recommandations.
 🟡 densifier les banques spécifiques ville par ville.
 
 ---
@@ -290,6 +317,7 @@ Légende :
 ✅ inter-bassins.
 ✅ Lyon, Genève, Savoie, Paris et régions voisines.
 ✅ logique réseau > hiérarchie géographique.
+✅ nouvelles chaînes : Bourg→Ambérieu→Saint-Rambert→Jujurieux ; Oyonnax→Valserhône→Gex/Genève ; Dombes→Châtillon→Vonnas→Bourg.
 
 ---
 
@@ -306,21 +334,24 @@ Légende :
 ✅ expositions temporaires.
 ✅ événements datés 2026 servant de modèle pour calendrier vivant.
 ✅ personnages évolutifs.
+✅ stocks de seconde main et événements commerciaux ajoutent du contenu variable.
 🟡 banque procédurale spécifique Ain à développer davantage.
 
 ---
 
 # 33 — SAISONNALITÉ
 
-✅ très forte différenciation par bassin.
+✅ forte différenciation par bassin.
 ✅ événements, paysages, clientèle, missions et shootings saisonniers.
-🔴 brocantes / arrivages / fournisseurs saisonniers encore incomplets.
+✅ calendrier seconde main / braderies désormais amorcé.
+🟡 arrivages / fournisseurs saisonniers encore incomplets.
 
 ---
 
 # 34 — RARETÉ
 
 ✅ principe commun → exceptionnel.
+✅ seconde main possède désormais une échelle de rareté spécifique.
 🟡 attribution ressource par ressource à poursuivre.
 
 ---
@@ -343,13 +374,13 @@ Légende :
 
 # PRIORITÉS RESTANTES AVANT « AIN PRÊT »
 
-1. 🔴 brocantes / friperies / vintage réels + calendrier ;
-2. 🔴 photographes / studios / professionnels créatifs réels ;
-3. 🔴 merceries / tissus / fournisseurs hors grands pôles ;
-4. 🔴 figures locales réelles sourcées ;
-5. 🟡 quartiers / zones détaillés Oyonnax, Gex/Ferney/Divonne, Belley ;
-6. 🟡 Ambérieu, Châtillon-sur-Chalaronne, Vonnas, Saint-Rambert, Valserhône à traiter plus finement ;
-7. 🟡 banques de briefs/personnages/secrets aussi denses que Bourg pour Oyonnax, Gex/Jura, Dombes, Jujurieux/Cerdon et Belley ;
+1. 🔴 figures locales réelles sourcées et proprement hiérarchisées ;
+2. 🔴 sélection réelle de cafés / lieux sociaux / hôtels réellement utiles ;
+3. 🟡 photographes / studios / professionnels créatifs réels plus précis ;
+4. 🟡 merceries / tissus / fournisseurs dans les bassins moins couverts ;
+5. 🟡 Bourg, Bugey et Dombes : brocantes / seconde main à compléter ;
+6. 🟡 quartiers / zones détaillés Oyonnax, Gex/Ferney/Divonne, Belley ;
+7. 🟡 banques de briefs/personnages/secrets aussi denses que Bourg pour les autres grands pôles ;
 8. 🟡 calendrier mensuel final consolidé ;
 9. 🟡 catalogue final des techniques Atelier réellement apprenables ;
 10. 🟡 banque procédurale de changement du monde sur 20–30 ans.
@@ -358,6 +389,6 @@ Légende :
 
 # VERDICT ACTUALISÉ
 
-L’Ain n’est plus au stade de simple socle départemental : ses principaux bassins et pôles ont désormais une identité de gameplay documentée et différenciée. Le département n’est toujours PAS marqué terminé, mais il est passé au stade **AVANCÉ — GRANDES STRUCTURES ET PRINCIPAUX PÔLES COUVERTS**.
+L’Ain est désormais au stade **TRÈS AVANCÉ — PRINCIPAUX PÔLES, SAVOIR-FAIRE, SECONDE MAIN ET RÉSEAUX COUVERTS**.
 
-La suite peut être menée sans validation intermédiaire : fermer les catégories rouges, densifier les banques de contenu dans les grands pôles, puis produire la synthèse finale du département avant de passer au département suivant.
+Le département n’est toujours PAS marqué terminé : il reste à fermer quelques catégories de qualité plutôt qu’à ajouter massivement des lieux. La suite doit viser les dernières zones rouges, densifier les banques de contenu dans les grands pôles et produire la synthèse finale du département avant passage au département suivant.
