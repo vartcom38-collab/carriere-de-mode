@@ -9,8 +9,7 @@ async function main(){
  page.setDefaultTimeout(5000);
  const errors=[],consoleErrors=[];
  page.on('pageerror',e=>errors.push(String(e.message||e)));
- page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
- // Les tuiles OSM ne sont pas nécessaires au test fonctionnel et peuvent ralentir la CI.
+ page.on('console',m=>{const text=m.text();console.log('BROWSER',m.type(),text);if(m.type()==='error')consoleErrors.push(text)});
  await page.route('**/tile.openstreetmap.org/**',route=>route.abort());
  await page.addInitScript(()=>localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify({city:'Bourg-en-Bresse',departmentCode:'01',departmentName:'Ain',lat:46.205,lng:5.226,reason:'visit'})));
  await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:20000});
@@ -25,17 +24,7 @@ async function main(){
  const beforePresence=await page.evaluate(()=>localStorage.getItem('haute-couture-current-presence-v1'));
  await page.evaluate(()=>window.HCTerritorialPlaceInterfaceV1.open({id:'ain-brou',dept:'01',departmentName:'Ain',city:'Bourg-en-Bresse',name:'Monastère royal de Brou',cat:'heritage',lat:46.19766,lng:5.23576,where:'Bourg-en-Bresse · Ain',text:'Architecture, sculpture, dentelle de pierre et recherche patrimoniale.',palette:['ivoire','pierre'],materials:['toile'],motifs:['arcades'],unlock:'BOOK_RESEARCH · DESIGN_REFERENCE.'}));
  await page.waitForFunction(()=>document.querySelector('#hcTerritorialPlaceOverlay')?.classList.contains('open'),{timeout:3000});
- const brou=await page.evaluate(()=>({
-   title:document.querySelector('#tpTitle')?.textContent||null,
-   flag:document.querySelector('#tpHero .tp-mediaflag')?.textContent?.trim()||null,
-   src:document.querySelector('#tpHero img')?.getAttribute('src')||null,
-   source:document.querySelector('#tpSource')?.textContent?.trim()||null,
-   fallback:!!document.querySelector('#tpHero .tp-fallback'),
-   actionsHostCount:document.querySelectorAll('#tpActions').length,
-   buttons:document.querySelectorAll('[data-tpa]').length,
-   actionsHtml:document.querySelector('#tpActions')?.innerHTML||null,
-   heritage:window.HCTerritorialPlaceInterfaceV1?.actions?.heritage||null
- }));
+ const brou=await page.evaluate(()=>({title:document.querySelector('#tpTitle')?.textContent||null,flag:document.querySelector('#tpHero .tp-mediaflag')?.textContent?.trim()||null,src:document.querySelector('#tpHero img')?.getAttribute('src')||null,source:document.querySelector('#tpSource')?.textContent?.trim()||null,fallback:!!document.querySelector('#tpHero .tp-fallback'),actionsHostCount:document.querySelectorAll('#tpActions').length,buttons:document.querySelectorAll('[data-tpa]').length,actionsHtml:document.querySelector('#tpActions')?.innerHTML||null,heritage:window.HCTerritorialPlaceInterfaceV1?.actions?.heritage||null}));
  console.log('AIN BROU DIAG',JSON.stringify(brou));
  if(brou.title!=='Monastère royal de Brou')failures.push('Ain Brou: mauvais titre rendu');
  if(brou.flag!=='PHOTO RÉELLE')failures.push('Ain Brou: badge média inattendu: '+brou.flag);
@@ -46,8 +35,18 @@ async function main(){
  try{await page.waitForFunction(()=>{const i=document.querySelector('#tpHero img');return !!i&&i.complete&&i.naturalWidth>0},{timeout:8000})}catch(_){failures.push('Ain Brou: vraie image non chargée dans Chromium')}
 
  if(brou.buttons>0){
+   await page.evaluate(()=>{
+     const g=window.HCGame;
+     const wrap=(obj,key)=>{if(!obj||typeof obj[key]!=='function'||obj[key].__hcQaWrapped)return;const original=obj[key];const wrapped=function(...args){console.log('HCQA BEFORE '+key);const out=original.apply(this,args);console.log('HCQA AFTER '+key);return out};wrapped.__hcQaWrapped=true;obj[key]=wrapped};
+     wrap(g,'transact');wrap(g,'advanceTime');wrap(g,'registerVisit');
+     const originalDispatch=window.dispatchEvent.bind(window);window.dispatchEvent=function(ev){const n=ev?.type||'?';if(n==='hc-territorial-place-observed'||n==='hc-territorial-signal')console.log('HCQA BEFORE dispatch '+n);const out=originalDispatch(ev);if(n==='hc-territorial-place-observed'||n==='hc-territorial-signal')console.log('HCQA AFTER dispatch '+n);return out};
+     const originalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='haute-couture-territorial-place-actions-v1')console.log('HCQA BEFORE place-action setItem');const out=originalSet.call(this,k,v);if(k==='haute-couture-territorial-place-actions-v1')console.log('HCQA AFTER place-action setItem');return out};
+     console.log('HCQA INSTRUMENTED');
+   });
    const beforeTime=await page.evaluate(()=>Number(window.HCGame?.get?.()?.clock?.totalMinutes||0));
+   console.log('HCQA CLICK START');
    const clicked=await page.evaluate(()=>{const b=document.querySelector('[data-tpa]');if(!b)return false;b.click();return true});
+   console.log('HCQA CLICK RETURNED',clicked);
    if(!clicked)failures.push('Ain Brou: bouton présent mais clic impossible');
    await page.waitForTimeout(100);
    const actionResult=await page.evaluate(()=>({time:Number(window.HCGame?.get?.()?.clock?.totalMinutes||0),state:JSON.parse(localStorage.getItem('haute-couture-territorial-place-actions-v1')||'{}'),presence:localStorage.getItem('haute-couture-current-presence-v1')}));
@@ -57,7 +56,6 @@ async function main(){
    if(actionResult.presence!==beforePresence)failures.push('Ain Brou: action a déplacé Marion');
  }
 
- window.focus();
  const focusResult=await page.evaluate(()=>{const before=localStorage.getItem('haute-couture-current-presence-v1');window.HCFranceGeo=window.HCFranceGeo||{};window.HCFranceGeo.state={region:{nom:'Auvergne-Rhône-Alpes'},department:{code:'69',nom:'Rhône'},commune:{nom:'Lyon',lat:45.764,lng:4.835}};return{before,after:localStorage.getItem('haute-couture-current-presence-v1'),focus:window.HCTerritoryContext.getMapFocus?.(),preview:window.HCTerritoryContext.isPreviewOnly?.(),presence:window.HCTerritoryContext.getPresence?.()}});
  console.log('AIN FOCUS RESULT',JSON.stringify(focusResult));
  if(focusResult.before!==focusResult.after||focusResult.presence?.city!=='Bourg-en-Bresse')failures.push('Ain: focus Lyon a modifié la présence physique');
