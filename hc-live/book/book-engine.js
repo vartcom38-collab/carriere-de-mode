@@ -28,4 +28,22 @@ function searchByTags(tags,{mode='any'}={}){const q=uniq(tags).map(slug);if(!q.l
 function search(text){const q=String(text||'').trim().toLowerCase();if(!q)return read().items;return read().items.filter(x=>[x.title,x.place,x.summary,x.history,...(x.tags||[])].join(' ').toLowerCase().includes(q))}
 function allTags(){const m={};read().items.forEach(x=>(x.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([tag,count])=>({tag,count}))}
 window.HCBook={storageKey:KEY,get:read,add,addPlacePage,remove,toggleFavorite,updateNote,has,byTag,searchByTags,search,allTags,normalize};
+
+/* Pont carte territoriale : capture Leaflet sans toucher au moteur ville existant. */
+if(window.L&&typeof window.L.map==='function'&&!window.L.__hcTerritoryMapWrapped){
+  const originalMap=window.L.map;
+  const wrapped=function(){
+    const map=originalMap.apply(this,arguments);
+    window.HCTerritoryMapBridge=window.HCTerritoryMapBridge||{};
+    window.HCTerritoryMapBridge.map=map;
+    setTimeout(()=>window.dispatchEvent(new CustomEvent('hc-leaflet-map-ready',{detail:{map}})),0);
+    return map;
+  };
+  Object.keys(originalMap).forEach(k=>{try{wrapped[k]=originalMap[k]}catch(e){}});
+  window.L.map=wrapped;
+  window.L.__hcTerritoryMapWrapped=true;
+  if(!document.getElementById('hcTerritorialRegistryScript')){
+    const s=document.createElement('script');s.id='hcTerritorialRegistryScript';s.src='../territorial-map-registry-v1.js?v=20260910-territories1';s.async=true;document.head.appendChild(s);
+  }
+}
 })();
