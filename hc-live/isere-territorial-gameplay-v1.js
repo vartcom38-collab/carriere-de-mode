@@ -12,7 +12,9 @@ const people=[
 {id:'is-p-vizille-costume',city:'Vizille',name:'Nina Cordier',role:'costumière événementielle',systems:['Atelier','Book','scène']},
 {id:'is-p-vizille-photo',city:'Vizille',name:'Martin Rey',role:'photographe patrimoine',systems:['Book','shooting']},
 {id:'is-p-vercors-matiere',city:'Villard-de-Lans',name:'Jo Perron',role:'développeur matière outdoor',systems:['Atelier','B2B']},
-{id:'is-p-vercors-guide',city:'Villard-de-Lans',name:'Lina Faure',role:'guide et testeuse terrain',systems:['clientes','B2B','Atelier']}
+{id:'is-p-vercors-guide',city:'Villard-de-Lans',name:'Lina Faure',role:'guide et testeuse terrain',systems:['clientes','B2B','Atelier']},
+{id:'is-p-oisans-proto',city:"Bourg-d'Oisans",name:'Noé Arnaud',role:'prototypiste outdoor',systems:['Atelier','B2B']},
+{id:'is-p-oisans-photo',city:"Bourg-d'Oisans",name:'Maya Brun',role:'photographe sport et altitude',systems:['Book','shooting']}
 ];
 const briefs=[
 {id:'is-b-gre-01',city:'Grenoble',title:'Prototype textile technique urbain',systems:['Atelier','B2B'],needs:1},
@@ -24,7 +26,9 @@ const briefs=[
 {id:'is-b-vizille-01',city:'Vizille',title:'Silhouette contemporaine pour shooting patrimoine',systems:['Atelier','Book','shooting'],needs:1},
 {id:'is-b-vizille-02',city:'Vizille',title:'Tenue de cérémonie inspirée du parc sans pastiche historique',systems:['Atelier','clientes'],needs:2},
 {id:'is-b-vercors-01',city:'Villard-de-Lans',title:'Prototype de surcouche mobile pour altitude',systems:['Atelier','B2B'],needs:1},
-{id:'is-b-vercors-02',city:'Villard-de-Lans',title:'Essai porté froid et mouvement',systems:['Atelier','Book','B2B'],needs:2}
+{id:'is-b-vercors-02',city:'Villard-de-Lans',title:'Essai porté froid et mouvement',systems:['Atelier','Book','B2B'],needs:2},
+{id:'is-b-oisans-01',city:"Bourg-d'Oisans",title:'Pièce technique de transition vallée-altitude',systems:['Atelier','B2B'],needs:1},
+{id:'is-b-oisans-02',city:"Bourg-d'Oisans",title:'Campagne photo mouvement et haute montagne',systems:['Book','shooting','B2B'],needs:2}
 ];
 const secrets=[
 {id:'is-s-gre-lab',city:'Grenoble',title:'Un prototype matière cherche un regard textile',needs:3},
@@ -32,7 +36,8 @@ const secrets=[
 {id:'is-s-vienne-stage',city:'Vienne',title:'Une équipe de scène cherche une retouche urgente',needs:2},
 {id:'is-s-voiron-fourni',city:'Voiron',title:'Un petit fournisseur accepte parfois de très faibles métrages',needs:3},
 {id:'is-s-vizille-photo',city:'Vizille',title:'Un repérage photo exceptionnel pourrait s’ouvrir hors horaires publics',needs:3},
-{id:'is-s-vercors-test',city:'Villard-de-Lans',title:'Un test terrain confidentiel cherche une pièce à éprouver',needs:3}
+{id:'is-s-vercors-test',city:'Villard-de-Lans',title:'Un test terrain confidentiel cherche une pièce à éprouver',needs:3},
+{id:'is-s-oisans-marque',city:"Bourg-d'Oisans",title:'Une petite structure outdoor cherche discrètement un prototype à tester',needs:3}
 ];
 const eventFamilies=[
 {id:'is-e-gre-art',city:'Grenoble',label:'Saison textile et métiers d’art',months:[3,9,12],themes:['matière et création','réemploi','textile technique','artisanat contemporain']},
@@ -40,7 +45,8 @@ const eventFamilies=[
 {id:'is-e-vienne-scene',city:'Vienne',label:'Saison scène et patrimoine',months:[6,7,8],themes:['costume et scène','festival','patrimoine et lumière','public international']},
 {id:'is-e-voiron-local',city:'Voiron',label:'Saison artisanat et clientèle locale',months:[4,5,9,10],themes:['réparation','cérémonie','maille','création locale']},
 {id:'is-e-vizille-patrimoine',city:'Vizille',label:'Saison patrimoine et image',months:[5,6,9],themes:['cérémonie contemporaine','jardin et silhouette','photo de mode','costume et représentation']},
-{id:'is-e-vercors-outdoor',city:'Villard-de-Lans',label:'Saison montagne et prototype',months:[1,2,7,8,12],themes:['froid et mobilité','test terrain','laine et technique','shooting outdoor']}
+{id:'is-e-vercors-outdoor',city:'Villard-de-Lans',label:'Saison montagne et prototype',months:[1,2,7,8,12],themes:['froid et mobilité','test terrain','laine et technique','shooting outdoor']},
+{id:'is-e-oisans-performance',city:"Bourg-d'Oisans",label:'Saison altitude et performance',months:[1,2,6,7,8,12],themes:['mobilité verticale','performance textile','réparation technique','campagne outdoor']}
 ];
 function emit(kind,payload){const s=read(),id=kind+':'+String(payload.id||payload.title||Date.now());if(s.signals.some(x=>x.id===id))return;s.signals.push({id,kind,payload,day:day()});s.signals=s.signals.slice(-180);write(s);window.dispatchEvent(new CustomEvent('hc-territorial-signal',{detail:{kind,departmentCode:DEPT,...payload}}))}
 function personRecord(p){return read().people[p.id]||null}function unlock(city){const s=read(),count=Object.values(s.people).filter(x=>x.city===city&&x.met).reduce((a,x)=>a+(x.interactions||0),0);briefs.filter(b=>b.city===city&&count>=b.needs&&!s.briefs[b.id]).forEach(b=>{s.briefs[b.id]={...b,unlockedDay:day(),status:'lead'};emit('agenda_opportunity',{id:b.id,city:b.city,title:b.title,systems:b.systems})});secrets.filter(x=>x.city===city&&count>=x.needs&&!s.secrets[x.id]).forEach(x=>{s.secrets[x.id]={...x,revealedDay:day()};emit('phone_rumor',{id:x.id,city:x.city,title:x.title})});write(s)}
