@@ -32,8 +32,8 @@ function currentLocal(){return getPresence()||getResidence();}
 function currentForInteractiveMap(){return getMapFocus()||getPresence()||getResidence();}
 function isAwayFromHome(){const p=getPresence(),h=getResidence();if(!p)return false;if(!h)return true;if(p.departmentCode&&h.departmentCode&&p.departmentCode!==h.departmentCode)return true;return !!(p.city&&h.city&&p.city!==h.city);}
 function isPreviewOnly(){const f=getMapFocus(),p=getPresence();if(!f)return false;if(!p)return true;if(f.departmentCode&&p.departmentCode&&f.departmentCode!==p.departmentCode)return true;return !!(f.city&&p.city&&f.city!==p.city);}
-const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay2','03':'allier-territorial-gameplay-v1.js?v=20260910-allierplay1','63':'puy-de-dome-territorial-gameplay-v1.js?v=20260910-pddplay1','15':'cantal-territorial-gameplay-v1.js?v=20260910-cantalplay1'};
-const DEPARTMENT_MAP_PACK={'03':'allier-map-content-v1.js?v=20260910-alliermap1','63':'puy-de-dome-map-content-v1.js?v=20260910-pddmap1','15':'cantal-map-content-v1.js?v=20260910-cantalmap1'};
+const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay2','03':'allier-territorial-gameplay-v1.js?v=20260910-allierplay1','63':'puy-de-dome-territorial-gameplay-v1.js?v=20260910-pddplay1','15':'cantal-territorial-gameplay-v1.js?v=20260910-cantalplay1','43':'haute-loire-territorial-gameplay-v1.js?v=20260910-hlplay1'};
+const DEPARTMENT_MAP_PACK={'03':'allier-map-content-v1.js?v=20260910-alliermap1','63':'puy-de-dome-map-content-v1.js?v=20260910-pddmap1','15':'cantal-map-content-v1.js?v=20260910-cantalmap1','43':'haute-loire-map-content-v1.js?v=20260910-hlmap1'};
 function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
 function loadDepartmentGameplay(place=getPresence()){
  if(!place||!String(location.pathname).includes('/ville'))return;
