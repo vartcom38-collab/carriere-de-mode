@@ -18,7 +18,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - name: Install Playwright Chromium
@@ -31,4 +31,6 @@ jobs:
           echo $! > /tmp/hc-http.pid
           sleep 2
       - name: Run territorial UI E2E
-        run: node hc-live/qa/territories-ui-e2e.mjs
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-e2e.mjs 2>&1 | tee /tmp/hc-territories-e2e.log
