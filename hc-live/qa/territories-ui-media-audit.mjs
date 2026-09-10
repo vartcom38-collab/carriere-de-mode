@@ -15,6 +15,7 @@ function val(body,key){const rx=new RegExp(key+"\\s*:\\s*['\"]([^'\"]+)['\"]");c
 function bool(body,key){return new RegExp(key+'\\s*:\\s*true').test(body)}
 function hasAny(body,keys){return keys.some(k=>new RegExp(k+'\\s*:').test(body))}
 function normalizedCategory(body){const cat=val(body,'cat')||val(body,'category');if(cat)return cat;const kind=val(body,'kind');return kind?(KIND_TO_CAT[kind]||kind):null}
+function looksDynamicId(id){return !id||id.endsWith('-')||/\$\{|\+\s*[a-zA-Z_$]/.test(id)}
 
 /* Registre média central : une même photo peut couvrir plusieurs définitions représentant exactement le même lieu. */
 const MEDIA_REGISTRY=path.join(HC,'ville','territorial-place-media-aura-v1.js');
@@ -35,15 +36,16 @@ for(const file of files){
  const text=fs.readFileSync(file,'utf8');
  const rx=/\{id\s*:\s*['"]([^'"]+)['"][\s\S]{0,2600}?\}/g;
  for(const m of text.matchAll(rx)){
-   const body=m[0];
+   const body=m[0],id=m[1];
+   if(looksDynamicId(id))continue;
    if(!/\bname\s*:/.test(body)||!(/\blat\s*:/.test(body)&&/\blng\s*:/.test(body)))continue;
    const dept=val(body,'dept')||val(body,'departmentCode');
    if(dept&&!CODES.has(String(dept)))continue;
-   const reg=mediaById.get(m[1])||{};
+   const reg=mediaById.get(id)||{};
    const marker={
-     id:m[1],dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:normalizedCategory(body),kind:val(body,'kind'),
+     id,dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:normalizedCategory(body),kind:val(body,'kind'),
      fictional:bool(body,'fictional'),hasImage:hasAny(body,MEDIA_KEYS)||!!reg.hasImage,hasSource:hasAny(body,SOURCE_KEYS)||!!reg.hasSource,
-     hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:path.relative(ROOT,file).replaceAll('\\','/'),mediaRegistry:mediaById.has(m[1])
+     hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:path.relative(ROOT,file).replaceAll('\\','/'),mediaRegistry:mediaById.has(id)
    };
    if(!out.markers.some(x=>x.id===marker.id&&x.file===marker.file))out.markers.push(marker);
  }
