@@ -34,6 +34,12 @@ function isAwayFromHome(){const p=getPresence(),h=getResidence();if(!p)return fa
 function isPreviewOnly(){const f=getMapFocus(),p=getPresence();if(!f)return false;if(!p)return true;if(f.departmentCode&&p.departmentCode&&f.departmentCode!==p.departmentCode)return true;return !!(f.city&&p.city&&f.city!==p.city);}
 const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay2','03':'allier-territorial-gameplay-v1.js?v=20260910-allierplay1','63':'puy-de-dome-territorial-gameplay-v1.js?v=20260910-pddplay1','15':'cantal-territorial-gameplay-v1.js?v=20260910-cantalplay1','43':'haute-loire-territorial-gameplay-v1.js?v=20260910-hlplay1','42':'loire-territorial-gameplay-v1.js?v=20260910-loireplay1','69':'rhone-territorial-gameplay-v1.js?v=20260910-rhoneplay1'};
 const DEPARTMENT_MAP_PACK={'03':'allier-map-content-v1.js?v=20260910-alliermap1','63':'puy-de-dome-map-content-v1.js?v=20260910-pddmap1','15':'cantal-map-content-v1.js?v=20260910-cantalmap1','43':'haute-loire-map-content-v1.js?v=20260910-hlmap1','42':'loire-map-content-v1.js?v=20260910-loiremap1','69':'rhone-map-content-v1.js?v=20260910-rhonemap1'};
+const CITY_UNIVERSE_PACK={
+ 'Lyon':'rhone-lyon-city-universe-v2.js?v=20260910-lyondense1',
+ 'Villeurbanne':'rhone-lyon-city-universe-v2.js?v=20260910-lyondense1',
+ 'Clermont-Ferrand':'clermont-ferrand-city-universe-v2.js?v=20260910-clermontdense1',
+ 'Saint-Étienne':'saint-etienne-city-universe-v2.js?v=20260910-stetiennedense1'
+};
 function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
 function loadDepartmentGameplay(place=getPresence()){
  if(!place||!String(location.pathname).includes('/ville'))return;
@@ -42,6 +48,7 @@ function loadDepartmentGameplay(place=getPresence()){
  const code=String(place.departmentCode||''),src=DEPARTMENT_GAMEPLAY[code],mapSrc=DEPARTMENT_MAP_PACK[code];
  if(src)loadScript('hcTerritoryGameplayScript'+code,src);
  if(mapSrc)loadScript('hcTerritoryMapPack'+code,mapSrc);
+ const citySrc=CITY_UNIVERSE_PACK[String(place.city||'')];if(citySrc)loadScript('hcCityUniverse'+String(place.city||'').replace(/\W+/g,''),citySrc);
 }
 window.HCTerritoryContext={version:2,storageKey:PRESENCE_KEY,normalizePlace,getStoredPresence,getTravelPresence,getPresence,setPresence,clearPresence,getResidence,getMapFocus,currentLocal,currentForInteractiveMap,isAwayFromHome,isPreviewOnly,loadDepartmentGameplay};
 loadDepartmentGameplay();
