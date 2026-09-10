@@ -1,0 +1,24 @@
+name: Territoires smoke test
+
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - 'hc-live/**'
+      - '.github/workflows/territoires-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node version
+        run: node --version
+      - name: Run territorial smoke test
+        run: node hc-live/qa/territories-smoke-test.mjs
