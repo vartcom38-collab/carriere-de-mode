@@ -10,7 +10,7 @@ const day=()=>Number(window.HCGame?.get?.()?.clock?.day||1);
 function state(){const s=read(KEY,{version:1,places:{},history:[]});s.version=1;s.places=s.places||{};s.history=s.history||[];return s}
 function save(s){s.updatedAt=now();s.history=s.history.slice(0,500);return write(KEY,s)}
 function sourceEntry(detail={}){const tr=detail.territory||{},p=detail.place||{};if(!p.id)return null;return{key:String((tr.id||tr.territoryId||'unknown')+'|'+p.id),territoryId:tr.id||tr.territoryId||null,territoryLabel:tr.label||tr.city||null,placeId:p.id,name:p.name||'Lieu',category:p.category||'place',visits:Number(p.visits||0),firstSource:p.firstSource||detail.source||null,lastSource:p.lastSource||detail.source||null}}
-function levelFor(visits){if(visits>=10)return'habitude';if(visits>=5)return'familier';if(visits>=2)return'reconnu';return'decouverte'}
+function levelFor(visits){if(visits>=10)return 'habitude';if(visits>=5)return 'familier';if(visits>=2)return 'reconnu';return 'decouverte'}
 const TEXT={
  decouverte:'Tu observes encore le lieu avant de savoir comment il fonctionne.',
  reconnu:'Tu reconnais l’endroit et tu commences à savoir où regarder.',
