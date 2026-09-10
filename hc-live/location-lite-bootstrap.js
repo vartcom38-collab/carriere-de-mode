@@ -10,7 +10,7 @@
     });
   }
   function ensureTerritory(cb){if(window.HCTerritoryContext)return cb&&cb();if(territoryLoading)return setTimeout(()=>ensureTerritory(cb),80);territoryLoading=true;load('./territory-context-v1.js?v=20260910-presence2',()=>!!window.HCTerritoryContext,()=>{territoryLoading=false;cb&&cb()})}
-  function ensureTerritorialLayer(){load('./territorial-interactive-layer-v1.js?v=20260910-maptravel1',()=>!!window.__HCTerritorialInteractiveLayerInstalled)}
+  function ensureTerritorialLayer(){load('./territorial-interactive-layer-v1.js?v=20260910-ainfull1',()=>!!window.__HCTerritorialInteractiveLayerInstalled)}
   function ensureVector(){if(!window.__HCBourgVectorMapInstalled&&!mapLoading){mapLoading=true;load('./bourg-vector-map.js?v=ca705722',()=>!!window.__HCBourgVectorMapInstalled,()=>{mapLoading=false})}}
   function boot(){const loc=$('#location');if(!loc)return;new MutationObserver(ensure).observe(loc,{attributes:true,attributeFilter:['class']});if(loc.classList.contains('active'))ensure()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
