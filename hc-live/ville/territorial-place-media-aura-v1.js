@@ -68,9 +68,8 @@ const M={
  'ain-chatillon':{image:commons('Halles - Châtillon-sur-Chalaronne (FR01) - 2025-07-06 - 1.jpg'),source:source('Halles - Châtillon-sur-Chalaronne (FR01) - 2025-07-06 - 1.jpg'),kind:'photo',real:true},
  'ain-vonnas':{image:commons('Vonnas-FR-01-mairie-01.jpg'),source:source('Vonnas-FR-01-mairie-01.jpg'),kind:'photo',real:true},
  'ain-meillonnas':{image:commons('Meillonnas rue ancienne.JPG'),source:source('Meillonnas rue ancienne.JPG'),kind:'photo',real:true},
- 'ain-albarine-schappe':{image:commons('Saint-Rambert-en-Bugey - Vue générale.jpg'),source:source('Saint-Rambert-en-Bugey - Vue générale.jpg'),kind:'photo',real:true}
+ 'ain-albarine-schappe':{image:commons('Vue de Saint-Rambert-en-Bugey depuis le chemin du Four (août 2019).jpg'),source:source('Vue de Saint-Rambert-en-Bugey depuis le chemin du Four (août 2019).jpg'),kind:'photo',real:true}
 };
-/* L'interface territoriale sait déjà lire ce stockage. On fusionne sans effacer d'éventuels médias ajoutés manuellement. */
 try{
  const saved=JSON.parse(localStorage.getItem(STORAGE)||'{}')||{};
  for(const [id,m] of Object.entries(M))saved[id]={...(saved[id]||{}),...m,url:m.image,attribution:m.source};
