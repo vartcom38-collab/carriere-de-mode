@@ -46,7 +46,9 @@ const CITY_UNIVERSE_PACK={
 };
 const CITY_CONTENT_BANK={
  'Clermont-Ferrand':'clermont-ferrand-city-content-bank-v1.js?v=20260910-cfbank1',
- 'Saint-Étienne':'saint-etienne-city-content-bank-v1.js?v=20260910-stebank1'
+ 'Saint-Étienne':'saint-etienne-city-content-bank-v1.js?v=20260910-stebank1',
+ 'Villeurbanne':'villeurbanne-city-content-bank-v1.js?v=20260910-villeurbannebank1',
+ 'Aurillac':'aurillac-city-content-bank-v1.js?v=20260910-aurillacbank1'
 };
 function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
 function loadDepartmentGameplay(place=getPresence()){
