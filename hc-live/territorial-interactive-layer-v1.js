@@ -5,10 +5,28 @@
 'use strict';
 if(window.__HCTerritorialInteractiveLayerInstalled)return;window.__HCTerritorialInteractiveLayerInstalled=true;
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
 const DATA={
  '01':{name:'Ain',poles:[
-  ['Bourg-en-Bresse','Patrimoine · clientèle · archives','Brou, mémoire bressane, commandes et réseau local.'],['Oyonnax','Accessoire · industrie','Peigne, lunetterie, plasturgie, prototype et petite série.'],['Jujurieux','Textile · soie','Soie, velours, chaîne-trame et mémoire ouvrière.'],['Pérouges','Patrimoine · shooting','Pierre, proportions anciennes et photographie.'],['Gex','Frontière · montagne','Clientèle transfrontalière, mobilité et Monts Jura.'],['Villars-les-Dombes','Nature · cérémonie','Étangs, palettes saisonnières, shootings et mariages.']]},
+  ['Bourg-en-Bresse','Patrimoine · clientèle · archives','Brou, archives, scène, mémoire bressane, émaux, commandes et réseau local.'],
+  ['Oyonnax','Accessoire · industrie','Peigne, lunetterie, plasturgie, prototype, petite série et mémoire industrielle.'],
+  ['Jujurieux','Textile · soie','Soie, velours, chaîne-trame, dessin textile et mémoire ouvrière.'],
+  ['Cerdon','Cuivre · relief','Surface, martelage, relief et pistes textile/métal.'],
+  ['Saint-Rambert-en-Bugey','Schappe · mémoire textile','Filature, fibres de soie, transformation et mémoire industrielle de l’Albarine.'],
+  ['Pérouges','Patrimoine · shooting','Pierre, proportions anciennes, patines et photographie.'],
+  ['Ambronay','Musique · scène','Patrimoine, festival, artistes, costume, réception et réseau culturel.'],
+  ['Nantua','Lac · relief','Palette froide, strates, mouvement, photographie et contraintes de relief.'],
+  ['Gex','Frontière · montagne','Clientèle transfrontalière, mobilité, Monts Jura et réseau international.'],
+  ['Ferney-Voltaire','Culture · international','Expositions, cinéma, réception, patrimoine et publics internationaux.'],
+  ['Mijoux','Lapidaire · lumière','Facettes, pierre, lumière et contact spécialisé.'],
+  ['Villars-les-Dombes','Nature · cérémonie','Étangs, oiseaux, brume, palettes saisonnières, shootings et mariages.'],
+  ['Châtillon-sur-Chalaronne','Marché · patrimoine','Halles, marché, brocante, rencontres locales et commandes.'],
+  ['Vonnas','Hospitalité · réception','Événements privés, clientèle de passage et cérémonies.'],
+  ['Belley','Bugey Sud · clientèle','Patrimoine, relief, réseau local et liens vers la Savoie.'],
+  ['Meillonnas','Faïence · décor','Couleur, décor, surface, motif et métiers d’art.'],
+  ['Ambérieu-en-Bugey','Mobilité · carrefour','Déplacements, correspondances, rencontres de passage et circulation professionnelle.'],
+  ['Valserhône','Transport · transfrontalier','Carrefour vers Genève, Jura et Haute-Savoie, avec opportunités de mobilité et culture.']
+ ]},
  '03':{name:'Allier',poles:[
   ['Moulins','Costume · scène','Costume, patrimoine, métiers d’art et recherche documentaire.'],['Vichy','Thermalisme · réception','Architecture, Opéra, séjours, cérémonies et clientèle thermale.'],['Montluçon','Industrie · musique','Mémoire ouvrière, patrimoine médiéval, scène et photographie.'],['Bourbon-l’Archambault','Thermalisme intime','Clientèle fidèle, patrimoine bourbonnais et revisites.']]},
  '63':{name:'Puy-de-Dôme',poles:[
