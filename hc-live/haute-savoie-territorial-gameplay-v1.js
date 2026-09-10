@@ -11,7 +11,7 @@ const CFG={
 'Thonon-les-Bains':{themes:['lac Léman','artisanat','patrimoine','clientèle locale'],roles:['cliente locale','artisan d’art','photographe patrimoine','costumière']},
 'Morzine':{themes:['glisse','culture','village','sportswear'],roles:['designer sportswear','régisseur culturel','photographe ride','réparateur technique']},
 'Avoriaz':{themes:['architecture station','snowboard','image futuriste','performance'],roles:['designer technique','directeur artistique','rider testeur','photographe architecture']},
-'La Clusaz':{themes:['Aravis','ski','artisanat','maille'],roles:['créatrice maille','styliste ski','artisan cuir','photographe alpage']}}
+'La Clusaz':{themes:['Aravis','ski','artisanat','maille'],roles:['créatrice maille','styliste ski','artisan cuir','photographe alpage']}
 };
 const FIRST=['Léna','Camille','Nora','Malo','Inès','Sacha','Maëlle','Noé','Lou','Élise','Robin','Anaïs','Mina','Jules','Cléo','Yanis','Agathe','Léo','Salomé','Nils','Iris','Élias','Mila','Bastien','Claire','Noémie','Sohan','Lise','Pauline','Nolan','Anna','Éva','Maya','Simon','Apolline','Lina'];
 const LAST=['Perrin','Favre','Roux','Martin','Vernier','Giraud','Rey','Faure','Berger','Morel','Chabert','Vidal','Arnaud','Dumas','Coste','Brunet','Garnier','Roche','Delmas','Veyrat','Joubert','Masson','Béraud','Chazel','Ravier','Pascal','Montel','Vignal','Perret','Tardy','Fabre','Chappuis','Reynaud','Caron','Vernet','Sagnier'];
