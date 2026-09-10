@@ -15,6 +15,10 @@ const M={
  'bou-brou':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
  'ain-map-bourg':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
  'ain-bourg':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
+ 'ain-scene-bourg':{image:commons('Théâtre de Bourg-en-Bresse.jpg'),source:source('Théâtre de Bourg-en-Bresse.jpg'),kind:'photo',real:true},
+ 'bou-scene':{image:commons('Théâtre de Bourg-en-Bresse.jpg'),source:source('Théâtre de Bourg-en-Bresse.jpg'),kind:'photo',real:true},
+ 'ain-emaux-bourg':{image:commons("Boutique Jeanvoine d'émaux bressans à Bourg-en-Bresse (février 2023).JPG"),source:source("Boutique Jeanvoine d'émaux bressans à Bourg-en-Bresse (février 2023).JPG"),kind:'photo',real:true},
+ 'bou-emaux':{image:commons("Boutique Jeanvoine d'émaux bressans à Bourg-en-Bresse (février 2023).JPG"),source:source("Boutique Jeanvoine d'émaux bressans à Bourg-en-Bresse (février 2023).JPG"),kind:'photo',real:true},
 
  /* AIN — Pérouges */
  'ain-perouges':{image:commons('Maisons Pérouges.jpg'),source:source('Maisons Pérouges.jpg'),kind:'photo',real:true},
@@ -56,7 +60,15 @@ const M={
 
  /* AIN — Belley */
  'ain-map-bel':{image:commons('Belley.jpg'),source:source('Belley.jpg'),kind:'photo',real:true},
- 'ain-belley':{image:commons('Belley.jpg'),source:source('Belley.jpg'),kind:'photo',real:true}
+ 'ain-belley':{image:commons('Belley.jpg'),source:source('Belley.jpg'),kind:'photo',real:true},
+
+ /* AIN — lieux complémentaires documentés */
+ 'ain-cerdon-cuivre':{image:commons('Cuivrerie Cerdon Ain 1.jpg'),source:source('Cuivrerie Cerdon Ain 1.jpg'),kind:'photo',real:true},
+ 'ain-ambronay':{image:commons('Jardin du cloître, vu de la galerie supérieure.jpg'),source:source('Jardin du cloître, vu de la galerie supérieure.jpg'),kind:'photo',real:true},
+ 'ain-chatillon':{image:commons('Halles - Châtillon-sur-Chalaronne (FR01) - 2025-07-06 - 1.jpg'),source:source('Halles - Châtillon-sur-Chalaronne (FR01) - 2025-07-06 - 1.jpg'),kind:'photo',real:true},
+ 'ain-vonnas':{image:commons('Vonnas-FR-01-mairie-01.jpg'),source:source('Vonnas-FR-01-mairie-01.jpg'),kind:'photo',real:true},
+ 'ain-meillonnas':{image:commons('Meillonnas rue ancienne.JPG'),source:source('Meillonnas rue ancienne.JPG'),kind:'photo',real:true},
+ 'ain-albarine-schappe':{image:commons('Saint-Rambert-en-Bugey - Vue générale.jpg'),source:source('Saint-Rambert-en-Bugey - Vue générale.jpg'),kind:'photo',real:true}
 };
 /* L'interface territoriale sait déjà lire ce stockage. On fusionne sans effacer d'éventuels médias ajoutés manuellement. */
 try{
