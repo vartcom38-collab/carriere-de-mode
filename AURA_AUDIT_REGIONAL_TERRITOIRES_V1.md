@@ -1,130 +1,99 @@
-# AUDIT RÉGIONAL — AUVERGNE-RHÔNE-ALPES — V2
+# AUDIT RÉGIONAL — AUVERGNE-RHÔNE-ALPES — V3
 
 Date : 2026-09-10
 Branche : `territoires-france`
 
 ## Verdict
 
-**AUVERGNE-RHÔNE-ALPES : COUVERTURE TERRITORIALE DENSE SUR LES 12 DÉPARTEMENTS. QA STRUCTURELLE RENFORCÉE. QA NAVIGATEUR ENCORE À FAIRE AVANT FUSION.**
+**AUVERGNE-RHÔNE-ALPES : 12/12 DÉPARTEMENTS DENSES. QA STATIQUE/STRUCTURELLE RENFORCÉE. QA NAVIGATEUR RÉELLE ENCORE REQUISE AVANT FUSION.**
 
-Départements couverts : Ain (01), Allier (03), Ardèche (07), Cantal (15), Drôme (26), Isère (38), Loire (42), Haute-Loire (43), Puy-de-Dôme (63), Rhône / territoire gameplay 69, Savoie (73), Haute-Savoie (74).
+Départements : Ain (01), Allier (03), Ardèche (07), Cantal (15), Drôme (26), Isère (38), Loire (42), Haute-Loire (43), Puy-de-Dôme (63), Rhône / territoire gameplay 69, Savoie (73), Haute-Savoie (74).
 
-## Règle territoriale canonique
+## Règle canonique
 
-Résidence, présence physique/voyage et focus de carte restent distincts. **Ouvrir ou regarder un territoire ne téléporte jamais Marion.** Les rencontres, briefs et signaux territoriaux sont déclenchés à partir de la présence physique, pas du simple focus carte.
+Résidence, présence physique/voyage et focus de carte sont distincts. **Regarder un territoire ne téléporte jamais Marion.** Les systèmes territoriaux s’activent à partir de la présence physique.
 
-## Correctifs réalisés pendant l’audit
+## Correctifs consolidés
 
-### 1. Fiabilisation stale-state
+### Stale-state
 
-Corrigé sur Drôme, Ardèche, Savoie, Loire et Haute-Loire. Déjà corrigé auparavant sur Rhône, Allier, Cantal et Puy-de-Dôme. Ain : architecture différente, pas de stale-state identifié dans le flux inspecté.
+Corrigé sur Drôme, Ardèche, Savoie, Haute-Savoie, Loire et Haute-Loire. Rhône, Allier, Cantal et Puy-de-Dôme avaient déjà été corrigés. Ain utilise une architecture où les signaux enrichissent le même objet mémoire avant sauvegarde et n’a pas présenté ce défaut dans le flux inspecté.
 
-Principe appliqué : les briefs, secrets et événements sont persistés avant émission des signaux ; aucun snapshot ancien ne doit être réécrit après un `emit()` susceptible d’avoir enrichi le store.
+### Routage
 
-### 2. Routage régional
+`territorial-signal-runtime-v1.js` V8 contient un fallback régional couvrant les pôles denses et les variantes critiques d’apostrophes ASCII/typographiques, notamment Bourg-d'Oisans / Bourg-d’Oisans, Tain-l'Hermitage / Tain-l’Hermitage, Vallon-Pont-d'Arc / Vallon-Pont-d’Arc et Val-d'Isère / Val-d’Isère.
 
-`territorial-signal-runtime-v1.js` est passé en V8 avec un fallback régional étendu couvrant les pôles denses des 12 départements, dont les variantes d’apostrophes ASCII/typographiques critiques (`Bourg-d'Oisans` / `Bourg-d’Oisans`, `Tain-l'Hermitage` / `Tain-l’Hermitage`, `Val-d'Isère` / `Val-d’Isère`, etc.).
+### PNJ
 
-### 3. Savoie — collision documentaire
+Les générateurs de banques historiques Drôme secondaire, Ardèche primaire/secondaire, Savoie primaire/stations ont été remplacés par des générateurs de noms fictionnels déterministes tout en conservant leurs IDs. Le moteur Haute-Savoie V2 ne génère plus non plus de `Contact <ville> <n>` et conserve ses IDs `hs-p-*`.
 
-Le PNJ fictif `Soline Arpin` a été renommé **Soline Perrier** afin d’éviter toute ambiguïté avec la véritable maison Arpin utilisée comme ancrage documentaire.
+`Soline Arpin` a été renommée **Soline Perrier** pour éviter toute ambiguïté avec la vraie maison Arpin.
 
-### 4. Savoie — loader réellement corrigé
+### Savoie 73 — loader
 
-Un 404 structurel a été trouvé dans `territory-context-savoie-addon-v1.js` : le loader appelait `savoie-primary-territories-universe-v1.js` / `savoie-primary-territories-banks-v1.js`, fichiers inexistants.
+Deux noms de fichiers inexistants ont été corrigés : le loader utilise désormais `savoie-primary-cities-universe-v1.js` et `savoie-primary-cities-banks-v1.js`.
 
-Correctif V2 :
-- utilisation des vrais fichiers `savoie-primary-cities-universe-v1.js` et `savoie-primary-cities-banks-v1.js` ;
-- chargement séquentiel via Promises ;
-- moteur Savoie chargé avant l’addon des stations ;
-- univers et banque chargés avant l’addon gameplay ;
-- support de `Val-d'Isère` et `Val-d’Isère` ;
-- émission d’un événement `hc-savoie-runtime-ready` en cas de succès et `hc-territory-load-error` en cas d’échec.
+Le loader est maintenant V3 :
+- scripts structurants chargés séquentiellement ;
+- moteur 73 chargé avant les addons ;
+- attente explicite de `window.HCLocalMap` avant les packs carte/univers ;
+- villes de base et stations séparées ;
+- support des deux apostrophes de Val-d’Isère ;
+- événements `hc-savoie-runtime-ready` et `hc-territory-load-error`.
 
-Le fichier `savoie-primary-cities-universe-v1.js` a été vérifié présent sur la branche.
+### Haute-Savoie 74 — loader
 
-### 5. Nettoyage des PNJ placeholders
+Le loader est maintenant V2 :
+- reconnaissance par code, nom de département ou ville connue ;
+- correction de présence vers code 74 si nécessaire ;
+- chargement séquentiel ;
+- attente explicite de `window.HCLocalMap` avant carte et univers ;
+- chargement moteur → carte → univers → banques ;
+- événements `hc-haute-savoie-runtime-ready` et `hc-territory-load-error`.
 
-Les banques héritées suivantes ne génèrent plus de noms `Contact <ville> <n>` :
-- `drome-secondary-cities-banks-v2.js` ;
-- `ardeche-primary-cities-banks-v1.js` ;
-- `ardeche-secondary-cities-banks-v1.js` ;
-- `savoie-primary-cities-banks-v1.js` ;
-- `savoie-high-resorts-banks-v1.js`.
-
-Les IDs restent inchangés pour préserver la compatibilité avec les sauvegardes et références existantes. Les PNJ reçoivent désormais des noms fictionnels déterministes, leur rôle, leur zone/quartier quand la banque en possède un, et un trait de personnalité de base.
-
-Cette passe ne remplace pas encore le futur système relationnel complet (âge, niveau économique, goûts vestimentaires, emploi du temps, motivations, affinités, romance/rivalité, mémoire fine), mais la dette des noms placeholders est supprimée pour ces banques.
+Le moteur Haute-Savoie est maintenant V2 avec stale-state corrigé et PNJ fictionnels nommés.
 
 ## État régional
 
-### Ain — DENSE
-Bourg-en-Bresse, Oyonnax, Jujurieux, Pérouges, Pays de Gex, Bugey, Dombes et pôles secondaires.
+- Ain — DENSE
+- Allier — DENSE
+- Ardèche — DENSE
+- Cantal — DENSE
+- Drôme — DENSE
+- Isère — DENSE
+- Loire — DENSE
+- Haute-Loire — DENSE
+- Puy-de-Dôme — DENSE
+- Rhône / gameplay 69 — DENSE
+- Savoie — DENSE
+- Haute-Savoie — DENSE
 
-### Allier — DENSE
-Moulins, Vichy, Montluçon, Bourbon-l’Archambault, Saint-Pourçain-sur-Sioule, Lapalisse, Commentry, Hérisson.
+## Dernier verrou avant fusion
 
-### Ardèche — DENSE
-Annonay, Aubenas, Privas, Tournon-sur-Rhône, Le Teil, Marcols-les-Eaux, Jaujac, Largentière, Les Vans, Vallon-Pont-d’Arc, Saint-Agrève.
+### QA navigateur réelle — BLOQUANTE
 
-### Cantal — DENSE
-Aurillac, Salers, Saint-Flour, Chaudes-Aigues, Laveissière / Le Lioran, Murat, Mauriac, Massiac.
+Sur une version réellement servie de la branche :
+1. entrer physiquement dans au moins une ville par département ;
+2. contrôler console et réseau : aucun 404 / aucune exception ;
+3. vérifier marqueurs et univers ;
+4. déclencher rencontre ;
+5. déclencher brief ou secret ;
+6. vérifier Téléphone et Agenda ;
+7. vérifier Atelier et Book ;
+8. recharger et contrôler la persistance ;
+9. vérifier que le simple focus de carte ne modifie pas la présence ;
+10. en Savoie tester une ville primaire + une station ;
+11. en Haute-Savoie tester une ville primaire + une secondaire.
 
-### Drôme — DENSE
-Romans-sur-Isère, Valence, Crest, Die, Nyons, Montélimar, Grignan, Dieulefit, Bourdeaux, Tain-l’Hermitage, La Chapelle-en-Vercors.
+Cette QA navigateur n’est **pas encore déclarée passée**.
 
-### Isère — DENSE
-Grenoble, Bourgoin-Jallieu, Vienne, Voiron, Vizille, Villard-de-Lans, Bourg-d’Oisans, La Tour-du-Pin, Crémieu, Saint-Marcellin, Chartreuse, Grésivaudan, Belledonne, Royans.
+## Dettes non bloquantes
 
-### Loire — DENSE
-Saint-Étienne, Roanne, Charlieu, Montbrison, Saint-Chamond, Rive-de-Gier, Firminy, Feurs, Saint-Bonnet-le-Château, Boën-sur-Lignon, Noirétable, Saint-Galmier.
-
-### Haute-Loire — DENSE
-Le Puy-en-Velay, Retournac, Brioude, La Chaise-Dieu, Blesle, Yssingeaux, Monistrol-sur-Loire, Langeac.
-
-### Puy-de-Dôme — DENSE
-Clermont-Ferrand, Thiers, Riom, Volvic, Le Mont-Dore, La Bourboule, Issoire, Ambert, Orcines / Chaîne des Puys.
-
-### Rhône / territoire gameplay 69 — DENSE
-Lyon, Villeurbanne, Villefranche-sur-Saône, Tarare, Amplepuis, Thizy-les-Bourgs, Oullins-Pierre-Bénite, Givors.
-
-### Savoie — DENSE
-Chambéry, Aix-les-Bains, Albertville, Beaufort, Bourg-Saint-Maurice, Modane + stations et hautes vallées densifiées.
-
-### Haute-Savoie — DENSE
-Annecy, Chamonix-Mont-Blanc, Le Grand-Bornand, Châtel, Megève, Évian-les-Bains, Thonon-les-Bains, Morzine, Avoriaz, La Clusaz, Cluses, Sallanches, Saint-Gervais-les-Bains, Samoëns, Yvoire.
-
-## Dettes restantes avant fusion
-
-### A. QA navigateur / runtime réel — BLOQUANT POUR FUSION
-
-À faire sur une version réellement servie de la branche :
-- entrer physiquement dans au moins une ville par département ;
-- vérifier le chargement sans erreur console / 404 ;
-- observer un marqueur ;
-- déclencher une rencontre ;
-- provoquer un brief ou secret ;
-- vérifier Téléphone, Agenda, Atelier et Book ;
-- recharger et confirmer la persistance ;
-- vérifier que le focus carte seul ne déplace jamais Marion ;
-- tester au moins une ville Savoie de base et une station après correction du loader.
-
-Cette QA n’est **pas** encore déclarée passée.
-
-### B. Tables centrales héritées — NON BLOQUANT
-
-`territory-context-v1.js` garde une table historique plus petite que le fallback V8. Le runtime compense le problème, mais une future refactorisation pourra avoir une source d’alias unique.
-
-### C. Relations PNJ — NON BLOQUANT
-
-Les noms placeholders ont été supprimés des banques héritées ciblées. Il reste à enrichir les PNJ avec âge/tranche d’âge, situation économique, goûts, personnalité détaillée, horaires, motivations, compatibilités et mémoire relationnelle profonde.
-
-### D. Normalisation globale des noms — NON BLOQUANT
-
-Le fallback V8 couvre plusieurs variantes critiques. Une fonction de normalisation globale reste préférable à long terme pour accents, apostrophes, tirets, espaces et changements administratifs.
+- `territory-context-v1.js` et le fallback V8 du runtime dupliquent encore partiellement les alias ; une source unique serait préférable à terme.
+- Une normalisation globale accents/apostrophes/tirets/espaces serait plus robuste qu’une accumulation d’alias.
+- Les PNJ sont désormais nommés, mais le futur système relationnel doit encore enrichir âge, situation économique, goûts vestimentaires, horaires, motivations, affinités, rivalités, romance et mémoire fine.
+- Le gameplay `69` regroupe encore Rhône + Métropole de Lyon par simplification technique connue.
 
 ## Conclusion
 
-La région n’a plus de département structurellement vide et les principales dettes de cohérence détectées en lecture de code ont été corrigées. Le dernier verrou avant fusion n’est plus le contenu territorial : c’est **la QA navigateur réelle sur la branche**.
-
-Aucun merge vers `main` et aucun déploiement ne doivent être effectués sans demande explicite.
+La région n’a plus de département structurellement vide et les défauts statiques critiques trouvés pendant l’audit ont été traités. **Ne pas fusionner dans `main` ni déployer avant la QA navigateur réelle**, sauf demande explicite de l’utilisateur.
