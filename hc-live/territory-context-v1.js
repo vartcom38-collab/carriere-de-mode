@@ -5,6 +5,7 @@
 (function(){
 'use strict';
 if(window.HCTerritoryContext?.version>=2)return;
+const SCRIPT_BASE=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src):new URL('./',location.href);
 const PRESENCE_KEY='haute-couture-current-presence-v1';
 const HOME_KEY='haute-couture-home';
 const RESIDENCE_KEY='haute-couture-residence';
@@ -35,7 +36,7 @@ function syncGameWorld(p){
  try{if(window.HauteCoutureCore?.save)window.HauteCoutureCore.save(g);else localStorage.setItem(GAME_KEY,JSON.stringify(g))}catch(_){localStorage.setItem(GAME_KEY,JSON.stringify(g))}
 }
 function setPresence(place,reason='visit'){
- const p=normalizePlace(place,{source:'presence',reason});if(!p)return null;p.enteredAt=new Date().toISOString();localStorage.setItem(PRESENCE_KEY,JSON.stringify(p));syncGameWorld(p);window.dispatchEvent(new CustomEvent('hc-territory-presence',{detail:p}));return p;
+ const p=normalizePlace(place,{source:'presence',reason});if(!p)return null;p.enteredAt=new Date().toISOString();localStorage.setItem(PRESENCE_KEY,JSON.stringify(p));syncGameWorld(p);window.dispatchEvent(new CustomEvent('hc-territory-presence',{detail:p}));loadDepartmentGameplay(p);return p;
 }
 function clearPresence(){localStorage.removeItem(PRESENCE_KEY);window.dispatchEvent(new CustomEvent('hc-territory-presence',{detail:null}));}
 function getResidence(){const hs=read(HOME_KEY),rs=read(RESIDENCE_KEY);const h=hs?.home||rs||hs;if(!h)return null;return normalizePlace({...h,city:hs?.city||h.city,lat:h.lat??hs?.cityLat,lng:h.lng??h.lon??hs?.cityLng,departmentCode:h.departmentCode??h.deptCode??hs?.departmentCode??hs?.deptCode,departmentName:h.departmentName??hs?.departmentName},{source:'residence',reason:'home'});}
@@ -46,5 +47,13 @@ function currentLocal(){return getPresence()||getResidence();}
 function currentForInteractiveMap(){return getMapFocus()||getPresence()||getResidence();}
 function isAwayFromHome(){const p=getPresence(),h=getResidence();if(!p)return false;if(!h)return true;if(p.departmentCode&&h.departmentCode&&p.departmentCode!==h.departmentCode)return true;return !!(p.city&&h.city&&p.city!==h.city);}
 function isPreviewOnly(){const f=getMapFocus(),p=getPresence();if(!f)return false;if(!p)return true;if(f.departmentCode&&p.departmentCode&&f.departmentCode!==p.departmentCode)return true;return !!(f.city&&p.city&&f.city!==p.city);}
-window.HCTerritoryContext={version:2,storageKey:PRESENCE_KEY,normalizePlace,getStoredPresence,getTravelPresence,getPresence,setPresence,clearPresence,getResidence,getMapFocus,currentLocal,currentForInteractiveMap,isAwayFromHome,isPreviewOnly};
+const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay1'};
+function loadDepartmentGameplay(place=getPresence()){
+ if(!place||!String(location.pathname).includes('/ville'))return;
+ const src=DEPARTMENT_GAMEPLAY[String(place.departmentCode||'')];if(!src)return;
+ const key='hcTerritoryGameplayScript'+String(place.departmentCode||'');if(document.getElementById(key))return;
+ const s=document.createElement('script');s.id=key;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s);
+}
+window.HCTerritoryContext={version:2,storageKey:PRESENCE_KEY,normalizePlace,getStoredPresence,getTravelPresence,getPresence,setPresence,clearPresence,getResidence,getMapFocus,currentLocal,currentForInteractiveMap,isAwayFromHome,isPreviewOnly,loadDepartmentGameplay};
+loadDepartmentGameplay();
 })();
