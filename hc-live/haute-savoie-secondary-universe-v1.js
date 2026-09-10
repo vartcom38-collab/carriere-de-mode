@@ -1,0 +1,8 @@
+/* Haute Couture Live — univers secondaires Haute-Savoie V1 */
+(function(){'use strict';if(window.__HCHauteSavoieSecondaryUniverseV1)return;window.__HCHauteSavoieSecondaryUniverseV1=true;const p=window.HCTerritoryContext?.getPresence?.();if(String(p?.departmentCode||'')!=='74')return;const city=String(p.city||'');const U={
+'Cluses':{identity:'vallée de l’Arve / horlogerie / décolletage / précision métal / composants',materials:['métal','acier','aluminium','cuir'],motifs:['rouage','micro-pièce','ligne mécanique'],palette:['acier','noir','bleu industriel']},
+'Sallanches':{identity:'Mont-Blanc / métiers d’art / photographie / ville de vallée',materials:['laine','bois','verre','toile'],motifs:['main','massif','quai'],palette:['gris montagne','ivoire','vert']},
+'Saint-Gervais-les-Bains':{identity:'thermalisme / patrimoine / Mont-Blanc / bien-être / culture',materials:['laine fine','soie','lin'],motifs:['source','bassin','baroque'],palette:['blanc thermal','pierre','bleu glacier']},
+'Samoëns':{identity:'tailleurs de pierre / sculpture / botanique / village alpin',materials:['laine','lin','cuir'],motifs:['pierre taillée','rosace','feuille alpine'],palette:['gris calcaire','vert botanique','écru']},
+'Yvoire':{identity:'Léman / village médiéval / jardin / artisanat / tourisme',materials:['lin','soie','cuir'],motifs:['rempart','fleur','vague'],palette:['pierre','bleu Léman','rose végétal']}}
+;const u=U[city];if(!u)return;window.HCCityUniverse={version:1,departmentCode:'74',city,...u,fictionalGameplay:true};window.dispatchEvent(new CustomEvent('hc-city-universe-ready',{detail:window.HCCityUniverse}));})();
