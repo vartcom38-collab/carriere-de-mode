@@ -11,24 +11,24 @@ const out={markers:[],summary:{}};
 
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{const p=path.join(dir,e.name);return e.isDirectory()?walk(p):[p]})}
 function val(body,key){
- const rx=new RegExp(`${key}\\s*:\\s*(['\"\\`])([^'\"\\`]+)\\1`);
- const m=body.match(rx);return m?m[2]:null;
+ const rx=new RegExp(key+"\\s*:\\s*['\"]([^'\"]+)['\"]");
+ const m=body.match(rx);return m?m[1]:null;
 }
-function bool(body,key){return new RegExp(`${key}\\s*:\\s*true`).test(body)}
-function hasAny(body,keys){return keys.some(k=>new RegExp(`${k}\\s*:`).test(body))}
+function bool(body,key){return new RegExp(key+'\\s*:\\s*true').test(body)}
+function hasAny(body,keys){return keys.some(k=>new RegExp(k+'\\s*:').test(body))}
 
 const files=walk(HC).filter(f=>f.endsWith('.js'));
 for(const file of files){
  const text=fs.readFileSync(file,'utf8');
- // Capture compact object literals that look like map POIs. The 2600-char cap avoids swallowing whole config blocks.
- const rx=/\{id\s*:\s*(['"`])([^'"`]+)\1[\s\S]{0,2600}?\}/g;
+ // Capture les objets POI littéraux. Les objets générés dynamiquement restent contrôlés par le runtime/E2E.
+ const rx=/\{id\s*:\s*['"]([^'"]+)['"][\s\S]{0,2600}?\}/g;
  for(const m of text.matchAll(rx)){
    const body=m[0];
    if(!/\bname\s*:/.test(body)||!(/\blat\s*:/.test(body)&&/\blng\s*:/.test(body)))continue;
    const dept=val(body,'dept')||val(body,'departmentCode');
    if(dept&&!CODES.has(String(dept)))continue;
    const marker={
-     id:m[2],dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:val(body,'cat')||val(body,'category'),
+     id:m[1],dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:val(body,'cat')||val(body,'category'),
      fictional:bool(body,'fictional'),hasImage:hasAny(body,MEDIA_KEYS),hasSource:hasAny(body,SOURCE_KEYS),
      hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:path.relative(ROOT,file).replaceAll('\\','/')
    };
