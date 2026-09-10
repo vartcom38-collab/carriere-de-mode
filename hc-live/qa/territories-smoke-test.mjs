@@ -56,12 +56,14 @@ for(const source of loaderFiles){
 }
 notes.push(`Références JS locales vérifiées dans ${loaderFiles.map(rel).join(', ')}.`);
 
+// Recherche globale en warning : certaines banques territoriales ont un nom de fichier générique
+// (ex. Bourg/Oyonnax, Romans/Valence) et ne doivent pas échapper au contrôle de contenu.
 const placeholderRx=/name:\s*`Contact \$\{city\}|name:\s*['\"]Contact [^'\"]+ \d+['\"]|Soline Arpin/;
-for(const file of territoryJs){
+for(const file of js){
   const text=fs.readFileSync(file,'utf8');
   if(placeholderRx.test(text))warnings.push(`PLACEHOLDER ${rel(file)}`);
 }
-notes.push(`Recherche placeholders effectuée : ${warnings.length} fichier(s) encore signalé(s), sans bloquer la syntaxe/runtime.`);
+notes.push(`Recherche globale placeholders : ${warnings.length} fichier(s) encore signalé(s), sans bloquer la syntaxe/runtime.`);
 
 const runtime=fs.readFileSync(path.join(HC,'territorial-signal-runtime-v1.js'),'utf8');
 for(const code of ['01','03','07','15','26','38','42','43','63','69','73','74']){
