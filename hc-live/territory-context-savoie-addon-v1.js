@@ -1,12 +1,23 @@
-/* Haute Couture Live — correctif de chargement territorial Savoie 73 V3
+/* Haute Couture Live — bootstrap Ville AURA + correctif Savoie 73 V4
+   Le fichier est chargé par /ville pour tous les territoires : il initialise donc l'UI de lieu AURA,
+   puis active la couche Savoie uniquement lorsque Marion est physiquement en 73.
    Focus carte != déplacement. Chargement séquentiel + attente explicite de HCLocalMap.
 */
-(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV3)return;window.__HCTerritoryContextSavoieAddonV3=true;
+(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV4)return;window.__HCTerritoryContextSavoieAddonV4=true;
 const ctx=window.HCTerritoryContext;if(!ctx||!String(location.pathname).includes('/ville'))return;
-const p=ctx.getPresence?.();if(String(p?.departmentCode||'')!=='73')return;
 const base=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src):new URL('../',location.href);
 function load(id,src){return new Promise((resolve,reject)=>{const old=document.getElementById(id);if(old){if(old.dataset.hcLoaded==='1'||old.readyState==='complete')return resolve(old);old.addEventListener('load',()=>resolve(old),{once:true});old.addEventListener('error',reject,{once:true});return}const s=document.createElement('script');s.id=id;s.src=new URL(src,base).href;s.async=false;s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',reject,{once:true});document.head.appendChild(s)})}
-function waitForMap(timeout=5000){if(window.HCLocalMap)return Promise.resolve(window.HCLocalMap);return new Promise((resolve,reject)=>{const start=Date.now(),t=setInterval(()=>{if(window.HCLocalMap){clearInterval(t);resolve(window.HCLocalMap)}else if(Date.now()-start>=timeout){clearInterval(t);reject(new Error('HCLocalMap indisponible'))}},20)})}
+function waitForMap(timeout=8000){if(window.HCLocalMap)return Promise.resolve(window.HCLocalMap);return new Promise((resolve,reject)=>{const start=Date.now(),t=setInterval(()=>{if(window.HCLocalMap){clearInterval(t);resolve(window.HCLocalMap)}else if(Date.now()-start>=timeout){clearInterval(t);reject(new Error('HCLocalMap indisponible'))}},20)})}
+
+/* Bootstrap commun : les médias sont chargés AVANT l'interface afin que la première ouverture soit déjà documentée. */
+(async()=>{try{
+ await waitForMap();
+ await load('hcTerritorialPlaceMediaAURA','ville/territorial-place-media-aura-v1.js?v=20260910-aura-media2');
+ await load('hcTerritorialPlaceInterfaceAURA','ville/territorial-place-interface-v1.js?v=20260910-aura-placeui1');
+ window.dispatchEvent(new CustomEvent('hc-territorial-place-ui-runtime-ready',{detail:{media:true,interface:true}}));
+}catch(err){console.error('[HC Ville UI loader]',err);window.dispatchEvent(new CustomEvent('hc-territory-load-error',{detail:{scope:'place-ui',message:String(err?.message||err)}}))}})();
+
+const p=ctx.getPresence?.();if(String(p?.departmentCode||'')!=='73')return;
 (async()=>{try{
  await load('hcTerritorialSignalRuntime','territorial-signal-runtime-v1.js?v=20260910-runtime8');
  await load('hcTerritorialLocalInteractionBridge','territorial-local-interaction-bridge-v1.js?v=20260910-localbridge2');
