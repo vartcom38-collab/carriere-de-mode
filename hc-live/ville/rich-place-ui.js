@@ -22,7 +22,7 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
                       load('../client-orders/client-order-engine-v1.js?v=20260825-orders1','data-hc-client-order-engine',()=>{
                         load('../client-orders/client-fitting-engine-v1.js?v=20260825-fitting1','data-hc-client-fitting-engine',()=>{
                           load('nimes-client-fitting-v2.js?v=20260825-fitting-ui2','data-hc-nimes-client-fitting-v2');
-                          load('nimes-client-order-board-v1.js?v=20260825-order-board1','data-hc-nimes-order-board');
+                          load('nimes-client-order-board-v1.js?v=20260825-order-board1','data-hc-nimes-client-order-board');
                         });
                       });
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
@@ -57,4 +57,6 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
     });
   });
 });
+// Extension régionale : chargée après l'installation du guide local. Elle reste inactive hors AURA.
+load('territorial-place-interface-v1.js?v=20260910-aura-place-ui1','data-hc-territorial-place-ui');
 })();
