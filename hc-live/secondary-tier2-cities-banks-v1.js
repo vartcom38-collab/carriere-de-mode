@@ -1,0 +1,11 @@
+/* Haute Couture Live — banques villes fortes secondaires vague 2 V1 */
+(function(){'use strict';if(window.HCSecondaryTier2CityBanksV1)return;
+function make(city,prefix,roles,families){const people=Array.from({length:26},(_,i)=>({id:`${prefix}-p-${i+1}`,name:`Contact ${city} ${i+1}`,role:roles[i%roles.length],district:['centre','quartier patrimoine','marché','atelier','périphérie'][i%5],fictional:true}));const briefs=Array.from({length:42},(_,i)=>({id:`${prefix}-b-${i+1}`,title:`${families[i%families.length]} ${i+1}`,district:people[i%people.length].district,level:1+Math.floor(i/11),systems:['Atelier','Book','Téléphone','Agenda']}));const secrets=Array.from({length:14},(_,i)=>({id:`${prefix}-s-${i+1}`,title:`Piste discrète ${city} ${i+1}`,district:people[i%people.length].district,fictional:true,threshold:2+(i%4)}));const events=Array.from({length:9},(_,i)=>({id:`${prefix}-e-${i+1}`,family:families[i%families.length],evolutive:true}));return{version:1,city,people,briefs,secrets,events}}
+window.HCSecondaryTier2CityBanksV1={
+'Montluçon':make('Montluçon','mtlc',['habilleuse','photographe','brocanteur·euse','documentaliste','cliente locale','organisateur·rice'],['Scène','Patrimoine','Seconde main','Industrie','Clientèle','Photo']),
+'Brioude':make('Brioude','bri',['dentellière','créatrice métiers d’art','photographe','cliente cérémonie','médiatrice','brocanteuse'],['Dentelle','Métiers d’art','Cérémonie','Patrimoine','Photo','Réemploi']),
+'Saint-Flour':make('Saint-Flour','stf',['photographe','artisan laine','cliente cérémonie','commerçant·e','médiateur·rice','organisateur·rice'],['Basalte','Laine','Cérémonie','Patrimoine','Marché','Photo']),
+'Salers':make('Salers','sal',['artisan laine','brocanteuse','photographe','cliente estivale','commerçant·e','organisateur·rice'],['Laine','Marché','Réemploi','Tourisme','Photo','Artisanat']),
+'Montbrison':make('Montbrison','mon',['retoucheuse','photographe','cliente mariage','commerçant·e','documentaliste','organisateur·rice'],['Cérémonie','Forez','Marché','Photo','Clientèle','Patrimoine']),
+'Tarare':make('Tarare','tar',['technicien textile','photographe produit','fournisseur','créateur·rice','cliente B2B','archiviste'],['Textile','Voilage','Production','B2B','Archives','Réemploi'])
+};window.dispatchEvent(new CustomEvent('hc-city-bank-ready',{detail:window.HCSecondaryTier2CityBanksV1}));})();
