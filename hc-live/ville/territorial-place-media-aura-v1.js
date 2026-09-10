@@ -9,18 +9,54 @@ const STORAGE='haute-couture-territorial-place-media-v1';
 const commons=(file,w=1600)=>`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${w}`;
 const source=file=>`Wikimedia Commons — ${file}`;
 const M={
- /* AIN — première vague documentaire */
+ /* AIN — Bourg-en-Bresse / Brou */
  'ain-brou':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
  'mc-bourg-brou':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
  'bou-brou':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
+ 'ain-map-bourg':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
+ 'ain-bourg':{image:commons('Monastère Royal de Brou 38.jpg'),source:source('Monastère Royal de Brou 38.jpg'),kind:'photo',real:true},
+
+ /* AIN — Pérouges */
  'ain-perouges':{image:commons('Maisons Pérouges.jpg'),source:source('Maisons Pérouges.jpg'),kind:'photo',real:true},
  'ain-map-per':{image:commons('Maisons Pérouges.jpg'),source:source('Maisons Pérouges.jpg'),kind:'photo',real:true},
+
+ /* AIN — Nantua */
  'ain-nantua':{image:commons('Lac de Nantua.jpg'),source:source('Lac de Nantua.jpg'),kind:'photo',real:true},
  'ain-map-nan':{image:commons('Lac de Nantua.jpg'),source:source('Lac de Nantua.jpg'),kind:'photo',real:true},
+
+ /* AIN — Ferney-Voltaire */
  'ain-ferney':{image:commons('Château Ferney Voltaire.JPG'),source:source('Château Ferney Voltaire.JPG'),kind:'photo',real:true},
  'ain-map-fer':{image:commons('Château Ferney Voltaire.JPG'),source:source('Château Ferney Voltaire.JPG'),kind:'photo',real:true},
+
+ /* AIN — Dombes */
  'ain-dombes':{image:commons('Villars les Dombes.jpg'),source:source('Villars les Dombes.jpg'),kind:'photo',real:true},
- 'ain-map-dom':{image:commons('Villars les Dombes.jpg'),source:source('Villars les Dombes.jpg'),kind:'photo',real:true}
+ 'ain-map-dom':{image:commons('Villars les Dombes.jpg'),source:source('Villars les Dombes.jpg'),kind:'photo',real:true},
+ 'ain-dombes-registry':{image:commons('Villars les Dombes.jpg'),source:source('Villars les Dombes.jpg'),kind:'photo',real:true},
+
+ /* AIN — Oyonnax : ville + Grande Vapeur */
+ 'ain-map-oyo':{image:commons("Centre d'Oyonnax.jpg"),source:source("Centre d'Oyonnax.jpg"),kind:'photo',real:true},
+ 'ain-oyonnax':{image:commons("Centre d'Oyonnax.jpg"),source:source("Centre d'Oyonnax.jpg"),kind:'photo',real:true},
+ 'ain-grande-vapeur':{image:commons('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),source:source('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),kind:'photo',real:true},
+ 'mc-oyo-vapeur':{image:commons('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),source:source('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),kind:'photo',real:true},
+ 'oyo-vapeur':{image:commons('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),source:source('Usine Grande Vapeur - Oyonnax (FR01) - 2021-07-03 - 1.jpg'),kind:'photo',real:true},
+
+ /* AIN — Jujurieux / Soieries Bonnet */
+ 'ain-map-juj':{image:commons('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),source:source('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),kind:'photo',real:true},
+ 'ain-jujurieux':{image:commons('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),source:source('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),kind:'photo',real:true},
+ 'ain-soieries':{image:commons('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),source:source('Entrée du musée des soieries Bonnet (Jujurieux).jpg'),kind:'photo',real:true},
+
+ /* AIN — Pays de Gex */
+ 'ain-map-gex':{image:commons('Col Faucille Gex Ain 4.jpg'),source:source('Col Faucille Gex Ain 4.jpg'),kind:'photo',real:true},
+ 'ain-gex':{image:commons('Col Faucille Gex Ain 4.jpg'),source:source('Col Faucille Gex Ain 4.jpg'),kind:'photo',real:true},
+ 'ain-gex-registry':{image:commons('Col Faucille Gex Ain 4.jpg'),source:source('Col Faucille Gex Ain 4.jpg'),kind:'photo',real:true},
+
+ /* AIN — Mijoux */
+ 'ain-map-mij':{image:commons('Col de la Faucille 01- Un dei rari scorci interessanti, qui il villaggio di Mijoux 990m- BVAPM.jpg'),source:source('Col de la Faucille 01- Un dei rari scorci interessanti, qui il villaggio di Mijoux 990m- BVAPM.jpg'),kind:'photo',real:true},
+ 'ain-mijoux':{image:commons('Col de la Faucille 01- Un dei rari scorci interessanti, qui il villaggio di Mijoux 990m- BVAPM.jpg'),source:source('Col de la Faucille 01- Un dei rari scorci interessanti, qui il villaggio di Mijoux 990m- BVAPM.jpg'),kind:'photo',real:true},
+
+ /* AIN — Belley */
+ 'ain-map-bel':{image:commons('Belley.jpg'),source:source('Belley.jpg'),kind:'photo',real:true},
+ 'ain-belley':{image:commons('Belley.jpg'),source:source('Belley.jpg'),kind:'photo',real:true}
 };
 /* L'interface territoriale sait déjà lire ce stockage. On fusionne sans effacer d'éventuels médias ajoutés manuellement. */
 try{
