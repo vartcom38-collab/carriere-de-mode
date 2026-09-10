@@ -1,7 +1,14 @@
-/* Haute Couture Live — charge Gard complet + enrichissements de Nîmes + traduction mode. */
+/* Haute Couture Live — charge Gard complet + enrichissements de Nîmes + traduction mode.
+   Hors Gard, ne charge pas le lourd runtime Nîmes : AURA utilise son interface territoriale dédiée.
+*/
 (function(){
 'use strict';
-function load(src,attr,onload){if(document.querySelector('script['+attr+']')){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(attr,'1');s.onload=()=>onload&&onload();s.onerror=()=>{console.warn('[Gard] chargement impossible: '+src);onload&&onload()};document.head.appendChild(s)}
+function load(src,attr,onload){if(document.querySelector('script['+attr+']')){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(attr,'1');s.onload=()=>onload&&onload();s.onerror=()=>{console.warn('[Ville] chargement impossible: '+src);onload&&onload()};document.head.appendChild(s)}
+const here=window.HCTerritoryContext?.getPresence?.()||null;
+const isGard=String(here?.departmentCode||'')==='30'||String(here?.city||'')==='Nîmes';
+
+/* Nîmes reste la référence fonctionnelle, mais son stack historique est strictement local au Gard. */
+if(isGard){
 load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecycle',()=>{
   load('../travel/france/france-territories.js?v=20260824-france-registry','data-hc-france-territories',()=>{
     load('../travel/france/departments/30.js?v=20260824-gard-total','data-hc-gard-base',()=>{
@@ -22,7 +29,7 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
                       load('../client-orders/client-order-engine-v1.js?v=20260825-orders1','data-hc-client-order-engine',()=>{
                         load('../client-orders/client-fitting-engine-v1.js?v=20260825-fitting1','data-hc-client-fitting-engine',()=>{
                           load('nimes-client-fitting-v2.js?v=20260825-fitting-ui2','data-hc-nimes-client-fitting-v2');
-                          load('nimes-client-order-board-v1.js?v=20260825-order-board1','data-hc-nimes-order-board');
+                          load('nimes-client-order-board-v1.js?v=20260825-order-board1','data-hc-nimes-client-order-board');
                         });
                       });
                       load('nimes-artisan-v2.js?v=20260825-nimes-artisan1','data-hc-nimes-artisan-v2',()=>{
@@ -57,7 +64,9 @@ load('overlay-lifecycle-fix.js?v=20260824-overlay-fix-1','data-hc-overlay-lifecy
     });
   });
 });
-// Extension régionale : registre documentaire puis interface. Inactifs hors AURA.
+}
+
+/* Extension régionale : légère et indépendante du stack Nîmes. Inactive hors AURA. */
 load('territorial-place-media-aura-v1.js?v=20260910-aura-media1','data-hc-territorial-place-media',()=>{
   load('territorial-place-interface-v1.js?v=20260910-aura-place-ui2','data-hc-territorial-place-ui');
 });
