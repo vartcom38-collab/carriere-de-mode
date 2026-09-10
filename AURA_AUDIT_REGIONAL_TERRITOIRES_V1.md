@@ -1,79 +1,62 @@
-# AUDIT RÉGIONAL — AUVERGNE-RHÔNE-ALPES — V1
+# AUDIT RÉGIONAL — AUVERGNE-RHÔNE-ALPES — V2
 
 Date : 2026-09-10
 Branche : `territoires-france`
 
 ## Verdict
 
-**AUVERGNE-RHÔNE-ALPES : COUVERTURE TERRITORIALE DENSE SUR LES 12 DÉPARTEMENTS, PRÊTE POUR QA NAVIGATEUR AVANT FUSION.**
+**AUVERGNE-RHÔNE-ALPES : COUVERTURE TERRITORIALE DENSE SUR LES 12 DÉPARTEMENTS. QA STRUCTURELLE RENFORCÉE. QA NAVIGATEUR ENCORE À FAIRE AVANT FUSION.**
 
-Départements couverts :
-- Ain (01)
-- Allier (03)
-- Ardèche (07)
-- Cantal (15)
-- Drôme (26)
-- Isère (38)
-- Loire (42)
-- Haute-Loire (43)
-- Puy-de-Dôme (63)
-- Rhône / territoire gameplay 69
-- Savoie (73)
-- Haute-Savoie (74)
+Départements couverts : Ain (01), Allier (03), Ardèche (07), Cantal (15), Drôme (26), Isère (38), Loire (42), Haute-Loire (43), Puy-de-Dôme (63), Rhône / territoire gameplay 69, Savoie (73), Haute-Savoie (74).
 
 ## Règle territoriale canonique
 
-Résidence, présence physique/voyage et focus de carte restent distincts.
-
-**Ouvrir ou regarder un territoire ne téléporte jamais Marion.**
-
-Les rencontres, briefs et signaux territoriaux sont déclenchés à partir de la présence physique, pas du simple focus carte.
+Résidence, présence physique/voyage et focus de carte restent distincts. **Ouvrir ou regarder un territoire ne téléporte jamais Marion.** Les rencontres, briefs et signaux territoriaux sont déclenchés à partir de la présence physique, pas du simple focus carte.
 
 ## Correctifs réalisés pendant l’audit
 
 ### 1. Fiabilisation stale-state
 
-Les moteurs suivants utilisaient un ancien pattern où un snapshot local pouvait être réécrit après `emit()` et supprimer les signaux nouvellement persistés :
-- Drôme
-- Ardèche
-- Savoie
-- Loire
-- Haute-Loire
+Corrigé sur Drôme, Ardèche, Savoie, Loire et Haute-Loire. Déjà corrigé auparavant sur Rhône, Allier, Cantal et Puy-de-Dôme. Ain : architecture différente, pas de stale-state identifié dans le flux inspecté.
 
-Ils ont été corrigés :
-- les briefs/secrets sont persistés avant émission des signaux ;
-- les événements sont persistés avant émission quand le moteur possède un store d’événements ;
-- les anciens `write(s)` finaux susceptibles d’écraser les signaux ont été supprimés ou déplacés.
-
-Déjà corrigés auparavant :
-- Rhône
-- Allier
-- Cantal
-- Puy-de-Dôme
-
-Ain : architecture différente, pas de stale-state identifié dans le flux inspecté ; `addSignal()` modifie le même objet mémoire sauvegardé ensuite.
+Principe appliqué : les briefs, secrets et événements sont persistés avant émission des signaux ; aucun snapshot ancien ne doit être réécrit après un `emit()` susceptible d’avoir enrichi le store.
 
 ### 2. Routage régional
 
-`territorial-signal-runtime-v1.js` passe en V8 et possède maintenant un fallback régional étendu couvrant les pôles denses des 12 départements.
-
-Ajouts importants :
-- secondaires Ardèche et Drôme ;
-- villes denses Loire / Haute-Loire / Puy-de-Dôme / Allier / Cantal / Rhône ;
-- variantes d’apostrophes typographiques et ASCII ;
-- `Bourg-d’Oisans` et `Bourg-d'Oisans` ;
-- `Vallon-Pont-d’Arc` et `Vallon-Pont-d'Arc` ;
-- `Tain-l’Hermitage` et `Tain-l'Hermitage` ;
-- `Val-d’Isère` et `Val-d'Isère` ;
-- principales villes Savoie et Haute-Savoie.
-
-Le pont peut donc déduire un code départemental dans davantage de cas lorsque l’état de voyage ne fournit qu’un nom de commune.
+`territorial-signal-runtime-v1.js` est passé en V8 avec un fallback régional étendu couvrant les pôles denses des 12 départements, dont les variantes d’apostrophes ASCII/typographiques critiques (`Bourg-d'Oisans` / `Bourg-d’Oisans`, `Tain-l'Hermitage` / `Tain-l’Hermitage`, `Val-d'Isère` / `Val-d’Isère`, etc.).
 
 ### 3. Savoie — collision documentaire
 
-Le PNJ fictif `Soline Arpin` a été renommé **Soline Perrier** afin d’éviter toute ambiguïté avec la véritable manufacture / maison Arpin utilisée comme ancrage documentaire pour la laine en Savoie.
+Le PNJ fictif `Soline Arpin` a été renommé **Soline Perrier** afin d’éviter toute ambiguïté avec la véritable maison Arpin utilisée comme ancrage documentaire.
 
-## État par département
+### 4. Savoie — loader réellement corrigé
+
+Un 404 structurel a été trouvé dans `territory-context-savoie-addon-v1.js` : le loader appelait `savoie-primary-territories-universe-v1.js` / `savoie-primary-territories-banks-v1.js`, fichiers inexistants.
+
+Correctif V2 :
+- utilisation des vrais fichiers `savoie-primary-cities-universe-v1.js` et `savoie-primary-cities-banks-v1.js` ;
+- chargement séquentiel via Promises ;
+- moteur Savoie chargé avant l’addon des stations ;
+- univers et banque chargés avant l’addon gameplay ;
+- support de `Val-d'Isère` et `Val-d’Isère` ;
+- émission d’un événement `hc-savoie-runtime-ready` en cas de succès et `hc-territory-load-error` en cas d’échec.
+
+Le fichier `savoie-primary-cities-universe-v1.js` a été vérifié présent sur la branche.
+
+### 5. Nettoyage des PNJ placeholders
+
+Les banques héritées suivantes ne génèrent plus de noms `Contact <ville> <n>` :
+- `drome-secondary-cities-banks-v2.js` ;
+- `ardeche-primary-cities-banks-v1.js` ;
+- `ardeche-secondary-cities-banks-v1.js` ;
+- `savoie-primary-cities-banks-v1.js` ;
+- `savoie-high-resorts-banks-v1.js`.
+
+Les IDs restent inchangés pour préserver la compatibilité avec les sauvegardes et références existantes. Les PNJ reçoivent désormais des noms fictionnels déterministes, leur rôle, leur zone/quartier quand la banque en possède un, et un trait de personnalité de base.
+
+Cette passe ne remplace pas encore le futur système relationnel complet (âge, niveau économique, goûts vestimentaires, emploi du temps, motivations, affinités, romance/rivalité, mémoire fine), mais la dette des noms placeholders est supprimée pour ces banques.
+
+## État régional
 
 ### Ain — DENSE
 Bourg-en-Bresse, Oyonnax, Jujurieux, Pérouges, Pays de Gex, Bugey, Dombes et pôles secondaires.
@@ -105,70 +88,43 @@ Clermont-Ferrand, Thiers, Riom, Volvic, Le Mont-Dore, La Bourboule, Issoire, Amb
 ### Rhône / territoire gameplay 69 — DENSE
 Lyon, Villeurbanne, Villefranche-sur-Saône, Tarare, Amplepuis, Thizy-les-Bourgs, Oullins-Pierre-Bénite, Givors.
 
-Note documentaire : le gameplay `69` regroupe actuellement Rhône + Métropole de Lyon pour des raisons de continuité du moteur. Cette simplification est connue et volontaire à ce stade.
-
 ### Savoie — DENSE
 Chambéry, Aix-les-Bains, Albertville, Beaufort, Bourg-Saint-Maurice, Modane + stations et hautes vallées densifiées.
 
 ### Haute-Savoie — DENSE
 Annecy, Chamonix-Mont-Blanc, Le Grand-Bornand, Châtel, Megève, Évian-les-Bains, Thonon-les-Bains, Morzine, Avoriaz, La Clusaz, Cluses, Sallanches, Saint-Gervais-les-Bains, Samoëns, Yvoire.
 
-## Dettes restantes non bloquantes
+## Dettes restantes avant fusion
 
-### A. QA navigateur / runtime réel
+### A. QA navigateur / runtime réel — BLOQUANT POUR FUSION
 
-À faire avant fusion :
+À faire sur une version réellement servie de la branche :
 - entrer physiquement dans au moins une ville par département ;
-- vérifier chargement des scripts sans 404 ;
+- vérifier le chargement sans erreur console / 404 ;
 - observer un marqueur ;
 - déclencher une rencontre ;
 - provoquer un brief ou secret ;
-- vérifier remontée Téléphone ;
-- vérifier Agenda ;
-- vérifier Atelier ;
-- vérifier Book ;
-- recharger la page et confirmer la persistance ;
-- vérifier qu’un focus carte seul ne déplace pas Marion.
+- vérifier Téléphone, Agenda, Atelier et Book ;
+- recharger et confirmer la persistance ;
+- vérifier que le focus carte seul ne déplace jamais Marion ;
+- tester au moins une ville Savoie de base et une station après correction du loader.
 
-Cette QA n’a **pas** encore été déclarée passée.
+Cette QA n’est **pas** encore déclarée passée.
 
-### B. Tables centrales héritées
+### B. Tables centrales héritées — NON BLOQUANT
 
-`territory-context-v1.js` garde encore une table historique de villes plus petite que le fallback V8. Le runtime V8 compense une grande partie du problème, mais une future passe de nettoyage pourra synchroniser directement les deux tables pour réduire la duplication.
+`territory-context-v1.js` garde une table historique plus petite que le fallback V8. Le runtime compense le problème, mais une future refactorisation pourra avoir une source d’alias unique.
 
-### C. Haute-Savoie / Savoie
+### C. Relations PNJ — NON BLOQUANT
 
-Le chargement 74 conserve son architecture spécifique déjà branchée sur la page Ville. Le fallback V8 connaît les principales communes du 74, mais la passe de refactorisation future pourra unifier totalement 73/74 avec le même chargeur générique que les autres départements.
+Les noms placeholders ont été supprimés des banques héritées ciblées. Il reste à enrichir les PNJ avec âge/tranche d’âge, situation économique, goûts, personnalité détaillée, horaires, motivations, compatibilités et mémoire relationnelle profonde.
 
-### D. PNJ placeholders hérités
+### D. Normalisation globale des noms — NON BLOQUANT
 
-Certaines anciennes banques générées pendant les premières vagues Drôme, Ardèche et Savoie utilisent encore des noms de type `Contact <ville> <n>`.
-
-Ce n’est pas un blocage runtime mais c’est la principale dette de contenu restante. Passe recommandée :
-- noms fictionnels naturels ;
-- âge / tranche d’âge ;
-- métier ;
-- niveau économique ;
-- goût vestimentaire ;
-- personnalité ;
-- horaires / lieux de présence ;
-- motivations ;
-- potentiel amitié / rivalité / romance / client / collaboration ;
-- mémoire relationnelle.
-
-### E. Normalisation des noms
-
-Le fallback V8 couvre plusieurs apostrophes critiques. Une future fonction de normalisation globale serait néanmoins plus robuste qu’une accumulation d’alias :
-- apostrophe droite / typographique ;
-- tirets ;
-- accents ;
-- espaces ;
-- variantes administratives récentes.
+Le fallback V8 couvre plusieurs variantes critiques. Une fonction de normalisation globale reste préférable à long terme pour accents, apostrophes, tirets, espaces et changements administratifs.
 
 ## Conclusion
 
-La région n’a plus de département structurellement vide.
-
-Le prochain travail recommandé n’est **pas** d’ajouter encore du volume territorial à Auvergne-Rhône-Alpes. Il est de faire une vraie QA end-to-end et une passe PNJ/relations sur les banques héritées, puis seulement ensuite de commencer une autre région française.
+La région n’a plus de département structurellement vide et les principales dettes de cohérence détectées en lecture de code ont été corrigées. Le dernier verrou avant fusion n’est plus le contenu territorial : c’est **la QA navigateur réelle sur la branche**.
 
 Aucun merge vers `main` et aucun déploiement ne doivent être effectués sans demande explicite.
