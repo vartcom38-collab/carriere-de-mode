@@ -8,6 +8,6 @@ const U={
 'La Bourboule':{identity:'villégiature · thermalisme · familles · élégance pratique',sites:[['Grands Thermes et villas','heritage','Belle Époque et séjour'],['Atelier Retouche des Sources','craft','réparation et adaptation',true]]},
 'Issoire':{identity:'patrimoine · cérémonie · commerce · réseau local',sites:[['Centre patrimonial','heritage','ornement, pierre et couleur'],['Salon de commande locale','markets','clientes et cérémonies',true]]},
 'Ambert':{identity:'papier · chiffon · réemploi · surface · artisanat',sites:[['Moulin Richard de Bas','craft','papier fait main à partir de chiffons, eau et gestes papetiers'],['Laboratoire Papier & Textile','craft','collage, impression, doublures et volumes',true]]},
-'Orcines':{identity:'volcan · paysage · météo · outdoor · palette',sites:[['Chaîne des Puys','nature','strates, relief, brume et volumes'],['Studio Altitude 63','culture','shooting et vêtements de terrain',true]]}}
+'Orcines':{identity:'volcan · paysage · météo · outdoor · palette',sites:[['Chaîne des Puys','nature','strates, relief, brume et volumes'],['Studio Altitude 63','culture','shooting et vêtements de terrain',true]]}
 };
 window.HCPuyDeDomeDenseUniverse={version:1,departmentCode:'63',cities:U};window.dispatchEvent(new CustomEvent('hc-city-universe-ready',{detail:window.HCPuyDeDomeDenseUniverse}));})();
