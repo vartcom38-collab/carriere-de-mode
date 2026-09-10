@@ -22,3 +22,5 @@ jobs:
         run: node --version
       - name: Run territorial smoke test
         run: node hc-live/qa/territories-smoke-test.mjs
+      - name: Audit AURA interfaces and media
+        run: node hc-live/qa/territories-ui-media-audit.mjs
