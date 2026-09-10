@@ -19,11 +19,7 @@ const DEPT_BY_CITY={
  'Clermont-Ferrand':'63','Thiers':'63','Riom':'63','Volvic':'63','Le Mont-Dore':'63','La Bourboule':'63','Lyon':'69','Villefranche-sur-Saône':'69','Nîmes':'30'
 };
 function deptCode(v){if(v==null)return null;if(typeof v==='object')v=v.code??v.departmentCode??v.deptCode;const s=String(v).trim();if(!s)return null;if(/^\d$/.test(s))return '0'+s;if(/^\d{2,3}$/.test(s)||/^(2A|2B)$/i.test(s))return s.toUpperCase();return DEPT_BY_NAME[s]||null;}
-function normalizePlace(input,meta={}){
- if(!input)return null;const department=input.department&&typeof input.department==='object'?input.department:null;const commune=input.commune&&typeof input.commune==='object'?input.commune:null;const city=input.city||input.communeName||commune?.nom||input.name||department?.nom||null;
- const code=deptCode(input.departmentCode??input.deptCode??department?.code??input.departmentName??(typeof input.department==='string'?input.department:null))||DEPT_BY_CITY[city]||null;
- return {id:input.id||commune?.code||null,city,commune:commune||null,department:department||input.department||null,departmentCode:code,departmentName:input.departmentName||department?.nom||(typeof input.department==='string'?input.department:null)||null,region:input.region||input.regionName||null,lat:num(input.lat??commune?.lat??department?.lat),lng:num(input.lng??input.lon??commune?.lng??commune?.lon??department?.lng??department?.lon),source:meta.source||input.source||null,reason:meta.reason||input.reason||null,enteredAt:input.enteredAt||null};
-}
+function normalizePlace(input,meta={}){if(!input)return null;const department=input.department&&typeof input.department==='object'?input.department:null;const commune=input.commune&&typeof input.commune==='object'?input.commune:null;const city=input.city||input.communeName||commune?.nom||input.name||department?.nom||null;const code=deptCode(input.departmentCode??input.deptCode??department?.code??input.departmentName??(typeof input.department==='string'?input.department:null))||DEPT_BY_CITY[city]||null;return {id:input.id||commune?.code||null,city,commune:commune||null,department:department||input.department||null,departmentCode:code,departmentName:input.departmentName||department?.nom||(typeof input.department==='string'?input.department:null)||null,region:input.region||input.regionName||null,lat:num(input.lat??commune?.lat??department?.lat),lng:num(input.lng??input.lon??commune?.lng??commune?.lon??department?.lng??department?.lon),source:meta.source||input.source||null,reason:meta.reason||input.reason||null,enteredAt:input.enteredAt||null};}
 function getStoredPresence(){return normalizePlace(read(PRESENCE_KEY),{source:'presence'});}
 function getTravelPresence(){const g=read(GAME_KEY),w=g?.world;if(!w?.currentCity&&!w?.currentDepartment)return null;return normalizePlace({city:w.currentCity,department:w.currentDepartment,departmentName:w.currentDepartment,departmentCode:w.currentDepartmentCode,region:w.currentRegion,lat:w.currentLat,lng:w.currentLng},{source:'travel-world',reason:'current-location'});}
 function getPresence(){return getStoredPresence()||getTravelPresence();}
@@ -36,16 +32,13 @@ function currentLocal(){return getPresence()||getResidence();}
 function currentForInteractiveMap(){return getMapFocus()||getPresence()||getResidence();}
 function isAwayFromHome(){const p=getPresence(),h=getResidence();if(!p)return false;if(!h)return true;if(p.departmentCode&&h.departmentCode&&p.departmentCode!==h.departmentCode)return true;return !!(p.city&&h.city&&p.city!==h.city);}
 function isPreviewOnly(){const f=getMapFocus(),p=getPresence();if(!f)return false;if(!p)return true;if(f.departmentCode&&p.departmentCode&&f.departmentCode!==p.departmentCode)return true;return !!(f.city&&p.city&&f.city!==p.city);}
-const DEPARTMENT_GAMEPLAY={
- '01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay2',
- '03':'allier-territorial-gameplay-v1.js?v=20260910-allierplay1'
-};
+const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay2','03':'allier-territorial-gameplay-v1.js?v=20260910-allierplay1'};
 function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
 function loadDepartmentGameplay(place=getPresence()){
  if(!place||!String(location.pathname).includes('/ville'))return;
  loadScript('hcTerritorialSignalRuntime','territorial-signal-runtime-v1.js?v=20260910-runtime2');
- const src=DEPARTMENT_GAMEPLAY[String(place.departmentCode||'')];if(!src)return;
- loadScript('hcTerritoryGameplayScript'+String(place.departmentCode||''),src);
+ loadScript('hcTerritorialLocalInteractionBridge','territorial-local-interaction-bridge-v1.js?v=20260910-localbridge1');
+ const src=DEPARTMENT_GAMEPLAY[String(place.departmentCode||'')];if(!src)return;loadScript('hcTerritoryGameplayScript'+String(place.departmentCode||''),src);
 }
 window.HCTerritoryContext={version:2,storageKey:PRESENCE_KEY,normalizePlace,getStoredPresence,getTravelPresence,getPresence,setPresence,clearPresence,getResidence,getMapFocus,currentLocal,currentForInteractiveMap,isAwayFromHome,isPreviewOnly,loadDepartmentGameplay};
 loadDepartmentGameplay();
