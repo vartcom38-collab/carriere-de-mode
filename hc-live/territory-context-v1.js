@@ -41,18 +41,17 @@ function setPresence(place,reason='visit'){
 function clearPresence(){localStorage.removeItem(PRESENCE_KEY);window.dispatchEvent(new CustomEvent('hc-territory-presence',{detail:null}));}
 function getResidence(){const hs=read(HOME_KEY),rs=read(RESIDENCE_KEY);const h=hs?.home||rs||hs;if(!h)return null;return normalizePlace({...h,city:hs?.city||h.city,lat:h.lat??hs?.cityLat,lng:h.lng??h.lon??hs?.cityLng,departmentCode:h.departmentCode??h.deptCode??hs?.departmentCode??hs?.deptCode,departmentName:h.departmentName??hs?.departmentName},{source:'residence',reason:'home'});}
 function getMapFocus(){const s=window.HCFranceGeo?.state;if(!s||(!s.department&&!s.commune))return null;return normalizePlace({department:s.department,departmentCode:s.department?.code,departmentName:s.department?.nom,region:s.region?.nom,commune:s.commune,city:s.commune?.nom||s.department?.nom,lat:s.commune?.centre?.coordinates?.[1]??s.commune?.lat??s.department?.lat,lng:s.commune?.centre?.coordinates?.[0]??s.commune?.lng??s.commune?.lon??s.department?.lng??s.department?.lon},{source:'map-focus',reason:'preview'});}
-/* Vie locale = là où Marion est physiquement. La résidence n'est qu'un fallback de compatibilité pour les anciennes sauvegardes. */
 function currentLocal(){return getPresence()||getResidence();}
-/* Carte interactive = ce que la joueuse regarde en premier, sans changer la présence. */
 function currentForInteractiveMap(){return getMapFocus()||getPresence()||getResidence();}
 function isAwayFromHome(){const p=getPresence(),h=getResidence();if(!p)return false;if(!h)return true;if(p.departmentCode&&h.departmentCode&&p.departmentCode!==h.departmentCode)return true;return !!(p.city&&h.city&&p.city!==h.city);}
 function isPreviewOnly(){const f=getMapFocus(),p=getPresence();if(!f)return false;if(!p)return true;if(f.departmentCode&&p.departmentCode&&f.departmentCode!==p.departmentCode)return true;return !!(f.city&&p.city&&f.city!==p.city);}
 const DEPARTMENT_GAMEPLAY={'01':'ain-territorial-gameplay-v1.js?v=20260910-ainplay1'};
+function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
 function loadDepartmentGameplay(place=getPresence()){
  if(!place||!String(location.pathname).includes('/ville'))return;
+ loadScript('hcTerritorialSignalRuntime','territorial-signal-runtime-v1.js?v=20260910-runtime1');
  const src=DEPARTMENT_GAMEPLAY[String(place.departmentCode||'')];if(!src)return;
- const key='hcTerritoryGameplayScript'+String(place.departmentCode||'');if(document.getElementById(key))return;
- const s=document.createElement('script');s.id=key;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s);
+ loadScript('hcTerritoryGameplayScript'+String(place.departmentCode||''),src);
 }
 window.HCTerritoryContext={version:2,storageKey:PRESENCE_KEY,normalizePlace,getStoredPresence,getTravelPresence,getPresence,setPresence,clearPresence,getResidence,getMapFocus,currentLocal,currentForInteractiveMap,isAwayFromHome,isPreviewOnly,loadDepartmentGameplay};
 loadDepartmentGameplay();
