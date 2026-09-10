@@ -1,0 +1,16 @@
+/* Haute Couture Live — Cantal map content V1 */
+(function(){
+'use strict';
+if(window.__HCCantalMapContentV1)return;window.__HCCantalMapContentV1=true;
+const ctx=window.HCTerritoryContext,bridge=window.HCLocalMap;if(!ctx||!bridge)return;const here=ctx.getPresence?.();if(String(here?.departmentCode||'')!=='15')return;
+const P=[
+{id:'cantal-aurillac-centre',dept:'15',departmentName:'Cantal',city:'Aurillac',name:'Aurillac · centre & arts de la rue',cat:'culture',lat:44.926,lng:2.44,where:'Aurillac · Cantal',text:'Ville-scène, arts de la rue, costume en mouvement et population temporaire.',palette:['rouge théâtre','gris pluie','pierre claire'],materials:['toile','textile technique'],motifs:['mouvement','rayons'],unlock:'BOOK_RESEARCH · missions scène · réseau culturel.'},
+{id:'cantal-aurillac-parapluie',dept:'15',departmentName:'Cantal',city:'Aurillac',name:'Aurillac · parapluie & structure',cat:'craft',lat:44.922,lng:2.447,where:'Aurillac · Cantal',text:'Structure, baleines, patronnage, toile imperméable et montage d’accessoire.',palette:['noir','gris pluie','bois'],materials:['toile imperméable','métal fin'],motifs:['rayons','segments'],unlock:'TECHNIQUE_OBSERVED · MATERIAL_KNOWLEDGE · accessoire.'},
+{id:'cantal-salers',dept:'15',departmentName:'Cantal',city:'Salers',name:'Salers · laine & patrimoine',cat:'fabric',lat:45.1377,lng:2.4947,where:'Salers · Cantal',text:'Laine, marché, pierre sombre et saison touristique.',palette:['basalte','écru','vert pâture'],materials:['laine','lin','soie'],motifs:['relief','pierre'],unlock:'MATERIAL_KNOWLEDGE · PALETTE_REFERENCE · marché.'},
+{id:'cantal-stflour',dept:'15',departmentName:'Cantal',city:'Saint-Flour',name:'Saint-Flour · ville haute',cat:'heritage',lat:45.033,lng:3.092,where:'Saint-Flour · Cantal',text:'Basalte, verticalité, patrimoine et clientèle territoriale.',palette:['basalte','ivoire','bleu froid'],materials:['laine','lin'],motifs:['strates','verticales'],unlock:'DESIGN_REFERENCE · shooting · clientèle locale.'},
+{id:'cantal-chaudes',dept:'15',departmentName:'Cantal',city:'Chaudes-Aigues',name:'Chaudes-Aigues · thermalisme',cat:'culture',lat:44.854,lng:3.004,where:'Chaudes-Aigues · Cantal',text:'Séjour thermal, confort, réception et clientèle fidèle.',palette:['ivoire','eau chaude','brun'],materials:['crêpe','laine fine'],motifs:['vapeur','eau'],unlock:'Clientèle de séjour · cérémonie · revisite.'},
+{id:'cantal-lioran',dept:'15',departmentName:'Cantal',city:'Laveissière',name:'Le Lioran · montagne',cat:'nature',lat:45.082,lng:2.752,where:'Le Lioran · Cantal',text:'Froid, mouvement, superposition, sport et saisonnalité montagne.',palette:['neige','gris roche','vert sapin'],materials:['laine','matières techniques'],motifs:['pentes','strates'],unlock:'PALETTE_REFERENCE · MATERIAL_KNOWLEDGE · vêtement transformable.'},
+{id:'cantal-murat',dept:'15',departmentName:'Cantal',city:'Murat',name:'Murat · pierre & passage',cat:'heritage',lat:45.11,lng:2.868,where:'Murat · Cantal',text:'Petite ville de passage, pierre volcanique, marché et réseau local.',palette:['pierre sombre','ocre','écru'],materials:['laine','lin'],motifs:['façades','pavage'],unlock:'Rencontres locales · Book · petite clientèle.'}
+];
+P.forEach(p=>bridge.addMarker(p));
+})();
