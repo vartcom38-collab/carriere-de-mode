@@ -5,9 +5,12 @@
 (function(){
 'use strict';
 if(window.__HCTerritorialSignalRuntimeV3)return;window.__HCTerritorialSignalRuntimeV3=true;
+const SCRIPT_BASE=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src):new URL('./',location.href);
 const GAME='haute-couture-game-state-v1',ATELIER='haute-couture-atelier-unlocks-v1',BOOK='haute-couture-book-v1';
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(_){return false}};
+function loadScript(id,src){if(document.getElementById(id))return;const s=document.createElement('script');s.id=id;s.src=new URL(src,SCRIPT_BASE).href;s.async=true;document.head.appendChild(s)}
+function bootstrapExtendedTerritories(){const p=window.HCTerritoryContext?.getPresence?.();if(!p)return;const code=String(p.departmentCode||''),city=String(p.city||'');if(code==='73'){loadScript('hcTerritoryGameplayScript73','savoie-territorial-gameplay-v1.js?v=20260910-savoieplay1');loadScript('hcTerritoryMapPack73','savoie-map-content-v1.js?v=20260910-savoiemap1');if(['Chambéry','Aix-les-Bains','Albertville','Beaufort','Bourg-Saint-Maurice','Modane'].includes(city)){loadScript('hcCityUniverse73'+city.replace(/\W+/g,''),'savoie-primary-cities-universe-v1.js?v=20260910-savoieprimary1');loadScript('hcCityContentBank73'+city.replace(/\W+/g,''),'savoie-primary-cities-banks-v1.js?v=20260910-savoieprimarybank1')}}}
 function readGame(){try{return window.HCGame?.get?.()||read(GAME,null)}catch(_){return null}}
 function saveGame(g){try{if(window.HCGame?.mutate){window.HCGame.mutate(s=>Object.assign(s,g));return true}write(GAME,g);window.dispatchEvent(new CustomEvent('hc-game-state',{detail:g}));return true}catch(_){return false}}
 function ensureMessage(s,id,from,subject,text,meta){s.messages=s.messages||[];if(s.messages.some(m=>m.id===id))return false;s.messages.unshift({id,from,avatar:String(from||'T')[0]||'T',subject,text,receivedAt:s.clock?.iso||new Date().toISOString(),read:false,action:null,meta:{source:'territorial',...(meta||{})}});return true}
@@ -28,9 +31,10 @@ function apply(s,d,idBase){
 function importSignal(detail){if(!detail?.kind)return;const d=detail,idBase='territory:'+String(d.departmentCode||'xx')+':'+String(d.id||d.title||Date.now());if(window.HCGame?.mutate){window.HCGame.mutate(s=>apply(s,d,idBase));return}const g=readGame();if(!g)return;apply(g,d,idBase);saveGame(g)}
 function syncStoredDepartment(code,key){try{const m=read(key,null);if(!m?.signals?.length)return;const g=readGame();if(!g)return;let changed=false;m.signals.forEach(x=>{const bm=(g.messages||[]).length,bc=(g.calendar||[]).length;apply(g,{kind:x.kind,...x.payload,departmentCode:code},'territory:'+code+':'+String(x.payload?.id||x.id));if((g.messages||[]).length!==bm||(g.calendar||[]).length!==bc)changed=true});if(changed)saveGame(g)}catch(_){}}
 function syncKnownStores(){[
- ['01','haute-couture-ain-territorial-gameplay-v1'],['03','haute-couture-allier-territorial-gameplay-v1'],['15','haute-couture-cantal-territorial-gameplay-v1'],['42','haute-couture-loire-territorial-gameplay-v1'],['43','haute-couture-haute-loire-territorial-gameplay-v1'],['63','haute-couture-puy-de-dome-territorial-gameplay-v1'],['69','haute-couture-rhone-territorial-gameplay-v1']
+ ['01','haute-couture-ain-territorial-gameplay-v1'],['03','haute-couture-allier-territorial-gameplay-v1'],['07','haute-couture-ardeche-territorial-gameplay-v1'],['15','haute-couture-cantal-territorial-gameplay-v1'],['26','haute-couture-drome-territorial-gameplay-v1'],['42','haute-couture-loire-territorial-gameplay-v1'],['43','haute-couture-haute-loire-territorial-gameplay-v1'],['63','haute-couture-puy-de-dome-territorial-gameplay-v1'],['69','haute-couture-rhone-territorial-gameplay-v1'],['73','haute-couture-savoie-territorial-gameplay-v1']
  ].forEach(([code,key])=>syncStoredDepartment(code,key))}
 window.addEventListener('hc-territorial-signal',e=>importSignal(e.detail));
-window.HCTerritorialSignalRuntime={version:3,importSignal,syncKnownStores,ensureAtelierUnlock,ensureBookReference};
-setTimeout(syncKnownStores,80);
+window.addEventListener('hc-territory-presence',()=>setTimeout(bootstrapExtendedTerritories,0));
+window.HCTerritorialSignalRuntime={version:3,importSignal,syncKnownStores,ensureAtelierUnlock,ensureBookReference,bootstrapExtendedTerritories};
+bootstrapExtendedTerritories();setTimeout(syncKnownStores,80);
 })();
