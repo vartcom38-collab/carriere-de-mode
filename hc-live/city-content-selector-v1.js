@@ -6,7 +6,7 @@ const KEY='haute-couture-city-content-history-v1';
 const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null')||{cities:{}}}catch(_){return{cities:{}}}};
 const write=s=>localStorage.setItem(KEY,JSON.stringify(s));
 const hash=s=>String(s).split('').reduce((a,c)=>((a*33)+c.charCodeAt(0))>>>0,5381);
-function bankFor(city){const sources=[window.HCLyonCityBankV1,window.HCClermontCityContentBankV1,window.HCStEtienneCityContentBankV1,window.HCVilleurbanneCityContentBankV1,window.HCAurillacCityContentBankV1,window.HCLePuyCityBankV1,window.HCMoulinsVichyCityBanksV1,window.HCBourgOyonnaxCityBanksV1];for(const s of sources){if(!s)continue;if(s.city===city)return s;if(s[city])return s[city]}return null}
+function bankFor(city){const sources=[window.HCLyonCityBankV1,window.HCClermontCityContentBankV1,window.HCStEtienneCityContentBankV1,window.HCVilleurbanneCityContentBankV1,window.HCAurillacCityContentBankV1,window.HCLePuyCityBankV1,window.HCMoulinsVichyCityBanksV1,window.HCBourgOyonnaxCityBanksV1,window.HCSecondaryStrongCitiesBanksV1];for(const s of sources){if(!s)continue;if(s.city===city)return s;if(s[city])return s[city]}return null}
 function game(){try{return window.HCGame?.get?.()||{}}catch(_){return{}}}
 function level(){const g=game();return Number(g?.career?.level||g?.player?.careerLevel||1)||1}
 function season(){const g=game(),d=new Date(g?.clock?.iso||Date.now()),m=d.getMonth()+1;return m<=2||m===12?'hiver':m<=5?'printemps':m<=8?'été':'automne'}
