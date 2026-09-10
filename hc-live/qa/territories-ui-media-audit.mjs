@@ -16,6 +16,20 @@ function bool(body,key){return new RegExp(key+'\\s*:\\s*true').test(body)}
 function hasAny(body,keys){return keys.some(k=>new RegExp(k+'\\s*:').test(body))}
 function normalizedCategory(body){const cat=val(body,'cat')||val(body,'category');if(cat)return cat;const kind=val(body,'kind');return kind?(KIND_TO_CAT[kind]||kind):null}
 
+/* Registre média central : une même photo peut couvrir plusieurs définitions représentant exactement le même lieu. */
+const MEDIA_REGISTRY=path.join(HC,'ville','territorial-place-media-aura-v1.js');
+const mediaById=new Map();
+if(fs.existsSync(MEDIA_REGISTRY)){
+ const text=fs.readFileSync(MEDIA_REGISTRY,'utf8');
+ const rx=/['"]([^'"]+)['"]\s*:\s*\{([^{}]*?(?:commons\([^)]*\)|image\s*:[^,}]+)[^{}]*?)\}/g;
+ for(const m of text.matchAll(rx)){
+   const body=m[2];
+   const hasImage=/\bimage\s*:/.test(body);
+   const hasSource=/\bsource\s*:/.test(body);
+   if(hasImage||hasSource)mediaById.set(m[1],{hasImage,hasSource});
+ }
+}
+
 const files=walk(HC).filter(f=>f.endsWith('.js'));
 for(const file of files){
  const text=fs.readFileSync(file,'utf8');
@@ -25,10 +39,11 @@ for(const file of files){
    if(!/\bname\s*:/.test(body)||!(/\blat\s*:/.test(body)&&/\blng\s*:/.test(body)))continue;
    const dept=val(body,'dept')||val(body,'departmentCode');
    if(dept&&!CODES.has(String(dept)))continue;
+   const reg=mediaById.get(m[1])||{};
    const marker={
      id:m[1],dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:normalizedCategory(body),kind:val(body,'kind'),
-     fictional:bool(body,'fictional'),hasImage:hasAny(body,MEDIA_KEYS),hasSource:hasAny(body,SOURCE_KEYS),
-     hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:path.relative(ROOT,file).replaceAll('\\','/')
+     fictional:bool(body,'fictional'),hasImage:hasAny(body,MEDIA_KEYS)||!!reg.hasImage,hasSource:hasAny(body,SOURCE_KEYS)||!!reg.hasSource,
+     hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:path.relative(ROOT,file).replaceAll('\\','/'),mediaRegistry:mediaById.has(m[1])
    };
    if(!out.markers.some(x=>x.id===marker.id&&x.file===marker.file))out.markers.push(marker);
  }
@@ -44,6 +59,7 @@ const noText=out.markers.filter(x=>!x.hasText);
 const noUnlock=out.markers.filter(x=>!x.hasUnlock);
 out.summary={
  totalDefinitions:out.markers.length,realDefinitions:real.length,fictionalDefinitions:fictional.length,
+ mediaRegistryEntries:mediaById.size,
  realWithImageAndSource:real.filter(x=>x.hasImage&&x.hasSource).length,
  realMissingValidatedMedia:missingRealMedia.length,fictionalWithImage:fictional.filter(x=>x.hasImage).length,
  unsupportedCategories:unsupported.length,noCategory:noCategory.length,noText:noText.length,noUnlock:noUnlock.length,
