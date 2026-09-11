@@ -4,6 +4,24 @@ Branche de travail : `territoires-france`
 
 Objectif : vérifier que l'Isère n'est pas seulement couverte géographiquement, mais que chaque pôle apporte une identité de gameplay distincte et nourrit réellement les systèmes Téléphone, Agenda, Atelier, Book, clientes, B2B, scène et shooting.
 
+## Validation navigateur réelle — 11 septembre 2026
+
+L’Isère est désormais validée dans la campagne E2E Chromium de la branche `territoires-france`.
+
+Scénario de référence : **Bourgoin-Jallieu / Musée de Bourgoin-Jallieu · textile**.
+
+Le test vérifie réellement :
+- présence physique de Marion à Bourgoin-Jallieu ;
+- moteur territorial Isère chargé avec 22 personnages, 26 briefs, 14 secrets et 14 familles d’événements ;
+- marqueur `is-bj-musee` produit par le vrai pack carte ;
+- affichage `PHOTO RÉELLE` avec source Wikimedia Commons ;
+- 4 actions contextuelles ;
+- consommation de 20 minutes sur l’action testée ;
+- mémoire d’action persistée ;
+- focus Saint-Étienne traité en aperçu sans téléportation ;
+- rendu distinct d’un lieu fictif ;
+- absence du runtime Gard/Nîmes hors Gard.
+
 ## Pôles denses
 
 ### Grenoble
@@ -107,6 +125,6 @@ Ces zones doivent être traitées comme extensions, pas comme conditions nécess
 
 ## Verdict
 
-Statut : **ISÈRE DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL**.
+Statut : **ISÈRE DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / VALIDÉ EN CHROMIUM**.
 
 Le département possède maintenant une métropole forte, plusieurs pôles textiles/patrimoniaux, plusieurs types de montagne, des villes de clientèle, des zones B2B, des territoires de scène, des axes de sourcing et de nombreuses identités de matière et de motif. Il peut servir de modèle pour la densification des futurs départements alpins, notamment Savoie et Haute-Savoie, sans copier leurs identités futures.
