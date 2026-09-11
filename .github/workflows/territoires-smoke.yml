@@ -1,5 +1,6 @@
 name: Territoires smoke test
 
+# Validation cache-bust AURA — 2026-09-11
 on:
   push:
     branches:
