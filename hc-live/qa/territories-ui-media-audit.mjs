@@ -24,18 +24,21 @@ function normalizedCategory(body){const cat=val(body,'cat')||val(body,'category'
 function looksDynamicId(id){return !id||id.endsWith('-')||/\$\{|\+\s*[a-zA-Z_$]/.test(id)}
 function rel(p){return path.relative(ROOT,p).replaceAll('\\','/')}
 
-/* Registre média central */
-const MEDIA_REGISTRY=path.join(HC,'ville','territorial-place-media-aura-v1.js');
+/* Registres média réellement chargés par le bootstrap Ville AURA. */
+const MEDIA_REGISTRIES=[
+ path.join(HC,'ville','territorial-place-media-aura-v1.js'),
+ path.join(HC,'ville','territorial-place-media-aura-final-v1.js')
+];
 const mediaById=new Map();
 let fictionalVisualContract=false;
-if(fs.existsSync(MEDIA_REGISTRY)){
- const text=fs.readFileSync(MEDIA_REGISTRY,'utf8');
+for(const registry of MEDIA_REGISTRIES.filter(fs.existsSync)){
+ const text=fs.readFileSync(registry,'utf8');
  const rx=/['"]([^'"]+)['"]\s*:\s*\{([^{}]*?(?:commons\([^)]*\)|image\s*:[^,}]+)[^{}]*?)\}/g;
  for(const m of text.matchAll(rx)){
    const body=m[2],hasImage=/\bimage\s*:/.test(body),hasSource=/\bsource\s*:/.test(body);
-   if(hasImage||hasSource)mediaById.set(m[1],{hasImage,hasSource});
+   if(hasImage||hasSource){const old=mediaById.get(m[1])||{};mediaById.set(m[1],{hasImage:!!(old.hasImage||hasImage),hasSource:!!(old.hasSource||hasSource),registry:rel(registry)})}
  }
- fictionalVisualContract=/ILLUSTRATION DE JEU/.test(text)&&/decorateFictional/.test(text)&&/gameIllustration/.test(text);
+ fictionalVisualContract=fictionalVisualContract||(/ILLUSTRATION DE JEU/.test(text)&&/decorateFictional/.test(text)&&/gameIllustration/.test(text));
 }
 
 /* Détermine la surface réellement atteignable depuis les loaders actifs. */
@@ -69,7 +72,7 @@ function scan(files){
      if(!/\bname\s*:/.test(body)||!(/\blat\s*:/.test(body)&&/\blng\s*:/.test(body)))continue;
      const dept=val(body,'dept')||val(body,'departmentCode');if(dept&&!CODES.has(String(dept)))continue;
      const reg=mediaById.get(id)||{};
-     const marker={id,dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:normalizedCategory(body),kind:val(body,'kind'),fictional:bool(body,'fictional'),documentaryContext:bool(body,'documentaryContext'),hasImage:hasAny(body,MEDIA_KEYS)||!!reg.hasImage,hasSource:hasAny(body,SOURCE_KEYS)||!!reg.hasSource,hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:rel(file),mediaRegistry:mediaById.has(id)};
+     const marker={id,dept:dept||null,city:val(body,'city'),name:val(body,'name'),cat:normalizedCategory(body),kind:val(body,'kind'),fictional:bool(body,'fictional'),documentaryContext:bool(body,'documentaryContext'),hasImage:hasAny(body,MEDIA_KEYS)||!!reg.hasImage,hasSource:hasAny(body,SOURCE_KEYS)||!!reg.hasSource,hasText:/\b(text|description)\s*:/.test(body),hasUnlock:/\bunlock\s*:/.test(body),file:rel(file),mediaRegistry:reg.registry||null};
      if(!markers.some(x=>x.id===marker.id&&x.file===marker.file))markers.push(marker);
    }
  }
@@ -89,12 +92,14 @@ const noCategory=markers.filter(x=>!x.cat);
 const noText=markers.filter(x=>!x.hasText);
 const noUnlock=markers.filter(x=>!x.hasUnlock);
 const byDept={};for(const code of CODES){const d=markers.filter(x=>String(x.dept||'')===code),r=d.filter(x=>!x.fictional),f=d.filter(x=>x.fictional);byDept[code]={definitions:d.length,real:r.length,fictional:f.length,realValidatedMedia:r.filter(x=>x.hasImage&&x.hasSource).length,realMissingMedia:r.filter(x=>!x.hasImage||!x.hasSource).length,fictionalVisualCoverage:fictionalVisualContract?f.length:f.filter(x=>x.hasImage).length,missingText:d.filter(x=>!x.hasText).length,missingUnlock:d.filter(x=>!x.hasUnlock).length}}
-const out={summary:{historicalDefinitions:historical.length,activeFiles:active.size,activeDefinitions:markers.length,realDefinitions:real.length,fictionalDefinitions:fictional.length,mediaRegistryEntries:mediaById.size,realWithImageAndSource:real.filter(x=>x.hasImage&&x.hasSource).length,realMissingValidatedMedia:missingRealMedia.length,fictionalVisualContract,fictionalWithVisual:fictionalVisualContract?fictional.length:fictional.filter(x=>x.hasImage).length,fictionalMissingVisual:fictionalMissingVisual.length,unsupportedCategories:unsupported.length,noCategory:noCategory.length,noText:noText.length,noUnlock:noUnlock.length,duplicateIds:duplicates.length,supportedInterfaceCategories:[...SUPPORTED]},byDepartment:byDept,activeFiles:[...active].map(rel).sort(),markers,duplicates,realMissingValidatedMedia:missingRealMedia,fictionalMissingVisual,unsupported,noCategory,noText,noUnlock};
+const out={summary:{historicalDefinitions:historical.length,activeFiles:active.size,activeDefinitions:markers.length,realDefinitions:real.length,fictionalDefinitions:fictional.length,mediaRegistryFiles:MEDIA_REGISTRIES.filter(fs.existsSync).map(rel),mediaRegistryEntries:mediaById.size,realWithImageAndSource:real.filter(x=>x.hasImage&&x.hasSource).length,realMissingValidatedMedia:missingRealMedia.length,fictionalVisualContract,fictionalWithVisual:fictionalVisualContract?fictional.length:fictional.filter(x=>x.hasImage).length,fictionalMissingVisual:fictionalMissingVisual.length,unsupportedCategories:unsupported.length,noCategory:noCategory.length,noText:noText.length,noUnlock:noUnlock.length,duplicateIds:duplicates.length,supportedInterfaceCategories:[...SUPPORTED]},byDepartment:byDept,activeFiles:[...active].map(rel).sort(),markers,duplicates,realMissingValidatedMedia:missingRealMedia,fictionalMissingVisual,unsupported,noCategory,noText,noUnlock};
 fs.writeFileSync(path.join(HC,'qa','territories-ui-media-audit-report.json'),JSON.stringify(out,null,2));
 console.log('=== AURA · audit interfaces & médias · SURFACE ACTIVE ===');
 for(const [k,v] of Object.entries(out.summary))console.log(`${k}:`,Array.isArray(v)?v.join(', '):v);
 console.log('\n--- PAR DÉPARTEMENT ---');for(const [code,d] of Object.entries(byDept))console.log(`${code}: réel ${d.realValidatedMedia}/${d.real} média validé · fictif ${d.fictionalVisualCoverage}/${d.fictional} visuel · texte manquant ${d.missingText} · effet manquant ${d.missingUnlock}`);
 if(missingRealMedia.length){console.log('\n--- LIEUX RÉELS ACTIFS SANS IMAGE + SOURCE VALIDÉES ---');for(const m of missingRealMedia)console.log(`${m.dept||'?'} | ${m.city||'?'} | ${m.id} | ${m.name||'?'} | ${m.file}`)}
+if(noText.length){console.log('\n--- FICHES ACTIVES SANS TEXTE ---');for(const m of noText)console.log(`${m.dept||'?'} | ${m.city||'?'} | ${m.id} | ${m.name||'?'} | ${m.file}`)}
+if(noUnlock.length){console.log('\n--- FICHES ACTIVES SANS GAIN / EFFET EXPLICITE ---');for(const m of noUnlock)console.log(`${m.dept||'?'} | ${m.city||'?'} | ${m.id} | ${m.name||'?'} | ${m.file}`)}
 if(unsupported.length||noCategory.length){console.error('\nINTERFACE CONTRACT FAILURE: catégorie non couverte ou absente.');process.exit(2)}
 if(process.env.AURA_MEDIA_STRICT==='1'&&(missingRealMedia.length||fictionalMissingVisual.length||noText.length||noUnlock.length)){console.error(`\nSTRICT FAILURE: médias réels=${missingRealMedia.length}, visuels fictifs=${fictionalMissingVisual.length}, textes=${noText.length}, effets=${noUnlock.length}.`);process.exit(3)}
 console.log('\nAudit actif terminé. Le mode strict valide uniquement la surface réellement atteignable.');
