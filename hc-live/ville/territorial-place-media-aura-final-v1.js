@@ -15,6 +15,24 @@ const extra={
   sourceUrl:'https://musee.bourgoinjallieu.fr/le-musee/',
   kind:'photo',real:true
  },
+ 'bj-musee-textile':{
+  image:'https://musee.bourgoinjallieu.fr/wp-content/uploads/2022/03/textile-img-1.webp',
+  source:'Musée de Bourgoin-Jallieu — parcours textile · métier à tisser',
+  sourceUrl:'https://musee.bourgoinjallieu.fr/le-musee/',
+  kind:'photo',real:true
+ },
+ 'bj-musee-rebracks':{
+  image:'https://musee.bourgoinjallieu.fr/wp-content/uploads/2022/03/textile-img-1.webp',
+  source:'Musée de Bourgoin-Jallieu — parcours textile · repère documentaire partagé',
+  sourceUrl:'https://musee.bourgoinjallieu.fr/collections/',
+  kind:'photo',real:true,contextAlias:'bj-musee-textile'
+ },
+ 'bj-musee-metiers':{
+  image:'https://musee.bourgoinjallieu.fr/wp-content/uploads/2022/03/textile-img-1.webp',
+  source:'Musée de Bourgoin-Jallieu — parcours textile · métier à tisser',
+  sourceUrl:'https://musee.bourgoinjallieu.fr/le-musee/',
+  kind:'photo',real:true,contextAlias:'bj-musee-textile'
+ },
  'lo42-sc-tresses':{
   image:'https://saint-chamond.fr/wp-content/uploads/2022/11/50877517251_6ceeb2aab8_c-1200x650.jpg',
   source:'Ville de Saint-Chamond — patrimoine industriel local',
@@ -55,7 +73,7 @@ const aliases={
  'ain-nantua-reseau':'ain-nantua'
 };
 Object.entries(aliases).forEach(([id,sourceId])=>{
- const src=api.items[sourceId];
+ const src=api.items[sourceId]||extra[sourceId];
  if(src)extra[id]={...src,contextAlias:sourceId,source:String(src.source||'')+(sourceId===id?'':' · repère documentaire partagé')};
 });
 Object.entries(extra).forEach(([id,m])=>{api.items[id]=m});
