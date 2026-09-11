@@ -1,14 +1,30 @@
 # LOIRE — AUDIT DE COUVERTURE TERRITORIALE V1
 
-Date : 10 septembre 2026
+Date : 11 septembre 2026
 Branche : `territoires-france`
 Département : Loire (42)
 
 ## Verdict
 
-**DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL**
+**DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / VALIDÉ EN CHROMIUM**
 
 La Loire possède désormais une base départementale existante complétée par une couche dense additive. Le département n'est pas réduit à Saint-Étienne : plusieurs bassins de vie, patrimoines productifs, paysages et clientèles ont des fonctions de gameplay différentes.
+
+## Validation navigateur réelle — 11 septembre 2026
+
+Scénario de référence : **Saint-Chamond · tresses, lacets & ruban**.
+
+Le run Chromium vérifie :
+- présence physique de Marion à Saint-Chamond ;
+- vraie couche dense chargée avec **256 personnages, 416 briefs, 120 secrets et 72 familles d’événements** ;
+- marqueur `lo42-sc-tresses` réellement produit par `loire-dense-universe-v1.js` ;
+- affichage `PHOTO RÉELLE` avec source Ville de Saint-Chamond ;
+- 4 actions contextuelles ;
+- consommation de **20 minutes** sur l’action testée ;
+- mémoire persistée ;
+- focus Lyon traité en aperçu sans téléportation ;
+- rendu distinct du contenu fictif ;
+- absence du runtime Gard/Nîmes hors Gard.
 
 ## Socle déjà présent et conservé
 
@@ -75,15 +91,15 @@ Le complément `loire-dense-map-addon-v1.js` ajoute notamment :
 
 ## Intégration runtime
 
-`territorial-signal-runtime-v1.js` charge désormais automatiquement, lorsque la présence physique est dans le département 42 :
+`territorial-signal-runtime-v1.js` charge automatiquement, lorsque la présence physique est dans le département 42 :
 
 - `loire-dense-map-addon-v1.js`
 - `loire-dense-universe-v1.js`
 - `loire-dense-city-banks-v1.js`
 
-Le store Loire était déjà connu du rattrapage des signaux : `haute-couture-loire-territorial-gameplay-v1`.
+Le store Loire est connu du rattrapage des signaux : `haute-couture-loire-territorial-gameplay-v1`.
 
-Les signaux peuvent continuer à alimenter Téléphone, Agenda, Atelier et Book via le pont générique.
+Les signaux alimentent Téléphone, Agenda, Atelier et Book via le pont générique.
 
 ## Règle de déplacement
 
@@ -100,7 +116,3 @@ Résidence, présence physique et focus de carte restent des états distincts. L
 - documenter plus finement les événements datés réels avant de les utiliser comme éditions historiques.
 
 Ces extensions ne sont pas nécessaires pour considérer la Loire comme jouable à l'échelle territoriale actuelle.
-
-## QA restante
-
-L'intégration structurelle GitHub est vérifiée. Aucun test navigateur complet n'a été exécuté dans cette passe ; le statut « opérationnel » décrit l'architecture runtime et le branchement, pas une validation end-to-end en navigateur.
