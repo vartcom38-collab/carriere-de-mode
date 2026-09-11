@@ -1,0 +1,45 @@
+name: Territoires UI Exhaustive
+
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - 'hc-live/ville/**'
+      - 'hc-live/*territor*.js'
+      - 'hc-live/*map*.js'
+      - 'hc-live/*dense*.js'
+      - 'hc-live/*universe*.js'
+      - 'hc-live/qa/territories-ui-exhaustive-v2.mjs'
+      - '.github/workflows/territoires-ui-exhaustive.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  department:
+    strategy:
+      fail-fast: false
+      matrix:
+        dept: ['01','03','07','15','26','38','42','43','63','69','73','74']
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: AURA ${{ matrix.dept }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
+          echo $! > /tmp/hc-http.pid
+          sleep 2
+      - name: Recette exhaustive du département
+        env:
+          HC_DEPT: ${{ matrix.dept }}
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territory-${HC_DEPT}.log
