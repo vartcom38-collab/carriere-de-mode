@@ -8,7 +8,9 @@ on:
       - 'hc-live/ville/**'
       - 'hc-live/*territor*.js'
       - 'hc-live/*map*.js'
+      - 'hc-live/*dense*.js'
       - 'hc-live/qa/territories-ui-e2e.mjs'
+      - 'hc-live/qa/territories-ui-cantal-e2e.mjs'
       - '.github/workflows/territoires-ui-e2e.yml'
   workflow_dispatch:
 
@@ -30,7 +32,11 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
           echo $! > /tmp/hc-http.pid
           sleep 2
-      - name: Run territorial UI E2E
+      - name: Run Ain + Allier UI E2E
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-e2e.mjs 2>&1 | tee /tmp/hc-territories-e2e.log
+      - name: Run Cantal UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-cantal-e2e.mjs 2>&1 | tee /tmp/hc-territories-cantal-e2e.log
