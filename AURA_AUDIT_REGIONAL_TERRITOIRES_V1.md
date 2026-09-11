@@ -101,6 +101,10 @@ Le smoke-test Node reste actif en complément du navigateur :
 
 Les deux niveaux de QA sont complémentaires : Node détecte rapidement les défauts structurels, Chromium valide les interactions réelles DOM/runtime/persistance.
 
+Après suppression de l’ancien `territory-context-ain-addon-v1.js`, devenu redondant avec le runtime générique et les packs denses Ain, les deux validations ont été rejouées :
+- smoke run `34600664807` : **SUCCESS** ;
+- Chromium run `34600664850` : **SUCCESS**, 12/12 scénarios toujours verts.
+
 ## Correctifs consolidés
 
 ### Stale-state
@@ -137,8 +141,7 @@ Les anciens placeholders ciblés `Contact <ville> <n>` ont été nettoyés dans 
 - `territory-context-v1.js` et le fallback V8 du runtime dupliquent encore partiellement certains alias ; une source unique serait préférable à terme.
 - Une normalisation globale accents/apostrophes/tirets/espaces reste souhaitable.
 - Le gameplay `69` regroupe encore Rhône + Métropole de Lyon par simplification technique connue ; les textes documentaires conservent la distinction institutionnelle réelle.
-- `territory-context-ain-addon-v1.js` reste un addon orphelin à nettoyer.
-- Les chaînes de cache (`?v=`) devront être revues avant une mise en production afin que les navigateurs ne conservent pas d’anciennes versions des loaders/runtimes.
+- Les chaînes de cache (`?v=`) restent à aligner avant une mise en production afin que les navigateurs ne conservent pas d’anciennes versions des loaders/runtimes.
 - La campagne E2E est représentative par département ; elle ne remplace pas une future matrice exhaustive de toutes les villes, saisons, sauvegardes et événements.
 - Des erreurs syntaxiques préexistantes signalées dans des fichiers **non territoriaux** restent un chantier App/Atelier séparé et ne sont pas couvertes par ce verdict.
 
@@ -146,6 +149,6 @@ Les anciens placeholders ciblés `Contact <ville> <n>` ont été nettoyés dans 
 
 La couche territoriale Auvergne-Rhône-Alpes n’a plus de département structurellement vide et dispose désormais d’une **preuve navigateur réelle représentative sur les 12 départements**.
 
-Le verrou « QA navigateur départementale » est donc levé pour le chantier territorial. Les prochaines étapes logiques sont le nettoyage/cache-bust pré-fusion, puis éventuellement une revue d’intégration plus large avec les systèmes non territoriaux.
+Le verrou « QA navigateur départementale » est donc levé pour le chantier territorial. Le nettoyage de l’addon Ain est terminé et validé ; le dernier nettoyage territorial pré-fusion identifié est l’alignement des cache-busters des loaders/runtimes.
 
 **Aucun merge vers `main` et aucun déploiement ne doivent être effectués sans demande explicite de l’utilisateur.**
