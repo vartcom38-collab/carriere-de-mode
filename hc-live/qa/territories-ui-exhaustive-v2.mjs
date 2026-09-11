@@ -36,7 +36,7 @@ async function makePage(code,city){
  },presence);
  await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:15000});
  await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCLocalMap,{timeout:10000});
- let prev=-1,stable=0;for(let i=0;i<12&&stable<3;i++){await page.waitForTimeout(100);const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);if(n===prev)stable++;else{prev=n;stable=0}}
+ let prev=-1,stable=0;for(let i=0;i<50&&stable<5;i++){await page.waitForTimeout(100);const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);if(n>0&&n===prev)stable++;else if(n!==prev){prev=n;stable=0}}
  return{page,pageErrors,consoleErrors};
 }
 function isFiction(p){return !!(p.fictional||p.fictionalFamily||p.fictionalFuture||p.evolutive||/famille événementielle/i.test(String(p.name||'')))}

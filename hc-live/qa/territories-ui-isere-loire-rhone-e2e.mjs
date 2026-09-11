@@ -29,7 +29,7 @@ async function pageFor(presence){
   });
  },presence);
  await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:20000});
- await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.__HCTerritorialPlaceMediaAURAFinalV1,{timeout:12000});
+ await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCTerritorialPlaceMediaAURAFinal,{timeout:12000});
  return{page,errors,consoleErrors};
 }
 
