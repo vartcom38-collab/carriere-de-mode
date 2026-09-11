@@ -2,6 +2,25 @@
 
 Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL SUR LA PAGE VILLE VIA ADDON 73**
 
+## Validation navigateur réelle — 11 septembre 2026
+
+Le département 73 est désormais validé dans la campagne E2E Chromium de la branche `territoires-france`.
+
+Scénario de référence : **Séez / Filature Arpin**.
+
+Le test vérifie réellement :
+- chargement séquentiel du runtime territorial, de la carte Savoie, de la carte hautes stations, de l’univers Séez, de la banque haute vallée et de l’addon gameplay ;
+- présence physique de Marion conservée à Séez ;
+- ouverture du lieu documentaire `Filature Arpin · laine & drap alpin` avec photo réelle et source ;
+- 4 actions contextuelles disponibles ;
+- consommation de temps en jeu (20 minutes sur l’action testée) ;
+- persistance de la mémoire d’action ;
+- rendu distinct du contenu fictif ;
+- focus carte Annecy en mode aperçu sans téléportation de Marion ;
+- absence de chargement du runtime Gard/Nîmes hors Gard.
+
+Un blocage réel de double chargement a été identifié puis corrigé dans `territory-context-savoie-addon-v1.js` V5 : lorsqu’un script territorial est déjà injecté par le runtime générique, le loader vérifie maintenant son API globale et le considère comme prêt au lieu d’attendre un événement `load` déjà passé.
+
 ## Pôles couverts
 - Chambéry — patrimoine urbain, création, métiers d’art, costume contemporain.
 - Aix-les-Bains — thermalisme, palaces, villégiature, clientèle élégante, hôtellerie et image.
