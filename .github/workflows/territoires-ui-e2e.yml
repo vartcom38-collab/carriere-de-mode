@@ -18,6 +18,7 @@ on:
       - 'hc-live/qa/territories-ui-alpes-e2e.mjs'
       - 'hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs'
       - 'hc-live/qa/territories-ui-exhaustive-e2e.mjs'
+      - 'hc-live/qa/territories-ui-exhaustive-v2.mjs'
       - '.github/workflows/territoires-ui-e2e.yml'
   workflow_dispatch:
 
@@ -67,7 +68,7 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
-      - name: Run exhaustive clickable-place UI audit
+      - name: Run exhaustive clickable-place UI audit V2
         run: |
           set -o pipefail
-          timeout --signal=TERM --kill-after=15s 240s node hc-live/qa/territories-ui-exhaustive-e2e.mjs 2>&1 | tee /tmp/hc-territories-exhaustive-e2e.log
+          timeout --signal=TERM --kill-after=15s 300s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territories-exhaustive-v2.log
