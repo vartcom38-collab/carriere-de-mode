@@ -74,3 +74,4 @@ jobs:
           timeout --signal=TERM --kill-after=15s 300s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territories-exhaustive-v2.log
 
 # QA closure rerun after harness fix: 2026-09-11
+# Closure recheck after exhaustive timeout fix: 2026-09-11
