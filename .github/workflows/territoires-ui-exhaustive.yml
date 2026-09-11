@@ -43,3 +43,5 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territory-${HC_DEPT}.log
+
+# QA closure rerun: 2026-09-11
