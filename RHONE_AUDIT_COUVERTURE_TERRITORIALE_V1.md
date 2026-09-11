@@ -1,9 +1,27 @@
 # RHÔNE — AUDIT DE COUVERTURE TERRITORIALE V1
 
-Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL**
+Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / VALIDÉ EN CHROMIUM**
+
+## Validation navigateur réelle — 11 septembre 2026
+
+Scénario de référence : **Amplepuis / Musée Barthélemy Thimonnier · couture mécanique**.
+
+Le run Chromium valide :
+- présence physique de Marion à Amplepuis ;
+- couche dense chargée avec **256 personnages, 416 briefs, 120 secrets et 72 familles d’événements** ;
+- vrai marqueur `rh-dense-amplepuis-thimonnier` produit par `rhone-dense-universe-v1.js` ;
+- affichage `PHOTO RÉELLE` avec source documentaire ;
+- 3 actions contextuelles ;
+- consommation de **35 minutes** sur l’action testée ;
+- mémoire persistée ;
+- focus Grenoble traité en aperçu sans téléportation ;
+- rendu distinct du contenu fictif ;
+- absence du runtime Gard/Nîmes hors Gard.
+
+Le risque historique de stale-state n’est plus présent dans la version actuelle inspectée du moteur Rhône : l’état est persisté avant émission des signaux.
 
 ## Périmètre de jeu
-Le runtime `69` regroupe actuellement le Rhône et la Métropole lyonnaise pour conserver la continuité du système existant. C'est une simplification de gameplay : depuis le 1er janvier 2015, la Métropole de Lyon est une collectivité territoriale à statut particulier exerçant les compétences départementales sur son territoire, distincte du Conseil départemental du Rhône. Cette distinction devra être conservée dans les textes documentaires et pourra être raffinée plus tard dans la carte sans casser le gameplay.
+Le runtime `69` regroupe actuellement le Rhône et la Métropole lyonnaise pour conserver la continuité du système existant. C'est une simplification de gameplay : depuis le 1er janvier 2015, la Métropole de Lyon est une collectivité territoriale à statut particulier exerçant les compétences départementales sur son territoire, distincte du Conseil départemental du Rhône. Cette distinction doit être conservée dans les textes documentaires et pourra être raffinée plus tard dans la carte sans casser le gameplay.
 
 ## Pôles couverts
 - **Lyon** — soie, canuts, Jacquard, tissage, passementerie, costume, scène, design textile, vintage, image, clientèle urbaine.
@@ -45,15 +63,10 @@ Le pont territorial générique charge automatiquement en présence `69` :
 - `rhone-dense-universe-v1.js`
 - `rhone-dense-city-banks-v1.js`
 
-Les signaux territoriaux restent compatibles avec Téléphone, Agenda, Atelier et Book via le runtime V3 existant.
+Les signaux territoriaux restent compatibles avec Téléphone, Agenda, Atelier et Book via le pont territorial générique.
 
 ## Règles de vérité
 Les lieux, personnages, commissions, secrets et événements inventés sont du gameplay fictif. Les institutions, musées et éléments historiques documentaires servent de contexte et ne doivent pas recevoir de commandes ou relations fictives attribuées comme réelles.
-
-## QA restant
-- Test navigateur end-to-end à faire avant toute affirmation de validation runtime complète.
-- Ajouter explicitement Amplepuis, Thizy-les-Bourgs, Oullins-Pierre-Bénite et Givors au fallback `DEPT_BY_CITY` de `territory-context-v1.js` lors d'une prochaine passe de normalisation ; le chargement actuel fonctionne dès que la présence transporte déjà `departmentCode:69`.
-- Le moteur Rhône V1 hérite d'un risque de stale-state dans `unlockForCity()` lorsque `emit()` écrit le store puis que l'état local est réécrit ; à corriger dans une passe QA commune aux anciens moteurs.
 
 ## Extensions futures non bloquantes
 - Cours / Haut-Beaujolais textile ;
