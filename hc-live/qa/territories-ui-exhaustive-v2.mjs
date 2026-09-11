@@ -49,7 +49,7 @@ for(const [code,cities] of entries){
    const made=await makePage(code,city);page=made.page;
    const markers=await page.evaluate(()=>[...(window.__qaCapturedPlaces||[])]);
    const unique=[];const ids=new Set();for(const p of markers){if(!p?.id||ids.has(p.id))continue;ids.add(p.id);unique.push(p)}
-   console.log(`CITY ${code} ${city} · ${unique.length} marqueur(s)`);if(!unique.length)warnings.push(`${code} ${city}: aucun marqueur injecté`);
+   console.log(`CITY ${code} ${city} · ${unique.length} marqueur(s)`);if(!unique.length)failures.push(`${code} ${city}: aucun marqueur injecté`);
    for(const p of unique){
     if(seen.has(p.id))continue;const fictional=isFiction(p);seen.set(p.id,{code,city,name:p.name||p.id,fictional,cat:p.cat||p.category||null});
     const ui=await page.evaluate(place=>{window.HCTerritorialPlaceInterfaceV1.open(place);const q=s=>document.querySelector(s);const img=q('#tpHero img');return{title:q('#tpTitle')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!img,imgSrc:img?.getAttribute('src')||''};},p);
