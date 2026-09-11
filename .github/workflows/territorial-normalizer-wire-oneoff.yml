@@ -1,0 +1,56 @@
+name: Territorial normalizer wire oneoff
+
+on:
+  push:
+    branches: [territoires-france]
+    paths: ['.github/workflows/territorial-normalizer-wire-oneoff.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: territoires-france
+      - name: Patch exact loader strings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          edits={
+            Path('hc-live/ville/index.html'):[
+              ('<script src="../territory-context-v1.js?v=20260911-presence2-cache1"></script><script src="../territory-context-savoie-addon-v1.js?v=20260911-savoie73v6"></script>',
+               '<script src="../territory-context-v1.js?v=20260911-presence2-cache1"></script><script src="../territorial-place-normalizer-v1.js?v=20260911-normalizer1"></script><script src="../territory-context-savoie-addon-v1.js?v=20260911-savoie73v7"></script>'),
+            ],
+            Path('hc-live/territory-context-savoie-addon-v1.js'):[
+              ('correctif Savoie 73 V6','correctif Savoie 73 V7'),
+              ('if(window.__HCTerritoryContextSavoieAddonV6)return;window.__HCTerritoryContextSavoieAddonV6=true;',
+               'if(window.__HCTerritoryContextSavoieAddonV7)return;window.__HCTerritoryContextSavoieAddonV7=true;'),
+              ('hcTerritorialPlaceMediaAURAFinal:()=>!!window.__HCTerritorialPlaceMediaAURAFinalV1',
+               'hcTerritorialPlaceMediaAURAFinal:()=>!!window.HCTerritorialPlaceMediaAURAFinal'),
+              ('territorial-place-media-aura-final-v1.js?v=20260911-aura-final1',
+               'territorial-place-media-aura-final-v1.js?v=20260911-aura-final2'),
+            ],
+            Path('hc-live/qa/territories-ui-exhaustive-v2.mjs'):[
+              ("'Jaujurieux'","'Jaujac'"),
+            ]
+          }
+          for p,pairs in edits.items():
+            s=p.read_text(encoding='utf-8')
+            for old,new in pairs:
+              n=s.count(old)
+              if n!=1: raise SystemExit(f'{p}: expected 1 occurrence of {old!r}, got {n}')
+              s=s.replace(old,new)
+            p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+          git diff -- hc-live/ville/index.html hc-live/territory-context-savoie-addon-v1.js hc-live/qa/territories-ui-exhaustive-v2.mjs
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hc-live/ville/index.html hc-live/territory-context-savoie-addon-v1.js hc-live/qa/territories-ui-exhaustive-v2.mjs
+          git commit -m "Territoires: brancher normaliseur et média V2"
+          git push origin HEAD:territoires-france
