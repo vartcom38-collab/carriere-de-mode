@@ -15,6 +15,7 @@ on:
       - 'hc-live/qa/territories-ui-puy-de-dome-e2e.mjs'
       - 'hc-live/qa/territories-ui-drome-ardeche-e2e.mjs'
       - 'hc-live/qa/territories-ui-alpes-e2e.mjs'
+      - 'hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs'
       - '.github/workflows/territoires-ui-e2e.yml'
   workflow_dispatch:
 
@@ -60,3 +61,7 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-alpes-e2e.mjs 2>&1 | tee /tmp/hc-territories-alpes-e2e.log
+      - name: Run Isère + Loire + Rhône UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
