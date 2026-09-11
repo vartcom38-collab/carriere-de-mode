@@ -1,10 +1,11 @@
-/* Haute Couture Live — bootstrap Ville AURA + correctif Savoie 73 V5
+/* Haute Couture Live — bootstrap Ville AURA + correctif Savoie 73 V6
    Le fichier est chargé par /ville pour tous les territoires : il initialise donc l'UI de lieu AURA,
    puis active la couche Savoie uniquement lorsque Marion est physiquement en 73.
    Focus carte != déplacement. Chargement séquentiel + attente explicite de HCLocalMap.
    V5 : réutilisation sûre des scripts déjà injectés par le runtime générique.
+   V6 : chargement du pack média documentaire complémentaire AURA avant l'interface.
 */
-(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV5)return;window.__HCTerritoryContextSavoieAddonV5=true;
+(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV6)return;window.__HCTerritoryContextSavoieAddonV6=true;
 const ctx=window.HCTerritoryContext;if(!ctx||!String(location.pathname).includes('/ville'))return;
 const base=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src):new URL('../',location.href);
 function alreadyReady(id){
@@ -22,6 +23,7 @@ function alreadyReady(id){
   hcSavoieHighBank:()=>!!window.__HCSavoieHighResortsBanksV1,
   hcSavoieHighResortsGameplayAddon:()=>!!window.__HCSavoieHighResortsGameplayAddonV1,
   hcTerritorialPlaceMediaAURA:()=>!!window.HCTerritorialPlaceMediaAURA,
+  hcTerritorialPlaceMediaAURAFinal:()=>!!window.__HCTerritorialPlaceMediaAURAFinalV1,
   hcTerritorialPlaceInterfaceAURA:()=>!!window.HCTerritorialPlaceInterfaceV1
  };
  try{return !!checks[id]?.()}catch(_){return false}
@@ -33,8 +35,9 @@ function waitForMap(timeout=8000){if(window.HCLocalMap)return Promise.resolve(wi
 (async()=>{try{
  await waitForMap();
  await load('hcTerritorialPlaceMediaAURA','ville/territorial-place-media-aura-v1.js?v=20260910-aura-media2');
+ await load('hcTerritorialPlaceMediaAURAFinal','ville/territorial-place-media-aura-final-v1.js?v=20260911-aura-final1');
  await load('hcTerritorialPlaceInterfaceAURA','ville/territorial-place-interface-v1.js?v=20260910-aura-placeui1');
- window.dispatchEvent(new CustomEvent('hc-territorial-place-ui-runtime-ready',{detail:{media:true,interface:true}}));
+ window.dispatchEvent(new CustomEvent('hc-territorial-place-ui-runtime-ready',{detail:{media:true,mediaFinal:true,interface:true}}));
 }catch(err){console.error('[HC Ville UI loader]',err);window.dispatchEvent(new CustomEvent('hc-territory-load-error',{detail:{scope:'place-ui',message:String(err?.message||err)}}))}})();
 
 const p=ctx.getPresence?.();if(String(p?.departmentCode||'')!=='73')return;
