@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 
 const BASE=process.env.HC_BASE_URL||'http://127.0.0.1:4173/hc-live/ville/';
 const ROOT=BASE.replace(/ville\/?$/,'');
+const ONLY=String(process.env.HC_DEPT||'').trim();
 const DEPTS={
  '01':['Bourg-en-Bresse','Oyonnax','Jujurieux','Pérouges','Gex','Ferney-Voltaire','Mijoux','Belley','Villars-les-Dombes','Nantua'],
  '03':['Moulins','Vichy','Montluçon','Bourbon-l’Archambault','Néris-les-Bains','Charroux','Souvigny','Lapalisse','Saint-Pourçain-sur-Sioule','Commentry','Hérisson'],
@@ -20,8 +21,9 @@ const NAMES={'01':'Ain','03':'Allier','07':'Ardèche','15':'Cantal','26':'Drôme
 const NEED_CHIPS=new Set(['fabric','craft','heritage','nature','view','jewelry']);
 const failures=[];const warnings=[];const seen=new Map();
 const browser=await chromium.launch({headless:true});
-const page=await browser.newPage();page.setDefaultTimeout(10000);
-await page.route('**/tile.openstreetmap.org/**',r=>r.abort());
+const page=await browser.newPage();page.setDefaultTimeout(8000);
+/* La recette structurelle ne doit jamais être ralentie par les CDN d'images ou de fontes. Le contrat image/source est vérifié dans le DOM; la joignabilité réseau des médias relève d'un contrôle borné séparé. */
+await page.route('**/*',r=>{const t=r.request().resourceType();if(['image','media','font'].includes(t)||r.request().url().includes('tile.openstreetmap.org'))return r.abort();return r.continue()});
 await page.addInitScript(()=>{
  window.__qaCapturedPlaces=[];
  let value;
@@ -29,7 +31,9 @@ await page.addInitScript(()=>{
 });
 await page.goto(ROOT,{waitUntil:'domcontentloaded'});
 
-for(const [code,cities] of Object.entries(DEPTS)){
+const entries=Object.entries(DEPTS).filter(([code])=>!ONLY||code===ONLY);
+if(ONLY&&!entries.length)throw new Error('HC_DEPT inconnu: '+ONLY);
+for(const [code,cities] of entries){
  for(const city of cities){
   const presence={city,departmentCode:code,departmentName:NAMES[code],lat:46,lng:4,reason:'visit'};
   await page.evaluate(p=>localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify(p)),presence);
@@ -37,17 +41,23 @@ for(const [code,cities] of Object.entries(DEPTS)){
   const onPage=e=>pageErrors.push(String(e.message||e));const onConsole=m=>{if(m.type()==='error')consoleErrors.push(m.text())};
   page.on('pageerror',onPage);page.on('console',onConsole);
   try{
-   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:20000});
-   await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCLocalMap,{timeout:15000});
-   await page.waitForTimeout(900);
+   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:12000});
+   await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCLocalMap,{timeout:10000});
+   /* Attend la première salve de marqueurs puis une courte stabilisation, sans délai fixe de presque 1 s par ville. */
+   await page.waitForTimeout(220);
+   let previous=-1,stable=0;
+   for(let i=0;i<8&&stable<2;i++){
+     const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);
+     if(n===previous)stable++;else{stable=0;previous=n}
+     await page.waitForTimeout(90);
+   }
    const markers=await page.evaluate(()=>[...(window.__qaCapturedPlaces||[])]);
    const unique=[];const ids=new Set();for(const p of markers){if(!p?.id||ids.has(p.id))continue;ids.add(p.id);unique.push(p)}
    console.log(`CITY ${code} ${city} · ${unique.length} marqueur(s)`);
    if(!unique.length)warnings.push(`${code} ${city}: aucun marqueur injecté`);
    for(const p of unique){
     if(seen.has(p.id))continue;seen.set(p.id,{code,city,name:p.name||p.id,fictional:!!p.fictional,cat:p.cat||p.category||null});
-    const ui=await page.evaluate(place=>{window.HCTerritorialPlaceInterfaceV1.open(place);const q=s=>document.querySelector(s);return{title:q('#tpTitle')?.textContent?.trim()||'',text:q('#tpText')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',unlock:q('#tpUnlock')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!q('#tpHero img')};},p);
-    if(ui.img){await page.waitForTimeout(40);const media=await page.evaluate(()=>{const i=document.querySelector('#tpHero img');return i?{complete:i.complete,w:i.naturalWidth,h:i.naturalHeight,flag:document.querySelector('#tpHero .tp-mediaflag')?.textContent?.trim()||''}:{complete:false,w:0,h:0,flag:document.querySelector('#tpHero .tp-mediaflag')?.textContent?.trim()||''}});ui.media=media;}
+    const ui=await page.evaluate(place=>{window.HCTerritorialPlaceInterfaceV1.open(place);const q=s=>document.querySelector(s);const img=q('#tpHero img');return{title:q('#tpTitle')?.textContent?.trim()||'',text:q('#tpText')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',unlock:q('#tpUnlock')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!img,imgSrc:img?.getAttribute('src')||''};},p);
     const tag=`${code} | ${city} | ${p.id} | ${p.name||''}`;
     if(!ui.title)failures.push(tag+' · titre manquant');
     if(!ui.text)failures.push(tag+' · texte manquant');
@@ -58,8 +68,8 @@ for(const [code,cities] of Object.entries(DEPTS)){
     if(p.fictional){if(!/FICTIONNEL/.test(ui.status)||!/ILLUSTRATION|FICTIF/.test(ui.flag))failures.push(tag+' · fiction mal signalée');}
     else{
       if(ui.flag!=='PHOTO RÉELLE')failures.push(tag+' · photo réelle validée absente');
+      if(!ui.img||!ui.imgSrc)failures.push(tag+' · URL image absente');
       if(!ui.source||/manquante|revalider/i.test(ui.source))failures.push(tag+' · source image absente/non validée');
-      if(ui.img&&ui.media?.complete&&ui.media.w===0)failures.push(tag+' · image cassée');
       if(!/RÉEL \/ DOCUMENTAIRE/.test(ui.status))failures.push(tag+' · statut documentaire absent');
     }
    }
@@ -71,7 +81,7 @@ for(const [code,cities] of Object.entries(DEPTS)){
 }
 await browser.close();
 const rows=[...seen.entries()].map(([id,x])=>({id,...x}));
-console.log(`\nTOTAL CLIQUABLES UNIQUES: ${rows.length}`);console.log(`RÉELS: ${rows.filter(x=>!x.fictional).length} · FICTIFS: ${rows.filter(x=>x.fictional).length}`);
+console.log(`\nTOTAL CLIQUABLES UNIQUES${ONLY?' '+ONLY:''}: ${rows.length}`);console.log(`RÉELS: ${rows.filter(x=>!x.fictional).length} · FICTIFS: ${rows.filter(x=>x.fictional).length}`);
 if(warnings.length){console.log(`AVERTISSEMENTS: ${warnings.length}`);for(const w of warnings)console.log('!',w)}
-if(failures.length){console.error(`\nRECETTE EXHAUSTIVE: ${failures.length} défaut(s)`);for(const f of failures)console.error('✗',f);process.exit(1)}
-console.log('\n✓ RECETTE EXHAUSTIVE AURA PASSÉE · tous les marqueurs réellement cliquables ont une interface complète et cohérente.');
+if(failures.length){console.error(`\nRECETTE EXHAUSTIVE${ONLY?' '+ONLY:''}: ${failures.length} défaut(s)`);for(const f of failures)console.error('✗',f);process.exit(1)}
+console.log(`\n✓ RECETTE EXHAUSTIVE AURA${ONLY?' '+ONLY:''} PASSÉE · tous les marqueurs réellement cliquables ont une interface complète et cohérente.`);
