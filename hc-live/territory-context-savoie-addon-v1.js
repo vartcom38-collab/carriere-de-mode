@@ -1,12 +1,32 @@
-/* Haute Couture Live — bootstrap Ville AURA + correctif Savoie 73 V4
+/* Haute Couture Live — bootstrap Ville AURA + correctif Savoie 73 V5
    Le fichier est chargé par /ville pour tous les territoires : il initialise donc l'UI de lieu AURA,
    puis active la couche Savoie uniquement lorsque Marion est physiquement en 73.
    Focus carte != déplacement. Chargement séquentiel + attente explicite de HCLocalMap.
+   V5 : réutilisation sûre des scripts déjà injectés par le runtime générique.
 */
-(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV4)return;window.__HCTerritoryContextSavoieAddonV4=true;
+(function(){'use strict';if(window.__HCTerritoryContextSavoieAddonV5)return;window.__HCTerritoryContextSavoieAddonV5=true;
 const ctx=window.HCTerritoryContext;if(!ctx||!String(location.pathname).includes('/ville'))return;
 const base=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src):new URL('../',location.href);
-function load(id,src){return new Promise((resolve,reject)=>{const old=document.getElementById(id);if(old){if(old.dataset.hcLoaded==='1'||old.readyState==='complete')return resolve(old);old.addEventListener('load',()=>resolve(old),{once:true});old.addEventListener('error',reject,{once:true});return}const s=document.createElement('script');s.id=id;s.src=new URL(src,base).href;s.async=false;s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',reject,{once:true});document.head.appendChild(s)})}
+function alreadyReady(id){
+ const checks={
+  hcTerritorialSignalRuntime:()=>!!window.HCTerritorialSignalRuntime,
+  hcTerritorialLocalInteractionBridge:()=>!!window.__HCTerritorialLocalInteractionBridgeV2,
+  hcCityContentSelector:()=>!!window.HCCityContentSelectorV3,
+  hcCityContentRuntime:()=>!!window.__HCCityContentRuntimeV1,
+  hcTerritoryGameplayScript73:()=>!!window.HCSavoieTerritorialGameplay,
+  hcTerritoryMapPack73:()=>!!window.__HCSavoieMapContentV1,
+  hcSavoieHighResortsMap:()=>!!window.__HCSavoieHighResortsMapV1,
+  hcSavoiePrimaryUniverse:()=>!!window.__HCSavoiePrimaryCitiesUniverseV1,
+  hcSavoiePrimaryBank:()=>!!window.__HCSavoiePrimaryCitiesBanksV1,
+  hcSavoieHighUniverse:()=>!!window.HCSavoieHighResortsUniverse,
+  hcSavoieHighBank:()=>!!window.__HCSavoieHighResortsBanksV1,
+  hcSavoieHighResortsGameplayAddon:()=>!!window.__HCSavoieHighResortsGameplayAddonV1,
+  hcTerritorialPlaceMediaAURA:()=>!!window.HCTerritorialPlaceMediaAURA,
+  hcTerritorialPlaceInterfaceAURA:()=>!!window.HCTerritorialPlaceInterfaceV1
+ };
+ try{return !!checks[id]?.()}catch(_){return false}
+}
+function load(id,src){return new Promise((resolve,reject)=>{const old=document.getElementById(id);if(old){if(old.dataset.hcLoaded==='1'||old.readyState==='complete'||alreadyReady(id)){old.dataset.hcLoaded='1';return resolve(old)}const onLoad=()=>{old.dataset.hcLoaded='1';resolve(old)};old.addEventListener('load',onLoad,{once:true});old.addEventListener('error',reject,{once:true});const start=Date.now(),t=setInterval(()=>{if(alreadyReady(id)){clearInterval(t);old.removeEventListener('load',onLoad);old.dataset.hcLoaded='1';resolve(old)}else if(Date.now()-start>8000){clearInterval(t);old.removeEventListener('load',onLoad);reject(new Error('Script présent mais non prêt: '+id))}},20);return}const s=document.createElement('script');s.id=id;s.src=new URL(src,base).href;s.async=false;s.addEventListener('load',()=>{s.dataset.hcLoaded='1';resolve(s)},{once:true});s.addEventListener('error',reject,{once:true});document.head.appendChild(s)})}
 function waitForMap(timeout=8000){if(window.HCLocalMap)return Promise.resolve(window.HCLocalMap);return new Promise((resolve,reject)=>{const start=Date.now(),t=setInterval(()=>{if(window.HCLocalMap){clearInterval(t);resolve(window.HCLocalMap)}else if(Date.now()-start>=timeout){clearInterval(t);reject(new Error('HCLocalMap indisponible'))}},20)})}
 
 /* Bootstrap commun : les médias sont chargés AVANT l'interface afin que la première ouverture soit déjà documentée. */
