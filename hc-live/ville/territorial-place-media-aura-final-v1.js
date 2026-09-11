@@ -26,6 +26,12 @@ const extra={
   source:'Le Progrès — Musée Barthélemy Thimonnier, Amplepuis',
   sourceUrl:'https://musees.ouestrhodanien.fr/musee-barthelemy-thimonnier.html',
   kind:'photo',real:true
+ },
+ 'ar-peyrebeille-auberge-rouge':{
+  image:'https://static.apidae-tourisme.com/filestore/objets-touristiques/images/211/18/37360339.jpg',
+  source:'Auvergne-Rhône-Alpes Tourisme / Apidae — Auberge de Peyrebeille',
+  sourceUrl:'https://www.auvergnerhonealpes-tourisme.com/fiches/auberge-de-peyrebeille-auberge-rouge/',
+  kind:'photo',real:true
  }
 };
 /* Alias Ain : même lieu exact ou photo de contexte géographique explicitement conservée comme telle. */
