@@ -2,13 +2,30 @@
 
 Département : 74  
 Branche : `territoires-france`  
-Date : 2026-09-10
+Date de mise à jour : 2026-09-11
 
 ## Verdict
 
-**DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL VIA ADDON 74**
+**DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL VIA ADDON 74 / VALIDÉ EN CHROMIUM**
 
-La Haute-Savoie possède désormais suffisamment d'archétypes territoriaux distincts pour soutenir une carrière longue sans réduire le département à une succession de stations de ski.
+La Haute-Savoie possède suffisamment d'archétypes territoriaux distincts pour soutenir une carrière longue sans réduire le département à une succession de stations de ski.
+
+## Validation navigateur réelle — 11 septembre 2026
+
+Le scénario E2E de référence utilise **Le Grand-Bornand · laine, soie & tissage**.
+
+La campagne Chromium valide :
+- chargement du moteur Haute-Savoie ;
+- carte principale et carte secondaire ;
+- univers principal et secondaire ;
+- banques de villes principale et secondaire ;
+- ouverture du lieu documentaire du Grand-Bornand avec photo réelle et source ;
+- actions contextuelles, consommation de temps et persistance de la mémoire ;
+- rendu distinct du contenu fictif ;
+- focus carte Chambéry sans téléportation de Marion ;
+- absence de runtime Gard/Nîmes hors Gard.
+
+Le test a également révélé un vrai défaut de double chargement : l’addon 74 pouvait attendre un événement `load` déjà passé sur des scripts génériques présents dans la page. `territory-context-haute-savoie-addon-v1.js` V3 rend désormais le chargement idempotent en vérifiant l’API globale des scripts déjà actifs avant de poursuivre la chaîne.
 
 ## Couverture géographique et gameplay
 
@@ -74,7 +91,3 @@ Le moteur départemental possède en plus son propre jeu de contacts/opportunit�
 ## Extensions futures non bloquantes
 
 Peuvent être ajoutés plus tard sans empêcher de considérer le département dense : Sixt-Fer-à-Cheval, Les Gets, Abondance, La Roche-sur-Foron, Bonneville, Rumilly, Passy, Combloux, Praz-sur-Arly, Vallorcine, Argentière et autres villages/plateaux.
-
-## Prochaine logique territoriale
-
-Après Haute-Savoie, poursuivre Auvergne-Rhône-Alpes avec les départements encore non densifiés, en conservant la même méthode : recherche documentaire → pôles différenciés → banques → runtime → carte → audit.
