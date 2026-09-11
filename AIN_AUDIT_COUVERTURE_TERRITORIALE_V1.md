@@ -1,6 +1,6 @@
 # AIN — AUDIT COUVERTURE TERRITORIALE V1
 
-Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL**
+Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / E2E CHROMIUM VALIDÉ**
 
 ## Pôles couverts
 - Bourg-en-Bresse — capitale départementale, architecture, cérémonie, photographie, clientèle, métiers d’art.
@@ -60,6 +60,18 @@ Correction appliquée sans remplacer le moteur existant :
 - branchement via `territorial-signal-runtime-v1.js::bootstrapExtendedTerritories()` pour `01`.
 
 Le store `haute-couture-ain-territorial-gameplay-v1` était déjà intégré au rattrapage des signaux.
+
+## QA navigateur — validée le 11 septembre 2026
+Le scénario Playwright/Chromium réel valide :
+- Monastère royal de Brou rendu avec photo réelle et source documentaire ;
+- 3 actions patrimoine disponibles ;
+- une action consomme 35 minutes de temps de jeu ;
+- la mémoire de lieu est persistée ;
+- regarder Lyon ne déplace pas Marion de Bourg-en-Bresse ;
+- un lieu fictif reçoit une illustration de jeu explicitement étiquetée ;
+- le lourd stack Gard/Nîmes n’est plus chargé hors Gard.
+
+Workflow validé : `Territoires UI E2E`.
 
 ## Extensions futures non bloquantes
 - Trévoux / Val de Saône
