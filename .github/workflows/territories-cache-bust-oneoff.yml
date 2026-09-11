@@ -1,0 +1,58 @@
+name: Territoires cache bust oneoff
+
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - '.github/workflows/territories-cache-bust-oneoff.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: territoires-france
+      - name: Patch exact cache query strings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('hc-live/territory-context-v1.js'): [
+                  ('territorial-signal-runtime-v1.js?v=20260910-runtime3',
+                   'territorial-signal-runtime-v1.js?v=20260911-runtime8-cache1'),
+              ],
+              Path('hc-live/ville/index.html'): [
+                  ('../territory-context-v1.js?v=20260910-presence2',
+                   '../territory-context-v1.js?v=20260911-presence2-cache1'),
+                  ('../territory-context-savoie-addon-v1.js?v=20260910-savoie73fix1',
+                   '../territory-context-savoie-addon-v1.js?v=20260911-savoie73v6'),
+                  ('../territory-context-haute-savoie-addon-v1.js?v=20260910-hautesavoie74fix1',
+                   '../territory-context-haute-savoie-addon-v1.js?v=20260911-hautesavoie74v3'),
+              ],
+          }
+
+          for path, pairs in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly 1 occurrence of {old!r}, found {count}')
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+          PY
+          git diff --check
+          git diff -- hc-live/territory-context-v1.js hc-live/ville/index.html
+      - name: Commit cache bust
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hc-live/territory-context-v1.js hc-live/ville/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Territoires: aligner cache-busters runtime et loaders"
+          git push origin HEAD:territoires-france
