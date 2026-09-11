@@ -12,6 +12,7 @@ on:
       - 'hc-live/qa/territories-ui-e2e.mjs'
       - 'hc-live/qa/territories-ui-cantal-e2e.mjs'
       - 'hc-live/qa/territories-ui-haute-loire-e2e.mjs'
+      - 'hc-live/qa/territories-ui-puy-de-dome-e2e.mjs'
       - '.github/workflows/territoires-ui-e2e.yml'
   workflow_dispatch:
 
@@ -45,3 +46,7 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-haute-loire-e2e.mjs 2>&1 | tee /tmp/hc-territories-haute-loire-e2e.log
+      - name: Run Puy-de-Dôme UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-puy-de-dome-e2e.mjs 2>&1 | tee /tmp/hc-territories-puy-de-dome-e2e.log
