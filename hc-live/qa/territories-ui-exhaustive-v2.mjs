@@ -92,14 +92,19 @@ async function runCity(code,city,control={}){
 
 async function runCityBounded(code,city,ms=20000){
  const control={context:null};
- let timer;
+ let timer,timedOut=false;
  const task=runCity(code,city,control);
+ const guardedTask=task.catch(e=>{
+  if(timedOut)return new Promise(()=>{});
+  throw e;
+ });
  const deadline=new Promise((_,reject)=>{timer=setTimeout(async()=>{
+  timedOut=true;
   const err=new Error(`timeout ville ${code} ${city} après ${ms}ms`);
   try{await control.context?.close()}catch(_){}
   reject(err);
  },ms)});
- try{return await Promise.race([task,deadline])}
+ try{return await Promise.race([guardedTask,deadline])}
  finally{
   clearTimeout(timer);
   if(control.context){try{await control.context.close()}catch(_){}control.context=null}
