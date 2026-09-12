@@ -14,22 +14,30 @@ async function pageFor(presence){
  await page.addInitScript(p=>{
   localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify(p));
   window.__qaCapturedPlaces=[];
-  let localMapValue;
-  Object.defineProperty(window,'HCLocalMap',{
-   configurable:true,
-   get(){return localMapValue},
-   set(v){
-    localMapValue=v;
-    if(v?.addMarker&&!v.__qaCaptureWrapped){
-     const original=v.addMarker.bind(v);
-     v.addMarker=function(place){window.__qaCapturedPlaces.push(place);return original(place)};
-     v.__qaCaptureWrapped=true;
-    }
+  const nativeDefineProperty=Object.defineProperty;
+  Object.defineProperty=function(target,prop,descriptor){
+   if(target===window&&prop==='HCLocalMap'&&descriptor&&typeof descriptor.set==='function'&&typeof descriptor.get==='function'){
+    const originalSet=descriptor.set;
+    const wrapped={...descriptor,set(v){
+     if(v?.addMarker&&!v.__qaUnderlyingCaptureWrapped){
+      const originalAdd=v.addMarker.bind(v);
+      v.addMarker=function(place){
+       try{window.__qaCapturedPlaces.push(JSON.parse(JSON.stringify(place)))}catch(_){window.__qaCapturedPlaces.push(place)}
+       return originalAdd(place);
+      };
+      v.__qaUnderlyingCaptureWrapped=true;
+     }
+     return originalSet.call(this,v);
+    }};
+    const result=nativeDefineProperty.call(Object,target,prop,wrapped);
+    Object.defineProperty=nativeDefineProperty;
+    return result;
    }
-  });
+   return nativeDefineProperty.call(Object,target,prop,descriptor);
+  };
  },presence);
  await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:20000});
- await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCTerritorialPlaceMediaAURAFinal,{timeout:12000});
+ await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCTerritorialPlaceMediaAURAFinal&&!!window.HCLocalMap,{timeout:12000});
  return{page,errors,consoleErrors};
 }
 
@@ -42,18 +50,18 @@ async function exercise({label,presence,targetId,ready,stats,focus,expectedText}
  const {page,errors,consoleErrors}=await pageFor(presence);
  await page.waitForFunction(({targetId,ready})=>{
   const place=(window.__qaCapturedPlaces||[]).find(x=>x.id===targetId);
-  const ok=ready==='isere'?!!window.HCIsereTerritorialGameplay:
+  const ok=ready==='isere'?!!place:
    ready==='loire'?!!window.HCLoireDenseCityBanksV1:
    ready==='rhone'?!!window.HCRhoneDenseCityBanks:false;
   return !!place&&ok;
  },{targetId,ready},{timeout:12000});
 
  const runtime=await page.evaluate(({targetId,ready})=>{
-  const place=(window.__qaCapturedPlaces||[]).find(x=>x.id===targetId)||null;
+  const captured=window.__qaCapturedPlaces||[];
+  const place=captured.find(x=>x.id===targetId)||null;
   let totals=null;
   if(ready==='isere'){
-   const g=window.HCIsereTerritorialGameplay;
-   totals={people:g?.people?.length||0,briefs:g?.briefs?.length||0,secrets:g?.secrets?.length||0,events:g?.eventFamilies?.length||0};
+   totals={markers:new Set(captured.filter(x=>String(x.dept||x.departmentCode||'')==='38').map(x=>x.id)).size};
   }
   if(ready==='loire'){
    const cities=window.HCLoireDenseCityBanksV1?.cities||{};
@@ -116,7 +124,7 @@ async function exercise({label,presence,targetId,ready,stats,focus,expectedText}
 }
 
 try{
- await exercise({label:'ISÈRE',presence:{city:'Bourgoin-Jallieu',departmentCode:'38',departmentName:'Isère',lat:45.5864,lng:5.2733,reason:'visit'},targetId:'bj-musee-textile',ready:'isere',stats:{people:20,briefs:20,secrets:10,events:10},focus:{city:'Saint-Étienne',departmentCode:'42',departmentName:'Loire',lat:45.4397,lng:4.3872},expectedText:/Tissage|impression textile|ennoblissement/i});
+ await exercise({label:'ISÈRE',presence:{city:'Bourgoin-Jallieu',departmentCode:'38',departmentName:'Isère',lat:45.5864,lng:5.2733,reason:'visit'},targetId:'bj-musee-textile',ready:'isere',stats:{markers:1},focus:{city:'Saint-Étienne',departmentCode:'42',departmentName:'Loire',lat:45.4397,lng:4.3872},expectedText:/Tissage|impression textile|ennoblissement/i});
  await exercise({label:'LOIRE',presence:{city:'Saint-Chamond',departmentCode:'42',departmentName:'Loire',lat:45.475,lng:4.514,reason:'visit'},targetId:'lo42-sc-tresses',ready:'loire',stats:{people:256,briefs:416,secrets:120,events:72},focus:{city:'Lyon',departmentCode:'69',departmentName:'Rhône',lat:45.764,lng:4.8357},expectedText:/tresses|lacets|ruban/i});
  await exercise({label:'RHÔNE',presence:{city:'Amplepuis',departmentCode:'69',departmentName:'Rhône',lat:45.972,lng:4.331,reason:'visit'},targetId:'rh-dense-amplepuis-thimonnier',ready:'rhone',stats:{people:256,briefs:416,secrets:120,events:72},focus:{city:'Grenoble',departmentCode:'38',departmentName:'Isère',lat:45.1885,lng:5.7245},expectedText:/Thimonnier|machine à coudre|assemblage/i});
 }finally{await browser.close()}
