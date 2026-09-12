@@ -45,6 +45,24 @@ const extra={
   sourceUrl:'https://musees.ouestrhodanien.fr/musee-barthelemy-thimonnier.html',
   kind:'photo',real:true
  },
+ 'cantal-dense-lioran':{
+  image:commons("Le Lioran depuis la piste de l'Aiguillon.png"),
+  source:"Wikimedia Commons — Le Lioran depuis la piste de l’Aiguillon",
+  sourceUrl:"https://commons.wikimedia.org/wiki/File:Le_Lioran_depuis_la_piste_de_l%27Aiguillon.png",
+  kind:'photo',real:true
+ },
+ 'pdd63-ambert-richard-de-bas':{
+  image:commons('Moulin Richard de Bas 2016-08-08 n02.jpg'),
+  source:'Wikimedia Commons — Moulin Richard de Bas, Ambert',
+  sourceUrl:'https://commons.wikimedia.org/wiki/File:Moulin_Richard_de_Bas_2016-08-08_n02.jpg',
+  kind:'photo',real:true
+ },
+ 'sav-courch-excellence':{
+  image:commons('Courchevel 1850 ski resort.jpg'),
+  source:'Wikimedia Commons — Courchevel 1850, station de ski',
+  sourceUrl:'https://commons.wikimedia.org/wiki/File:Courchevel_1850_ski_resort.jpg',
+  kind:'photo',real:true
+ },
  'ar-peyrebeille-auberge-rouge':{
   image:'https://static.apidae-tourisme.com/filestore/objets-touristiques/images/211/18/37360339.jpg',
   source:'Auvergne-Rhône-Alpes Tourisme / Apidae — Auberge de Peyrebeille',
