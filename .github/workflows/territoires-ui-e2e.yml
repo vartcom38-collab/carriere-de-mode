@@ -69,72 +69,84 @@ jobs:
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
       - name: Exhaustif 01 · Ain
+        if: ${{ always() }}
         env:
           HC_DEPT: '01'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-01.log
       - name: Exhaustif 03 · Allier
+        if: ${{ always() }}
         env:
           HC_DEPT: '03'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-03.log
       - name: Exhaustif 07 · Ardèche
+        if: ${{ always() }}
         env:
           HC_DEPT: '07'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-07.log
       - name: Exhaustif 15 · Cantal
+        if: ${{ always() }}
         env:
           HC_DEPT: '15'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-15.log
       - name: Exhaustif 26 · Drôme
+        if: ${{ always() }}
         env:
           HC_DEPT: '26'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-26.log
       - name: Exhaustif 38 · Isère
+        if: ${{ always() }}
         env:
           HC_DEPT: '38'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-38.log
       - name: Exhaustif 42 · Loire
+        if: ${{ always() }}
         env:
           HC_DEPT: '42'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-42.log
       - name: Exhaustif 43 · Haute-Loire
+        if: ${{ always() }}
         env:
           HC_DEPT: '43'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-43.log
       - name: Exhaustif 63 · Puy-de-Dôme
+        if: ${{ always() }}
         env:
           HC_DEPT: '63'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-63.log
       - name: Exhaustif 69 · Rhône
+        if: ${{ always() }}
         env:
           HC_DEPT: '69'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-69.log
       - name: Exhaustif 73 · Savoie
+        if: ${{ always() }}
         env:
           HC_DEPT: '73'
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-73.log
       - name: Exhaustif 74 · Haute-Savoie
+        if: ${{ always() }}
         env:
           HC_DEPT: '74'
         run: |
@@ -142,4 +154,4 @@ jobs:
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-74.log
 
 # L'exhaustif est volontairement découpé par département : mêmes critères V2, aucun assouplissement,
-# mais plus de faux échec global causé par le plafond de 300 secondes.
+# et chaque département s'exécute même si un précédent échoue, pour obtenir les 12 verdicts d'un seul run.
