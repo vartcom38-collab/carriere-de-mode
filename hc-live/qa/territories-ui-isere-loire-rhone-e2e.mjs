@@ -50,7 +50,7 @@ async function exercise({label,presence,targetId,ready,stats,focus,expectedText}
  const {page,errors,consoleErrors}=await pageFor(presence);
  await page.waitForFunction(({targetId,ready})=>{
   const place=(window.__qaCapturedPlaces||[]).find(x=>x.id===targetId);
-  const ok=ready==='isere'?!!place:
+  const ok=ready==='isere'?!!window.HCBourgoinJallieuCityBankV1:
    ready==='loire'?!!window.HCLoireDenseCityBanksV1:
    ready==='rhone'?!!window.HCRhoneDenseCityBanks:false;
   return !!place&&ok;
@@ -61,7 +61,8 @@ async function exercise({label,presence,targetId,ready,stats,focus,expectedText}
   const place=captured.find(x=>x.id===targetId)||null;
   let totals=null;
   if(ready==='isere'){
-   totals={markers:new Set(captured.filter(x=>String(x.dept||x.departmentCode||'')==='38').map(x=>x.id)).size};
+   const city=window.HCBourgoinJallieuCityBankV1||{};
+   totals={people:city.people?.length||0,briefs:city.briefs?.length||0,secrets:city.secrets?.length||0,events:city.events?.length||0};
   }
   if(ready==='loire'){
    const cities=window.HCLoireDenseCityBanksV1?.cities||{};
@@ -124,7 +125,7 @@ async function exercise({label,presence,targetId,ready,stats,focus,expectedText}
 }
 
 try{
- await exercise({label:'ISÈRE',presence:{city:'Bourgoin-Jallieu',departmentCode:'38',departmentName:'Isère',lat:45.5864,lng:5.2733,reason:'visit'},targetId:'bj-musee-textile',ready:'isere',stats:{markers:1},focus:{city:'Saint-Étienne',departmentCode:'42',departmentName:'Loire',lat:45.4397,lng:4.3872},expectedText:/Tissage|impression textile|ennoblissement/i});
+ await exercise({label:'ISÈRE',presence:{city:'Bourgoin-Jallieu',departmentCode:'38',departmentName:'Isère',lat:45.5864,lng:5.2733,reason:'visit'},targetId:'bj-musee-textile',ready:'isere',stats:{people:20,briefs:20,secrets:10,events:10},focus:{city:'Saint-Étienne',departmentCode:'42',departmentName:'Loire',lat:45.4397,lng:4.3872},expectedText:/Tissage|impression textile|ennoblissement/i});
  await exercise({label:'LOIRE',presence:{city:'Saint-Chamond',departmentCode:'42',departmentName:'Loire',lat:45.475,lng:4.514,reason:'visit'},targetId:'lo42-sc-tresses',ready:'loire',stats:{people:256,briefs:416,secrets:120,events:72},focus:{city:'Lyon',departmentCode:'69',departmentName:'Rhône',lat:45.764,lng:4.8357},expectedText:/tresses|lacets|ruban/i});
  await exercise({label:'RHÔNE',presence:{city:'Amplepuis',departmentCode:'69',departmentName:'Rhône',lat:45.972,lng:4.331,reason:'visit'},targetId:'rh-dense-amplepuis-thimonnier',ready:'rhone',stats:{people:256,briefs:416,secrets:120,events:72},focus:{city:'Grenoble',departmentCode:'38',departmentName:'Isère',lat:45.1885,lng:5.7245},expectedText:/Thimonnier|machine à coudre|assemblage/i});
 }finally{await browser.close()}
