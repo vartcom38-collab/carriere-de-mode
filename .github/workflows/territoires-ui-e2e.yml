@@ -1,6 +1,6 @@
 name: Territoires UI E2E
 
-# Validation cache-bust AURA — 2026-09-11
+# Validation cache-bust AURA — 2026-09-12
 on:
   push:
     branches:
@@ -28,7 +28,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Playwright Chromium
@@ -68,10 +68,78 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
-      - name: Run exhaustive clickable-place UI audit V2
+      - name: Exhaustif 01 · Ain
+        env:
+          HC_DEPT: '01'
         run: |
           set -o pipefail
-          timeout --signal=TERM --kill-after=15s 300s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territories-exhaustive-v2.log
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-01.log
+      - name: Exhaustif 03 · Allier
+        env:
+          HC_DEPT: '03'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-03.log
+      - name: Exhaustif 07 · Ardèche
+        env:
+          HC_DEPT: '07'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-07.log
+      - name: Exhaustif 15 · Cantal
+        env:
+          HC_DEPT: '15'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-15.log
+      - name: Exhaustif 26 · Drôme
+        env:
+          HC_DEPT: '26'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-26.log
+      - name: Exhaustif 38 · Isère
+        env:
+          HC_DEPT: '38'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-38.log
+      - name: Exhaustif 42 · Loire
+        env:
+          HC_DEPT: '42'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-42.log
+      - name: Exhaustif 43 · Haute-Loire
+        env:
+          HC_DEPT: '43'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-43.log
+      - name: Exhaustif 63 · Puy-de-Dôme
+        env:
+          HC_DEPT: '63'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-63.log
+      - name: Exhaustif 69 · Rhône
+        env:
+          HC_DEPT: '69'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-69.log
+      - name: Exhaustif 73 · Savoie
+        env:
+          HC_DEPT: '73'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-73.log
+      - name: Exhaustif 74 · Haute-Savoie
+        env:
+          HC_DEPT: '74'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-74.log
 
-# QA closure rerun after harness fix: 2026-09-11
-# Closure recheck after exhaustive timeout fix: 2026-09-11
+# L'exhaustif est volontairement découpé par département : mêmes critères V2, aucun assouplissement,
+# mais plus de faux échec global causé par le plafond de 300 secondes.
