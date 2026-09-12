@@ -34,15 +34,38 @@ async function runCity(code,city){
  await page.addInitScript(p=>{
   localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify(p));
   window.__qaCapturedPlaces=[];
-  let value;
-  Object.defineProperty(window,'HCLocalMap',{configurable:true,get(){return value},set(v){value=v;if(v?.addMarker&&!v.__qaWrapped){const original=v.addMarker.bind(v);v.addMarker=function(place){try{window.__qaCapturedPlaces.push(JSON.parse(JSON.stringify(place)))}catch(_){window.__qaCapturedPlaces.push(place)}return original(place)};v.__qaWrapped=true}}});
+  const nativeDefineProperty=Object.defineProperty;
+  Object.defineProperty=function(target,prop,descriptor){
+   if(target===window&&prop==='HCLocalMap'&&descriptor&&typeof descriptor.set==='function'&&typeof descriptor.get==='function'){
+    const originalSet=descriptor.set;
+    const wrapped={...descriptor,set(v){
+     if(v?.addMarker&&!v.__qaUnderlyingCaptureWrapped){
+      const originalAdd=v.addMarker.bind(v);
+      v.addMarker=function(place){
+       try{window.__qaCapturedPlaces.push(JSON.parse(JSON.stringify(place)))}catch(_){window.__qaCapturedPlaces.push(place)}
+       return originalAdd(place);
+      };
+      v.__qaUnderlyingCaptureWrapped=true;
+     }
+     return originalSet.call(this,v);
+    }};
+    const result=nativeDefineProperty.call(Object,target,prop,wrapped);
+    Object.defineProperty=nativeDefineProperty;
+    return result;
+   }
+   return nativeDefineProperty.call(Object,target,prop,descriptor);
+  };
  },presence);
  try{
   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:15000});
   await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCLocalMap,{timeout:10000});
-  await page.waitForTimeout(250);
+  await page.waitForFunction(()=>Array.isArray(window.__qaCapturedPlaces)&&window.__qaCapturedPlaces.length>0,{timeout:8000});
   let previous=-1,stable=0;
-  for(let i=0;i<18&&stable<3;i++){const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);if(n>0&&n===previous)stable++;else if(n!==previous){stable=0;previous=n}await page.waitForTimeout(120)}
+  for(let i=0;i<24&&stable<5;i++){
+   const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);
+   if(n>0&&n===previous)stable++;else{stable=0;previous=n}
+   await page.waitForTimeout(120);
+  }
   const markers=await page.evaluate(()=>[...(window.__qaCapturedPlaces||[])]),unique=[],ids=new Set();
   for(const p of markers){if(!p?.id||ids.has(p.id))continue;ids.add(p.id);unique.push(p)}
   console.log(`CITY ${code} ${city} · ${unique.length} marqueur(s)`);
