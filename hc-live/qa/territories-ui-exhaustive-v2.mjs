@@ -21,10 +21,9 @@ const NEED_CHIPS=new Set(['fabric','craft','heritage','nature','view','jewelry']
 const failures=[],warnings=[],seen=new Map();
 const browser=await chromium.launch({headless:true});
 function isFiction(p){return !!(p.fictional||p.fictionalFamily||p.fictionalFuture||p.evolutive||/famille événementielle/i.test(String(p.name||'')))}
-function timeout(ms,label){return new Promise((_,reject)=>setTimeout(()=>reject(new Error(`timeout ville ${label} après ${ms}ms`)),ms))}
 
-async function runCity(code,city){
- const context=await browser.newContext();
+async function runCity(code,city,control={}){
+ const context=await browser.newContext();control.context=context;
  const page=await context.newPage();page.setDefaultTimeout(8000);
  const presence={city,departmentCode:code,departmentName:NAMES[code],lat:46,lng:4,reason:'visit'};
  const pageErrors=[],consoleErrors=[];
@@ -85,11 +84,31 @@ async function runCity(code,city){
   }
   if(pageErrors.some(x=>/SyntaxError|ReferenceError/.test(x)))failures.push(`${code} ${city} · erreur page: ${pageErrors.join(' | ')}`);
   if(consoleErrors.some(x=>/Uncaught|ReferenceError|SyntaxError/i.test(x)))failures.push(`${code} ${city} · erreur console: ${consoleErrors.join(' | ')}`);
- }finally{await Promise.race([context.close(),new Promise(r=>setTimeout(r,2500))])}
+ }finally{
+  if(control.context===context)control.context=null;
+  await Promise.race([context.close().catch(()=>{}),new Promise(r=>setTimeout(r,2500))]);
+ }
+}
+
+async function runCityBounded(code,city,ms=20000){
+ const control={context:null};
+ let timer;
+ const task=runCity(code,city,control);
+ const deadline=new Promise((_,reject)=>{timer=setTimeout(async()=>{
+  const err=new Error(`timeout ville ${code} ${city} après ${ms}ms`);
+  try{await control.context?.close()}catch(_){}
+  reject(err);
+ },ms)});
+ try{return await Promise.race([task,deadline])}
+ finally{
+  clearTimeout(timer);
+  if(control.context){try{await control.context.close()}catch(_){}control.context=null}
+  await Promise.race([task.catch(()=>{}),new Promise(r=>setTimeout(r,2500))]);
+ }
 }
 
 const entries=Object.entries(DEPTS).filter(([c])=>!ONLY||c===ONLY);if(ONLY&&!entries.length)throw new Error('HC_DEPT inconnu: '+ONLY);
-for(const [code,cities] of entries){for(const city of cities){try{await Promise.race([runCity(code,city),timeout(20000,`${code} ${city}`)])}catch(e){failures.push(`${code} ${city} · chargement/QA impossible: ${e.message}`)}}}
+for(const [code,cities] of entries){for(const city of cities){try{await runCityBounded(code,city,20000)}catch(e){failures.push(`${code} ${city} · chargement/QA impossible: ${e.message}`)}}}
 await browser.close();
 const rows=[...seen.entries()].map(([id,x])=>({id,...x}));console.log(`\nTOTAL CLIQUABLES UNIQUES${ONLY?' '+ONLY:''}: ${rows.length}`);console.log(`RÉELS: ${rows.filter(x=>!x.fictional).length} · FICTIFS/ÉVOLUTIFS: ${rows.filter(x=>x.fictional).length}`);
 if(warnings.length){console.log(`AVERTISSEMENTS: ${warnings.length}`);for(const w of warnings)console.log('!',w)}
