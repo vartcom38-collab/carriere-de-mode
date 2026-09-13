@@ -23,8 +23,8 @@ const M={
  'ar07-marcols-neuve':doc('https://cdn-s-www.ledauphine.com/images/74089E6B-91FF-49E1-B4A5-069B90261B70/FB1200/photo-1629039198.jpg','Le Dauphiné Libéré — Moulinage de la Neuve, Marcols-les-Eaux','https://www.ledauphine.com/culture-loisirs/2021/08/16/l-idee-de-sortie-a-la-decouverte-du-moulinage-de-la-neuve-de-marcols-les-eaux')
 };
 const A={
- 'ar-ann-industrie':'ar07-annonay',
- 'aub-centre':'ar07-aubenas',
+ 'ar-ann-industrie':'ar07-annonay','ann-centre':'ar07-annonay',
+ 'aub-centre':'ar07-aubenas','ar-aub-soie':'ar07-aubenas',
  'ar-privas':'ar07-privas','pri-centre':'ar07-privas',
  'ar-tournon':'ar07-tournon','tour-rhone':'ar07-tournon',
  'ar-teil':'ar07-teil','teil-reemploi':'ar07-teil',
