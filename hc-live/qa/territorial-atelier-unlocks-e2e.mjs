@@ -8,8 +8,14 @@ const departments=[
  ['26','Drôme','Valence','fabric'],['38','Isère','Grenoble','heritage'],['42','Loire','Saint-Étienne','craft'],['43','Haute-Loire','Le Puy-en-Velay','culture'],
  ['63','Puy-de-Dôme','Clermont-Ferrand','nature'],['69','Rhône','Lyon','fabric'],['73','Savoie','Chambéry','heritage'],['74','Haute-Savoie','Annecy','craft']
 ];
+const requested=String(process.env.HC_DEPTS||'').split(',').map(x=>x.trim()).filter(Boolean);
+const selected=requested.length?departments.filter(([code])=>requested.includes(code)):departments;
+if(requested.length&&selected.length!==requested.length){
+ console.error('Codes département inconnus dans HC_DEPTS:',requested.filter(code=>!departments.some(([known])=>known===code)).join(', '));
+ process.exit(2);
+}
 
-for(const [code,name,city,cat] of departments){
+for(const [code,name,city,cat] of selected){
  const context=await browser.newContext();
  const page=await context.newPage();
  page.setDefaultTimeout(10000);
@@ -58,4 +64,4 @@ for(const [code,name,city,cat] of departments){
 }
 await browser.close();
 if(failures.length){console.error('\nDÉBLOCAGES TERRITORIAUX → ATELIER : '+failures.length+' échec(s)');for(const f of failures)console.error('✗',f);process.exit(1)}
-console.log('\n✓ DÉBLOCAGES TERRITORIAUX → ATELIER : 12/12 départements, sélection réelle et persistance validées.');
+console.log('\n✓ DÉBLOCAGES TERRITORIAUX → ATELIER : '+selected.length+'/'+selected.length+' départements testés, sélection réelle et persistance validées.');
