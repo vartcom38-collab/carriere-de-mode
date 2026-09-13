@@ -1,18 +1,23 @@
-/* Haute Couture Live — normalisation des marqueurs territoriaux V4
+/* Haute Couture Live — normalisation des marqueurs territoriaux V5
    Empêche un contenu inventé d'être présenté comme documentaire, applique les
    enrichissements territoriaux strictement identifiés avant injection carte et
    sécurise le chargement async des packs qui peuvent arriver avant HCLocalMap.
 */
 (function(){
 'use strict';
-if(window.__HCTerritorialPlaceNormalizerV4)return;window.__HCTerritorialPlaceNormalizerV4=true;
+if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNormalizerV5=true;
 
-/* Couche média 42/69 additive. Elle écrit le registre documentaire local sans
-   modifier les contrôles QA. Le fichier est local à /ville/. */
-(function loadLoireRhoneMedia(){
- if(window.__HCTerritorialPlaceMediaLoireRhoneV1||document.getElementById('hcMediaLoireRhoneV1'))return;
- const s=document.createElement('script');s.id='hcMediaLoireRhoneV1';s.src='./territorial-place-media-loire-rhone-v1.js?v=20260913-qa2';
- document.head.appendChild(s);
+/* Couches média territoriales additives. Elles écrivent le registre documentaire
+   local sans modifier les contrôles QA. Les fichiers sont locaux à /ville/. */
+(function loadTerritorialMedia(){
+ const packs=[
+  ['hcMediaLoireRhoneV1','./territorial-place-media-loire-rhone-v1.js?v=20260913-qa2','__HCTerritorialPlaceMediaLoireRhoneV2'],
+  ['hcMediaArdecheV1','./territorial-place-media-ardeche-v1.js?v=20260913-qa1','__HCTerritorialPlaceMediaArdecheV1']
+ ];
+ for(const [id,src,guard] of packs){
+  if(window[guard]||document.getElementById(id))continue;
+  const s=document.createElement('script');s.id=id;s.src=src;document.head.appendChild(s);
+ }
 })();
 
 const CREATIVE_FIXES={
@@ -52,10 +57,10 @@ function normalize(p){
  return p;
 }
 function wrap(map){
- if(!map?.addMarker||map.__hcPlaceNormalizerV4)return map;
+ if(!map?.addMarker||map.__hcPlaceNormalizerV5)return map;
  const original=map.addMarker.bind(map);
  map.addMarker=function(place){return original(normalize(place))};
- map.__hcPlaceNormalizerV4=true;
+ map.__hcPlaceNormalizerV5=true;
  return map;
 }
 
@@ -95,5 +100,5 @@ try{
  }
 }catch(_){ }
 if(current){current=wrap(current);mapReady=true;observer.disconnect();queueMicrotask(()=>replayEarly())}
-window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2=window.HCTerritorialPlaceNormalizerV3=window.HCTerritorialPlaceNormalizerV4={version:4,normalize,isFictional:fictional,wrap,replayEarly};
+window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2=window.HCTerritorialPlaceNormalizerV3=window.HCTerritorialPlaceNormalizerV4=window.HCTerritorialPlaceNormalizerV5={version:5,normalize,isFictional:fictional,wrap,replayEarly};
 })();
