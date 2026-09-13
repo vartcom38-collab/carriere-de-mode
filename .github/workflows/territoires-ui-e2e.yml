@@ -70,10 +70,26 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
-      - name: Run 12 départements · déblocages vers Atelier
+      - name: Atelier unlocks 01 03 07 15
+        env:
+          HC_DEPTS: '01,03,07,15'
         run: |
           set -o pipefail
-          timeout --signal=TERM --kill-after=15s 210s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks.log
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-a.log
+      - name: Atelier unlocks 26 38 42 43
+        if: ${{ always() }}
+        env:
+          HC_DEPTS: '26,38,42,43'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-b.log
+      - name: Atelier unlocks 63 69 73 74
+        if: ${{ always() }}
+        env:
+          HC_DEPTS: '63,69,73,74'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-c.log
       - name: Exhaustif 01 · Ain
         if: ${{ always() }}
         env:
@@ -159,5 +175,7 @@ jobs:
           set -o pipefail
           timeout --signal=TERM --kill-after=15s 180s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-exhaustive-74.log
 
-# L'exhaustif est volontairement découpé par département : mêmes critères V2, aucun assouplissement,
+# Les parcours Atelier sont découpés par lots de quatre départements afin de garder
+# exactement les mêmes assertions navigateur sans masquer un défaut derrière un plafond global.
+# L'exhaustif reste volontairement découpé par département : mêmes critères V2, aucun assouplissement,
 # et chaque département s'exécute même si un précédent échoue, pour obtenir les 12 verdicts d'un seul run.
