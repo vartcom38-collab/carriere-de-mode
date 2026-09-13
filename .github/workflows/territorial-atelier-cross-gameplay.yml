@@ -1,0 +1,42 @@
+name: Territoires → Atelier Cross Gameplay
+
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - 'hc-live/territorial-signal-runtime-v1.js'
+      - 'hc-live/atelier-raster/**'
+      - 'hc-live/ville/**'
+      - 'hc-live/qa/territorial-atelier-unlocks-e2e.mjs'
+      - '.github/workflows/territorial-atelier-cross-gameplay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  atelier-cross-gameplay:
+    name: AURA ${{ matrix.dept }} → Atelier
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        dept: ['01','03','07','15','26','38','42','43','63','69','73','74']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
+          sleep 2
+      - name: Validate territorial unlock in real Atelier
+        env:
+          HC_DEPTS: ${{ matrix.dept }}
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 75s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-${{ matrix.dept }}.log
