@@ -51,6 +51,15 @@ const CREATIVE_FIXES={
  'tier2-montlu-on-2':{palette:['vert canal','bleu gris','brique'],materials:['toile de coton','sergé','cordage'],motifs:['reflets d’eau','écluses','lignes de halage']},
  'tier2-montlu-on-3':{palette:['acier','noir charbon','rouille'],materials:['denim','toile technique','métal'],motifs:['rayons de rotonde','rails','rivets']},
  'tier2-montlu-on-5':{palette:['noir scène','bordeaux','ivoire'],materials:['velours','satin','laine de costume'],motifs:['rideaux','plis de scène','lignes de vestiaire']},
+ /* Cantal — signatures créatives propres aux repères réels Salers / Saint-Flour. */
+ 'tier2-salers-0':{palette:['basalte sombre','pierre blonde','vert prairie'],materials:['laine','lin','cuir'],motifs:['façades de Salers','verticales de tours','pavés']},
+ 'tier2-salers-1':{palette:['écru laine','rouge profond','vert plateau'],materials:['laine','soie','feutre'],motifs:['étals','trames mêlées','petites séries']},
+ 'tier2-salers-3':{palette:['écru','gris mouton','brun atelier'],materials:['laine','feutre','fil épais'],motifs:['torsades','boucles','gestes d’atelier']},
+ 'tier2-salers-7':{palette:['vert plateau','gris basalte','bleu ciel'],materials:['laine','toile','cuir'],motifs:['lignes de crête','routes sinueuses','herbes hautes']},
+ 'tier2-saint-flour-0':{palette:['basalte noir','gris argent','ocre sec'],materials:['laine','lin','cuir'],motifs:['ville haute','verticales rocheuses','murailles']},
+ 'tier2-saint-flour-1':{palette:['gris lave','pierre sombre','rouille douce'],materials:['lin','laine sèche','cuir'],motifs:['ruelles anciennes','arcades','rythmes de façades']},
+ 'tier2-saint-flour-4':{palette:['écru','anthracite','brun naturel'],materials:['laine','feutre','fil cardé'],motifs:['torsades','maille dense','gestes d’atelier']},
+ 'tier2-saint-flour-8':{palette:['bleu horizon','gris basalte','vert plateau'],materials:['laine','toile','lin'],motifs:['horizons larges','courbes du relief','strates']},
  /* Brioude — signatures créatives des trois repères réels encore muets. */
  'tier2-brioude-0':{palette:['ivoire dentelle','pierre blonde','bleu grisé'],materials:['dentelle','lin','fil de coton'],motifs:['fuseaux','réseaux ajourés','rosaces']},
  'tier2-brioude-1':{palette:['pierre blonde','terre cuite','gris ardoise'],materials:['lin','laine sèche','cuir'],motifs:['arcades','façades anciennes','rythmes de ruelle']},
