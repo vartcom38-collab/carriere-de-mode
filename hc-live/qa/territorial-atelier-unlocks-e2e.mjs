@@ -21,7 +21,10 @@ for(const [code,name,city,cat] of selected){
  page.setDefaultTimeout(10000);
  await page.route('**/tile.openstreetmap.org/**',r=>r.abort());
  await page.addInitScript(p=>{
+  const seeded='__hc-qa-territorial-atelier-seeded';
+  if(localStorage.getItem(seeded)==='1')return;
   localStorage.clear();
+  localStorage.setItem(seeded,'1');
   localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify({city:p.city,departmentCode:p.code,departmentName:p.name,lat:45.8,lng:4.8,reason:'visit'}));
  },{code,name,city});
  try{
