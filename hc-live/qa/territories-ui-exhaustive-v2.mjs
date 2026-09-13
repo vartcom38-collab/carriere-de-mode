@@ -23,7 +23,7 @@ const browser=await chromium.launch({headless:true});
 function isFiction(p){return !!(p.fictional||p.fictionalFamily||p.fictionalFuture||p.evolutive||/famille événementielle/i.test(String(p.name||'')))}
 
 async function runCity(code,city,control={}){
- const context=await browser.newContext();control.context=context;
+ const context=await browser.newContext({viewport:{width:1280,height:800}});control.context=context;
  const page=await context.newPage();page.setDefaultTimeout(8000);
  const presence={city,departmentCode:code,departmentName:NAMES[code],lat:46,lng:4,reason:'visit'};
  const pageErrors=[],consoleErrors=[];
@@ -73,8 +73,10 @@ async function runCity(code,city,control={}){
   const fresh=unique.filter(p=>p?.id&&!seen.has(p.id));
   const snapshots=await page.evaluate(places=>places.map(place=>{
    window.HCTerritorialPlaceInterfaceV1.open(place);
-   const q=s=>document.querySelector(s),img=q('#tpHero img');
-   return{title:q('#tpTitle')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!img,imgSrc:img?.getAttribute('src')||''};
+   const q=s=>document.querySelector(s),visible=el=>{if(!el)return false;const cs=getComputedStyle(el),r=el.getBoundingClientRect();return cs.display!=='none'&&cs.visibility!=='hidden'&&Number(cs.opacity||1)>0&&r.width>1&&r.height>1};
+   const overlay=q('#hcTerritorialPlaceOverlay'),shell=q('.tp-shell'),titleEl=q('#tpTitle'),sourceEl=q('#tpSource'),statusEl=q('#tpStatus'),bookEl=q('#tpBook'),travelEl=q('#tpTravel'),closeEl=q('#tpClose'),img=q('#tpHero img');
+   const sr=shell?.getBoundingClientRect(),actions=[...document.querySelectorAll('[data-tpa]')];
+   return{title:titleEl?.textContent?.trim()||'',source:sourceEl?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:statusEl?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:actions.length,visibleActions:actions.filter(visible).length,book:!!bookEl,travel:!!travelEl,img:!!img,imgSrc:img?.getAttribute('src')||'',overlayOpen:!!overlay?.classList.contains('open'),overlayVisible:visible(overlay),shellVisible:visible(shell),titleVisible:visible(titleEl),sourceVisible:visible(sourceEl),statusVisible:visible(statusEl),bookVisible:visible(bookEl),travelVisible:visible(travelEl),closeVisible:visible(closeEl),shellWidth:Math.round(sr?.width||0),shellHeight:Math.round(sr?.height||0),shellFitsViewport:!!sr&&sr.left>=-2&&sr.right<=innerWidth+2&&sr.top>=-2&&sr.bottom<=innerHeight+2};
   }),fresh);
 
   for(let i=0;i<fresh.length;i++){
@@ -82,16 +84,25 @@ async function runCity(code,city,control={}){
    seen.set(p.id,{code,city,name:p.name||p.id,fictional,cat:p.cat||p.category||null});
    const tag=`${code} | ${city} | ${p.id} | ${p.name||''}`;
    if(!ui.title)failures.push(tag+' · titre manquant');
+   if(!ui.overlayOpen||!ui.overlayVisible)failures.push(tag+' · interface de lieu non ouverte/visible');
+   if(!ui.shellVisible||ui.shellWidth<280||ui.shellHeight<220)failures.push(tag+` · panneau de lieu invisible ou dimensions invalides (${ui.shellWidth}×${ui.shellHeight})`);
+   if(!ui.shellFitsViewport)failures.push(tag+' · panneau de lieu déborde du viewport desktop');
+   if(!ui.titleVisible)failures.push(tag+' · titre présent mais non visible');
+   if(!ui.statusVisible)failures.push(tag+' · statut réel/fictif présent mais non visible');
+   if(!ui.sourceVisible)failures.push(tag+' · source média présente mais non visible');
+   if(!ui.closeVisible)failures.push(tag+' · bouton fermeture non visible');
    if(!String(p.text||p.description||'').trim())failures.push(tag+' · texte propre au lieu manquant');
    if(!String(p.unlock||'').trim())failures.push(tag+' · gain/effet propre au lieu manquant');
    if(ui.actions<2)failures.push(tag+` · actions insuffisantes (${ui.actions})`);
+   if(ui.visibleActions!==ui.actions)failures.push(tag+` · actions présentes mais non toutes visibles (${ui.visibleActions}/${ui.actions})`);
    if(!ui.book||!ui.travel)failures.push(tag+' · boutons Book/déplacement manquants');
+   if(!ui.bookVisible||!ui.travelVisible)failures.push(tag+' · boutons Book/déplacement présents mais non visibles');
    if(NEED_CHIPS.has(p.cat)&&!(p.materials?.length||p.motifs?.length||p.palette?.length))failures.push(tag+' · matières/motifs/palette absents');
    if(fictional){if(!/FICTIONNEL/.test(ui.status)||!/ILLUSTRATION|FICTIF/.test(ui.flag))failures.push(tag+' · fiction/événement évolutif mal signalé')}
    else{if(ui.flag!=='PHOTO RÉELLE')failures.push(tag+' · photo réelle validée absente');if(!ui.img||!ui.imgSrc)failures.push(tag+' · URL image absente');if(!ui.source||/manquante|revalider/i.test(ui.source))failures.push(tag+' · source image absente/non validée');if(!/RÉEL \/ DOCUMENTAIRE/.test(ui.status))failures.push(tag+' · statut documentaire absent')}
   }
-  if(pageErrors.some(x=>/SyntaxError|ReferenceError/.test(x)))failures.push(`${code} ${city} · erreur page: ${pageErrors.join(' | ')}`);
-  if(consoleErrors.some(x=>/Uncaught|ReferenceError|SyntaxError/i.test(x)))failures.push(`${code} ${city} · erreur console: ${consoleErrors.join(' | ')}`);
+  if(pageErrors.some(x=>/SyntaxError|ReferenceError|TypeError/.test(x)))failures.push(`${code} ${city} · erreur page: ${pageErrors.join(' | ')}`);
+  if(consoleErrors.some(x=>/Uncaught|ReferenceError|SyntaxError|TypeError/i.test(x)))failures.push(`${code} ${city} · erreur console: ${consoleErrors.join(' | ')}`);
  }finally{
   if(control.context===context)control.context=null;
   await Promise.race([context.close().catch(()=>{}),new Promise(r=>setTimeout(r,2500))]);
@@ -140,4 +151,4 @@ await browser.close();
 const rows=[...seen.entries()].map(([id,x])=>({id,...x}));console.log(`\nTOTAL CLIQUABLES UNIQUES${ONLY?' '+ONLY:''}: ${rows.length}`);console.log(`RÉELS: ${rows.filter(x=>!x.fictional).length} · FICTIFS/ÉVOLUTIFS: ${rows.filter(x=>x.fictional).length}`);
 if(warnings.length){console.log(`AVERTISSEMENTS: ${warnings.length}`);for(const w of warnings)console.log('!',w)}
 const uniq=[...new Set(failures)];if(uniq.length){console.error(`\nRECETTE EXHAUSTIVE${ONLY?' '+ONLY:''}: ${uniq.length} défaut(s)`);for(const f of uniq)console.error('✗',f);process.exit(1)}
-console.log(`\n✓ RECETTE EXHAUSTIVE AURA${ONLY?' '+ONLY:''} PASSÉE · chaque marqueur cliquable a contenu, gain, actions et contrat média cohérents.`);
+console.log(`\n✓ RECETTE EXHAUSTIVE AURA${ONLY?' '+ONLY:''} PASSÉE · chaque marqueur cliquable a contenu, gain, actions, contrat média et interface visible cohérents.`);
