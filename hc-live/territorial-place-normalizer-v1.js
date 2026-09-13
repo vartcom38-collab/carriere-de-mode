@@ -1,10 +1,19 @@
-/* Haute Couture Live — normalisation des marqueurs territoriaux V2
+/* Haute Couture Live — normalisation des marqueurs territoriaux V3
    Empêche un contenu inventé d'être présenté comme documentaire et sécurise
    le chargement async des packs carte qui peuvent arriver avant HCLocalMap.
 */
 (function(){
 'use strict';
-if(window.__HCTerritorialPlaceNormalizerV2)return;window.__HCTerritorialPlaceNormalizerV2=true;
+if(window.__HCTerritorialPlaceNormalizerV3)return;window.__HCTerritorialPlaceNormalizerV3=true;
+
+/* Couche média 42/69 additive. Elle écrit le registre documentaire local sans
+   modifier les marqueurs ni les contrôles QA. Le fichier est local à /ville/. */
+(function loadLoireRhoneMedia(){
+ if(window.__HCTerritorialPlaceMediaLoireRhoneV1||document.getElementById('hcMediaLoireRhoneV1'))return;
+ const s=document.createElement('script');s.id='hcMediaLoireRhoneV1';s.src='./territorial-place-media-loire-rhone-v1.js?v=20260913-qa1';
+ document.head.appendChild(s);
+})();
+
 function fictional(p){
  if(!p)return false;
  if(p.fictional===true||p.fictionalFamily===true||p.fictionalFuture===true||p.evolutive===true)return true;
@@ -23,10 +32,10 @@ function normalize(p){
  return p;
 }
 function wrap(map){
- if(!map?.addMarker||map.__hcPlaceNormalizerV2)return map;
+ if(!map?.addMarker||map.__hcPlaceNormalizerV3)return map;
  const original=map.addMarker.bind(map);
  map.addMarker=function(place){return original(normalize(place))};
- map.__hcPlaceNormalizerV2=true;
+ map.__hcPlaceNormalizerV3=true;
  return map;
 }
 
@@ -66,5 +75,5 @@ try{
  }
 }catch(_){ }
 if(current){current=wrap(current);mapReady=true;observer.disconnect();queueMicrotask(()=>replayEarly())}
-window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2={version:2,normalize,isFictional:fictional,wrap,replayEarly};
+window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2=window.HCTerritorialPlaceNormalizerV3={version:3,normalize,isFictional:fictional,wrap,replayEarly};
 })();
