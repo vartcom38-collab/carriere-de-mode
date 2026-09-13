@@ -1,18 +1,32 @@
-/* Haute Couture Live — normalisation des marqueurs territoriaux V3
-   Empêche un contenu inventé d'être présenté comme documentaire et sécurise
-   le chargement async des packs carte qui peuvent arriver avant HCLocalMap.
+/* Haute Couture Live — normalisation des marqueurs territoriaux V4
+   Empêche un contenu inventé d'être présenté comme documentaire, applique les
+   enrichissements territoriaux strictement identifiés avant injection carte et
+   sécurise le chargement async des packs qui peuvent arriver avant HCLocalMap.
 */
 (function(){
 'use strict';
-if(window.__HCTerritorialPlaceNormalizerV3)return;window.__HCTerritorialPlaceNormalizerV3=true;
+if(window.__HCTerritorialPlaceNormalizerV4)return;window.__HCTerritorialPlaceNormalizerV4=true;
 
 /* Couche média 42/69 additive. Elle écrit le registre documentaire local sans
-   modifier les marqueurs ni les contrôles QA. Le fichier est local à /ville/. */
+   modifier les contrôles QA. Le fichier est local à /ville/. */
 (function loadLoireRhoneMedia(){
  if(window.__HCTerritorialPlaceMediaLoireRhoneV1||document.getElementById('hcMediaLoireRhoneV1'))return;
- const s=document.createElement('script');s.id='hcMediaLoireRhoneV1';s.src='./territorial-place-media-loire-rhone-v1.js?v=20260913-qa1';
+ const s=document.createElement('script');s.id='hcMediaLoireRhoneV1';s.src='./territorial-place-media-loire-rhone-v1.js?v=20260913-qa2';
  document.head.appendChild(s);
 })();
+
+const CREATIVE_FIXES={
+ 'charlieu-centre':{palette:['pierre claire','ocre doux','gris ardoise'],materials:['lin','laine'],motifs:['arcades','trame médiévale']},
+ 'charlieu-atelier':{palette:['écru','bleu atelier','bois'],materials:['soie','fils','bois'],motifs:['navette','chaîne-trame']},
+ 'tier2-montbrison-0':{palette:['pierre claire','vert jardin','ardoise'],materials:['lin','laine fine'],motifs:['façades','trame historique']},
+ 'tier2-montbrison-2':{palette:['ivoire','rose poudré','bleu nuit'],materials:['soie','crêpe','dentelle'],motifs:['cérémonie','plis souples']},
+ 'tier2-montbrison-8':{palette:['vert tendre','pierre','bleu eau'],materials:['lin','toile'],motifs:['jardin','courbes de promenade']},
+ 'vfs-centre':{palette:['pierre dorée','crème','gris zinc'],materials:['lin','laine fine'],motifs:['façades','rythme urbain']},
+ 'vfs-beaujolais':{palette:['lie-de-vin','pierre dorée','vert vigne'],materials:['soie','velours','lin'],motifs:['vigne','courbes du relief']},
+ 'tier2-tarare-0':{palette:['écru','gris atelier','bleu nuit'],materials:['voilage','coton','fils'],motifs:['trame','mémoire industrielle']},
+ 'tier2-tarare-3':{palette:['blanc cassé','gris perle','bleu brume'],materials:['voilage','organza','fils fins'],motifs:['transparence','rayures légères']},
+ 'tier2-tarare-8':{palette:['vert sombre','pierre','bleu horizon'],materials:['laine','toile'],motifs:['relief','lignes d’horizon']}
+};
 
 function fictional(p){
  if(!p)return false;
@@ -26,16 +40,22 @@ function fictional(p){
  if(/famille événementielle|famille evolutive|famille évolutive/.test(text+' '+String(p.name||'').toLowerCase()))return true;
  return false;
 }
+function enrichCreative(p){
+ const fix=CREATIVE_FIXES[p?.id];if(!fix)return p;
+ for(const k of ['palette','materials','motifs'])if(!(p[k]?.length))p[k]=[...fix[k]];
+ return p;
+}
 function normalize(p){
  if(!p||typeof p!=='object')return p;
+ enrichCreative(p);
  if(fictional(p)){p.fictional=true;p.documentaryContext=false}
  return p;
 }
 function wrap(map){
- if(!map?.addMarker||map.__hcPlaceNormalizerV3)return map;
+ if(!map?.addMarker||map.__hcPlaceNormalizerV4)return map;
  const original=map.addMarker.bind(map);
  map.addMarker=function(place){return original(normalize(place))};
- map.__hcPlaceNormalizerV3=true;
+ map.__hcPlaceNormalizerV4=true;
  return map;
 }
 
@@ -75,5 +95,5 @@ try{
  }
 }catch(_){ }
 if(current){current=wrap(current);mapReady=true;observer.disconnect();queueMicrotask(()=>replayEarly())}
-window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2=window.HCTerritorialPlaceNormalizerV3={version:3,normalize,isFictional:fictional,wrap,replayEarly};
+window.HCTerritorialPlaceNormalizerV1=window.HCTerritorialPlaceNormalizerV2=window.HCTerritorialPlaceNormalizerV3=window.HCTerritorialPlaceNormalizerV4={version:4,normalize,isFictional:fictional,wrap,replayEarly};
 })();
