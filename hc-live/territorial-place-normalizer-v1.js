@@ -16,7 +16,8 @@ if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNor
   ['hcMediaHauteSavoieV1','./territorial-place-media-haute-savoie-v1.js?v=20260913-hs74-1','__HCTerritorialPlaceMediaHauteSavoieV1'],
   ['hcMediaSavoieV1','./territorial-place-media-savoie-v1.js?v=20260913-sav73-1','__HCTerritorialPlaceMediaSavoieV1'],
   ['hcMediaAllierV1','./territorial-place-media-allier-v1.js?v=20260913-allier03-1','__HCTerritorialPlaceMediaAllierV1'],
-  ['hcMediaCantalV1','./territorial-place-media-cantal-v1.js?v=20260913-cantal15-1','__HCTerritorialPlaceMediaCantalV1']
+  ['hcMediaCantalV1','./territorial-place-media-cantal-v1.js?v=20260913-cantal15-1','__HCTerritorialPlaceMediaCantalV1'],
+  ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260913-hl43-1','__HCTerritorialPlaceMediaHauteLoireV1']
  ];
  for(const [id,src,guard] of packs){
   if(window[guard]||document.getElementById(id))continue;
@@ -39,7 +40,11 @@ const CREATIVE_FIXES={
  'tier2-montlu-on-0':{palette:['grès chaud','gris ardoise','rouille sourde'],materials:['lin lourd','laine sèche','cuir patiné'],motifs:['ruelles médiévales','pans de bois','verticales de tour']},
  'tier2-montlu-on-2':{palette:['vert canal','bleu gris','brique'],materials:['toile de coton','sergé','cordage'],motifs:['reflets d’eau','écluses','lignes de halage']},
  'tier2-montlu-on-3':{palette:['acier','noir charbon','rouille'],materials:['denim','toile technique','métal'],motifs:['rayons de rotonde','rails','rivets']},
- 'tier2-montlu-on-5':{palette:['noir scène','bordeaux','ivoire'],materials:['velours','satin','laine de costume'],motifs:['rideaux','plis de scène','lignes de vestiaire']}
+ 'tier2-montlu-on-5':{palette:['noir scène','bordeaux','ivoire'],materials:['velours','satin','laine de costume'],motifs:['rideaux','plis de scène','lignes de vestiaire']},
+ /* Brioude — signatures créatives des trois repères réels encore muets. */
+ 'tier2-brioude-0':{palette:['ivoire dentelle','pierre blonde','bleu grisé'],materials:['dentelle','lin','fil de coton'],motifs:['fuseaux','réseaux ajourés','rosaces']},
+ 'tier2-brioude-1':{palette:['pierre blonde','terre cuite','gris ardoise'],materials:['lin','laine sèche','cuir'],motifs:['arcades','façades anciennes','rythmes de ruelle']},
+ 'tier2-brioude-4':{palette:['écru','ocre atelier','bleu encre'],materials:['lin','fil','bois'],motifs:['trame artisanale','gestes d’atelier','géométries textiles']}
 };
 
 function fictional(p){
