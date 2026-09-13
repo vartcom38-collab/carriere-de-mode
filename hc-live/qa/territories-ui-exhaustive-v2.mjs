@@ -121,7 +121,21 @@ async function runCityBounded(code,city,ms=20000){
 }
 
 const entries=Object.entries(DEPTS).filter(([c])=>!ONLY||c===ONLY);if(ONLY&&!entries.length)throw new Error('HC_DEPT inconnu: '+ONLY);
-for(const [code,cities] of entries){for(const city of cities){try{await runCityBounded(code,city,20000)}catch(e){failures.push(`${code} ${city} · chargement/QA impossible: ${e.message}`)}}}
+for(const [code,cities] of entries){
+ for(const city of cities){
+  const seenBefore=new Set(seen.keys()),failBefore=failures.length;
+  try{await runCityBounded(code,city,20000)}
+  catch(e){
+   if(/timeout ville/.test(String(e?.message||e))){
+    failures.length=failBefore;
+    for(const id of [...seen.keys()])if(!seenBefore.has(id))seen.delete(id);
+    warnings.push(`${code} ${city} · premier passage expiré, retry unique avec le même timeout 20 s`);
+    try{await runCityBounded(code,city,20000);continue}catch(retryError){e=retryError}
+   }
+   failures.push(`${code} ${city} · chargement/QA impossible: ${e.message}`);
+  }
+ }
+}
 await browser.close();
 const rows=[...seen.entries()].map(([id,x])=>({id,...x}));console.log(`\nTOTAL CLIQUABLES UNIQUES${ONLY?' '+ONLY:''}: ${rows.length}`);console.log(`RÉELS: ${rows.filter(x=>!x.fictional).length} · FICTIFS/ÉVOLUTIFS: ${rows.filter(x=>x.fictional).length}`);
 if(warnings.length){console.log(`AVERTISSEMENTS: ${warnings.length}`);for(const w of warnings)console.log('!',w)}
