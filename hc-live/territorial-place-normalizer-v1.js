@@ -8,7 +8,8 @@
 if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNormalizerV5=true;
 
 /* Couches média territoriales additives. Elles écrivent le registre documentaire
-   local sans modifier les contrôles QA. Les fichiers sont locaux à /ville/. */
+   local sans modifier les contrôles QA. Les packs dépendants du registre AURA ne
+   sont injectés qu'une fois HCTerritorialPlaceMediaAURA réellement initialisé. */
 (function loadTerritorialMedia(){
  const packs=[
   ['hcMediaLoireRhoneV1','./territorial-place-media-loire-rhone-v1.js?v=20260913-qa2','__HCTerritorialPlaceMediaLoireRhoneV2'],
@@ -20,10 +21,18 @@ if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNor
   ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260913-hl43-1','__HCTerritorialPlaceMediaHauteLoireV1'],
   ['hcMediaPuyDeDomeV1','./territorial-place-media-puy-de-dome-v1.js?v=20260913-pdd63-1','__HCTerritorialPlaceMediaPuyDeDomeV1']
  ];
- for(const [id,src,guard] of packs){
-  if(window[guard]||document.getElementById(id))continue;
-  const s=document.createElement('script');s.id=id;s.src=src;document.head.appendChild(s);
+ let attempts=0;
+ function inject(){
+  if(!window.HCTerritorialPlaceMediaAURA?.items){
+   if(attempts++<80)setTimeout(inject,25);
+   return;
+  }
+  for(const [id,src,guard] of packs){
+   if(window[guard]||document.getElementById(id))continue;
+   const s=document.createElement('script');s.id=id;s.src=src;document.head.appendChild(s);
+  }
  }
+ inject();
 })();
 
 const CREATIVE_FIXES={
