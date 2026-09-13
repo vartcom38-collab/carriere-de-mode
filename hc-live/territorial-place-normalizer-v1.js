@@ -31,7 +31,12 @@ const CREATIVE_FIXES={
  'vfs-beaujolais':{palette:['lie-de-vin','pierre dorée','vert vigne'],materials:['soie','velours','lin'],motifs:['vigne','courbes du relief']},
  'tier2-tarare-0':{palette:['écru','gris atelier','bleu nuit'],materials:['voilage','coton','fils'],motifs:['trame','mémoire industrielle']},
  'tier2-tarare-3':{palette:['blanc cassé','gris perle','bleu brume'],materials:['voilage','organza','fils fins'],motifs:['transparence','rayures légères']},
- 'tier2-tarare-8':{palette:['vert sombre','pierre','bleu horizon'],materials:['laine','toile'],motifs:['relief','lignes d’horizon']}
+ 'tier2-tarare-8':{palette:['vert sombre','pierre','bleu horizon'],materials:['laine','toile'],motifs:['relief','lignes d’horizon']},
+ /* Montluçon — quatre repères réels qui doivent produire une matière créative propre. */
+ 'tier2-montlu-on-0':{palette:['grès chaud','gris ardoise','rouille sourde'],materials:['lin lourd','laine sèche','cuir patiné'],motifs:['ruelles médiévales','pans de bois','verticales de tour']},
+ 'tier2-montlu-on-2':{palette:['vert canal','bleu gris','brique'],materials:['toile de coton','sergé','cordage'],motifs:['reflets d’eau','écluses','lignes de halage']},
+ 'tier2-montlu-on-3':{palette:['acier','noir charbon','rouille'],materials:['denim','toile technique','métal'],motifs:['rayons de rotonde','rails','rivets']},
+ 'tier2-montlu-on-5':{palette:['noir scène','bordeaux','ivoire'],materials:['velours','satin','laine de costume'],motifs:['rideaux','plis de scène','lignes de vestiaire']}
 };
 
 function fictional(p){
