@@ -1,6 +1,6 @@
 name: Territoires UI E2E
 
-# Validation cache-bust AURA — 2026-09-12
+# Validation cache-bust AURA — 2026-09-13
 on:
   push:
     branches:
@@ -10,6 +10,8 @@ on:
       - 'hc-live/*territor*.js'
       - 'hc-live/*map*.js'
       - 'hc-live/*dense*.js'
+      - 'hc-live/atelier-raster/atelier-discovery-engine-v1.js'
+      - 'hc-live/qa/territorial-atelier-unlocks-e2e.mjs'
       - 'hc-live/qa/territories-ui-e2e.mjs'
       - 'hc-live/qa/territories-ui-cantal-e2e.mjs'
       - 'hc-live/qa/territories-ui-haute-loire-e2e.mjs'
@@ -28,7 +30,7 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - name: Install Playwright Chromium
@@ -68,6 +70,10 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
+      - name: Run 12 départements · déblocages vers Atelier
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 210s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks.log
       - name: Exhaustif 01 · Ain
         if: ${{ always() }}
         env:
