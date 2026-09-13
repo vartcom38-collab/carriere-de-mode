@@ -69,9 +69,17 @@ async function runCity(code,city,control={}){
   for(const p of markers){if(!p?.id||ids.has(p.id))continue;ids.add(p.id);unique.push(p)}
   console.log(`CITY ${code} ${city} · ${unique.length} marqueur(s)`);
   if(!unique.length)failures.push(`${code} ${city}: aucun marqueur injecté`);
-  for(const p of unique){
-   if(seen.has(p.id))continue;const fictional=isFiction(p);seen.set(p.id,{code,city,name:p.name||p.id,fictional,cat:p.cat||p.category||null});
-   const ui=await page.evaluate(place=>{window.HCTerritorialPlaceInterfaceV1.open(place);const q=s=>document.querySelector(s),img=q('#tpHero img');return{title:q('#tpTitle')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!img,imgSrc:img?.getAttribute('src')||''}},p);
+
+  const fresh=unique.filter(p=>p?.id&&!seen.has(p.id));
+  const snapshots=await page.evaluate(places=>places.map(place=>{
+   window.HCTerritorialPlaceInterfaceV1.open(place);
+   const q=s=>document.querySelector(s),img=q('#tpHero img');
+   return{title:q('#tpTitle')?.textContent?.trim()||'',source:q('#tpSource')?.textContent?.trim()||'',flag:q('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:q('#tpStatus')?.textContent?.trim()||'',chips:document.querySelectorAll('#tpChips .tp-chip').length,actions:document.querySelectorAll('[data-tpa]').length,book:!!q('#tpBook'),travel:!!q('#tpTravel'),img:!!img,imgSrc:img?.getAttribute('src')||''};
+  }),fresh);
+
+  for(let i=0;i<fresh.length;i++){
+   const p=fresh[i],ui=snapshots[i],fictional=isFiction(p);
+   seen.set(p.id,{code,city,name:p.name||p.id,fictional,cat:p.cat||p.category||null});
    const tag=`${code} | ${city} | ${p.id} | ${p.name||''}`;
    if(!ui.title)failures.push(tag+' · titre manquant');
    if(!String(p.text||p.description||'').trim())failures.push(tag+' · texte propre au lieu manquant');
