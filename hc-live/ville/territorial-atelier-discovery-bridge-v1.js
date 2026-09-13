@@ -38,6 +38,7 @@ function placeType(d={}){
  if(/^TECHNIQUE_|^CRAFT_/.test(u))return cat==='jewelry'?'jeweler':'regionalCraft';
  if(u==='ARCHIVE_REFERENCE'||u==='BOOK_RESEARCH')return 'archives';
  if(u==='VINTAGE_REFERENCE')return 'brocante';
+ if(['DESIGN_REFERENCE','MOTIF_REFERENCE','PALETTE_REFERENCE','PHOTO_REFERENCE'].includes(u))return ['nature','view','photo'].includes(cat)?'travel':'museum';
  if(u==='RELATION_CONTACT'||u==='PHONE_CONTACT'||u==='CAREER_LEAD'||u==='LOCAL_CONTACT'||u==='CLIENT_REFERENCE')return null;
  const byCat={fabric:'mercerie',craft:'regionalCraft',culture:'museum',heritage:'archives',markets:'regionalCraft',vintage:'brocante',nature:'travel',view:'travel',libraries:'archives',jewelry:'jeweler',shop:'boutique',photo:'travel'};
  return byCat[cat]||null;
@@ -55,9 +56,6 @@ function processSignal(detail={}){
  if(!type){remember(detail,null,[]);window.dispatchEvent(new CustomEvent('hc-territorial-atelier-discovery',{detail:{signal:detail,type:null,items:[],ignored:true}}));return[]}
  const E=engine();if(!E){queue.push(detail);return[]}
  const items=E.unlockFrom('place',type,{count:1,sourceId:detail.id,placeId:detail.placeId||null,city:detail.city||null,tierGrace:1});
- /* Une action n'est marquée comme traitée que lorsque le moteur est bien prêt.
-    Même si aucun nouveau candidat n'existe, le résultat est persistant et évite
-    de reroller la même action à chaque clic. */
  remember(detail,type,items);
  window.dispatchEvent(new CustomEvent('hc-territorial-atelier-discovery',{detail:{signal:detail,type,items,ignored:false}}));
  return items;
@@ -67,8 +65,6 @@ function loadSeq(i=0){
  if(i>=LOADS.length){flush();return}
  const [src,attr]=LOADS[i];
  if(document.querySelector('script['+attr+']')){loadSeq(i+1);return}
- /* Si Nîmes ou une autre couche a déjà chargé le module global, on ne recharge
-    pas son fichier : on passe simplement à la dépendance suivante. */
  const globals=[window.HCAtelierCatalog,window.HCAtelierCatalogV2,window.HCAtelierCatalogV3,window.HCAtelierStarterBaseV2,window.HCAtelierUnlockPacks,window.HCAtelierDiscoveryBindings,window.HCAtelierDiscoveryEngine];
  if(globals[i]){loadSeq(i+1);return}
  const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(attr,'1');s.onload=()=>loadSeq(i+1);s.onerror=()=>{console.warn('[Territoires Atelier] chargement impossible',src);loadSeq(i+1)};document.head.appendChild(s);
