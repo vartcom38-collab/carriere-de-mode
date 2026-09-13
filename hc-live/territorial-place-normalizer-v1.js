@@ -17,7 +17,8 @@ if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNor
   ['hcMediaSavoieV1','./territorial-place-media-savoie-v1.js?v=20260913-sav73-1','__HCTerritorialPlaceMediaSavoieV1'],
   ['hcMediaAllierV1','./territorial-place-media-allier-v1.js?v=20260913-allier03-1','__HCTerritorialPlaceMediaAllierV1'],
   ['hcMediaCantalV1','./territorial-place-media-cantal-v1.js?v=20260913-cantal15-1','__HCTerritorialPlaceMediaCantalV1'],
-  ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260913-hl43-1','__HCTerritorialPlaceMediaHauteLoireV1']
+  ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260913-hl43-1','__HCTerritorialPlaceMediaHauteLoireV1'],
+  ['hcMediaPuyDeDomeV1','./territorial-place-media-puy-de-dome-v1.js?v=20260913-pdd63-1','__HCTerritorialPlaceMediaPuyDeDomeV1']
  ];
  for(const [id,src,guard] of packs){
   if(window[guard]||document.getElementById(id))continue;
@@ -44,7 +45,20 @@ const CREATIVE_FIXES={
  /* Brioude — signatures créatives des trois repères réels encore muets. */
  'tier2-brioude-0':{palette:['ivoire dentelle','pierre blonde','bleu grisé'],materials:['dentelle','lin','fil de coton'],motifs:['fuseaux','réseaux ajourés','rosaces']},
  'tier2-brioude-1':{palette:['pierre blonde','terre cuite','gris ardoise'],materials:['lin','laine sèche','cuir'],motifs:['arcades','façades anciennes','rythmes de ruelle']},
- 'tier2-brioude-4':{palette:['écru','ocre atelier','bleu encre'],materials:['lin','fil','bois'],motifs:['trame artisanale','gestes d’atelier','géométries textiles']}
+ 'tier2-brioude-4':{palette:['écru','ocre atelier','bleu encre'],materials:['lin','fil','bois'],motifs:['trame artisanale','gestes d’atelier','géométries textiles']},
+ /* Riom — le centre historique doit lui aussi produire une matière créative. */
+ 'riom-centre':{palette:['pierre blonde','gris lave','vert patiné'],materials:['lin','laine','pierre volcanique'],motifs:['tour d’horloge','façades classiques','rythmes de rues']}
+};
+
+const UNLOCK_FIXES={
+ 'pdd-d-thiers':'Débloque l’inspiration « précision coutelière »',
+ 'pdd-d-riom':'Débloque l’inspiration « archives de Riom »',
+ 'pdd-d-volvic':'Débloque l’inspiration « lave et pierre de Volvic »',
+ 'pdd-d-montdore':'Débloque l’inspiration « élégance thermale alpine »',
+ 'pdd-d-bourboule':'Débloque l’inspiration « villégiature thermale »',
+ 'pdd-d-issoire':'Débloque l’inspiration « patrimoine roman »',
+ 'pdd-d-ambert':'Débloque l’inspiration « papier chiffon »',
+ 'pdd-d-orcines':'Débloque l’inspiration « relief volcanique »'
 };
 
 function fictional(p){
@@ -64,9 +78,14 @@ function enrichCreative(p){
  for(const k of ['palette','materials','motifs'])if(!(p[k]?.length))p[k]=[...fix[k]];
  return p;
 }
+function enrichUnlock(p){
+ const fix=UNLOCK_FIXES[p?.id];
+ if(fix&&!String(p.unlock||'').trim())p.unlock=fix;
+ return p;
+}
 function normalize(p){
  if(!p||typeof p!=='object')return p;
- enrichCreative(p);
+ enrichCreative(p);enrichUnlock(p);
  if(fictional(p)){p.fictional=true;p.documentaryContext=false}
  return p;
 }
