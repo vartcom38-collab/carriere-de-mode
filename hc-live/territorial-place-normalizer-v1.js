@@ -13,7 +13,8 @@ if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNor
  const packs=[
   ['hcMediaLoireRhoneV1','./territorial-place-media-loire-rhone-v1.js?v=20260913-qa2','__HCTerritorialPlaceMediaLoireRhoneV2'],
   ['hcMediaArdecheV1','./territorial-place-media-ardeche-v1.js?v=20260913-qa1','__HCTerritorialPlaceMediaArdecheV1'],
-  ['hcMediaHauteSavoieV1','./territorial-place-media-haute-savoie-v1.js?v=20260913-hs74-1','__HCTerritorialPlaceMediaHauteSavoieV1']
+  ['hcMediaHauteSavoieV1','./territorial-place-media-haute-savoie-v1.js?v=20260913-hs74-1','__HCTerritorialPlaceMediaHauteSavoieV1'],
+  ['hcMediaSavoieV1','./territorial-place-media-savoie-v1.js?v=20260913-sav73-1','__HCTerritorialPlaceMediaSavoieV1']
  ];
  for(const [id,src,guard] of packs){
   if(window[guard]||document.getElementById(id))continue;
