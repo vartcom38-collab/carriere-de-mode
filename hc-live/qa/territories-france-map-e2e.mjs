@@ -5,6 +5,8 @@ const AURA=['01','03','07','15','26','38','42','43','63','69','73','74'];
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1500,height:1000}});
 page.setDefaultTimeout(15000);
+page.on('console',msg=>console.log('BROWSER:',msg.type(),msg.text()));
+page.on('pageerror',err=>console.log('BROWSER_PAGEERROR:',err.message));
 
 try{
   console.log('QA_FRANCE: seed presence');
