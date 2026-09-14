@@ -50,7 +50,10 @@ window.HCLocalMap={map,groups,cats,filters,addMarker(p){const g=groups[p.cat]||g
 $('#closeGuide').onclick=()=>$('#overlay').classList.remove('open');$('#overlay').onclick=e=>{if(e.target===$('#overlay'))$('#overlay').classList.remove('open')};$('#saveBook').onclick=()=>{if(!currentGuide||!window.HCBook)return;HCBook.add({id:'place-'+currentGuide.id,title:currentGuide.name,type:'Lieu',category:'Lieux',place:currentGuide.where||currentGuide.city||city,summary:currentGuide.text||'',palette:currentGuide.palette||[],materials:currentGuide.materials||[],motifs:currentGuide.motifs||[],tags:[...(currentGuide.palette||[]),...(currentGuide.materials||[]),...(currentGuide.motifs||[])]});$('#saveBook').textContent='✓ AJOUTÉ À MON BOOK'};$('#visitHere').onclick=()=>travelTo(currentGuide);
 function sync(){cats.forEach(([id])=>{if(filters[id]?.checked){if(!map.hasLayer(groups[id]))groups[id].addTo(map)}else if(map.hasLayer(groups[id]))map.removeLayer(groups[id])});$('#mapTitle').textContent=(map.getZoom()>=14?'VILLE / QUARTIER':map.getZoom()>=9?'TERRITOIRE':'FRANCE')+' · '+city.toUpperCase()}document.querySelectorAll('[data-filter]').forEach(x=>x.addEventListener('change',sync));map.on('zoomend',sync);sync();
 $('#viewFrance').onclick=()=>map.setView([46.6,2.2],6);$('#viewHere').onclick=()=>map.setView([lat,lng],13);
-const s=document.createElement('script');s.src='../territorial-map-registry-v2.js?v=20260914-parity1';s.async=true;document.head.appendChild(s);setTimeout(()=>map.invalidateSize(),120)
+const s=document.createElement('script');s.src='../territorial-map-registry-v2.js?v=20260914-parity1';s.async=true;document.head.appendChild(s);
+const d=document.createElement('script');d.src='../aura-depth-expansion-v1.js?v=20260914-depth1';d.async=true;document.head.appendChild(d);
+const f=document.createElement('script');f.src='../aura-cultural-figures-v1.js?v=20260914-figures1';f.async=true;document.head.appendChild(f);
+setTimeout(()=>map.invalidateSize(),120)
 })();
 </script>
 </body>
