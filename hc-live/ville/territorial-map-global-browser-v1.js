@@ -73,8 +73,12 @@ async function boot(bridge){
   refreshUi(byDept,total,true);
 
   function renderDept(code){
+    const t0=performance.now();
+    console.log('[HC France map] render start',code);
     Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
     detailLayer.clearLayers();
+    const t1=performance.now();
+    console.log('[HC France map] render cleared',code,Math.round(t1-t0));
     const pts=byDept.get(code)||[];
     pts.forEach(p=>{
       const marker=L.circleMarker([Number(p.lat),Number(p.lng)],{
@@ -84,9 +88,13 @@ async function boot(bridge){
       marker.on('click',()=>window.HCLocalMapOpenGuide?.(p));
       marker.addTo(detailLayer);
     });
+    const t2=performance.now();
+    console.log('[HC France map] render points',code,pts.length,Math.round(t2-t1));
     if(!pts.length)return;
     const bounds=L.latLngBounds(pts.map(p=>[Number(p.lat),Number(p.lng)]));
-    map.fitBounds(bounds.pad(.12),{maxZoom:10});
+    map.fitBounds(bounds.pad(.12),{maxZoom:10,animate:false});
+    const t3=performance.now();
+    console.log('[HC France map] render fit',code,Math.round(t3-t2),'total',Math.round(t3-t0));
     const title=document.querySelector('#mapTitle');
     if(title)title.textContent=`DEPARTEMENT ${code} · ${NAME[code]||''}`;
   }
@@ -159,13 +167,13 @@ function installUi(map,presence,home,byDept,getTotal,renderDept){
     document.querySelector('#showFrance').onclick=()=>{
       Object.values(window.HCLocalMap.groups||{}).forEach(group=>group?.clearLayers?.());
       window.HCLocalMap.globalDetailLayer?.clearLayers?.();
-      map.setView([46.6,2.2],6);
+      map.setView([46.6,2.2],6,{animate:false});
       const title=document.querySelector('#mapTitle');if(title)title.textContent='FRANCE · TERRITOIRES INTEGRES';
     };
     document.querySelector('#showMe').onclick=()=>{
       const p=presence||home;
-      if(p?.lat!=null&&p?.lng!=null)map.setView([Number(p.lat),Number(p.lng)],12);
-      else map.setView([46.6,2.2],6);
+      if(p?.lat!=null&&p?.lng!=null)map.setView([Number(p.lat),Number(p.lng)],12,{animate:false});
+      else map.setView([46.6,2.2],6,{animate:false});
     };
   }
 
