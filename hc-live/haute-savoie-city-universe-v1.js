@@ -1,0 +1,13 @@
+/* Haute Couture Live — univers villes Haute-Savoie V1 */
+(function(){'use strict';if(window.__HCHauteSavoieCityUniverseV1)return;window.__HCHauteSavoieCityUniverseV1=true;const ctx=window.HCTerritoryContext,p=ctx?.getPresence?.();if(String(p?.departmentCode||'')!=='74')return;const city=String(p.city||'');const U={
+'Annecy':{identity:'lac / design / élégance / cérémonie / éditorial',materials:['soie','lin','laine fine'],motifs:['reflet','canal','arcade'],palette:['bleu lac','ivoire','pierre']},
+'Chamonix-Mont-Blanc':{identity:'alpinisme / performance / expédition / luxe sportif',materials:['membrane','ripstop','laine','duvet'],motifs:['cordée','crête','glacier'],palette:['blanc','gris roche','bleu glacier']},
+'Le Grand-Bornand':{identity:'laine / soie / tissage / alpage / artisanat',materials:['laine','soie','feutre'],motifs:['trame','maille','alpage'],palette:['écru','vert alpage','rouge sombre']},
+'Châtel':{identity:'station-village / frontière / hiver / petites capsules',materials:['laine','maille','cuir'],motifs:['chalet','piste','frontière'],palette:['bois','neige','sapin']},
+'Megève':{identity:'luxe alpin / hôtellerie / soirée / ski chic',materials:['cachemire','laine','soie','cuir'],motifs:['étoile','chalet','ligne ski'],palette:['crème','brun','noir']},
+'Évian-les-Bains':{identity:'thermalisme / Léman / villégiature / élégance',materials:['soie','crêpe','lin'],motifs:['source','vague','verrière'],palette:['bleu Léman','ivoire','or pâle']},
+'Thonon-les-Bains':{identity:'lac / artisanat / patrimoine / clientèle locale',materials:['lin','laine','cuir'],motifs:['port','eau','trame'],palette:['bleu','ardoise','écru']},
+'Morzine':{identity:'glisse / culture / sportswear / village',materials:['softshell','maille','toile technique'],motifs:['virage','piste','scène'],palette:['noir','rouge','bleu froid']},
+'Avoriaz':{identity:'architecture / snowboard / image / futurisme',materials:['membrane','nylon','maille technique'],motifs:['facette','verticale','trace'],palette:['bois sombre','blanc','orange']},
+'La Clusaz':{identity:'Aravis / ski / maille / artisanat',materials:['laine','maille','cuir'],motifs:['chevron','sapin','pente'],palette:['écru','vert forêt','brun']}
+};const u=U[city];if(!u)return;window.HCCityUniverse={version:1,departmentCode:'74',city,...u,fictionalGameplay:true};window.dispatchEvent(new CustomEvent('hc-city-universe-ready',{detail:window.HCCityUniverse}));})();

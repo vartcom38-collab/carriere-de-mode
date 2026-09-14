@@ -1,0 +1,45 @@
+name: QA territory harness fix oneoff
+
+on:
+  push:
+    branches: [territoires-france]
+    paths: ['.github/workflows/qa-territory-harness-fix-oneoff.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: territoires-france
+      - name: Fix media readiness and marker stabilization
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p=Path('hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.__HCTerritorialPlaceMediaAURAFinalV1,{timeout:12000});"
+          new="await page.waitForFunction(()=>!!window.HCTerritoryContext&&!!window.HCTerritorialPlaceInterfaceV1&&!!window.HCTerritorialPlaceMediaAURAFinal,{timeout:12000});"
+          if s.count(old)!=1: raise SystemExit(f'media readiness occurrence count: {s.count(old)}')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+
+          p=Path('hc-live/qa/territories-ui-exhaustive-v2.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="let prev=-1,stable=0;for(let i=0;i<12&&stable<3;i++){await page.waitForTimeout(100);const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);if(n===prev)stable++;else{prev=n;stable=0}}"
+          new="let prev=-1,stable=0;for(let i=0;i<50&&stable<5;i++){await page.waitForTimeout(100);const n=await page.evaluate(()=>window.__qaCapturedPlaces?.length||0);if(n>0&&n===prev)stable++;else if(n!==prev){prev=n;stable=0}}"
+          if s.count(old)!=1: raise SystemExit(f'marker stabilization occurrence count: {s.count(old)}')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
+          git diff --check
+          git diff -- hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs hc-live/qa/territories-ui-exhaustive-v2.mjs
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs hc-live/qa/territories-ui-exhaustive-v2.mjs
+          git commit -m "QA territoires: fiabiliser readiness média et capture marqueurs"
+          git push origin HEAD:territoires-france

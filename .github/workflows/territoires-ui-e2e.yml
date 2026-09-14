@@ -1,0 +1,97 @@
+name: Territoires UI E2E
+
+# Validation cache-bust AURA — 2026-09-13
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - 'hc-live/ville/**'
+      - 'hc-live/*territor*.js'
+      - 'hc-live/*map*.js'
+      - 'hc-live/*dense*.js'
+      - 'hc-live/atelier-raster/atelier-discovery-engine-v1.js'
+      - 'hc-live/qa/territorial-atelier-unlocks-e2e.mjs'
+      - 'hc-live/qa/territories-ui-e2e.mjs'
+      - 'hc-live/qa/territories-ui-cantal-e2e.mjs'
+      - 'hc-live/qa/territories-ui-haute-loire-e2e.mjs'
+      - 'hc-live/qa/territories-ui-puy-de-dome-e2e.mjs'
+      - 'hc-live/qa/territories-ui-drome-ardeche-e2e.mjs'
+      - 'hc-live/qa/territories-ui-alpes-e2e.mjs'
+      - 'hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs'
+      - 'hc-live/qa/territories-ui-exhaustive-e2e.mjs'
+      - 'hc-live/qa/territories-ui-exhaustive-v2.mjs'
+      - '.github/workflows/territoires-ui-e2e.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
+          echo $! > /tmp/hc-http.pid
+          sleep 2
+      - name: Run Ain + Allier UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-e2e.mjs 2>&1 | tee /tmp/hc-territories-e2e.log
+      - name: Run Cantal UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-cantal-e2e.mjs 2>&1 | tee /tmp/hc-territories-cantal-e2e.log
+      - name: Run Haute-Loire UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-haute-loire-e2e.mjs 2>&1 | tee /tmp/hc-territories-haute-loire-e2e.log
+      - name: Run Puy-de-Dôme UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-puy-de-dome-e2e.mjs 2>&1 | tee /tmp/hc-territories-puy-de-dome-e2e.log
+      - name: Run Drôme + Ardèche UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-drome-ardeche-e2e.mjs 2>&1 | tee /tmp/hc-territories-drome-ardeche-e2e.log
+      - name: Run Savoie + Haute-Savoie UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-alpes-e2e.mjs 2>&1 | tee /tmp/hc-territories-alpes-e2e.log
+      - name: Run Isère + Loire + Rhône UI E2E
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 90s node hc-live/qa/territories-ui-isere-loire-rhone-e2e.mjs 2>&1 | tee /tmp/hc-territories-isere-loire-rhone-e2e.log
+      - name: Atelier unlocks 01 03 07 15
+        env:
+          HC_DEPTS: '01,03,07,15'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-a.log
+      - name: Atelier unlocks 26 38 42 43
+        if: ${{ always() }}
+        env:
+          HC_DEPTS: '26,38,42,43'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-b.log
+      - name: Atelier unlocks 63 69 73 74
+        if: ${{ always() }}
+        env:
+          HC_DEPTS: '63,69,73,74'
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-c.log
+
+# Ce workflow valide les parcours UI représentatifs et le pont Territoires → Atelier.
+# La recette exhaustive V2 des 12 départements reste dans le workflow dédié
+# territoires-ui-exhaustive.yml, exécuté en matrice départementale afin d'éviter
+# la pollution de ressources d'un runner monolithique sans assouplir aucune assertion.

@@ -1,0 +1,29 @@
+name: Territoires smoke test
+
+# Validation cache-bust AURA — 2026-09-11
+on:
+  push:
+    branches:
+      - territoires-france
+    paths:
+      - 'hc-live/**'
+      - '.github/workflows/territoires-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node version
+        run: node --version
+      - name: Run territorial smoke test
+        run: node hc-live/qa/territories-smoke-test.mjs
+      - name: Audit AURA interfaces and media — strict
+        env:
+          AURA_MEDIA_STRICT: '1'
+        run: node hc-live/qa/territories-ui-media-audit.mjs
