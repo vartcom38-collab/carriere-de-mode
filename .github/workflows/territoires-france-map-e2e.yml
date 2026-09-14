@@ -11,13 +11,17 @@ on:
       - '.github/workflows/territoires-france-map-e2e.yml'
   workflow_dispatch:
 
+concurrency:
+  group: territoires-france-map-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   france-map:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
       - name: Install Playwright Chromium
@@ -29,4 +33,5 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
           sleep 2
       - name: Validate global France territory map
-        run: node hc-live/qa/territories-france-map-e2e.mjs
+        run: |
+          timeout --signal=TERM --kill-after=5s 90s node hc-live/qa/territories-france-map-e2e.mjs
