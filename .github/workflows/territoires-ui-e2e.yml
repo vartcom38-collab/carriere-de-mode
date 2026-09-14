@@ -1,10 +1,11 @@
 name: Territoires UI E2E
 
-# Validation cache-bust AURA — 2026-09-13
+# Validation cache-bust AURA — 2026-09-14
 on:
   push:
     branches:
       - territoires-france
+      - nimes-parity-territoires
     paths:
       - 'hc-live/ville/**'
       - 'hc-live/*territor*.js'
