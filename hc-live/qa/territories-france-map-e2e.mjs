@@ -8,15 +8,7 @@ page.setDefaultTimeout(15000);
 page.on('console',msg=>console.log('BROWSER:',msg.type(),msg.text()));
 page.on('pageerror',err=>console.log('BROWSER_PAGEERROR:',err.message));
 
-try{
-  console.log('QA_FRANCE: seed presence');
-  await page.goto(`${BASE}/hc-live/ville/index.html`,{waitUntil:'domcontentloaded'});
-  await page.evaluate(()=>localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify({city:'Nîmes',departmentCode:'30',departmentName:'Gard',lat:43.8367,lng:4.3601,reason:'qa-baseline'})));
-
-  console.log('QA_FRANCE: open global map');
-  await page.goto(`${BASE}/hc-live/ville/france.html`,{waitUntil:'domcontentloaded'});
-
-  console.log('QA_FRANCE: wait global ready');
+async function waitGlobalReady(){
   const deadline=Date.now()+20000;
   let snapshot=null;
   while(Date.now()<deadline){
@@ -34,12 +26,14 @@ try{
           buttons:document.querySelectorAll('[data-dept]').length
         };
       },AURA);
-      if(AURA.every(code=>(snapshot.counts[code]||0)>0)&&snapshot.buttons===12)break;
+      if(AURA.every(code=>(snapshot.counts[code]||0)>0)&&snapshot.buttons===12)return snapshot;
     }catch(_){ }
     await new Promise(resolve=>setTimeout(resolve,200));
   }
-  console.log('QA_FRANCE: snapshot',JSON.stringify(snapshot));
+  return snapshot;
+}
 
+function assertGlobal(snapshot){
   if(!snapshot)throw new Error('aucun snapshot de la carte France');
   const missing=AURA.filter(code=>!(snapshot.counts[code]>0));
   if(missing.length)throw new Error(`departements absents de la carte France: ${missing.join(',')} | counts=${JSON.stringify(snapshot.counts)}`);
@@ -47,22 +41,45 @@ try{
   if(snapshot.zoom>6)throw new Error(`la carte France demarre trop zoomee: ${snapshot.zoom}`);
   if(!/FRANCE/i.test(snapshot.title))throw new Error(`titre global inattendu: ${snapshot.title}`);
   if(snapshot.presence?.departmentCode!=='30')throw new Error('la consultation globale a modifie la presence initiale');
+}
+
+try{
+  console.log('QA_FRANCE: seed presence');
+  await page.goto(`${BASE}/hc-live/ville/index.html`,{waitUntil:'domcontentloaded'});
+  await page.evaluate(()=>localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify({city:'Nîmes',departmentCode:'30',departmentName:'Gard',lat:43.8367,lng:4.3601,reason:'qa-baseline'})));
+
+  console.log('QA_FRANCE: open global map');
+  await page.goto(`${BASE}/hc-live/ville/france.html`,{waitUntil:'domcontentloaded'});
+  console.log('QA_FRANCE: wait global ready');
+  const snapshot=await waitGlobalReady();
+  console.log('QA_FRANCE: snapshot',JSON.stringify(snapshot));
+  assertGlobal(snapshot);
 
   console.log('QA_FRANCE: browse Isere');
-  const browseOk=await page.evaluate(()=>{
+  const browse=await page.evaluate(()=>{
     const btn=document.querySelector('[data-dept="38"]');
-    if(!btn)return false;
+    if(!btn)return null;
     btn.click();
-    return true;
+    return {
+      presence:window.HCTerritoryContext?.getPresence?.()||null,
+      title:document.querySelector('#mapTitle')?.textContent||'',
+      isereCount:window.__HCFranceMapState?.byDept?.get('38')?.length||0
+    };
   });
-  if(!browseOk)throw new Error('bouton Isere absent de l interface');
-  await new Promise(resolve=>setTimeout(resolve,400));
-  const afterBrowse=await page.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
-  if(afterBrowse?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
+  if(!browse)throw new Error('bouton Isere absent de l interface');
+  if(browse.presence?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
+  if(browse.isereCount!==14)throw new Error(`rendu Isere inattendu: ${browse.isereCount} lieux`);
+
+  console.log('QA_FRANCE: reload clean global view for guide');
+  await page.goto(`${BASE}/hc-live/ville/france.html`,{waitUntil:'domcontentloaded'});
+  const guideSnapshot=await waitGlobalReady();
+  assertGlobal(guideSnapshot);
 
   console.log('QA_FRANCE: open place guide');
   const guideOpen=await page.evaluate(()=>{
-    window.HCLocalMapOpenGuide(window.__HCFranceMapState.byDept.get('38')[0]);
+    const place=window.__HCFranceMapState?.byDept?.get('38')?.[0];
+    if(!place||typeof window.HCLocalMapOpenGuide!=='function')return false;
+    window.HCLocalMapOpenGuide(place);
     return document.querySelector('#overlay')?.classList.contains('open')===true;
   });
   if(!guideOpen)throw new Error('la fiche lieu Isere ne s ouvre pas');
@@ -81,7 +98,9 @@ try{
   const travelDeadline=Date.now()+5000;
   let afterTravel=null;
   while(Date.now()<travelDeadline){
-    afterTravel=await page.evaluate(()=>{try{return JSON.parse(localStorage.getItem('haute-couture-current-presence-v1')||'null')}catch(_){return null}});
+    try{
+      afterTravel=await page.evaluate(()=>{try{return JSON.parse(localStorage.getItem('haute-couture-current-presence-v1')||'null')}catch(_){return null}});
+    }catch(_){ }
     if(afterTravel?.departmentCode==='38')break;
     await new Promise(resolve=>setTimeout(resolve,100));
   }
