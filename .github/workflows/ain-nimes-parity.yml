@@ -1,0 +1,33 @@
+name: Ain Nimes Parity
+
+on:
+  push:
+    branches:
+      - nimes-parity-territoires
+    paths:
+      - 'hc-live/ain-*.js'
+      - 'hc-live/qa/ain-nimes-parity-e2e.mjs'
+      - '.github/workflows/ain-nimes-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-http.log 2>&1 &
+          sleep 2
+      - name: Validate Ain Nimes parity
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 180s node hc-live/qa/ain-nimes-parity-e2e.mjs 2>&1 | tee /tmp/hc-ain-nimes-parity.log
