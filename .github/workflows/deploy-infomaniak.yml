@@ -146,3 +146,5 @@ jobs:
           cls -l api/generate-garment-visual.php
           bye
           LFTP
+
+# Déclencheur neutre du déploiement AURA validé — 2026-09-14
