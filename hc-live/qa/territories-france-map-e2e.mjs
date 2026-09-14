@@ -15,24 +15,26 @@ try{
 
   console.log('QA_FRANCE: open global map');
   await page.goto(`${BASE}/hc-live/ville/france.html`,{waitUntil:'domcontentloaded'});
-  const iframe=page.locator('#mapFrame');
-  await iframe.waitFor({state:'attached'});
-  const handle=await iframe.elementHandle();
-  const frame=await handle?.contentFrame();
-  if(!frame)throw new Error('iframe carte locale introuvable');
-  await frame.waitForLoadState('domcontentloaded');
 
   console.log('QA_FRANCE: wait global ready');
   const deadline=Date.now()+20000;
   let snapshot=null;
   while(Date.now()<deadline){
     try{
-      snapshot=await frame.evaluate(codes=>{
+      snapshot=await page.evaluate(codes=>{
         const state=window.__HCFranceMapState;
         const counts=Object.fromEntries(codes.map(code=>[code,(state?.byDept?.get(code)||[]).length]));
-        return {counts,total:state?.getTotal?.()||0,zoom:window.HCLocalMap?.map?.getZoom?.()??null,title:document.querySelector('#cityTitle')?.textContent||'',summary:document.querySelector('#territorySummary')?.textContent||'',presence:window.HCTerritoryContext?.getPresence?.()||null,buttons:document.querySelectorAll('[data-dept]').length};
+        return {
+          counts,
+          total:state?.getTotal?.()||0,
+          zoom:window.HCLocalMap?.map?.getZoom?.()??null,
+          title:document.querySelector('#cityTitle')?.textContent||'',
+          summary:document.querySelector('#territorySummary')?.textContent||'',
+          presence:window.HCTerritoryContext?.getPresence?.()||null,
+          buttons:document.querySelectorAll('[data-dept]').length
+        };
       },AURA);
-      if(AURA.every(code=>(snapshot.counts[code]||0)>0))break;
+      if(AURA.every(code=>(snapshot.counts[code]||0)>0)&&snapshot.buttons===12)break;
     }catch(_){ }
     await new Promise(resolve=>setTimeout(resolve,200));
   }
@@ -47,7 +49,7 @@ try{
   if(snapshot.presence?.departmentCode!=='30')throw new Error('la consultation globale a modifie la presence initiale');
 
   console.log('QA_FRANCE: browse Isere');
-  const browseOk=await frame.evaluate(()=>{
+  const browseOk=await page.evaluate(()=>{
     const btn=document.querySelector('[data-dept="38"]');
     if(!btn)return false;
     btn.click();
@@ -55,26 +57,27 @@ try{
   });
   if(!browseOk)throw new Error('bouton Isere absent de l interface');
   await new Promise(resolve=>setTimeout(resolve,400));
-  const afterBrowse=await frame.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
+  const afterBrowse=await page.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
   if(afterBrowse?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
 
   console.log('QA_FRANCE: open place guide');
-  const guideOpen=await frame.evaluate(()=>{
+  const guideOpen=await page.evaluate(()=>{
     window.HCLocalMapOpenGuide(window.__HCFranceMapState.byDept.get('38')[0]);
     return document.querySelector('#overlay')?.classList.contains('open')===true;
   });
   if(!guideOpen)throw new Error('la fiche lieu Isere ne s ouvre pas');
-  const afterGuide=await frame.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
+  const afterGuide=await page.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
   if(afterGuide?.departmentCode!=='30')throw new Error('ouvrir une fiche lieu a modifie la presence');
 
   console.log('QA_FRANCE: explicit travel');
-  const visitOk=await frame.evaluate(()=>{
+  const visitOk=await page.evaluate(()=>{
     const btn=document.querySelector('#visitHere');
     if(!btn||btn.disabled)return false;
     btn.click();
     return true;
   });
   if(!visitOk)throw new Error('bouton SE RENDRE ICI indisponible');
+
   const travelDeadline=Date.now()+5000;
   let afterTravel=null;
   while(Date.now()<travelDeadline){
