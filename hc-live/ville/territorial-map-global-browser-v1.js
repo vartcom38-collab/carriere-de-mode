@@ -44,7 +44,6 @@ async function boot(bridge){
   Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
   bridge.globalBrowse=true;
 
-  // Pendant la collecte, on ne dessine pas chaque POI. On enregistre seulement les donnees.
   bridge.addMarker=function(place){
     if(!place||place.lat==null||place.lng==null)return;
     const id=String(place.id||[place.dept,place.city,place.name,place.lat,place.lng].join('|'));
@@ -62,11 +61,12 @@ async function boot(bridge){
   for(const code of ALL_CODES){
     const src=REGISTRY_CODES.has(code)?REGISTRY:PACKS[code];
     if(!src)continue;
+    console.log('[HC France map] chargement',code,src);
     await loadPackIsolated(code,src,bridge);
+    console.log('[HC France map] charge',code,(byDept.get(code)||[]).length);
     refreshUi(byDept,total);
   }
 
-  // A partir d'ici, addMarker redevient le vrai moteur de rendu local.
   bridge.addMarker=originalAdd;
   refreshUi(byDept,total,true);
 
@@ -82,6 +82,7 @@ async function boot(bridge){
   }
 
   window.__HCFranceMapState={byDept,getTotal:()=>total,renderDept};
+  console.log('[HC France map] pret',Object.fromEntries([...byDept].map(([k,v])=>[k,v.length])),'total',total);
   document.dispatchEvent(new CustomEvent('hc-territorial-global-map-ready',{
     detail:{codes:[...byDept.keys()],counts:Object.fromEntries([...byDept].map(([k,v])=>[k,v.length])),total}
   }));
