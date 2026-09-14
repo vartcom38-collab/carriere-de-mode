@@ -1,3 +1,4 @@
+// QA trigger: UI E2E séparé de la matrice exhaustive départementale.
 import { chromium } from 'playwright';
 
 const ROOT=process.env.HC_ROOT_URL||'http://127.0.0.1:4173/hc-live/';
