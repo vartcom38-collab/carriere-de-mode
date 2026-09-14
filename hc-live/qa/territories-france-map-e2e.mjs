@@ -59,15 +59,29 @@ try{
   if(afterBrowse?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
 
   console.log('QA_FRANCE: open place guide');
-  await frame.evaluate(()=>window.HCLocalMapOpenGuide(window.__HCFranceMapState.byDept.get('38')[0]));
-  await frame.locator('#overlay.open').waitFor({state:'visible'});
+  const guideOpen=await frame.evaluate(()=>{
+    window.HCLocalMapOpenGuide(window.__HCFranceMapState.byDept.get('38')[0]);
+    return document.querySelector('#overlay')?.classList.contains('open')===true;
+  });
+  if(!guideOpen)throw new Error('la fiche lieu Isere ne s ouvre pas');
   const afterGuide=await frame.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
   if(afterGuide?.departmentCode!=='30')throw new Error('ouvrir une fiche lieu a modifie la presence');
 
   console.log('QA_FRANCE: explicit travel');
-  await frame.locator('#visitHere').click({noWaitAfter:true});
-  await new Promise(resolve=>setTimeout(resolve,700));
-  const afterTravel=await page.evaluate(()=>{try{return JSON.parse(localStorage.getItem('haute-couture-current-presence-v1')||'null')}catch(_){return null}});
+  const visitOk=await frame.evaluate(()=>{
+    const btn=document.querySelector('#visitHere');
+    if(!btn||btn.disabled)return false;
+    btn.click();
+    return true;
+  });
+  if(!visitOk)throw new Error('bouton SE RENDRE ICI indisponible');
+  const travelDeadline=Date.now()+5000;
+  let afterTravel=null;
+  while(Date.now()<travelDeadline){
+    afterTravel=await page.evaluate(()=>{try{return JSON.parse(localStorage.getItem('haute-couture-current-presence-v1')||'null')}catch(_){return null}});
+    if(afterTravel?.departmentCode==='38')break;
+    await new Promise(resolve=>setTimeout(resolve,100));
+  }
   if(afterTravel?.departmentCode!=='38')throw new Error(`SE RENDRE ICI ne change pas la presence: ${JSON.stringify(afterTravel)}`);
 
   console.log(JSON.stringify({ok:true,aura:'12/12',...snapshot,travelDepartment:afterTravel.departmentCode},null,2));
