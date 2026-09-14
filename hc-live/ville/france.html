@@ -15,14 +15,21 @@
   (function(){
     'use strict';
     const frame=document.getElementById('mapFrame');
-    frame.addEventListener('load',()=>{
+    function inject(){
       const doc=frame.contentDocument;
-      if(!doc||doc.getElementById('hc-global-map-browser'))return;
+      if(!doc||!doc.body||doc.getElementById('hc-global-map-browser'))return;
       const script=doc.createElement('script');
       script.id='hc-global-map-browser';
-      script.src='./territorial-map-global-browser-v1.js?v=20260914-france1';
+      script.src='./territorial-map-global-browser-v1.js?v=20260914-france2';
       doc.body.appendChild(script);
-    });
+    }
+    frame.addEventListener('load',inject);
+    const tryNow=()=>{
+      const doc=frame.contentDocument;
+      if(doc&&(doc.readyState==='interactive'||doc.readyState==='complete'))inject();
+      else setTimeout(tryNow,40);
+    };
+    tryNow();
   })();
   </script>
 </body>
