@@ -10,18 +10,23 @@ const AURA=[
   ['01','Ain'],['03','Allier'],['07','Ardeche'],['15','Cantal'],['26','Drome'],['38','Isere'],
   ['42','Loire'],['43','Haute-Loire'],['63','Puy-de-Dome'],['69','Rhone'],['73','Savoie'],['74','Haute-Savoie']
 ];
-const REGISTRY_CODES=new Set(['01','03','15','42','43','63','30']);
+const REGISTRY_CODES=new Set(['01']);
 const PACKS={
+  '03':'../allier-map-content-v1.js',
   '07':'../ardeche-map-content-v1.js',
+  '15':'../cantal-map-content-v1.js',
   '26':'../drome-map-content-v1.js',
   '38':'../isere-map-content-v1.js',
+  '42':'../loire-map-content-v1.js',
+  '43':'../haute-loire-map-content-v1.js',
+  '63':'../puy-de-dome-map-content-v1.js',
   '69':'../rhone-map-content-v1.js',
   '73':'../savoie-map-content-v1.js',
   '74':'../haute-savoie-map-content-v1.js'
 };
 const REGISTRY='../territorial-map-registry-v2.js';
-const ALL_CODES=[...AURA.map(x=>x[0]),'30'];
-const NAME=Object.fromEntries([...AURA,['30','Gard · Nimes test']]);
+const ALL_CODES=AURA.map(x=>x[0]);
+const NAME=Object.fromEntries(AURA);
 
 function ready(){
   const bridge=window.HCLocalMap;
@@ -43,8 +48,6 @@ async function boot(bridge){
   const byDept=new Map();
   let total=0;
 
-  // La carte globale remplace les couches de POI locales, mais conserve les pins ICI / CHEZ MOI
-  // car ceux-ci sont poses directement sur la carte et non dans les groupes categories.
   Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
 
   bridge.globalBrowse=true;
@@ -63,8 +66,6 @@ async function boot(bridge){
   installUi(map,realPresence,realHome,byDept,()=>total);
   map.setView([46.6,2.2],6);
 
-  // Chaque pack historique verifie la presence courante. On l'execute donc dans un iframe
-  // same-origin isole avec une presence de lecture. Le vrai HCTerritoryContext n'est jamais touche.
   for(const code of ALL_CODES){
     const src=REGISTRY_CODES.has(code)?REGISTRY:PACKS[code];
     if(!src)continue;
@@ -92,8 +93,11 @@ function loadPackIsolated(code,src,bridge){
     win.HauteCoutureCore=window.HauteCoutureCore;
     const script=doc.createElement('script');
     script.src=new URL(src,location.href).href+'?globalBrowse=1';
-    script.onload=()=>{frame.remove();resolve();};
-    script.onerror=()=>{console.warn('[HC France map] pack non charge',code,src);frame.remove();resolve();};
+    let done=false;
+    const finish=()=>{if(done)return;done=true;frame.remove();resolve();};
+    const timer=setTimeout(()=>{console.warn('[HC France map] timeout pack',code,src);finish();},5000);
+    script.onload=()=>{clearTimeout(timer);finish();};
+    script.onerror=()=>{clearTimeout(timer);console.warn('[HC France map] pack non charge',code,src);finish();};
     doc.head.appendChild(script);
   });
 }
