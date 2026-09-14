@@ -1,5 +1,5 @@
 /* Haute Couture Live — navigateur territorial France global V1
-   Surface de consultation/recette visuelle : charge les territoires integres sans deplacer Marion.
+   Vue France legere, puis rendu detaille d'un departement a la demande.
 */
 (function(){
 'use strict';
@@ -12,17 +12,10 @@ const AURA=[
 ];
 const REGISTRY_CODES=new Set(['01']);
 const PACKS={
-  '03':'../allier-map-content-v1.js',
-  '07':'../ardeche-map-content-v1.js',
-  '15':'../cantal-map-content-v1.js',
-  '26':'../drome-map-content-v1.js',
-  '38':'../isere-map-content-v1.js',
-  '42':'../loire-map-content-v1.js',
-  '43':'../haute-loire-map-content-v1.js',
-  '63':'../puy-de-dome-map-content-v1.js',
-  '69':'../rhone-map-content-v1.js',
-  '73':'../savoie-map-content-v1.js',
-  '74':'../haute-savoie-map-content-v1.js'
+  '03':'../allier-map-content-v1.js','07':'../ardeche-map-content-v1.js','15':'../cantal-map-content-v1.js',
+  '26':'../drome-map-content-v1.js','38':'../isere-map-content-v1.js','42':'../loire-map-content-v1.js',
+  '43':'../haute-loire-map-content-v1.js','63':'../puy-de-dome-map-content-v1.js','69':'../rhone-map-content-v1.js',
+  '73':'../savoie-map-content-v1.js','74':'../haute-savoie-map-content-v1.js'
 };
 const REGISTRY='../territorial-map-registry-v2.js';
 const ALL_CODES=AURA.map(x=>x[0]);
@@ -49,8 +42,9 @@ async function boot(bridge){
   let total=0;
 
   Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
-
   bridge.globalBrowse=true;
+
+  // Pendant la collecte, on ne dessine pas chaque POI. On enregistre seulement les donnees.
   bridge.addMarker=function(place){
     if(!place||place.lat==null||place.lng==null)return;
     const id=String(place.id||[place.dept,place.city,place.name,place.lat,place.lng].join('|'));
@@ -60,10 +54,9 @@ async function boot(bridge){
     if(!byDept.has(dept))byDept.set(dept,[]);
     byDept.get(dept).push(place);
     total+=1;
-    originalAdd(place);
   };
 
-  installUi(map,realPresence,realHome,byDept,()=>total);
+  installUi(map,realPresence,realHome,byDept,()=>total,code=>renderDept(code));
   map.setView([46.6,2.2],6);
 
   for(const code of ALL_CODES){
@@ -73,7 +66,22 @@ async function boot(bridge){
     refreshUi(byDept,total);
   }
 
+  // A partir d'ici, addMarker redevient le vrai moteur de rendu local.
+  bridge.addMarker=originalAdd;
   refreshUi(byDept,total,true);
+
+  function renderDept(code){
+    Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
+    const pts=byDept.get(code)||[];
+    pts.forEach(p=>originalAdd(p));
+    if(!pts.length)return;
+    const bounds=L.latLngBounds(pts.map(p=>[Number(p.lat),Number(p.lng)]));
+    map.fitBounds(bounds.pad(.12),{maxZoom:10});
+    const title=document.querySelector('#mapTitle');
+    if(title)title.textContent=`DEPARTEMENT ${code} · ${NAME[code]||''}`;
+  }
+
+  window.__HCFranceMapState={byDept,getTotal:()=>total,renderDept};
   document.dispatchEvent(new CustomEvent('hc-territorial-global-map-ready',{
     detail:{codes:[...byDept.keys()],counts:Object.fromEntries([...byDept].map(([k,v])=>[k,v.length])),total}
   }));
@@ -95,18 +103,18 @@ function loadPackIsolated(code,src,bridge){
     script.src=new URL(src,location.href).href+'?globalBrowse=1';
     let done=false;
     const finish=()=>{if(done)return;done=true;frame.remove();resolve();};
-    const timer=setTimeout(()=>{console.warn('[HC France map] timeout pack',code,src);finish();},5000);
+    const timer=setTimeout(()=>{console.warn('[HC France map] timeout pack',code,src);finish();},4000);
     script.onload=()=>{clearTimeout(timer);finish();};
     script.onerror=()=>{clearTimeout(timer);console.warn('[HC France map] pack non charge',code,src);finish();};
     doc.head.appendChild(script);
   });
 }
 
-function installUi(map,presence,home,byDept,getTotal){
+function installUi(map,presence,home,byDept,getTotal,renderDept){
   const cityTitle=document.querySelector('#cityTitle');
   if(cityTitle)cityTitle.textContent='LA FRANCE';
   const headP=document.querySelector('.head p');
-  if(headP)headP.textContent='Explore tous les territoires deja integres. Regarder la carte ne deplace jamais Marion : seul « Se rendre ici » lance un voyage.';
+  if(headP)headP.textContent='Explore les territoires integres. Choisir un departement affiche ses lieux sans deplacer Marion ; seul « Se rendre ici » lance un voyage.';
 
   const style=document.createElement('style');
   style.textContent=`
@@ -133,7 +141,11 @@ function installUi(map,presence,home,byDept,getTotal){
     browser.className='territory-browser';
     browser.innerHTML='<strong>Territoires integres</strong><small id="territorySummary">Chargement des 12 departements AURA...</small><div class="territory-grid" id="territoryGrid"></div>';
     panel.insertBefore(browser,filters);
-    document.querySelector('#showFrance').onclick=()=>map.setView([46.6,2.2],6);
+    document.querySelector('#showFrance').onclick=()=>{
+      Object.values(window.HCLocalMap.groups||{}).forEach(group=>group?.clearLayers?.());
+      map.setView([46.6,2.2],6);
+      const title=document.querySelector('#mapTitle');if(title)title.textContent='FRANCE · TERRITOIRES INTEGRES';
+    };
     document.querySelector('#showMe').onclick=()=>{
       const p=presence||home;
       if(p?.lat!=null&&p?.lng!=null)map.setView([Number(p.lat),Number(p.lng)],12);
@@ -145,12 +157,13 @@ function installUi(map,presence,home,byDept,getTotal){
     const el=document.querySelector('#mapTitle');
     if(!el)return;
     const z=map.getZoom();
-    el.textContent=(z>=14?'VILLE / QUARTIER':z>=9?'TERRITOIRE':'FRANCE')+' · TERRITOIRES INTEGRES';
+    if(z<9)el.textContent='FRANCE · TERRITOIRES INTEGRES';
   }
   map.on('zoomend',()=>setTimeout(globalTitle,0));
-  map.on('moveend',()=>setTimeout(globalTitle,0));
   globalTitle();
+
   window.__HCFranceMapState={byDept,getTotal};
+  window.__HCFranceRenderDept=renderDept;
 }
 
 function refreshUi(byDept,total,done=false){
@@ -158,24 +171,14 @@ function refreshUi(byDept,total,done=false){
   const summary=document.querySelector('#territorySummary');
   const loading=document.querySelector('#loading');
   const auraReady=AURA.filter(([code])=>(byDept.get(code)||[]).length>0).length;
-  if(summary)summary.textContent=`AURA ${auraReady}/12 · ${total} lieux visibles${done?' · recette visuelle prete':''}`;
+  if(summary)summary.textContent=`AURA ${auraReady}/12 · ${total} lieux disponibles${done?' · pret a explorer':''}`;
   if(loading)loading.textContent=`AURA ${auraReady}/12 · ${total} lieux`;
   if(!grid)return;
   grid.innerHTML=AURA.map(([code,label])=>{
     const n=(byDept.get(code)||[]).length;
     return `<button type="button" class="territory-chip ${n?'ready':''}" data-dept="${code}">${code} · ${label}<b>${n||'—'}</b></button>`;
   }).join('');
-  grid.querySelectorAll('[data-dept]').forEach(btn=>btn.onclick=()=>focusDept(btn.dataset.dept,byDept));
-}
-
-function focusDept(code,byDept){
-  const bridge=window.HCLocalMap;
-  const pts=byDept.get(code)||[];
-  if(!bridge?.map||!pts.length)return;
-  const bounds=L.latLngBounds(pts.map(p=>[Number(p.lat),Number(p.lng)]));
-  bridge.map.fitBounds(bounds.pad(.12),{maxZoom:10});
-  const title=document.querySelector('#mapTitle');
-  if(title)title.textContent=`DEPARTEMENT ${code} · ${NAME[code]||''}`;
+  grid.querySelectorAll('[data-dept]').forEach(btn=>btn.onclick=()=>window.__HCFranceMapState?.renderDept?.(btn.dataset.dept));
 }
 
 ready();
