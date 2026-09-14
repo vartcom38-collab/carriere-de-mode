@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Haute Couture Live — Carte France</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f6efe7}
+    #mapFrame{display:block;width:100%;height:100%;border:0}
+  </style>
+</head>
+<body>
+  <iframe id="mapFrame" title="Carte France — territoires integres" src="./index.html"></iframe>
+  <script>
+  (function(){
+    'use strict';
+    const frame=document.getElementById('mapFrame');
+    frame.addEventListener('load',()=>{
+      const doc=frame.contentDocument;
+      if(!doc||doc.getElementById('hc-global-map-browser'))return;
+      const script=doc.createElement('script');
+      script.id='hc-global-map-browser';
+      script.src='./territorial-map-global-browser-v1.js?v=20260914-france1';
+      doc.body.appendChild(script);
+    });
+  })();
+  </script>
+</body>
+</html>
