@@ -34,9 +34,10 @@
 <script src="../territory-context-haute-savoie-addon-v1.js?v=20260911-hautesavoie74v3"></script>
 <script src="../book/book-engine.js?v=20260910-territory2"></script>
 <script src="../territorial-place-experience-engine-v1.js?v=20260914-nimes-parity1"></script>
+<script src="../ain-parity-system-bridge-v1.js?v=20260914-parity-systems1"></script>
 <script>
 (function(){'use strict';
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const cats=[['fabric','Merceries / tissus','✂',true],['culture','Musées / galeries','✦',true],['heritage','Patrimoine','♜',true],['markets','Brocantes / temporaires','◉',false],['vintage','Vintage / brocantes','◇',false],['craft','Artisans','✣',true],['nature','Nature / paysages','❧',false],['view','Photo / points de vue','◌',false],['libraries','Archives / livres','▤',false],['jewelry','Bijoux / accessoires','♢',false],['people','Rencontres / social','♡',false],['event','Événements','⌁',false]];
 const filters={};$('#filters').innerHTML=cats.map(([id,label,icon,on])=>`<label class="toggle"><span>${icon} ${label}</span><input type="checkbox" data-filter="${id}" ${on?'checked':''}></label>`).join('');document.querySelectorAll('[data-filter]').forEach(x=>filters[x.dataset.filter]=x);
 const ctx=window.HCTerritoryContext,presence=ctx?.getPresence?.()||null,home=ctx?.getResidence?.()||null,current=presence||home||{city:'France',lat:46.6,lng:2.2,source:'browse'};const lat=Number(current.lat)||46.6,lng=Number(current.lng)||2.2,city=current.city||current.departmentName||'France';
