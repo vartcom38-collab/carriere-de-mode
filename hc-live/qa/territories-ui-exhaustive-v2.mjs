@@ -62,7 +62,7 @@ async function runCity(code,city,control={}){
 
   const fresh=unique.filter(p=>p?.id&&!seen.has(p.id));
   const snapshots=[];
-  const CHUNK=4;
+  const CHUNK=2;
   for(let start=0;start<fresh.length;start+=CHUNK){
    const chunk=fresh.slice(start,start+CHUNK);
    const part=await page.evaluate(places=>places.map(place=>{
