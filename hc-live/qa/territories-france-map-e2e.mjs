@@ -20,27 +20,24 @@ try{
   if(!frame)throw new Error('iframe carte locale introuvable');
   await frame.waitForLoadState('domcontentloaded');
 
-  console.log('QA_FRANCE: wait 12 departments');
-  await frame.waitForFunction(codes=>{
-    const state=window.__HCFranceMapState;
-    return !!state && codes.every(code=>(state.byDept.get(code)||[]).length>0);
-  },AURA,{timeout:45000});
-
+  console.log('QA_FRANCE: collect departments');
+  await frame.waitForTimeout(12000);
   const snapshot=await frame.evaluate(codes=>{
     const state=window.__HCFranceMapState;
-    const counts=Object.fromEntries(codes.map(code=>[code,(state.byDept.get(code)||[]).length]));
-    return {counts,total:state.getTotal(),zoom:window.HCLocalMap.map.getZoom(),title:document.querySelector('#cityTitle')?.textContent||'',summary:document.querySelector('#territorySummary')?.textContent||'',presence:window.HCTerritoryContext?.getPresence?.()||null};
+    const counts=Object.fromEntries(codes.map(code=>[code,(state?.byDept?.get(code)||[]).length]));
+    return {counts,total:state?.getTotal?.()||0,zoom:window.HCLocalMap?.map?.getZoom?.()??null,title:document.querySelector('#cityTitle')?.textContent||'',summary:document.querySelector('#territorySummary')?.textContent||'',presence:window.HCTerritoryContext?.getPresence?.()||null};
   },AURA);
   console.log('QA_FRANCE: snapshot',JSON.stringify(snapshot));
 
-  for(const code of AURA)if(!(snapshot.counts[code]>0))throw new Error(`departement ${code} absent de la carte France`);
+  const missing=AURA.filter(code=>!(snapshot.counts[code]>0));
+  if(missing.length)throw new Error(`departements absents de la carte France: ${missing.join(',')} | counts=${JSON.stringify(snapshot.counts)}`);
   if(snapshot.zoom>6)throw new Error(`la carte France demarre trop zoomee: ${snapshot.zoom}`);
   if(!/FRANCE/i.test(snapshot.title))throw new Error(`titre global inattendu: ${snapshot.title}`);
   if(snapshot.presence?.departmentCode!=='30')throw new Error('la consultation globale a modifie la presence initiale');
 
   console.log('QA_FRANCE: browse Isere');
   await frame.locator('[data-dept="38"]').click();
-  await frame.waitForTimeout(250);
+  await frame.waitForTimeout(500);
   const afterBrowse=await frame.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
   if(afterBrowse?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
 
@@ -58,5 +55,5 @@ try{
 
   console.log(JSON.stringify({ok:true,aura:'12/12',...snapshot,travelDepartment:afterTravel.departmentCode},null,2));
 } finally {
-  await browser.close();
+  await Promise.race([browser.close(),new Promise(resolve=>setTimeout(resolve,3000))]);
 }
