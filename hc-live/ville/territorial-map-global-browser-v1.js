@@ -39,6 +39,8 @@ async function boot(bridge){
   const originalAdd=bridge.addMarker.bind(bridge);
   const seen=new Set();
   const byDept=new Map();
+  const detailLayer=L.layerGroup().addTo(map);
+  bridge.globalDetailLayer=detailLayer;
   let total=0;
 
   Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
@@ -72,8 +74,16 @@ async function boot(bridge){
 
   function renderDept(code){
     Object.values(bridge.groups||{}).forEach(group=>group?.clearLayers?.());
+    detailLayer.clearLayers();
     const pts=byDept.get(code)||[];
-    pts.forEach(p=>originalAdd(p));
+    pts.forEach(p=>{
+      const marker=L.circleMarker([Number(p.lat),Number(p.lng)],{
+        radius:7,weight:2,color:'#fff',fillColor:'#211a16',fillOpacity:.9
+      });
+      marker.bindTooltip(`<b>${escapeHtml(p.name||'Lieu')}</b><br>${escapeHtml(p.city||NAME[code]||'')}`);
+      marker.on('click',()=>window.HCLocalMapOpenGuide?.(p));
+      marker.addTo(detailLayer);
+    });
     if(!pts.length)return;
     const bounds=L.latLngBounds(pts.map(p=>[Number(p.lat),Number(p.lng)]));
     map.fitBounds(bounds.pad(.12),{maxZoom:10});
@@ -86,6 +96,10 @@ async function boot(bridge){
   document.dispatchEvent(new CustomEvent('hc-territorial-global-map-ready',{
     detail:{codes:[...byDept.keys()],counts:Object.fromEntries([...byDept].map(([k,v])=>[k,v.length])),total}
   }));
+}
+
+function escapeHtml(value){
+  return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function loadPackIsolated(code,src,bridge){
@@ -144,6 +158,7 @@ function installUi(map,presence,home,byDept,getTotal,renderDept){
     panel.insertBefore(browser,filters);
     document.querySelector('#showFrance').onclick=()=>{
       Object.values(window.HCLocalMap.groups||{}).forEach(group=>group?.clearLayers?.());
+      window.HCLocalMap.globalDetailLayer?.clearLayers?.();
       map.setView([46.6,2.2],6);
       const title=document.querySelector('#mapTitle');if(title)title.textContent='FRANCE · TERRITOIRES INTEGRES';
     };
