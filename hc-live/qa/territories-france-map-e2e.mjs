@@ -30,10 +30,10 @@ try{
       snapshot=await frame.evaluate(codes=>{
         const state=window.__HCFranceMapState;
         const counts=Object.fromEntries(codes.map(code=>[code,(state?.byDept?.get(code)||[]).length]));
-        return {counts,total:state?.getTotal?.()||0,zoom:window.HCLocalMap?.map?.getZoom?.()??null,title:document.querySelector('#cityTitle')?.textContent||'',summary:document.querySelector('#territorySummary')?.textContent||'',presence:window.HCTerritoryContext?.getPresence?.()||null};
+        return {counts,total:state?.getTotal?.()||0,zoom:window.HCLocalMap?.map?.getZoom?.()??null,title:document.querySelector('#cityTitle')?.textContent||'',summary:document.querySelector('#territorySummary')?.textContent||'',presence:window.HCTerritoryContext?.getPresence?.()||null,buttons:document.querySelectorAll('[data-dept]').length};
       },AURA);
       if(AURA.every(code=>(snapshot.counts[code]||0)>0))break;
-    }catch(_){ /* frame still initializing */ }
+    }catch(_){ }
     await new Promise(resolve=>setTimeout(resolve,200));
   }
   console.log('QA_FRANCE: snapshot',JSON.stringify(snapshot));
@@ -41,12 +41,19 @@ try{
   if(!snapshot)throw new Error('aucun snapshot de la carte France');
   const missing=AURA.filter(code=>!(snapshot.counts[code]>0));
   if(missing.length)throw new Error(`departements absents de la carte France: ${missing.join(',')} | counts=${JSON.stringify(snapshot.counts)}`);
+  if(snapshot.buttons!==12)throw new Error(`interface territoriale incomplete: ${snapshot.buttons}/12 boutons departementaux`);
   if(snapshot.zoom>6)throw new Error(`la carte France demarre trop zoomee: ${snapshot.zoom}`);
   if(!/FRANCE/i.test(snapshot.title))throw new Error(`titre global inattendu: ${snapshot.title}`);
   if(snapshot.presence?.departmentCode!=='30')throw new Error('la consultation globale a modifie la presence initiale');
 
   console.log('QA_FRANCE: browse Isere');
-  await frame.locator('[data-dept="38"]').click();
+  const browseOk=await frame.evaluate(()=>{
+    const btn=document.querySelector('[data-dept="38"]');
+    if(!btn)return false;
+    btn.click();
+    return true;
+  });
+  if(!browseOk)throw new Error('bouton Isere absent de l interface');
   await new Promise(resolve=>setTimeout(resolve,400));
   const afterBrowse=await frame.evaluate(()=>window.HCTerritoryContext?.getPresence?.()||null);
   if(afterBrowse?.departmentCode!=='30')throw new Error('le focus departemental a modifie la presence');
