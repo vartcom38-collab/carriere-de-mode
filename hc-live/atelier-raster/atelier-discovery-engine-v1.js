@@ -27,9 +27,31 @@ function boot(){
  function preview(kind,type,opts={}){return candidates(kind,type,opts)}
  function isUnlocked(id){return unlockedSet().has(id)||(C.starterIds?.has?.(id)||false)}
  function history(){return read(HISTORY,[])}
- function recoverTerritorialUnlocks(){let raw=read(KEY,[]);if(!Array.isArray(raw))raw=[];const seen=new Set(raw.map(x=>typeof x==='string'?x:x?.id).filter(Boolean));let changed=false;for(const [code,key] of Object.entries(TERRITORIAL_STORES)){const state=read(key,null);for(const signal of state?.signals||[]){if(signal?.kind!=='atelier_unlock'||!signal.payload)continue;const d=signal.payload,id='territory:'+code+':'+String(d.id||signal.id)+':atelier';if(seen.has(id))continue;raw.push({id,name:d.title||d.name||'Référence territoriale',label:d.title||d.name||'Référence territoriale',type:d.unlockType||d.type||'DESIGN_REFERENCE',territory:d.city||'',departmentCode:code,territorialSignalId:String(signal.id||''),source:'territorial',materials:d.materials||[],motifs:d.motifs||[],palette:d.palette||[],learnedAt:new Date().toISOString(),level:d.level||'observed',description:d.text||d.description||'',meta:d.meta||{}});seen.add(id);changed=true}}
-  if(changed){write(KEY,raw);window.dispatchEvent(new CustomEvent('hc-atelier-unlocks',{detail:raw}))}return changed}
- function territorialPlaceType(ref){const t=String(ref?.type||ref?.unlockType||'').toUpperCase();if(t==='MATERIAL_KNOWLEDGE')return 'fabricShop';if(t==='CRAFT_CONTACT')return 'artisan';if(t==='BOOK_RESEARCH')return 'museum';if(t==='PALETTE_REFERENCE')return 'travel';if(t==='CLIENT_REFERENCE')return 'boutique';return 'regionalCraft'}
+ function recoverTerritorialUnlocks(){
+  let raw=read(KEY,[]);if(!Array.isArray(raw))raw=[];
+  const byId=new Map();for(const entry of raw){if(entry&&typeof entry==='object'&&entry.id)byId.set(entry.id,entry)}
+  let changed=false;
+  for(const [code,key] of Object.entries(TERRITORIAL_STORES)){
+   const state=read(key,null);
+   for(const signal of state?.signals||[]){
+    if(signal?.kind!=='atelier_unlock'||!signal.payload)continue;
+    const d=signal.payload,id='territory:'+code+':'+String(d.id||signal.id)+':atelier';
+    const existing=byId.get(id);
+    if(existing){
+     const signalId=String(signal.id||'');
+     if(signalId&&!existing.territorialSignalId){existing.territorialSignalId=signalId;changed=true}
+     if(!existing.departmentCode){existing.departmentCode=code;changed=true}
+     if(!existing.type&&(d.unlockType||d.type)){existing.type=d.unlockType||d.type;changed=true}
+     if(!existing.source){existing.source='territorial';changed=true}
+     continue;
+    }
+    const ref={id,name:d.title||d.name||'Référence territoriale',label:d.title||d.name||'Référence territoriale',type:d.unlockType||d.type||'DESIGN_REFERENCE',territory:d.city||'',departmentCode:code,territorialSignalId:String(signal.id||''),source:'territorial',materials:d.materials||[],motifs:d.motifs||[],palette:d.palette||[],learnedAt:new Date().toISOString(),level:d.level||'observed',description:d.text||d.description||'',meta:d.meta||{}};
+    raw.push(ref);byId.set(id,ref);changed=true;
+   }
+  }
+  if(changed){write(KEY,raw);window.dispatchEvent(new CustomEvent('hc-atelier-unlocks',{detail:raw}))}return changed
+ }
+ function territorialPlaceType(ref){const t=String(ref?.type||ref?.unlockType||'').toUpperCase();if(t==='MATERIAL_KNOWLEDGE')return 'fabricShop';if(t==='CRAFT_CONTACT')return 'artisan';if(t==='BOOK_RESEARCH'||t==='ARCHIVE_REFERENCE')return 'archives';if(t==='PALETTE_REFERENCE')return 'travel';if(t==='CLIENT_REFERENCE')return 'boutique';return 'regionalCraft'}
  function resolveTerritorialUnlocks(){const raw=read(KEY,[]);if(!Array.isArray(raw)||!raw.length)return[];const resolved=read(TERRITORIAL_RESOLUTIONS,{});const bridge=read(TERRITORIAL_BRIDGE_STATE,{processed:{}});const processed=bridge&&bridge.processed||{};const out=[];for(const ref of raw){if(!ref||typeof ref==='string'||ref.source!=='territorial'||!ref.id||resolved[ref.id])continue;const signalId=String(ref.territorialSignalId||'');const bridged=signalId?processed[signalId]:null;const bridgedIds=Array.isArray(bridged?.itemIds)?[...new Set(bridged.itemIds.filter(id=>id&&C.byId(id)))]:[];if(bridgedIds.length){const type=bridged.atelierType||territorialPlaceType(ref);const items=bridgedIds.map(id=>C.byId(id)).filter(Boolean);resolved[ref.id]={catalogIds:bridgedIds,resolvedAt:new Date().toISOString(),type,source:'territorial-bridge',signalId};out.push({reference:ref,items});continue}const type=territorialPlaceType(ref);const items=unlockFrom('place',type,{count:1,sourceId:ref.id,city:ref.territory||null,placeId:ref.id,context:{territorial:true,departmentCode:ref.departmentCode||'',territorialReferenceId:ref.id,territorialReferenceName:ref.name||ref.label||'',materials:ref.materials||[],motifs:ref.motifs||[],palette:ref.palette||[]}});if(items.length){resolved[ref.id]={catalogIds:items.map(x=>x.id),resolvedAt:new Date().toISOString(),type,source:'atelier-fallback'};out.push({reference:ref,items})}}
   if(out.length){write(TERRITORIAL_RESOLUTIONS,resolved);window.dispatchEvent(new CustomEvent('hc-atelier-territorial-resolved',{detail:out}))}return out}
  function syncTerritorial(){recoverTerritorialUnlocks();return resolveTerritorialUnlocks()}
