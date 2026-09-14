@@ -31,3 +31,5 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 180s node hc-live/qa/ain-nimes-parity-e2e.mjs 2>&1 | tee /tmp/hc-ain-nimes-parity.log
+
+# Explicit rerun after parity runtime syntax repair — 2026-09-14
