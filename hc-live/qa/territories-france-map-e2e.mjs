@@ -14,7 +14,8 @@ try{
   await page.goto(`${BASE}/hc-live/ville/france.html`,{waitUntil:'domcontentloaded'});
   const iframe=page.locator('#mapFrame');
   await iframe.waitFor({state:'attached'});
-  const frame=await iframe.contentFrame();
+  const handle=await iframe.elementHandle();
+  const frame=await handle?.contentFrame();
   if(!frame)throw new Error('iframe carte locale introuvable');
   await frame.waitForLoadState('domcontentloaded');
 
