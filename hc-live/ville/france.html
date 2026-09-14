@@ -4,35 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Haute Couture Live — Carte France</title>
-  <style>
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f6efe7}
-    #mapFrame{display:block;width:100%;height:100%;border:0}
-  </style>
+  <style>html,body{margin:0;min-height:100%;background:#f6efe7}</style>
 </head>
 <body>
-  <iframe id="mapFrame" title="Carte France — territoires integres" src="./index.html"></iframe>
+  <div id="bootFrance" style="padding:24px;font-family:Georgia,serif">Chargement de la carte France…</div>
   <script>
-  (function(){
+  (async function(){
     'use strict';
-    const frame=document.getElementById('mapFrame');
-    function injectWhenReady(){
-      let doc,win,path='';
-      try{
-        doc=frame.contentDocument;
-        win=frame.contentWindow;
-        path=win?.location?.pathname||'';
-      }catch(_){return setTimeout(injectWhenReady,50)}
-      if(!doc||!doc.body||!/\/ville\/index\.html$/.test(path)||!win?.HCLocalMap){
-        return setTimeout(injectWhenReady,50);
-      }
-      if(doc.getElementById('hc-global-map-browser'))return;
-      const script=doc.createElement('script');
-      script.id='hc-global-map-browser';
-      script.src='./territorial-map-global-browser-v1.js?v=20260914-france3';
-      doc.body.appendChild(script);
+    try{
+      const res=await fetch('./index.html',{cache:'no-store'});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      let html=await res.text();
+      html=html.replace(
+        "s.src='../territorial-map-registry-v2.js?v=20260910-presence1'",
+        "s.src='./territorial-map-global-browser-v1.js?v=20260914-france-direct1'"
+      );
+      document.open();
+      document.write(html);
+      document.close();
+    }catch(err){
+      console.error('[HC France boot]',err);
+      const el=document.getElementById('bootFrance');
+      if(el)el.textContent='Impossible de charger la carte France.';
     }
-    frame.addEventListener('load',injectWhenReady);
-    injectWhenReady();
   })();
   </script>
 </body>
