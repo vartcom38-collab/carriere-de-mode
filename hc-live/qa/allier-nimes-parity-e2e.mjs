@@ -17,6 +17,8 @@ await page.addInitScript(()=>{
 await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:20000});
 await page.waitForFunction(()=>window.HCAllierTerritorialGameplay?.version===3,{timeout:10000});
 await page.waitForFunction(()=>window.HCAllierParitySystemBridge?.version===1,{timeout:10000});
+await page.waitForFunction(()=>window.HCAllierMapInterface?.version===1,{timeout:10000});
+await page.waitForFunction(()=>window.HCLocalMap&&typeof window.HCLocalMap.addMarker==='function',{timeout:10000});
 
 const shape=await page.evaluate(()=>{
   const api=window.HCAllierTerritorialGameplay;
@@ -24,6 +26,7 @@ const shape=await page.evaluate(()=>{
   return {
     version:api.version,
     bridge:window.HCAllierParitySystemBridge?.version||0,
+    mapInterface:window.HCAllierMapInterface?.version||0,
     active:api.active?.(),
     types:list.map(x=>x.type),
     ids:list.map(x=>x.id),
@@ -35,11 +38,37 @@ const shape=await page.evaluate(()=>{
 console.log('ALLIER MOULINS SHAPE',JSON.stringify(shape));
 if(shape.version!==3)failures.push('Moulins: runtime Allier V3 absent');
 if(shape.bridge!==1)failures.push('Moulins: pont systèmes Allier absent');
+if(shape.mapInterface!==1)failures.push('Moulins: couche interface carte absente');
 if(!shape.active)failures.push('Moulins: runtime non actif malgré présence 03');
 for(const type of ['heritage','archives','studio','social','hotel'])if(!shape.types.includes(type))failures.push('Moulins: interface '+type+' absente');
 if(shape.people.length<3||shape.people.some(x=>x.fictional!==true||!/FICTION GAMEPLAY/i.test(x.role)))failures.push('Moulins: personnages contemporains non clairement fictifs');
 if(shape.chanelAsCurrentPerson)failures.push('Moulins: Chanel ne doit jamais devenir un PNJ contemporain');
 for(const type of ['rumor','poster'])if(!shape.temp.includes(type))failures.push('Moulins: objet temporaire '+type+' absent');
+
+const visible=await page.evaluate(async()=>{
+  const captured=[],map=window.HCLocalMap,original=map.addMarker;
+  map.addMarker=item=>{captured.push(item);return item};
+  window.HCAllierMapInterface.render();
+  map.addMarker=original;
+  const experience=captured.find(x=>x.gameplayType==='allier-experience'&&x.experienceId==='moulins-archives-gameplay');
+  if(experience){window.HCLocalMapOpenGuide(experience);await new Promise(r=>setTimeout(r,30));}
+  return {
+    count:captured.length,
+    person:captured.some(x=>x.gameplayType==='allier-person'),
+    experiences:captured.filter(x=>x.gameplayType==='allier-experience').map(x=>x.experienceId),
+    temp:captured.some(x=>x.gameplayType==='allier-temporary'),
+    event:captured.some(x=>x.gameplayType==='allier-event'),
+    guideCard:!!document.querySelector('#overlay .allier-special-card'),
+    actionLabels:[...document.querySelectorAll('#overlay .allier-gp-action')].map(x=>x.textContent.trim())
+  };
+});
+console.log('ALLIER MOULINS VISIBLE UI',JSON.stringify(visible));
+if(visible.count<10)failures.push('Moulins: trop peu de marqueurs gameplay réellement injectés ('+visible.count+')');
+if(!visible.person)failures.push('Moulins: rencontres non visibles sur la carte');
+for(const id of ['moulins-cncs-research','moulins-archives-gameplay','moulins-studio-gameplay','moulins-social-gameplay','moulins-hotel-gameplay'])if(!visible.experiences.includes(id))failures.push('Moulins: marqueur interface '+id+' non injecté');
+if(!visible.temp)failures.push('Moulins: objets temporaires non visibles sur la carte');
+if(!visible.guideCard||visible.actionLabels.length<2)failures.push('Moulins: guide spécialisé sans carte/boutons d’action');
+if(!visible.actionLabels.some(x=>/ATELIER/.test(x))||!visible.actionLabels.some(x=>/BOOK/.test(x)))failures.push('Moulins: interface archives sans choix Book/Atelier visible');
 
 const systems=await page.evaluate(()=>{
   const api=window.HCAllierTerritorialGameplay,bridge=window.HCAllierParitySystemBridge;
@@ -95,4 +124,4 @@ if(failures.length){
   failures.forEach(x=>console.error('✗',x));
   process.exit(1);
 }
-console.log('\nALLIER NÎMES PARITY : OK — Moulins, interfaces spécialisées, mémoire, temps, relation, hôtel, studio réel, invitation/RSVP, Phone et Agenda.');
+console.log('\nALLIER NÎMES PARITY : OK — Moulins visible et vivant : interfaces carte, mémoire, temps, relation, hôtel, studio réel, invitation/RSVP, Phone et Agenda.');
