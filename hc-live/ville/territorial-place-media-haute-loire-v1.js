@@ -7,7 +7,9 @@ const api=window.HCTerritorialPlaceMediaAURA;if(!api?.items)return;
 const commons=(file,w=1600)=>`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${w}`;
 const C={
  puy:{image:commons('Cathédrale Le Puy-en-Velay.JPEG'),source:'Wikimedia Commons — cathédrale Notre-Dame, Le Puy-en-Velay',sourceUrl:'https://commons.wikimedia.org/wiki/File:Cath%C3%A9drale_Le_Puy-en-Velay.JPEG',kind:'photo',real:true},
+ crozatier:{image:commons('Musee Crozatier facade jardin.jpg'),source:'Wikimedia Commons — façade jardin du Musée Crozatier, Le Puy-en-Velay',sourceUrl:'https://commons.wikimedia.org/wiki/Category:Mus%C3%A9e_Crozatier',kind:'photo',real:true},
  dentelle:{image:commons('La Dentelle Au Foyer.jpg'),source:'Wikimedia Commons — La Dentelle au Foyer, Le Puy-en-Velay',sourceUrl:'https://commons.wikimedia.org/wiki/File:La_Dentelle_Au_Foyer.jpg',kind:'photo',real:true},
+ chavaniac:{image:commons('Château de Chavaniac Chavaniac-Lafayette.jpg'),source:'Wikimedia Commons — Château de Chavaniac-Lafayette, maison natale de Lafayette',sourceUrl:'https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_de_Chavaniac_Chavaniac-Lafayette.jpg',kind:'photo',real:true},
  brioude:{image:commons('Brioude, basilique St-Julien, haut abside.jpg'),source:'Wikimedia Commons — basilique Saint-Julien, Brioude',sourceUrl:'https://commons.wikimedia.org/wiki/File:Brioude,_basilique_St-Julien,_haut_abside.jpg',kind:'photo',real:true},
  retournac:{image:commons('Musée des dentelles à retournac.jpg'),source:'Wikimedia Commons — Musée des dentelles, Retournac',sourceUrl:'https://commons.wikimedia.org/wiki/Category:Retournac',kind:'photo',real:true},
  chaise:{image:commons('Abbatiale Saint Robert La Chaise Dieu Haute LoIre.jpg'),source:'Wikimedia Commons — abbatiale Saint-Robert, La Chaise-Dieu',sourceUrl:'https://commons.wikimedia.org/wiki/File:Abbatiale_Saint_Robert_La_Chaise_Dieu_Haute_LoIre.jpg',kind:'photo',real:true},
@@ -17,8 +19,9 @@ const C={
  langeac:{image:commons('Langeac Vil1a.jpg'),source:'Wikimedia Commons — Langeac, l’Allier et la collégiale Saint-Gal',sourceUrl:'https://commons.wikimedia.org/wiki/File:Langeac_Vil1a.jpg',kind:'photo',real:true}
 };
 const aliases={
- 'hl-puy-dentelle':'dentelle','puy-dentelle':'dentelle','hl-puy':'dentelle','hl43-map-puy':'dentelle','hl43-puy-conservatoire':'dentelle',
- 'hl-puy-patrimoine':'puy','puy-centre':'puy','puy-cathedrale':'puy','puy-marche':'puy','hl43-puy-crozatier':'puy',
+ 'hl-puy-dentelle':'dentelle','puy-dentelle':'dentelle','hl-puy':'dentelle','hl43-map-puy':'dentelle','hl43-puy-conservatoire':'dentelle','43-dentelle':'dentelle',
+ 'hl-puy-patrimoine':'puy','puy-centre':'puy','puy-cathedrale':'puy','puy-marche':'puy','hl43-puy-crozatier':'puy','43-crozatier':'crozatier',
+ '43-lafayette-chateau':'chavaniac','fig-43-lafayette':'chavaniac',
  'hl-brioude-dentelle':'brioude','hl-brioude':'brioude','hl43-map-brioude':'brioude','tier2-brioude-0':'brioude','tier2-brioude-1':'brioude','tier2-brioude-2':'brioude','tier2-brioude-3':'brioude','hl43-brioude-craft':'brioude',
  'hl-retournac':'retournac','hl43-map-retournac':'retournac',
  'hl-chaise':'chaise','hl43-map-chaise':'chaise','hl43-chaise-scene':'chaise',
