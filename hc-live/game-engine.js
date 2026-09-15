@@ -38,6 +38,7 @@ addScript(hcLiveBase+'career-opportunities-v1.js?v=20260903-career3','data-hc-ca
 addScript(hcLiveBase+'ain-canonical-time-v1.js?v=20260915-time1','data-hc-ain-canonical-time');
 addScript(hcLiveBase+'ain-invitations-v1.js?v=20260915-invite1','data-hc-ain-invitations');
 addScript(hcLiveBase+'ain-studio-photo-v1.js?v=20260915-studio1','data-hc-ain-studio-photo');
+addScript(hcLiveBase+'allier-territorial-gameplay-v1.js?v=20260915-moulins3','data-hc-allier-territorial',()=>addScript(hcLiveBase+'allier-parity-system-bridge-v1.js?v=20260915-systems1','data-hc-allier-parity'));
 if(location.pathname.includes('/chez-moi/')){addScript('./real-home-visual-v1.js?v=20260825-realhome1','data-hc-real-home-visual');addScript('./creations-access-v1.js?v=20260903-career2','data-hc-home-creations-access')}
 if(location.pathname.includes('/telephone/')){const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');if(window.HCPhone)loadDynamics();else addScript('./phone-gameplay-engine.js?v=20260824-phone-core3','data-hc-phone-core',loadDynamics)}
 if(location.pathname.includes('/agenda/'))addScript('./nimes-event-flow-v1.js?v=20260825-agenda-events1','data-hc-nimes-agenda-events');
