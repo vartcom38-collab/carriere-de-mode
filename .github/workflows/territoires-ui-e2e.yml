@@ -11,6 +11,7 @@ on:
       - 'hc-live/*territor*.js'
       - 'hc-live/*parity*.js'
       - 'hc-live/ain-*.js'
+      - 'hc-live/allier-*.js'
       - 'hc-live/*map*.js'
       - 'hc-live/*dense*.js'
       - 'hc-live/atelier-raster/atelier-discovery-engine-v1.js'
@@ -95,7 +96,7 @@ jobs:
           timeout --signal=TERM --kill-after=15s 150s node hc-live/qa/territorial-atelier-unlocks-e2e.mjs 2>&1 | tee /tmp/hc-territorial-atelier-unlocks-c.log
 
 # Ce workflow valide les parcours UI représentatifs et le pont Territoires → Atelier.
-# Les fichiers Ain/parity sont inclus explicitement pour que les ponts système
+# Les fichiers Ain/Allier/parity sont inclus explicitement pour que les ponts système
 # déclenchent toujours la recette transversale, même hors glob territorial.
 # La recette exhaustive V2 des 12 départements reste dans le workflow dédié
 # territoires-ui-exhaustive.yml, exécuté en matrice départementale afin d'éviter
