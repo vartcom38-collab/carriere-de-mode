@@ -10,6 +10,7 @@ on:
       - 'hc-live/*territor*.js'
       - 'hc-live/*parity*.js'
       - 'hc-live/ain-*.js'
+      - 'hc-live/allier-*.js'
       - 'hc-live/*map*.js'
       - 'hc-live/*dense*.js'
       - 'hc-live/*universe*.js'
@@ -47,5 +48,5 @@ jobs:
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 270s node hc-live/qa/territories-ui-exhaustive-v2.mjs 2>&1 | tee /tmp/hc-territory-${HC_DEPT}.log
 
-# QA closure Ain/AURA: les fichiers Ain sont explicitement surveillés afin que
-# les ponts système et shims spécialisés déclenchent toujours la matrice complète.
+# QA closure Ain/Allier/AURA: les fichiers spécialisés sont explicitement surveillés afin que
+# les ponts système et runtimes territoriaux déclenchent toujours la matrice complète.
