@@ -18,7 +18,7 @@ if(window.__HCTerritorialPlaceNormalizerV5)return;window.__HCTerritorialPlaceNor
   ['hcMediaSavoieV1','./territorial-place-media-savoie-v1.js?v=20260913-sav73-1','__HCTerritorialPlaceMediaSavoieV1'],
   ['hcMediaAllierV1','./territorial-place-media-allier-v1.js?v=20260913-allier03-1','__HCTerritorialPlaceMediaAllierV1'],
   ['hcMediaCantalV1','./territorial-place-media-cantal-v1.js?v=20260913-cantal15-1','__HCTerritorialPlaceMediaCantalV1'],
-  ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260913-hl43-1','__HCTerritorialPlaceMediaHauteLoireV1'],
+  ['hcMediaHauteLoireV1','./territorial-place-media-haute-loire-v1.js?v=20260915-hl43-2','__HCTerritorialPlaceMediaHauteLoireV1'],
   ['hcMediaPuyDeDomeV1','./territorial-place-media-puy-de-dome-v1.js?v=20260913-pdd63-1','__HCTerritorialPlaceMediaPuyDeDomeV1']
  ];
  let attempts=0;
@@ -64,11 +64,18 @@ const CREATIVE_FIXES={
  'tier2-brioude-0':{palette:['ivoire dentelle','pierre blonde','bleu grisé'],materials:['dentelle','lin','fil de coton'],motifs:['fuseaux','réseaux ajourés','rosaces']},
  'tier2-brioude-1':{palette:['pierre blonde','terre cuite','gris ardoise'],materials:['lin','laine sèche','cuir'],motifs:['arcades','façades anciennes','rythmes de ruelle']},
  'tier2-brioude-4':{palette:['écru','ocre atelier','bleu encre'],materials:['lin','fil','bois'],motifs:['trame artisanale','gestes d’atelier','géométries textiles']},
+ /* Haute-Loire — signatures créatives des deux repères 43 spécialisés. */
+ '43-dentelle':{palette:['ivoire dentelle','écru','bleu grisé'],materials:['dentelle','fil de coton','lin'],motifs:['fuseaux','réseau ajouré','bordure placée']},
+ '43-lafayette-chateau':{palette:['bleu uniforme','écru','rouge sourd'],materials:['laine de costume','lin','métal'],motifs:['galons','boutons','correspondance']},
  /* Riom — le centre historique doit lui aussi produire une matière créative. */
  'riom-centre':{palette:['pierre blonde','gris lave','vert patiné'],materials:['lin','laine','pierre volcanique'],motifs:['tour d’horloge','façades classiques','rythmes de rues']}
 };
 
 const UNLOCK_FIXES={
+ '43-crozatier':'BOOK_RESEARCH · costumes, objets et mémoire locale · piste de collection.',
+ '43-dentelle':'TECHNIQUE_OBSERVED · dentelle aux fuseaux · MOTIF_REFERENCE · Book.',
+ '43-lafayette-chateau':'BOOK_RESEARCH · référence costume historique · palette et détails d’uniforme.',
+ 'fig-43-lafayette':'DESIGN_REFERENCE · recherche documentaire Lafayette · piste de collection historique.',
  'pdd-d-thiers':'Débloque l’inspiration « précision coutelière »',
  'pdd-d-riom':'Débloque l’inspiration « archives de Riom »',
  'pdd-d-volvic':'Débloque l’inspiration « lave et pierre de Volvic »',
