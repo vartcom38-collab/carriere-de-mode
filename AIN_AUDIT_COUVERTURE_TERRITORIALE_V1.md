@@ -1,6 +1,6 @@
 # AIN — AUDIT COUVERTURE TERRITORIALE V1
 
-Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / E2E CHROMIUM VALIDÉ**
+Statut : **DENSE / RUNTIME TERRITORIAL OPÉRATIONNEL / PARITÉ NÎMES FERMÉE / QA TRANSVERSALE VERTE**
 
 ## Pôles couverts
 - Bourg-en-Bresse — capitale départementale, architecture, cérémonie, photographie, clientèle, métiers d’art.
@@ -49,9 +49,13 @@ Ces totaux n’incluent pas les contacts persistants, briefs et événements dé
 - B2B : Oyonnax, Nantua/Haut-Bugey, Pays de Gex.
 - Shooting : Bourg, Pérouges, Dombes, Nantua.
 - Sourcing / matériaux : Jujurieux, Oyonnax, Mijoux.
+- Temps canonique : les actions territoriales passent par le temps de jeu central.
+- Invitations : création, téléphone, RSVP et agenda canonique.
+- Studio photo : blocage sans création Atelier terminée, puis utilisation de la vraie création finie.
+- Mémoire / revisites : visites, découvertes, relations et hébergement temporaire persistants.
 
 ## Intégration runtime
-Le code départemental `01` était déjà reconnu par `territory-context-v1.js` et son moteur territorial était déjà chargé. L’audit a identifié un manque : aucun pack carte `01` n’était présent dans `DEPARTMENT_MAP_PACK`.
+Le code départemental `01` était déjà reconnu par `territory-context-v1.js` et son moteur territorial était déjà chargé. L’audit avait identifié un manque : aucun pack carte `01` n’était présent dans `DEPARTMENT_MAP_PACK`.
 
 Correction appliquée sans remplacer le moteur existant :
 - `ain-map-content-v2.js`
@@ -59,19 +63,71 @@ Correction appliquée sans remplacer le moteur existant :
 - `ain-dense-city-banks-v1.js`
 - branchement via `territorial-signal-runtime-v1.js::bootstrapExtendedTerritories()` pour `01`.
 
-Le store `haute-couture-ain-territorial-gameplay-v1` était déjà intégré au rattrapage des signaux.
+La fermeture de parité Nîmes ajoute également :
+- `ain-territorial-gameplay-v1.js` V2 ;
+- `ain-parity-system-bridge-v1.js` comme source canonique pour temps, invitations/RSVP et studio ;
+- les shims de compatibilité `ain-canonical-time-v1.js`, `ain-invitations-v1.js`, `ain-studio-photo-v1.js` sans listeners concurrents.
 
-## QA navigateur — validée le 11 septembre 2026
-Le scénario Playwright/Chromium réel valide :
-- Monastère royal de Brou rendu avec photo réelle et source documentaire ;
-- 3 actions patrimoine disponibles ;
-- une action consomme 35 minutes de temps de jeu ;
-- la mémoire de lieu est persistée ;
-- regarder Lyon ne déplace pas Marion de Bourg-en-Bresse ;
-- un lieu fictif reçoit une illustration de jeu explicitement étiquetée ;
-- le lourd stack Gard/Nîmes n’est plus chargé hors Gard.
+Le store `haute-couture-ain-territorial-gameplay-v1` reste intégré au rattrapage des signaux.
 
-Workflow validé : `Territoires UI E2E`.
+## QA navigateur — validation dédiée Ain
+Le scénario Playwright/Chromium dédié valide notamment :
+- cinq pôles Ain avec interfaces spécialisées ;
+- personnes et objets narratifs temporaires ;
+- mémoire de visite, Book et Atelier ;
+- hébergement temporaire ;
+- temps canonique ;
+- invitation → Téléphone → RSVP → Agenda ;
+- studio utilisant une vraie création Atelier terminée ;
+- absence de `SyntaxError` / `ReferenceError` bloquante.
+
+Référence de validation dédiée déjà obtenue : commit `c4a98a305719fcce8a6f96d8e7303179fa8e6f46`, workflow `Ain Nîmes Parity`, vert.
+
+## QA transversale AURA — fermeture du 15 septembre 2026
+La fermeture finale n’est pas basée uniquement sur le test dédié Ain. Elle a été revalidée dans les deux recettes régionales au SHA exact :
+
+`ed5fb90b6450cdf3cae1e8a4e30d915a9ab19bf1`
+
+### Interfaces représentatives
+Workflow : `Territoires UI E2E`
+Run : `34951350562`
+Résultat : **VERT**.
+
+Blocs validés :
+- Ain + Allier ;
+- Cantal ;
+- Haute-Loire ;
+- Puy-de-Dôme ;
+- Drôme + Ardèche ;
+- Savoie + Haute-Savoie ;
+- Isère + Loire + Rhône ;
+- Atelier unlocks 01/03/07/15 ;
+- Atelier unlocks 26/38/42/43 ;
+- Atelier unlocks 63/69/73/74.
+
+Cette recette contrôle réellement l’ouverture et la visibilité des interfaces ainsi que les ponts vers l’Atelier ; elle ne se limite pas à vérifier la présence de données.
+
+### Matrice exhaustive 12 départements
+Workflow : `Territoires UI Exhaustive`
+Run : `34951350541`
+Résultat final après reruns ciblés de deux timeouts d’exécution : **12/12 VERTS**.
+
+Départements validés : `01`, `03`, `07`, `15`, `26`, `38`, `42`, `43`, `63`, `69`, `73`, `74`.
+
+Aucune assertion métier ou documentaire n’a été supprimée ou abaissée. Les deux échecs transitoires constatés sur `43` (Langeac) et `73` (Chambéry) étaient des timeouts de passage ; les reruns du même SHA ont réussi sans modification de code ni augmentation du timeout. Les 17 défauts de contenu Haute-Loire précédemment détectés sur Crozatier, Dentelle du Puy, Chavaniac-Lafayette et la référence documentaire Lafayette sont corrigés à la source et ne réapparaissent plus.
+
+### Décision de fermeture
+**Ain 01 peut être considéré comme fermé au niveau de parité territoriale actuellement exigé pour passer au département suivant.**
+
+Cette fermeture signifie :
+- test dédié Ain validé ;
+- interfaces AURA représentatives validées ;
+- ponts Atelier validés ;
+- matrice exhaustive 12 départements validée ;
+- distinction réel / fictif et contrat média contrôlés ;
+- temps, mémoire, Book, Atelier, invitations et studio couverts par les systèmes Ain.
+
+**Aucun déploiement production n’a été effectué dans cette phase.**
 
 ## Extensions futures non bloquantes
 - Trévoux / Val de Saône
