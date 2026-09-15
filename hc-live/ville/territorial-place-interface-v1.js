@@ -7,7 +7,7 @@
 if(window.__HCTerritorialPlaceInterfaceV1)return;window.__HCTerritorialPlaceInterfaceV1=true;
 const AURA=new Set(['01','03','07','15','26','38','42','43','63','69','73','74']);
 const ctx=window.HCTerritoryContext,here=ctx?.getPresence?.();if(!here||!AURA.has(String(here.departmentCode||'')))return;
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const GAME=()=>window.HCGame||null,BOOK=()=>window.HCBook||null;
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
 const VISIT_KEY='haute-couture-territorial-place-actions-v1',MEDIA_KEY='haute-couture-territorial-place-media-v1';
