@@ -7,7 +7,7 @@
 if(window.__HCTerritorialPlaceInterfaceV1)return;window.__HCTerritorialPlaceInterfaceV1=true;
 const AURA=new Set(['01','03','07','15','26','38','42','43','63','69','73','74']);
 const ctx=window.HCTerritoryContext,here=ctx?.getPresence?.();if(!here||!AURA.has(String(here.departmentCode||'')))return;
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const GAME=()=>window.HCGame||null,BOOK=()=>window.HCBook||null;
 const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
 const VISIT_KEY='haute-couture-territorial-place-actions-v1',MEDIA_KEY='haute-couture-territorial-place-media-v1';
@@ -30,8 +30,15 @@ const ACTIONS={
  photo:[['observer','REPÉRER LA LUMIÈRE',20,0,'PHOTO_REFERENCE'],['shoot','PRÉPARER UN SHOOTING',40,0,'BOOK_RESEARCH']]
 };
 const fallbackActions=ACTIONS.culture;
+let mediaFallback=null;
+function mediaBank(){
+ const live=window.HCTerritorialPlaceMediaAURA?.items;
+ if(live&&typeof live==='object')return live;
+ if(mediaFallback===null)mediaFallback=read(MEDIA_KEY,{});
+ return mediaFallback;
+}
 function mediaFor(p){
- const saved=read(MEDIA_KEY,{}),m=saved[p.id]||{};
+ const saved=mediaBank(),m=saved[p.id]||{};
  const url=p.image||p.photo||p.imageUrl||m.image||m.url||null;
  const source=p.source||p.imageSource||p.attribution||m.source||m.attribution||null;
  const fictional=!!p.fictional;
