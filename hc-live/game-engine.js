@@ -35,6 +35,7 @@ document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closes
 const addScript=(src,tag,onload)=>{if(document.querySelector(`script[${tag}]`)){onload&&onload();return}const s=document.createElement('script');s.src=src;s.defer=true;s.setAttribute(tag,'1');s.onload=()=>onload&&onload();s.onerror=()=>console.warn('[HCGame] failed to load '+src);document.head.appendChild(s)};
 const engineScript=[...document.scripts].find(s=>/\/game-engine\.js(?:\?|$)/.test(s.src));const hcLiveBase=engineScript?new URL('.',engineScript.src).href:(location.pathname.includes('/hc-live/')?location.pathname.split('/hc-live/')[0]+'/hc-live/':'/');
 addScript(hcLiveBase+'career-opportunities-v1.js?v=20260903-career3','data-hc-career-opportunities');
+addScript(hcLiveBase+'ain-canonical-time-v1.js?v=20260915-time1','data-hc-ain-canonical-time');
 if(location.pathname.includes('/chez-moi/')){addScript('./real-home-visual-v1.js?v=20260825-realhome1','data-hc-real-home-visual');addScript('./creations-access-v1.js?v=20260903-career2','data-hc-home-creations-access')}
 if(location.pathname.includes('/telephone/')){const loadDynamics=()=>addScript('./phone-social-dynamics.js?v=20260824-social-dyn2','data-hc-social-dynamics');if(window.HCPhone)loadDynamics();else addScript('./phone-gameplay-engine.js?v=20260824-phone-core3','data-hc-phone-core',loadDynamics)}
 if(location.pathname.includes('/agenda/'))addScript('./nimes-event-flow-v1.js?v=20260825-agenda-events1','data-hc-nimes-agenda-events');
