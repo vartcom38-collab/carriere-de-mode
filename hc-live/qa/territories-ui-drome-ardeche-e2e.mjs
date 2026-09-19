@@ -28,6 +28,29 @@ async function ardeche(){
  const focus=await page.evaluate(()=>{const before=localStorage.getItem('haute-couture-current-presence-v1');window.HCFranceGeo=window.HCFranceGeo||{};window.HCFranceGeo.state={region:{nom:'Auvergne-Rhône-Alpes'},department:{code:'26',nom:'Drôme'},commune:{nom:'Valence',lat:44.933,lng:4.892}};return{before,after:localStorage.getItem('haute-couture-current-presence-v1'),focus:window.HCTerritoryContext.getMapFocus?.(),preview:window.HCTerritoryContext.isPreviewOnly?.(),presence:window.HCTerritoryContext.getPresence?.()}});console.log('ARDÈCHE FOCUS',JSON.stringify({focus:focus.focus?.city,preview:focus.preview,presence:focus.presence?.city}));if(focus.before!==focus.after||focus.presence?.city!=='Marcols-les-Eaux')failures.push('Ardèche: focus Valence a déplacé Marion');if(focus.focus?.city!=='Valence'||focus.preview!==true)failures.push('Ardèche: focus Valence non reconnu comme aperçu');
  const fiction=await page.evaluate(()=>{window.HCTerritorialPlaceInterfaceV1.open({id:'ar-fictif',dept:'07',departmentName:'Ardèche',city:'Marcols-les-Eaux',name:'Atelier Torsion · fictif',cat:'people',lat:44.815,lng:4.402,where:'Marcols-les-Eaux',fictional:true,text:'Contact fictif autour du fil.',unlock:'Relation persistante.'});return{src:document.querySelector('#tpHero img')?.getAttribute('src')||null,status:document.querySelector('#tpStatus')?.textContent?.trim()||null,buttons:document.querySelectorAll('[data-tpa]').length};});if(!fiction.src?.startsWith('data:image/svg+xml')||!/FICTIONNEL/.test(fiction.status||'')||fiction.buttons!==3)failures.push('Ardèche fictif: rendu/identification/actions invalides');checkErrors('Ardèche',errors,consoleErrors);await page.close();
 }
-try{await drome();await ardeche()}finally{await browser.close()}
+
+async function ardecheAnnonay(){
+ const {page,errors,consoleErrors}=await pageFor({city:'Annonay',departmentCode:'07',departmentName:'Ardèche',lat:45.2397,lng:4.6707,reason:'visit'});
+ await page.waitForFunction(()=>Array.isArray(window.HCArdechePrimaryCityPlaces)&&!!window.HCPlaceExperience,{timeout:8000});
+ const source=await page.evaluate(()=>window.HCArdechePrimaryCityPlaces.map(x=>({id:x.id,name:x.name,template:x.template||null,cat:x.cat,fictional:!!x.fictional,image:x.image||null,source:x.source||x.meta?.sourceUrl||null})));
+ const museum=source.find(x=>x.id==='ann-papeteries-canson-montgolfier'),cordeliers=source.find(x=>x.id==='ann-cordeliers-envol'),craft=source.find(x=>x.id==='ann-cuir-lab');
+ console.log('ARDÈCHE ANNONAY',JSON.stringify({count:source.length,museum:!!museum,cordeliers:!!cordeliers,craft:!!craft}));
+ if(!museum||museum.fictional||museum.template!=='heritage'||!museum.image||!museum.source)failures.push('Annonay: musée Canson/Montgolfier documentaire incomplet');
+ if(!cordeliers||cordeliers.fictional||cordeliers.template!=='heritage'||!cordeliers.image||!cordeliers.source)failures.push('Annonay: place des Cordeliers documentaire incomplète');
+ if(!craft||!craft.fictional||craft.template!=='craft')failures.push('Annonay: atelier cuir fictif mal typé');
+ const oldUi=await page.evaluate(()=>{const p=window.HCArdechePrimaryCityPlaces.find(x=>x.id==='ann-papeteries-canson-montgolfier');window.HCTerritorialPlaceInterfaceV1.open(p);return{title:document.querySelector('#tpTitle')?.textContent?.trim()||'',flag:document.querySelector('#tpHero .tp-mediaflag')?.textContent?.trim()||'',status:document.querySelector('#tpStatus')?.textContent?.trim()||'',source:document.querySelector('#tpSource')?.textContent?.trim()||'',actions:document.querySelectorAll('[data-tpa]').length};});
+ if(oldUi.title!=='Musée des Papeteries Canson et Montgolfier'||oldUi.flag!=='PHOTO RÉELLE'||!/RÉEL \/ DOCUMENTAIRE/.test(oldUi.status)||!/Wikimedia Commons|Annonay Rhône Agglo/i.test(oldUi.source)||oldUi.actions<2)failures.push('Annonay: interface documentaire musée invalide');
+ const specialized=await page.evaluate(()=>{
+   const get=id=>window.HCArdechePrimaryCityPlaces.find(x=>x.id===id);
+   window.HCPlaceExperience.open(get('ann-papeteries-canson-montgolfier'));const heritage=document.querySelector('.hcpx-kicker')?.textContent?.trim()||'';window.HCPlaceExperience.close();
+   window.HCPlaceExperience.open(get('ann-cuir-lab'));const craft=document.querySelector('.hcpx-kicker')?.textContent?.trim()||'';const learn=!!document.querySelector('[data-act="learn"]');window.HCPlaceExperience.close();
+   return{heritage,craft,learn};
+ });
+ if(!/Patrimoine/.test(specialized.heritage))failures.push('Annonay: interface patrimoine spécialisée non branchée');
+ if(!/Artisan/.test(specialized.craft)||!specialized.learn)failures.push('Annonay: interface artisan spécialisée non branchée');
+ checkErrors('Annonay',errors,consoleErrors);await page.close();
+}
+
+try{await drome();await ardeche();await ardecheAnnonay()}finally{await browser.close()}
 if(failures.length){console.error('\nDRÔME + ARDÈCHE E2E : '+failures.length+' échec(s)');for(const f of failures)console.error('✗',f);process.exit(1)}
-console.log('\n✓ DRÔME + ARDÈCHE E2E COMPLET PASSÉ · lieux documentaires + actions + temps + mémoire + fiction + anti-téléportation');
+console.log('\n✓ DRÔME + ARDÈCHE E2E COMPLET PASSÉ · documentaires + Annonay spécialisé + actions + temps + mémoire + fiction + anti-téléportation');

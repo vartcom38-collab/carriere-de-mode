@@ -67,7 +67,7 @@ Pôles prioritaires : Annonay, Aubenas, Privas, Tournon-sur-Rhône, Vallon-Pont-
 
 Forces : Montgolfier/Canson, cuir/papier/industrie, paysages, Jean Ferrat, événements aérostation.
 
-À approfondir : vraie vie sociale Annonay, artisans, mémoire textile/peau, événements saisonniers et itinéraires paysage.
+Progression Annonay : musée des Papeteries Canson et Montgolfier + place des Cordeliers documentés, atelier cuir fictif séparé, interfaces patrimoine/artisan contrôlées en E2E.\n\nÀ approfondir : vraie vie sociale Annonay, archives municipales, davantage d’artisans persistants, mémoire textile/peau, événements saisonniers et itinéraires paysage.
 
 ## 15 — Cantal
 
