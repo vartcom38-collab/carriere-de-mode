@@ -34,38 +34,40 @@ await page.addInitScript(()=>{
 });
 
 await page.goto(URL,{waitUntil:'domcontentloaded',timeout:15000});
-await page.waitForFunction(()=>!!window.HCGame&&!!window.HCAtelierClientWorkflow&&!!window.HCAtelierRealisationEngine&&!!window.HCAtelierRealisationPreflight,{timeout:15000});
-await page.waitForSelector('#hcClientWorkflowV2',{state:'attached',timeout:8000});
-await page.waitForFunction(()=>!!document.querySelector('#hcCw2Send'),{timeout:8000});
+await page.waitForFunction(()=>{
+ const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument;
+ return !!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.querySelector('#hcClientWorkflowV2');
+},{timeout:20000});
+await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send'),{timeout:10000});
 
 const before=await page.evaluate(()=>({
  order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0],
  money:Number(window.HCGame.get().player.money||0),
  time:Number(window.HCGame.get().clock.totalMinutes||0),
- text:document.querySelector('#hcClientWorkflowV2')?.textContent||''
+ text:document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcClientWorkflowV2')?.textContent||''
 }));
 console.log('FIRST PLAYABLE MIDDLE BEFORE',JSON.stringify({status:before.order?.status,money:before.money,time:before.time,text:before.text}));
 if(before.order?.status!=='accepted')failures.push('commande de départ non acceptée');
 if(!/PROPOSITION CLIENTE|Présenter/i.test(before.text))failures.push('workflow devis cliente absent');
 
-await page.evaluate(()=>document.querySelector('#hcCw2Send')?.click());
+await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='approved_for_production',{timeout:5000});
 
 const approved=await page.evaluate(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]);
 console.log('FIRST PLAYABLE MIDDLE APPROVED',JSON.stringify({status:approved.status,price:approved.proposal?.price,response:approved.clientResponse?.type}));
 if(approved.clientResponse?.type!=='approved'||!approved.proposal?.sketch?.id)failures.push('devis/croquis non validé par la cliente');
 
-await page.waitForFunction(()=>!!document.querySelector('#hcCw2Realise'),{timeout:5000});
-await page.evaluate(()=>document.querySelector('#hcCw2Realise')?.click());
-await page.waitForFunction(()=>!!document.querySelector('#hcConfirmRealise'),{timeout:5000});
+await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Realise'),{timeout:5000});
+await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Realise')?.click());
+await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise'),{timeout:5000});
 
 const preflight=await page.evaluate(()=>({
- disabled:document.querySelector('#hcConfirmRealise')?.disabled,
- text:document.querySelector('#hcAtelierRealisationPreflight')?.textContent||document.body.textContent||''
+ disabled:document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise')?.disabled,
+ text:document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcAtelierRealisationPreflight')?.textContent||''
 }));
 if(preflight.disabled)failures.push('réalisation bloquée malgré planche/croquis/matière complets');
 
-await page.evaluate(()=>document.querySelector('#hcConfirmRealise')?.click());
+await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='realised_pending_send',{timeout:7000});
 
 const realised=await page.evaluate(()=>({
@@ -77,8 +79,8 @@ console.log('FIRST PLAYABLE MIDDLE REALISED',JSON.stringify({status:realised.ord
 if(!realised.order?.design?.realisationId||realised.creations.length!==1)failures.push('création cliente réelle non persistée');
 if(!(Number(realised.game?.clock?.totalMinutes||0)>before.time))failures.push('réalisation sans passage du temps');
 
-await page.waitForFunction(()=>!!document.querySelector('#hcSendClient'),{timeout:5000});
-await page.evaluate(()=>document.querySelector('#hcSendClient')?.click());
+await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcSendClient'),{timeout:5000});
+await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcSendClient')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='ready_for_fitting',{timeout:5000});
 
 const sent=await page.evaluate(()=>({
