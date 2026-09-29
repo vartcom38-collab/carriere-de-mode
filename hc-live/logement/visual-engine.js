@@ -53,8 +53,8 @@ function chooseHome(x){
   if(!x)return false;
   ensureCurated(x);
   try{if(typeof st!=='undefined'&&st)st.listing=x.id}catch(e){}
-  if(typeof window.rentSelected==='function'){
-    window.rentSelected();
+  if(typeof window.HCRentSelected==='function'){
+    window.HCRentSelected();
     return true;
   }
   return false;
