@@ -1,0 +1,39 @@
+name: First Playable Loop
+
+on:
+  push:
+    branches:
+      - nimes-parity-territoires
+    paths:
+      - 'hc-live/ville/client-fitting-lived-v1.js'
+      - 'hc-live/ville/client-fitting-generic-bridge-v1.js'
+      - 'hc-live/ville/index.html'
+      - 'hc-live/client-orders/**'
+      - 'hc-live/atelier-raster/atelier-client-*.js'
+      - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
+      - 'hc-live/game-engine.js'
+      - 'hc-live/qa/first-playable-client-cycle-e2e.mjs'
+      - '.github/workflows/first-playable-loop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  client-cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-first-playable-http.log 2>&1 &
+          sleep 2
+      - name: Run first playable client cycle
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/first-playable-client-cycle-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-client-cycle.log
