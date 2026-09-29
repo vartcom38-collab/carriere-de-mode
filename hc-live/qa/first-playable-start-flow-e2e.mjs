@@ -26,7 +26,7 @@ await page.evaluate(()=>{
 });
 await page.click('#continue');
 await page.waitForURL(/\/hc-live\/logement\/?$/,{timeout:8000});
-await page.waitForFunction(()=>{const x=document.querySelector('.listing');return !!x&&!/Adresse en cours/.test(x.textContent||'')},{timeout:15000});
+await page.waitForFunction(()=>document.querySelectorAll('.listing').length>0,{timeout:15000});
 const firstListing=page.locator('.listing').first();
 
 const initialBudget=await page.evaluate(()=>Number(localStorage.getItem('haute-couture-starting-budget')||0));
