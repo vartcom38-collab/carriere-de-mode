@@ -49,6 +49,16 @@ if(/\b\d+\s*\/\s*100\b|satisfaction\s*[:=]|fitScore/i.test(before.text))failures
 
 await page.click('[data-gfit="start"]');
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='fitting_ok',{timeout:5000});
+await page.waitForTimeout(180);
+const afterFitUi=await page.evaluate(()=>({
+ target:window.HCClientFittingGenericBridgeV1?.target?.()?.id||null,
+ text:document.querySelector('#hcGenericClientFitting')?.textContent||'',
+ hasDeliver:!!document.querySelector('[data-gfit="deliver"]'),
+ order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
+ session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null
+}));
+console.log('FIRST PLAYABLE FIT UI',JSON.stringify({target:afterFitUi.target,status:afterFitUi.order?.status,phase:afterFitUi.session?.phase,hasDeliver:afterFitUi.hasDeliver,text:afterFitUi.text}));
+if(!afterFitUi.hasDeliver)failures.push('bouton livraison absent après essayage approuvé');
 await page.waitForSelector('[data-gfit="deliver"]',{state:'visible',timeout:5000});
 
 const afterFit=await page.evaluate(()=>({
