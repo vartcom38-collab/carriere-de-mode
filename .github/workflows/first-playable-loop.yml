@@ -18,6 +18,7 @@ on:
       - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
       - 'hc-live/game-engine.js'
       - 'hc-live/qa/first-playable-start-flow-e2e.mjs'
+      - 'hc-live/qa/first-playable-middle-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-client-cycle-e2e.mjs'
       - '.github/workflows/first-playable-loop.yml'
   workflow_dispatch:
@@ -43,6 +44,11 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/first-playable-start-flow-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-start-flow.log
+      - name: Run first playable middle flow
+        if: always()
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/first-playable-middle-flow-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-middle-flow.log
       - name: Run first playable client cycle
         if: always()
         run: |
