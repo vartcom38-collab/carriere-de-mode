@@ -9,6 +9,7 @@ on:
       - 'hc-live/start-choice/index.html'
       - 'hc-live/career-welcome/index.html'
       - 'hc-live/logement/index.html'
+      - 'hc-live/logement/visual-engine.js'
       - 'hc-live/career-first-day/index.html'
       - 'hc-live/ville/client-fitting-lived-v1.js'
       - 'hc-live/ville/client-fitting-generic-bridge-v1.js'
