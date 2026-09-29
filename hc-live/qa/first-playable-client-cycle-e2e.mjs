@@ -70,8 +70,6 @@ const delayedFitUi=await page.evaluate(()=>({
 }));
 console.log('FIRST PLAYABLE FIT DELAYED',JSON.stringify({status:delayedFitUi.order?.status,phase:delayedFitUi.session?.phase,target:delayedFitUi.target,hasHost:delayedFitUi.hasHost,hasDeliver:delayedFitUi.hasDeliver,text:delayedFitUi.text}));
 if(!delayedFitUi.hasDeliver)failures.push('bouton livraison disparaît après validation');
-await page.waitForFunction(()=>!!document.querySelector('[data-gfit="deliver"]'),{timeout:5000});
-
 const afterFit=await page.evaluate(()=>({
  status:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status,
  time:Number(window.HCGame.get().clock.totalMinutes||0),
