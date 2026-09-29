@@ -5,6 +5,11 @@ on:
     branches:
       - nimes-parity-territoires
     paths:
+      - 'hc-live/index.html'
+      - 'hc-live/start-choice/index.html'
+      - 'hc-live/career-welcome/index.html'
+      - 'hc-live/logement/index.html'
+      - 'hc-live/career-first-day/index.html'
       - 'hc-live/ville/client-fitting-lived-v1.js'
       - 'hc-live/ville/client-fitting-generic-bridge-v1.js'
       - 'hc-live/ville/index.html'
@@ -12,6 +17,7 @@ on:
       - 'hc-live/atelier-raster/atelier-client-*.js'
       - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
       - 'hc-live/game-engine.js'
+      - 'hc-live/qa/first-playable-start-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-client-cycle-e2e.mjs'
       - '.github/workflows/first-playable-loop.yml'
   workflow_dispatch:
@@ -33,6 +39,10 @@ jobs:
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/hc-first-playable-http.log 2>&1 &
           sleep 2
+      - name: Run first playable start flow
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/first-playable-start-flow-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-start-flow.log
       - name: Run first playable client cycle
         run: |
           set -o pipefail
