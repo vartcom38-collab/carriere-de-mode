@@ -15,7 +15,7 @@ const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}cat
 function game(){try{return window.parent?.HCGame||window.top?.HCGame||window.HCGame||null}catch(e){return window.HCGame||null}}
 function money(){return Number(game()?.get?.().player?.money||0)}
 function now(){return game()?.get?.().clock?.iso||new Date().toISOString()}
-function activeOrder(){return read(K.orders,[]).find(x=>x.status==='accepted'||x.status==='alterations_needed')||null}
+function activeOrder(){return read(K.orders,[]).find(x=>['accepted','approved_for_production','alterations_needed'].includes(x.status))||null}
 function pendingOrder(){return read(K.orders,[]).find(x=>x.status==='realised_pending_send')||null}
 function orderForCreation(id){return read(K.orders,[]).find(x=>x.design?.realisationId===id)||null}
 function saveOrder(o){let a=read(K.orders,[]).filter(x=>x.id!==o.id);a.unshift(o);write(K.orders,a.slice(0,100));window.dispatchEvent(new CustomEvent('hc-client-order',{detail:o}))}
