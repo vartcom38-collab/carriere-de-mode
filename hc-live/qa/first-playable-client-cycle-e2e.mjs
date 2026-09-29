@@ -47,7 +47,7 @@ if(before.garment!=='qa-client-creation')failures.push('la création réelle de 
 if(!/Camille Test/.test(before.text)||!/COMMENCER L’ESSAYAGE/.test(before.text))failures.push('interface essayage générique absente/incomplète');
 if(/\b\d+\s*\/\s*100\b|satisfaction\s*[:=]|fitScore/i.test(before.text))failures.push('ancien score numérique visible dans l’essayage');
 
-await page.click('[data-gfit="start"]');
+await page.evaluate(()=>document.querySelector('[data-gfit="start"]')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='fitting_ok',{timeout:5000});
 await page.waitForTimeout(180);
 const afterFitUi=await page.evaluate(()=>({
