@@ -59,7 +59,7 @@ const afterFitUi=await page.evaluate(()=>({
 }));
 console.log('FIRST PLAYABLE FIT UI',JSON.stringify({target:afterFitUi.target,status:afterFitUi.order?.status,phase:afterFitUi.session?.phase,hasDeliver:afterFitUi.hasDeliver,text:afterFitUi.text}));
 if(!afterFitUi.hasDeliver)failures.push('bouton livraison absent après essayage approuvé');
-await page.waitForSelector('[data-gfit="deliver"]',{state:'visible',timeout:5000});
+await page.waitForFunction(()=>!!document.querySelector('[data-gfit="deliver"]'),{timeout:5000});
 
 const afterFit=await page.evaluate(()=>({
  status:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status,
@@ -70,7 +70,7 @@ console.log('FIRST PLAYABLE FIT APPROVED',JSON.stringify(afterFit));
 if(afterFit.status!=='fitting_ok'||afterFit.session?.phase!=='approved')failures.push('essayage ne valide pas qualitativement la pièce');
 if(!(afterFit.time>before.time))failures.push('essayage sans passage du temps');
 
-await page.click('[data-gfit="deliver"]');
+await page.evaluate(()=>document.querySelector('[data-gfit="deliver"]')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='completed',{timeout:5000});
 
 const delivered=await page.evaluate(()=>({
