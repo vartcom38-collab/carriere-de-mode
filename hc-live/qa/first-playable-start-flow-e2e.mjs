@@ -26,12 +26,13 @@ await page.evaluate(()=>{
 });
 await page.click('#continue');
 await page.waitForURL(/\/hc-live\/logement\/?$/,{timeout:8000});
-await page.waitForSelector('.listing',{state:'visible',timeout:15000});
+await page.waitForFunction(()=>document.querySelectorAll('.listing').length>0,{timeout:15000});
+const firstListing=page.locator('.listing').first();await firstListing.scrollIntoViewIfNeeded();
 
 const initialBudget=await page.evaluate(()=>Number(localStorage.getItem('haute-couture-starting-budget')||0));
 if(initialBudget!==3500)failures.push('budget de départ inattendu: '+initialBudget);
 
-await page.locator('.listing').first().click();
+await firstListing.click({force:true});
 await page.waitForSelector('#detailModal.open',{state:'visible',timeout:5000});
 const detail=await page.evaluate(()=>({
  totalText:document.querySelector('#dTotal')?.textContent||'',
