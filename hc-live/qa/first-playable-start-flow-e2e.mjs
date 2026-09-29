@@ -27,12 +27,12 @@ await page.evaluate(()=>{
 await page.click('#continue');
 await page.waitForURL(/\/hc-live\/logement\/?$/,{timeout:8000});
 await page.waitForFunction(()=>document.querySelectorAll('.listing').length>0,{timeout:15000});
-const firstListing=page.locator('.listing').first();
+const affordable=page.locator('.listing').filter({has:page.locator('.mini-tag.ok')}).first();
 
 const initialBudget=await page.evaluate(()=>Number(localStorage.getItem('haute-couture-starting-budget')||0));
 if(initialBudget!==3500)failures.push('budget de départ inattendu: '+initialBudget);
 
-await page.evaluate(()=>document.querySelector('.listing')?.click());
+await page.evaluate(()=>document.querySelector('.listing .mini-tag.ok')?.closest('.listing')?.click());
 await page.waitForSelector('#detailModal.open',{state:'visible',timeout:5000});
 const detail=await page.evaluate(()=>({
  totalText:document.querySelector('#dTotal')?.textContent||'',
@@ -40,7 +40,14 @@ const detail=await page.evaluate(()=>({
 }));
 if(detail.city!=='Nîmes')failures.push('ville logement non conservée');
 
-await page.click('#detailVisit');
+await page.evaluate(()=>document.querySelector('#detailVisit')?.click());
+await page.waitForTimeout(250);
+const housingClick=await page.evaluate(()=>({
+ href:location.href,
+ home:JSON.parse(localStorage.getItem('haute-couture-home')||'null'),
+ current:localStorage.getItem('haute-couture-current-screen')
+}));
+console.log('FIRST PLAYABLE HOUSING CLICK',JSON.stringify({href:housingClick.href,city:housingClick.home?.city,entryCost:housingClick.home?.estimatedEntryCost,remaining:housingClick.home?.startingBudget,current:housingClick.current}));
 await page.waitForURL(/\/hc-live\/career-first-day\/?$/,{timeout:8000});
 
 const state=await page.evaluate(()=>({
