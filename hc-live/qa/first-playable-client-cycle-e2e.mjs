@@ -49,34 +49,18 @@ if(/\b\d+\s*\/\s*100\b|satisfaction\s*[:=]|fitScore/i.test(before.text))failures
 
 await page.evaluate(()=>document.querySelector('[data-gfit="start"]')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='fitting_ok',{timeout:5000});
-await page.waitForTimeout(180);
-const afterFitUi=await page.evaluate(()=>({
- target:window.HCClientFittingGenericBridgeV1?.target?.()?.id||null,
- text:document.querySelector('#hcGenericClientFitting')?.textContent||'',
- hasDeliver:!!document.querySelector('[data-gfit="deliver"]'),
- order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
- session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null
-}));
-console.log('FIRST PLAYABLE FIT UI',JSON.stringify({target:afterFitUi.target,status:afterFitUi.order?.status,phase:afterFitUi.session?.phase,hasDeliver:afterFitUi.hasDeliver,text:afterFitUi.text}));
-if(!afterFitUi.hasDeliver)failures.push('bouton livraison absent après essayage approuvé');
-await page.waitForTimeout(1000);
-const delayedFitUi=await page.evaluate(()=>({
- order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
- session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null,
- target:window.HCClientFittingGenericBridgeV1?.target?.()?.id||null,
- hasHost:!!document.querySelector('#hcGenericClientFitting'),
- hasDeliver:!!document.querySelector('[data-gfit="deliver"]'),
- text:document.querySelector('#hcGenericClientFitting')?.textContent||''
-}));
-console.log('FIRST PLAYABLE FIT DELAYED',JSON.stringify({status:delayedFitUi.order?.status,phase:delayedFitUi.session?.phase,target:delayedFitUi.target,hasHost:delayedFitUi.hasHost,hasDeliver:delayedFitUi.hasDeliver,text:delayedFitUi.text}));
-if(!delayedFitUi.hasDeliver)failures.push('bouton livraison disparaît après validation');
+await page.waitForTimeout(80);
 const afterFit=await page.evaluate(()=>({
  status:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status,
  time:Number(window.HCGame.get().clock.totalMinutes||0),
- session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null
+ session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null,
+ target:window.HCClientFittingGenericBridgeV1?.target?.()?.id||null,
+ hasDeliver:!!document.querySelector('[data-gfit="deliver"]'),
+ text:document.querySelector('#hcGenericClientFitting')?.textContent||''
 }));
-console.log('FIRST PLAYABLE FIT APPROVED',JSON.stringify(afterFit));
+console.log('FIRST PLAYABLE FIT APPROVED',JSON.stringify({status:afterFit.status,time:afterFit.time,phase:afterFit.session?.phase,target:afterFit.target,hasDeliver:afterFit.hasDeliver,text:afterFit.text}));
 if(afterFit.status!=='fitting_ok'||afterFit.session?.phase!=='approved')failures.push('essayage ne valide pas qualitativement la pièce');
+if(!afterFit.hasDeliver||!/PRÉPARER LA LIVRAISON/.test(afterFit.text))failures.push('bouton livraison absent après essayage approuvé');
 if(!(afterFit.time>before.time))failures.push('essayage sans passage du temps');
 
 const deliveryCall=await page.evaluate(()=>window.HCClientFittingLivedV1.deliver('qa-generic-order'));
