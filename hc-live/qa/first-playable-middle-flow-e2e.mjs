@@ -36,8 +36,12 @@ await page.addInitScript(()=>{
 await page.goto(URL,{waitUntil:'domcontentloaded',timeout:15000});
 await page.waitForFunction(()=>{
  const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument;
- return !!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.querySelector('#hcClientWorkflowV2');
+ return document.body.classList.contains('hc-ready')&&!!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.getElementById('hcAtelierShellV3');
 },{timeout:20000});
+await page.evaluate(()=>{
+ const w=document.getElementById('atelierFrame')?.contentWindow;
+ w?.HCAtelierClientWorkflow?.render?.();
+});
 const bootDiag=await page.evaluate(()=>{
  const sketch={id:'qa-sketch',name:'Croquis cliente QA',direction:'Ligne structurée et mobile',url:''};
  localStorage.setItem('haute-couture-atelier-selected-sketch-v2',JSON.stringify(sketch));
