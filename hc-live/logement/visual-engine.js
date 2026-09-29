@@ -52,12 +52,22 @@ function chooseHome(x){
   x=x||activeListing();
   if(!x)return false;
   ensureCurated(x);
-  try{if(typeof st!=='undefined'&&st)st.listing=x.id}catch(e){}
-  if(typeof window.HCRentSelected==='function'){
-    window.HCRentSelected();
-    return true;
-  }
-  return false;
+  const state=(typeof st!=='undefined'&&st)?st:{};
+  const budget=(typeof START_BUDGET!=='undefined')?Number(START_BUDGET):3500;
+  const entryCost=Number(x.price||0)+Number(x.charges||0)+Number(x.price||0);
+  if(entryCost>budget){alert('Ce logement dépasse ton budget de départ. Choisis une autre annonce ou revois tes critères.');return false}
+  const remaining=Math.max(0,budget-entryCost),now=new Date().toISOString();
+  try{state.listing=String(x.id)}catch(e){}
+  const payload={...state,home:x,rentedAt:now,initialBudget:budget,startingBudget:remaining,estimatedEntryCost:entryCost};
+  localStorage.setItem('haute-couture-home',JSON.stringify(payload));
+  localStorage.setItem('haute-couture-starting-budget',String(remaining));
+  let opening={};try{opening=JSON.parse(localStorage.getItem('haute-couture-career-opening-v1')||'{}')||{}}catch(e){}
+  opening.status='housing-chosen';opening.homeChosenAt=now;opening.city=state.city||x.city||'';
+  localStorage.setItem('haute-couture-career-opening-v1',JSON.stringify(opening));
+  localStorage.setItem('haute-couture-current-screen','career-first-day');
+  localStorage.setItem('haute-couture-screen','career-first-day');
+  location.href='../career-first-day/';
+  return true;
 }
 function bindChooseButton(x){
   const btn=document.getElementById('detailVisit');
