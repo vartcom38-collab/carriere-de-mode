@@ -39,9 +39,18 @@ await page.waitForFunction(()=>{
  return !!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.querySelector('#hcClientWorkflowV2');
 },{timeout:20000});
 await page.evaluate(()=>{
- localStorage.setItem('haute-couture-atelier-selected-sketch-v2',JSON.stringify({id:'qa-sketch',name:'Croquis cliente QA',direction:'Ligne structurée et mobile',url:''}));
+ const sketch={id:'qa-sketch',name:'Croquis cliente QA',direction:'Ligne structurée et mobile',url:''};
+ localStorage.setItem('haute-couture-atelier-selected-sketch-v2',JSON.stringify(sketch));
  const w=document.getElementById('atelierFrame')?.contentWindow;
+ if(w)w.__HC_SELECTED_SKETCH__=sketch;
  w?.HCAtelierClientWorkflow?.render?.();
+ const d=document.getElementById('atelierFrame')?.contentDocument;
+ console.log('FIRST PLAYABLE MIDDLE BOOT',JSON.stringify({
+   order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
+   sketch:JSON.parse(localStorage.getItem('haute-couture-atelier-selected-sketch-v2')||'null'),
+   text:d?.querySelector('#hcClientWorkflowV2')?.textContent||'',
+   hasSend:!!d?.querySelector('#hcCw2Send')
+ }));
 });
 await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send'),{timeout:10000});
 
