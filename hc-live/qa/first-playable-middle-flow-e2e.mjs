@@ -38,21 +38,27 @@ await page.waitForFunction(()=>{
  const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument;
  return !!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.querySelector('#hcClientWorkflowV2');
 },{timeout:20000});
-await page.evaluate(()=>{
+const bootDiag=await page.evaluate(()=>{
  const sketch={id:'qa-sketch',name:'Croquis cliente QA',direction:'Ligne structurée et mobile',url:''};
  localStorage.setItem('haute-couture-atelier-selected-sketch-v2',JSON.stringify(sketch));
- const w=document.getElementById('atelierFrame')?.contentWindow;
+ const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument;
  if(w)w.__HC_SELECTED_SKETCH__=sketch;
- w?.HCAtelierClientWorkflow?.render?.();
- const d=document.getElementById('atelierFrame')?.contentDocument;
- console.log('FIRST PLAYABLE MIDDLE BOOT',JSON.stringify({
+ let renderError=null;
+ try{w?.HCAtelierClientWorkflow?.render?.()}catch(e){renderError=String(e?.stack||e?.message||e)}
+ return{
    order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
    sketch:JSON.parse(localStorage.getItem('haute-couture-atelier-selected-sketch-v2')||'null'),
    text:d?.querySelector('#hcClientWorkflowV2')?.textContent||'',
-   hasSend:!!d?.querySelector('#hcCw2Send')
- }));
+   hasSend:!!d?.querySelector('#hcCw2Send'),
+   renderError
+ };
 });
-await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send'),{timeout:10000});
+console.log('FIRST PLAYABLE MIDDLE BOOT',JSON.stringify(bootDiag));
+if(!bootDiag.hasSend){
+ failures.push('workflow devis absent après sélection du croquis'+(bootDiag.renderError?' · '+bootDiag.renderError:'')+' · panneau: '+bootDiag.text);
+ await browser.close();
+ console.error('\nFIRST PLAYABLE MIDDLE FLOW: '+failures.length+' échec(s)');for(const f of failures)console.error('✗',f);process.exit(1);
+}
 
 const before=await page.evaluate(()=>({
  order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0],
