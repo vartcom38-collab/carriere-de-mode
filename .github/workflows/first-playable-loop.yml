@@ -17,6 +17,7 @@ on:
       - 'hc-live/client-orders/**'
       - 'hc-live/atelier-raster/atelier-client-*.js'
       - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
+      - 'hc-live/atelier-raster/atelier-shell-v3-simple.js'
       - 'hc-live/atelier-raster/atelier-realise-scheduler-hotfix-v1.js'
       - 'hc-live/atelier-raster/atelier-realisation-preflight-v1.js'
       - 'hc-live/game-engine.js'
