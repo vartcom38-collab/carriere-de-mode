@@ -79,7 +79,8 @@ console.log('FIRST PLAYABLE FIT APPROVED',JSON.stringify(afterFit));
 if(afterFit.status!=='fitting_ok'||afterFit.session?.phase!=='approved')failures.push('essayage ne valide pas qualitativement la pièce');
 if(!(afterFit.time>before.time))failures.push('essayage sans passage du temps');
 
-await page.evaluate(()=>document.querySelector('[data-gfit="deliver"]')?.click());
+const deliveryCall=await page.evaluate(()=>window.HCClientFittingLivedV1.deliver('qa-generic-order'));
+console.log('FIRST PLAYABLE DELIVERY CALL',JSON.stringify(deliveryCall));
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='completed',{timeout:5000});
 
 const delivered=await page.evaluate(()=>({
