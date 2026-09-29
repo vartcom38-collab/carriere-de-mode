@@ -52,19 +52,12 @@ function chooseHome(x){
   x=x||activeListing();
   if(!x)return false;
   ensureCurated(x);
-  const budget=(typeof START_BUDGET!=='undefined')?START_BUDGET:2500;
-  const state=(typeof st!=='undefined'&&st)?st:{};
-  const payload={
-    ...state,
-    home:x,
-    rentedAt:new Date().toISOString(),
-    startingBudget:budget,
-    estimatedEntryCost:Number(x.price||0)+Number(x.charges||0)+Number(x.price||0)
-  };
-  localStorage.setItem('haute-couture-home',JSON.stringify(payload));
-  localStorage.setItem('haute-couture-current-screen','chez-moi');
-  location.href='../chez-moi/';
-  return true;
+  try{if(typeof st!=='undefined'&&st)st.listing=x.id}catch(e){}
+  if(typeof window.rentSelected==='function'){
+    window.rentSelected();
+    return true;
+  }
+  return false;
 }
 function bindChooseButton(x){
   const btn=document.getElementById('detailVisit');
