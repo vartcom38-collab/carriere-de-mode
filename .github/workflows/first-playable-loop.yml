@@ -17,6 +17,8 @@ on:
       - 'hc-live/client-orders/**'
       - 'hc-live/atelier-raster/atelier-client-*.js'
       - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
+      - 'hc-live/atelier-raster/atelier-realise-scheduler-hotfix-v1.js'
+      - 'hc-live/atelier-raster/atelier-realisation-preflight-v1.js'
       - 'hc-live/game-engine.js'
       - 'hc-live/qa/first-playable-start-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-middle-flow-e2e.mjs'
