@@ -38,6 +38,11 @@ await page.waitForFunction(()=>{
  const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument;
  return !!window.HCGame&&!!w?.HCAtelierClientWorkflow&&!!w?.HCAtelierRealisationEngine&&!!w?.HCAtelierRealisationPreflight&&!!d?.querySelector('#hcClientWorkflowV2');
 },{timeout:20000});
+await page.evaluate(()=>{
+ localStorage.setItem('haute-couture-atelier-selected-sketch-v2',JSON.stringify({id:'qa-sketch',name:'Croquis cliente QA',direction:'Ligne structurée et mobile',url:''}));
+ const w=document.getElementById('atelierFrame')?.contentWindow;
+ w?.HCAtelierClientWorkflow?.render?.();
+});
 await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send'),{timeout:10000});
 
 const before=await page.evaluate(()=>({
