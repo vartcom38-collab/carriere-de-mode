@@ -59,6 +59,17 @@ const afterFitUi=await page.evaluate(()=>({
 }));
 console.log('FIRST PLAYABLE FIT UI',JSON.stringify({target:afterFitUi.target,status:afterFitUi.order?.status,phase:afterFitUi.session?.phase,hasDeliver:afterFitUi.hasDeliver,text:afterFitUi.text}));
 if(!afterFitUi.hasDeliver)failures.push('bouton livraison absent après essayage approuvé');
+await page.waitForTimeout(1000);
+const delayedFitUi=await page.evaluate(()=>({
+ order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]||null,
+ session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null,
+ target:window.HCClientFittingGenericBridgeV1?.target?.()?.id||null,
+ hasHost:!!document.querySelector('#hcGenericClientFitting'),
+ hasDeliver:!!document.querySelector('[data-gfit="deliver"]'),
+ text:document.querySelector('#hcGenericClientFitting')?.textContent||''
+}));
+console.log('FIRST PLAYABLE FIT DELAYED',JSON.stringify({status:delayedFitUi.order?.status,phase:delayedFitUi.session?.phase,target:delayedFitUi.target,hasHost:delayedFitUi.hasHost,hasDeliver:delayedFitUi.hasDeliver,text:delayedFitUi.text}));
+if(!delayedFitUi.hasDeliver)failures.push('bouton livraison disparaît après validation');
 await page.waitForFunction(()=>!!document.querySelector('[data-gfit="deliver"]'),{timeout:5000});
 
 const afterFit=await page.evaluate(()=>({
