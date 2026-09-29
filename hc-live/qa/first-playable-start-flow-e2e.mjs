@@ -32,7 +32,7 @@ const firstListing=page.locator('.listing').first();
 const initialBudget=await page.evaluate(()=>Number(localStorage.getItem('haute-couture-starting-budget')||0));
 if(initialBudget!==3500)failures.push('budget de départ inattendu: '+initialBudget);
 
-await firstListing.click({force:true,timeout:5000});
+await page.evaluate(()=>document.querySelector('.listing')?.click());
 await page.waitForSelector('#detailModal.open',{state:'visible',timeout:5000});
 const detail=await page.evaluate(()=>({
  totalText:document.querySelector('#dTotal')?.textContent||'',
