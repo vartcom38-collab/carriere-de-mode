@@ -76,15 +76,19 @@ const delivered=await page.evaluate(()=>({
  game:window.HCGame.get(),
  relation:JSON.parse(localStorage.getItem('haute-couture-client-relations-v1')||'{}')?.['qa-client']||null,
  tracks:window.HCGame.get().reputationTracks||{},
+ careerLevel:window.HCClientOrderEngine?.careerLevel?.()||null,
+ level2Templates:(window.HCClientOrderEngine?.availableTemplates?.()||[]).filter(x=>Number(x.min||0)>=2).map(x=>x.id),
  session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null
 }));
-console.log('FIRST PLAYABLE DELIVERED',JSON.stringify({status:delivered.order?.status,payment:delivered.order?.payment,money:delivered.game?.player?.money,rep:delivered.game?.player?.reputation,trust:delivered.relation?.trust,phase:delivered.session?.phase,tailoring:delivered.tracks?.tailoring,clientele:delivered.tracks?.clientele}));
+console.log('FIRST PLAYABLE DELIVERED',JSON.stringify({status:delivered.order?.status,payment:delivered.order?.payment,money:delivered.game?.player?.money,rep:delivered.game?.player?.reputation,trust:delivered.relation?.trust,phase:delivered.session?.phase,tailoring:delivered.tracks?.tailoring,clientele:delivered.tracks?.clientele,careerLevel:delivered.careerLevel,level2Templates:delivered.level2Templates}));
 if(delivered.order?.status!=='completed'||delivered.order?.progress!=='delivered')failures.push('commande non terminée après livraison');
 if(!delivered.order?.paymentApplied||Number(delivered.order?.payment||0)!==260)failures.push('paiement cliente non appliqué');
 if(Number(delivered.game?.player?.money||0)!==before.money+260)failures.push('solde carrière non crédité');
 if(Number(delivered.game?.player?.reputation||0)!==before.rep+2)failures.push('réputation professionnelle non créditée');
 if(Number(delivered.tracks?.tailoring||0)!==before.tailoring+1)failures.push('spécialité tailoring non créditée');
 if(Number(delivered.tracks?.clientele||0)!==before.clientele+1)failures.push('progression clientèle non créditée');
+if(Number(delivered.careerLevel||0)!==2)failures.push('niveau carrière 2 non débloqué à réputation 8');
+if(!Array.isArray(delivered.level2Templates)||!delivered.level2Templates.length)failures.push('aucune offre de niveau 2 débloquée après progression');
 if(Number(delivered.relation?.trust||0)!==2)failures.push('relation cliente non mémorisée');
 if(delivered.session?.phase!=='delivered')failures.push('session essayage non clôturée');
 if(!(Number(delivered.game?.clock?.totalMinutes||0)>afterFit.time))failures.push('livraison sans passage du temps');
