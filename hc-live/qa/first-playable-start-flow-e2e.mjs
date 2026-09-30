@@ -41,7 +41,7 @@ const detail=await page.evaluate(()=>({
 }));
 if(detail.city!=='Nîmes')failures.push('ville logement non conservée');
 
-await page.evaluate(()=>window.HCHousingChoose?.());
+await page.evaluate(()=>window.HCHousingChoose?.(window.__HC_ACTIVE_LISTING?.id));
 await page.waitForTimeout(250);
 const housingClick=await page.evaluate(()=>({
  href:location.href,
