@@ -18,6 +18,10 @@ await page.addInitScript(()=>{
    garment:'Robe structurée',occasion:'Rendez-vous professionnel',budget:900,reward:260,estimatedMinutes:260,
    brief:{style:'net, contemporain, crédible',paletteLiked:['marine'],materialsPreferred:['crêpe']}
  }]));
+ localStorage.setItem('haute-couture-atelier-active-project-v1',JSON.stringify({
+   id:'qa-middle-order',name:'Robe structurée',type:'client',
+   subtitle:'Camille Test · Rendez-vous professionnel',source:'order',selectedAt:now
+ }));
  localStorage.setItem('haute-couture-atelier-board-v2',JSON.stringify({
    pieces:[{id:'top-drape',name:'Top drapé'},{id:'jupe',name:'Jupe drapée'}],
    counts:{garments:2,materials:1}
