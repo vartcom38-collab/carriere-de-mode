@@ -11,7 +11,8 @@ await page.addInitScript(()=>{
  const now='2026-09-29T10:00:00.000Z';
  localStorage.clear();
  localStorage.setItem('haute-couture-start-path-v1',JSON.stringify({type:'career',chosenAt:now}));
- localStorage.setItem('haute-couture-home',JSON.stringify({city:'Nîmes',startingBudget:900,home:{id:'qa-home',city:'Nîmes',title:'Appartement test',price:0,charges:0}}));
+ localStorage.setItem('haute-couture-home',JSON.stringify({city:'Nîmes',startingBudget:5000,home:{id:'qa-home',city:'Nîmes',title:'Appartement test',price:0,charges:0}}));
+ localStorage.setItem('haute-couture-atelier-production-choice-v1',JSON.stringify('camille'));
  localStorage.setItem('haute-couture-client-orders-v1',JSON.stringify([{
    id:'qa-middle-order',clientId:'qa-middle-client',clientName:'Camille Test',clientRole:'Cliente fictive',
    fictional:true,city:'Nîmes',source:'Café des Croquis',status:'accepted',progress:'brief_accepted',
@@ -105,11 +106,23 @@ await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.conten
 await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Realise')?.click());
 await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise'),{timeout:5000});
 
-const preflight=await page.evaluate(()=>({
- disabled:document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise')?.disabled,
- text:document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcAtelierRealisationPreflight')?.textContent||''
-}));
-if(preflight.disabled)failures.push('réalisation bloquée malgré planche/croquis/matière complets');
+const preflight=await page.evaluate(()=>{
+ const f=document.getElementById('atelierFrame'),w=f?.contentWindow,d=f?.contentDocument,chk=w?.HCAtelierRealisationEngine?.canRealise?.()||{};
+ return{
+   disabled:d?.querySelector('#hcConfirmRealise')?.disabled,
+   text:d?.querySelector('#hcAtelierRealisationPreflight')?.textContent||'',
+   laborCost:Number(chk?.labor?.cost||0),
+   worker:chk?.labor?.worker?.name||'',
+   cashNeed:Number(chk?.cashNeed||0),
+   materialCost:Number(chk?.material?.purchaseCost||0),
+   money:Number(window.HCGame.get().player.money||0)
+ };
+});
+console.log('FIRST PLAYABLE MIDDLE PREFLIGHT',JSON.stringify(preflight));
+if(preflight.disabled)failures.push('réalisation bloquée malgré trésorerie suffisante');
+if(!(preflight.laborCost>0)||!/Camille Roux/.test(preflight.worker))failures.push('coût partenaire Camille absent du préflight');
+if(!/COÛT PARTENAIRE|TOTAL À FINANCER/.test(preflight.text))failures.push('préflight ne montre pas le coût complet');
+if(preflight.cashNeed!==preflight.laborCost+preflight.materialCost)failures.push('total cash préflight incohérent');
 
 await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcConfirmRealise')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='realised_pending_send',{timeout:7000});
@@ -119,9 +132,13 @@ const realised=await page.evaluate(()=>({
  creations:JSON.parse(localStorage.getItem('haute-couture-atelier-creations-v1')||'[]'),
  game:window.HCGame.get()
 }));
-console.log('FIRST PLAYABLE MIDDLE REALISED',JSON.stringify({status:realised.order?.status,creationId:realised.order?.design?.realisationId,creations:realised.creations.length,time:realised.game?.clock?.totalMinutes}));
+console.log('FIRST PLAYABLE MIDDLE REALISED',JSON.stringify({status:realised.order?.status,creationId:realised.order?.design?.realisationId,creations:realised.creations.length,time:realised.game?.clock?.totalMinutes,money:realised.game?.player?.money,laborCost:realised.order?.production?.laborCost,laborPaid:realised.order?.production?.laborPaid,worker:realised.order?.production?.worker?.name}));
 if(!realised.order?.design?.realisationId||realised.creations.length!==1)failures.push('création cliente réelle non persistée');
 if(!(Number(realised.game?.clock?.totalMinutes||0)>before.time))failures.push('réalisation sans passage du temps');
+if(!realised.order?.production?.laborPaid)failures.push('confection partenaire non marquée payée');
+if(Number(realised.order?.production?.laborCost||0)!==preflight.laborCost)failures.push('coût partenaire enregistré incorrect');
+if(Number(realised.game?.player?.money||0)!==before.money-preflight.cashNeed)failures.push('trésorerie non débitée du coût réel de réalisation');
+if(Number(realised.creations?.[0]?.labor?.cost||0)!==preflight.laborCost)failures.push('coût partenaire absent de la création persistée');
 
 await page.waitForFunction(()=>!!document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcSendClient'),{timeout:5000});
 await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcSendClient')?.click());
