@@ -34,13 +34,14 @@ if(initialBudget!==3500)failures.push('budget de départ inattendu: '+initialBud
 
 await page.evaluate(()=>document.querySelector('.listing .mini-tag.ok')?.closest('.listing')?.click());
 await page.waitForSelector('#detailModal.open',{state:'visible',timeout:5000});
+await page.waitForFunction(()=>typeof window.HCHousingChoose==='function'&&!!document.querySelector('#detailVisit'),{timeout:5000});
 const detail=await page.evaluate(()=>({
  totalText:document.querySelector('#dTotal')?.textContent||'',
  city:JSON.parse(localStorage.getItem('haute-couture-logement-builder')||'{}').city||''
 }));
 if(detail.city!=='Nîmes')failures.push('ville logement non conservée');
 
-await page.evaluate(()=>document.querySelector('#detailVisit')?.click());
+await page.evaluate(()=>window.HCHousingChoose?.());
 await page.waitForTimeout(250);
 const housingClick=await page.evaluate(()=>({
  href:location.href,
