@@ -74,6 +74,19 @@ console.log('FIRST PLAYABLE MIDDLE BEFORE',JSON.stringify({status:before.order?.
 if(before.order?.status!=='accepted')failures.push('commande de départ non acceptée');
 if(!/PROPOSITION CLIENTE|Présenter/i.test(before.text))failures.push('workflow devis cliente absent');
 
+const quote=await page.evaluate(()=>{
+ const d=document.getElementById('atelierFrame')?.contentDocument;
+ const input=d?.querySelector('#hcCw2Price');
+ const budget=JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.budget||0;
+ const suggested=Number(input?.value||0);
+ const chosen=Math.max(1,Math.min(suggested,Math.floor(Number(budget||0)*0.95)));
+ if(input){input.value=String(chosen);input.dispatchEvent(new Event('input',{bubbles:true}))}
+ return{budget,suggested,chosen,hasBreakdown:!!d?.querySelector('#hcQuoteBreakdown')};
+});
+console.log('FIRST PLAYABLE MIDDLE QUOTE',JSON.stringify(quote));
+if(!(quote.chosen>0&&quote.chosen<=quote.budget))failures.push('devis ajusté hors budget');
+if(!quote.hasBreakdown)failures.push('détail du devis réaliste absent');
+
 await page.evaluate(()=>document.getElementById('atelierFrame')?.contentDocument?.querySelector('#hcCw2Send')?.click());
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='approved_for_production',{timeout:5000});
 
