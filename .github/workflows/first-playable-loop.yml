@@ -11,6 +11,9 @@ on:
       - 'hc-live/logement/index.html'
       - 'hc-live/logement/visual-engine.js'
       - 'hc-live/career-first-day/index.html'
+      - 'hc-live/ville/nimes-cafe-gameplay-v3.js'
+      - 'hc-live/ville/nimes-client-order-board-v1.js'
+      - 'hc-live/client-orders/client-order-engine-v1.js'
       - 'hc-live/ville/client-fitting-lived-v1.js'
       - 'hc-live/ville/client-fitting-generic-bridge-v1.js'
       - 'hc-live/ville/index.html'
@@ -27,6 +30,7 @@ on:
       - 'hc-live/qa/first-playable-start-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-middle-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-client-cycle-e2e.mjs'
+      - 'hc-live/qa/first-playable-continuous-e2e.mjs'
       - '.github/workflows/first-playable-loop.yml'
   workflow_dispatch:
 
@@ -61,3 +65,8 @@ jobs:
         run: |
           set -o pipefail
           timeout --signal=TERM --kill-after=10s 120s node hc-live/qa/first-playable-client-cycle-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-client-cycle.log
+      - name: Run continuous first playable journey
+        if: always()
+        run: |
+          set -o pipefail
+          timeout --signal=TERM --kill-after=10s 180s node hc-live/qa/first-playable-continuous-e2e.mjs 2>&1 | tee /tmp/hc-first-playable-continuous.log
