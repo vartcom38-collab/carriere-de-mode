@@ -120,6 +120,7 @@ const quote=await deepEval(()=>{
  return{suggested,chosen,budget:o?.budget||0};
 });
 console.log('CONTINUOUS QUOTE',JSON.stringify(quote));
+if(quote.suggested>quote.budget*1.15)failures.push('budget cliente généré encore trop faible face au devis Atelier: '+quote.suggested+' € conseillé pour '+quote.budget+' € de budget');
 await page.waitForFunction(()=>JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0]?.status==='approved_for_production',{timeout:6000});
 await page.waitForFunction(()=>{
  const mid=document.getElementById('atelier')?.contentDocument;
