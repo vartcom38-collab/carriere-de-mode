@@ -189,6 +189,37 @@ if(!done.order?.design?.realisationId)failures.push('réalisation perdue avant l
 if(!(Number(done.game?.clock?.totalMinutes||0)>startState.time))failures.push('aucun temps de jeu écoulé sur le parcours continu');
 if(!(Number(rel?.trust||0)>0))failures.push('relation cliente non conservée sur le parcours continu');
 
+// 6) Recharger la partie puis vérifier qu'une nouvelle journée peut réellement relancer la carrière.
+const snapshot={id:done.order?.id,money:Number(done.game?.player?.money||0),rep:Number(done.game?.player?.reputation||0),trust:Number(rel?.trust||0),time:Number(done.game?.clock?.totalMinutes||0)};
+await page.reload({waitUntil:'domcontentloaded',timeout:15000});
+await page.waitForFunction(()=>!!window.HCGame&&!!window.HCNimesPlaceUI?.routes?.['nimes-cafe-creative'],{timeout:12000});
+const resumed=await page.evaluate(()=>({
+ game:window.HCGame.get(),
+ order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]').find(x=>x.status==='completed')||null,
+ relations:JSON.parse(localStorage.getItem('haute-couture-client-relations-v1')||'{}')
+}));
+const resumedRel=resumed.relations?.[done.order?.clientId];
+console.log('CONTINUOUS RESUME',JSON.stringify({id:resumed.order?.id,money:resumed.game?.player?.money,rep:resumed.game?.player?.reputation,trust:resumedRel?.trust,time:resumed.game?.clock?.totalMinutes}));
+if(resumed.order?.id!==snapshot.id)failures.push('commande terminée perdue après rechargement');
+if(Number(resumed.game?.player?.money||0)!==snapshot.money)failures.push('argent non conservé après rechargement');
+if(Number(resumed.game?.player?.reputation||0)!==snapshot.rep)failures.push('réputation non conservée après rechargement');
+if(Number(resumedRel?.trust||0)!==snapshot.trust)failures.push('relation cliente non conservée après rechargement');
+
+await page.evaluate(()=>window.HCGame.advanceTime?.(1440,'Jour suivant — reprise de carrière'));
+await page.evaluate(()=>window.HCNimesPlaceUI.open({id:'nimes-cafe-creative',name:'Café des Croquis',city:'Nîmes',category:'cafe'}));
+await page.waitForFunction(()=>!!window.HCClientOrderEngine&&!!document.querySelector('#hcGenericOrderBoard'),{timeout:12000});
+await page.waitForFunction(()=>document.querySelectorAll('#hcGenericOrderBoard [data-hc-order-accept]').length>0,{timeout:8000});
+const nextDay=await page.evaluate(()=>{
+ const offered=[...document.querySelectorAll('#hcGenericOrderBoard [data-hc-order-accept]')].map(x=>x.dataset.hcOrderAccept).filter(Boolean);
+ const orders=JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]');
+ return{day:window.HCGame.get().clock?.day,offered,completed:orders.filter(x=>x.status==='completed').map(x=>x.id),money:Number(window.HCGame.get().player.money||0)};
+});
+console.log('CONTINUOUS NEXT DAY',JSON.stringify(nextDay));
+if(!nextDay.offered.length)failures.push('aucune nouvelle commande proposée le jour suivant');
+if(nextDay.offered.includes(snapshot.id))failures.push('ancienne commande livrée reproposée comme nouvelle opportunité');
+if(!nextDay.completed.includes(snapshot.id))failures.push('historique de la première cliente perdu en générant la suivante');
+if(nextDay.money!==snapshot.money)failures.push('argent modifié sans raison au simple passage au jour suivant');
+
 await browser.close();
 if(failures.length){console.error('\nFIRST PLAYABLE CONTINUOUS: '+failures.length+' échec(s)');for(const f of failures)console.error('✗',f);process.exit(1)}
 console.log('\n✓ FIRST PLAYABLE CONTINUOUS PASSÉ · nouvelle partie → Café → commande → Atelier → devis → réalisation → essayage → livraison · même sauvegarde.');
