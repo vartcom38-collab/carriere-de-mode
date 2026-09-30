@@ -20,6 +20,8 @@ on:
       - 'hc-live/atelier-raster/atelier-shell-v3-simple.js'
       - 'hc-live/atelier-raster/atelier-realise-scheduler-hotfix-v1.js'
       - 'hc-live/atelier-raster/atelier-realisation-preflight-v1.js'
+      - 'hc-live/atelier-raster/atelier-generation-hotfix-v2.js'
+      - 'hc-live/atelier-raster/atelier-quote-engine-v1.js'
       - 'hc-live/game-engine.js'
       - 'hc-live/qa/first-playable-start-flow-e2e.mjs'
       - 'hc-live/qa/first-playable-middle-flow-e2e.mjs'
