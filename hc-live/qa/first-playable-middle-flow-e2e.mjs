@@ -4,7 +4,7 @@ const URL=process.env.HC_ATELIER_URL||'http://127.0.0.1:4173/hc-live/atelier-ras
 const failures=[];
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:1000}});
-page.on('pageerror',e=>failures.push('pageerror: '+String(e.message||e)));
+page.on('pageerror',e=>{const detail=String(e.stack||e.message||e);console.error('FIRST PLAYABLE PAGEERROR',detail);failures.push('pageerror: '+detail)});
 page.on('console',m=>{if(m.type()==='error'&&/Uncaught|ReferenceError|TypeError|SyntaxError/i.test(m.text()))failures.push('console: '+m.text())});
 
 await page.addInitScript(()=>{
