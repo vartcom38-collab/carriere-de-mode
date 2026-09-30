@@ -19,6 +19,7 @@ on:
       - 'hc-live/atelier-raster/atelier-realisation-engine-v1.js'
       - 'hc-live/atelier-raster/atelier-shell-v3-simple.js'
       - 'hc-live/atelier-raster/atelier-realise-scheduler-hotfix-v1.js'
+      - 'hc-live/atelier-raster/atelier-production-scheduler-v1.js'
       - 'hc-live/atelier-raster/atelier-realisation-preflight-v1.js'
       - 'hc-live/atelier-raster/atelier-generation-hotfix-v2.js'
       - 'hc-live/atelier-raster/atelier-quote-engine-v1.js'
