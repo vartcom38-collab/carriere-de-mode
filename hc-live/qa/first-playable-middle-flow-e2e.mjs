@@ -85,9 +85,12 @@ const quote=await page.evaluate(()=>{
  const suggested=Number(input?.value||0);
  const chosen=Math.max(1,Math.min(suggested,Math.floor(Number(budget||0)*0.95)));
  if(input){input.value=String(chosen);input.dispatchEvent(new Event('input',{bubbles:true}))}
- return{budget,suggested,chosen,hasBreakdown:!!d?.querySelector('#hcQuoteBreakdown')};
+ const w=document.getElementById('atelierFrame')?.contentWindow;
+ const est=w?.HCAtelierQuoteEngine?.estimate?.()||null;
+ return{budget,suggested,chosen,hasBreakdown:!!d?.querySelector('#hcQuoteBreakdown'),workHours:Number(est?.workHours||0),recommended:Number(est?.price||0),materialCost:Number(est?.materialCost||0),features:est?.features||[]};
 });
 console.log('FIRST PLAYABLE MIDDLE QUOTE',JSON.stringify(quote));
+if(quote.workHours>45)failures.push('devis atelier encore anormalement long pour cette robe test: '+quote.workHours+' h');
 if(!(quote.chosen>0&&quote.chosen<=quote.budget))failures.push('devis ajusté hors budget');
 if(!quote.hasBreakdown)failures.push('détail du devis réaliste absent');
 
