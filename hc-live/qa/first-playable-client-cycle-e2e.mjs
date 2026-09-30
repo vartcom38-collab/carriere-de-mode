@@ -11,11 +11,12 @@ await page.addInitScript(()=>{
  const now='2026-09-29T10:00:00.000Z';
  localStorage.clear();
  localStorage.setItem('haute-couture-start-path-v1',JSON.stringify({type:'career',chosenAt:now}));
+ localStorage.setItem('haute-couture-player-stats',JSON.stringify({reputation:6}));
  localStorage.setItem('haute-couture-home',JSON.stringify({city:'Nîmes',startingBudget:500,home:{id:'qa-home',city:'Nîmes',title:'Petit appartement',price:0,charges:0,address:'Nîmes'}}));
  localStorage.setItem('haute-couture-current-presence-v1',JSON.stringify({city:'Nîmes',departmentCode:'30',departmentName:'Gard',lat:43.8367,lng:4.3601,reason:'visit'}));
  localStorage.setItem('haute-couture-client-orders-v1',JSON.stringify([{
    id:'qa-generic-order',clientId:'qa-client',clientName:'Camille Test',clientRole:'Cliente fictive',fictional:true,
-   city:'Nîmes',source:'Café des Croquis',status:'ready_for_fitting',progress:'realised_sent',
+   city:'Nîmes',source:'Café des Croquis',status:'ready_for_fitting',progress:'realised_sent',specialtyTrack:'tailoring',specialtyLabel:'Tailoring',
    garment:'Robe structurée',occasion:'Rendez-vous professionnel',reward:260,budget:340,
    deadline:'2026-10-03T17:00:00.000Z',
    design:{realisationId:'qa-client-creation'},
@@ -36,12 +37,15 @@ await page.waitForSelector('#hcGenericClientFitting',{state:'visible',timeout:10
 const before=await page.evaluate(()=>({
  money:Number(window.HCGame.get().player.money||0),
  rep:Number(window.HCGame.get().player.reputation||0),
+ tailoring:Number(window.HCGame.get().reputationTracks?.tailoring||0),
+ clientele:Number(window.HCGame.get().reputationTracks?.clientele||0),
  time:Number(window.HCGame.get().clock.totalMinutes||0),
  target:window.HCClientFittingGenericBridgeV1.target()?.id||null,
  garment:window.HCClientFittingLivedV1.garmentFor(window.HCClientFittingGenericBridgeV1.target())?.id||null,
  text:document.querySelector('#hcGenericClientFitting')?.textContent||''
 }));
 console.log('FIRST PLAYABLE FIT BEFORE',JSON.stringify(before));
+if(before.rep!==6)failures.push('réputation initiale de progression inattendue');
 if(before.target!=='qa-generic-order')failures.push('commande générique non ciblée par la scène essayage');
 if(before.garment!=='qa-client-creation')failures.push('la création réelle de la commande n’est pas retrouvée');
 if(!/Camille Test/.test(before.text)||!/COMMENCER L’ESSAYAGE/.test(before.text))failures.push('interface essayage générique absente/incomplète');
@@ -71,13 +75,16 @@ const delivered=await page.evaluate(()=>({
  order:JSON.parse(localStorage.getItem('haute-couture-client-orders-v1')||'[]')[0],
  game:window.HCGame.get(),
  relation:JSON.parse(localStorage.getItem('haute-couture-client-relations-v1')||'{}')?.['qa-client']||null,
+ tracks:window.HCGame.get().reputationTracks||{},
  session:JSON.parse(localStorage.getItem('haute-couture-client-fitting-lived-v1')||'{}')?.items?.['qa-generic-order']||null
 }));
-console.log('FIRST PLAYABLE DELIVERED',JSON.stringify({status:delivered.order?.status,payment:delivered.order?.payment,money:delivered.game?.player?.money,rep:delivered.game?.player?.reputation,trust:delivered.relation?.trust,phase:delivered.session?.phase}));
+console.log('FIRST PLAYABLE DELIVERED',JSON.stringify({status:delivered.order?.status,payment:delivered.order?.payment,money:delivered.game?.player?.money,rep:delivered.game?.player?.reputation,trust:delivered.relation?.trust,phase:delivered.session?.phase,tailoring:delivered.tracks?.tailoring,clientele:delivered.tracks?.clientele}));
 if(delivered.order?.status!=='completed'||delivered.order?.progress!=='delivered')failures.push('commande non terminée après livraison');
 if(!delivered.order?.paymentApplied||Number(delivered.order?.payment||0)!==260)failures.push('paiement cliente non appliqué');
 if(Number(delivered.game?.player?.money||0)!==before.money+260)failures.push('solde carrière non crédité');
 if(Number(delivered.game?.player?.reputation||0)!==before.rep+2)failures.push('réputation professionnelle non créditée');
+if(Number(delivered.tracks?.tailoring||0)!==before.tailoring+1)failures.push('spécialité tailoring non créditée');
+if(Number(delivered.tracks?.clientele||0)!==before.clientele+1)failures.push('progression clientèle non créditée');
 if(Number(delivered.relation?.trust||0)!==2)failures.push('relation cliente non mémorisée');
 if(delivered.session?.phase!=='delivered')failures.push('session essayage non clôturée');
 if(!(Number(delivered.game?.clock?.totalMinutes||0)>afterFit.time))failures.push('livraison sans passage du temps');
